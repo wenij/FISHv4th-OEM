@@ -1,0 +1,134 @@
+//	NUMBER NUMBER:	( addr -- sd )
+//	If error print message and ABORT.
+//      Convert a character string left at addr with a preceeding count,
+//      and a terminating null, to a signed number, in the current numeric base.
+//      If a decimal point is encountered in the text, its position will be
+//      given in DPL, but no other effect occurs. If numeric conversion is
+//      not possible, an error message will be given.
+
+//      Adding support for , as a single number formatter.
+//      current version allows any non word/number to be converted to zero
+//      Thought null was only case that would convert to zero?
+
+#define comma_test
+
+ SECTION .text : CONST (2)
+NUMBER_NFA:
+	DC8	0x86
+	DC8	'NUMBE'
+	DC8	'R'+0x80
+ ALIGNROM 2,0xFFFFFFFF
+	DC32	WORD_NFA
+NUMBER:
+	DC32	DOCOL
+        DC32    BASE_TO_R12     // Save current BASE
+        DC32    NUMBERSUFFIX
+	DC32	ZERO, ZERO
+	DC32	ROT		// ( 0 0 addr -- )
+
+	DC32	DUP, ONEP	// ( 0 0 addr addr+1 -- )
+	DC32	CAT		// ( 0 0 addr 1rstchar -- )
+
+#ifdef  comma_test
+// Check for "," first and err if so
+        DC32    DUP, TOR
+	DC32	LIT, ','	// COMMA = 0x2C
+	                	// ( 0 0 addr 1rstchar 0x2C --- )
+	DC32	EQUAL		// ( 0 0 addr f -- )
+        DC32    R, LIT, "."
+        DC32    EQUAL, OR
+        DC32    ZBRAN
+        DC32      TEST_NEG-.
+        
+// ASSUMING DON'T HAVE TO CLEAN UP FOR ERROR
+//        DC32    RFROM, DROP 
+        DC32    BRAN
+        DC32      BASE_RESET_THEN_ERROR-.
+        
+TEST_NEG:
+        DC32    RFROM
+#endif
+
+	DC32	LIT, '-'	// Minus sign = 0x2D
+	                	// ( 0 0 addr 1rstchar 0x2D --- )
+	DC32	EQUAL		// ( 0 0 addr f -- )
+#ifdef TRUE_EQU_NEG_ONE         // FIX ASSUMPTION THIS FLAG WILL BE ONE!
+        DC32    ONE, ANDD       // ( 0 0 addr f -- ) MAKE FLAG IS ONE OR ZERO
+#endif
+	DC32	DUP, TOR	// ( 0 0 addr f -- ) copy of f >R
+	DC32	PLUS		// FLAG MADE TO BE 1 or 0 INSTEAD OF -1
+	DC32    LIT, -1
+
+NUMB1:      			// Begin
+	DC32	DPL_SV, STORE   // PNUMBER creates whole, dot or comma number segment
+	DC32	PNUMBER   	// ( 0 0 addr -- ud=(LSW MSW) ADDR=PAST#)
+// END OF NUMBER CHARACTER (not BASESUFFIX) CHECK HERE, NULL or dot expected.
+	DC32	DUP
+	DC32	CAT
+// Convert from space to NULL terminated string fix here
+//	DC32	BLANK    	//20h
+        DC32    ZERO
+	DC32	SUBB
+		        	// while
+	DC32	ZBRAN   	// IF NULL (WAS BLANK)
+	DC32      NUMB2-. 	// DONE UNLESS IT NEEDS TO BE NEGATED
+
+// Adding create non double , delimeter
+// Test each - CAN'T OR !!!
+	DC32	DUP             // ??????Increment this addr if ","
+	DC32	CAT
+// 1rst Test
+	DC32	LIT, '.'        // 2EH period
+	DC32	SUBB
+// ORIGINALLY FELL THRU NUMBERTEST: TO THIS
+        DC32    ZBRAN
+        DC32      DPL_ZERO_INCR-.
+
+#ifdef  comma_test
+// 2nd Test
+// INCR PASSED DUP..
+//        DC32    ONEP, DUP, ONEM
+	DC32	DUP             // ??????Increment this addr if ","
+//
+	DC32	CAT
+	DC32	LIT, ','        // 2CH comma
+	DC32	SUBB
+// NOW DON'T SET DPL TO ZERO
+// IF NOT COMMA ERR OUT
+        DC32    ONEP
+        DC32    ZBRAN
+        DC32      BASE_RESET_THEN_ERROR-.
+
+// IF COMMA NOT A DOUBLE NUMBER!
+DPL_RESET:        
+        DC32    LIT, -1
+	DC32	BRAN
+	DC32      NUMB1-.
+#endif
+
+BASE_RESET_THEN_ERROR:
+// GOING TO ERROR SO RESTORE BASE!
+        DC32    BASE_FROM_R12   // Restore BASE
+//NO_BASE_RESTORE:
+        DC32    ONE     // provide non zero flag for error
+	DC32	LIT, msg_number_error
+	DC32	QERROR // ( f nullstr-addr -- ) IF f TRUE EXECUTE ERROR!
+
+DPL_ZERO_INCR:      // set DPL to zero
+	DC32	ZERO
+	DC32	BRAN
+	DC32      NUMB1-.
+
+NUMB2:
+	DC32	DROP
+	DC32	RFROM           // FLAG OF "-" TEST
+	    			// IF
+	DC32	ZBRAN
+	DC32    NUMB3-.
+
+	DC32	DNEGATE
+
+NUMB3:        		        // endif
+        DC32    BASE_FROM_R12   // Restore BASE
+        DC32    SEMIS
+

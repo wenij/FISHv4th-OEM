@@ -1,0 +1,141 @@
+###############################################################################
+#
+# IAR ELF Linker V8.22.1.15669/W32 for ARM                27/Apr/2018  18:39:44
+# Copyright 2007-2018 IAR Systems AB.
+#
+#    Output file  =  
+#        C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Exe\FISH_STM32F407_DISCO_Debug_ddmmyyyy_hhmmss.v1.7.2.out
+#    Map file     =  
+#        C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\FISH_STM32F407_DISCO_Debug_ddmmyyyy_hhmmss.v1.7.2.map
+#    Command line =  
+#        -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWF2C9.tmp ("C:\Users\Clyde W
+#        Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\FISH_STM32F4_IAR.o"
+#        "C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\main.o" -o
+#        "C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Exe\FISH_STM32F407_DISCO_Debug_ddmmyyyy_hhmmss.v1.7.2.out"
+#        --redirect _Printf=_PrintfTiny --redirect _Scanf=_ScanfSmallNoMb --map
+#        "C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\FISH_STM32F407_DISCO_Debug_ddmmyyyy_hhmmss.v1.7.2.map"
+#        --log initialization,modules,sections --log_file "C:\Users\Clyde W
+#        Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\FISH_STM32F407_DISCO_Debug_ddmmyyyy_hhmmss.v1.7.2.log"
+#        --config "C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\stm32f407xG.icf" --no_entry --no_vfe
+#        --text_out locale)
+#
+###############################################################################
+
+*******************************************************************************
+*** RUNTIME MODEL ATTRIBUTES
+***
+
+__SystemLibrary = DLib
+__dlib_version  = 6
+
+
+*******************************************************************************
+*** HEAP SELECTION
+***
+
+The basic heap was selected because some modules are built with
+size limitations (and not runtime checking), and --advanced_heap
+was not specified.
+
+
+*******************************************************************************
+*** PLACEMENT SUMMARY
+***
+
+"P1":  place in [from 0x08000000 to 0x080fffff] { ro };
+"P2":  place in [from 0x10000000 to 0x1000ffff] {
+          section .tcm_pref_stacks_and_vars };
+"P3":  place in [from 0x20000000 to 0x2000ffff] {
+          section .sram_1rst_dict_stdio_bufs };
+"P4":  place in [from 0x20010000 to 0x2001ffff] {
+          section .sram_2nd_intvecs_unint };
+do not initialize { rw, section .tcm_pref_stacks_and_vars };
+
+No sections matched the following patterns:
+
+  ro section .intvec  in "A0"
+
+
+  Section                 Kind        Address    Size  Object
+  -------                 ----        -------    ----  ------
+"P1":                                          0x420e
+  .text                   ro code  0x08000000  0x41e4  FISH_STM32F4_IAR.o [1]
+  .text                   ro code  0x080041e4     0x8  main.o [1]
+  .text                   ro code  0x080041ec    0x22  fpinit_M.o [3]
+                                 - 0x0800420e  0x420e
+
+"P2":                                           0x568
+  .tcm_pref_stacks_and_vars
+                          uninit   0x10000000   0x568  FISH_STM32F4_IAR.o [1]
+                                 - 0x10000568   0x568
+
+"P3":                                          0xff14
+  .sram_1rst_dict_stdio_bufs
+                          uninit   0x20000000  0xff14  FISH_STM32F4_IAR.o [1]
+                                 - 0x2000ff14  0xff14
+
+"P4":                                           0x208
+  .sram_2nd_intvecs_unint
+                          uninit   0x20010000   0x208  FISH_STM32F4_IAR.o [1]
+                                 - 0x20010208   0x208
+
+
+
+*******************************************************************************
+*** MODULE SUMMARY
+***
+
+    Module              ro code  rw data
+    ------              -------  -------
+C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj: [1]
+    FISH_STM32F4_IAR.o   16 868   67 204
+    main.o                    8
+    ------------------------------------
+    Total:               16 876   67 204
+
+command line: [2]
+    ------------------------------------
+    Total:
+
+m7M_tls.a: [3]
+    fpinit_M.o               34
+    ------------------------------------
+    Total:                   34
+
+----------------------------------------
+    Grand Total:         16 910   67 204
+
+
+*******************************************************************************
+*** ENTRY LIST
+***
+
+Entry                      Address  Size  Type      Object
+-----                      -------  ----  ----      ------
+C_CMSIS_DISABLE_IRQS    0x080041e5   0x4  Code  Gb  main.o [1]
+C_CMSIS_ENABLE_IRQS     0x080041e9   0x4  Code  Gb  main.o [1]
+FMx_SYSTICK_ISR         0x08000c0d        Code  Gb  FISH_STM32F4_IAR.o [1]
+STM32Fx_COLD_FISH       0x08000b9d        Code  Gb  FISH_STM32F4_IAR.o [1]
+__iar_init_vfp          0x080041ed        Code  Gb  fpinit_M.o [3]
+__iar_program_start     0x08000b9d        Code  Gb  FISH_STM32F4_IAR.o [1]
+__iar_systems$$module {Abs}
+                        0x00000001        Data  Gb  command line/config [2]
+
+
+[1] = C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj
+[2] = command line
+[3] = m7M_tls.a
+
+  16 910 bytes of readonly  code memory
+  67 204 bytes of readwrite data memory
+
+Errors: none
+Warnings: none

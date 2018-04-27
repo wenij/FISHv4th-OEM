@@ -1,0 +1,158 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.22.1.15669/W32 for ARM       27/Apr/2018  18:37:36
+# Copyright 1999-2018 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\main.c
+#    Command line =  
+#        -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWFC19.tmp ("C:\Users\Clyde W
+#        Phillips Jr\Desktop\FISHv4th-OEM\main.c" -lCN "C:\Users\Clyde W
+#        Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List" -o
+#        "C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj" --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M4 -e
+#        --fpu=VFPv4_sp --dlib_config "C:\Program Files (x86)\IAR
+#        Systems\Embedded Workbench 8.0\arm\INC\c\DLib_Config_Normal.h" -I
+#        "C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\..\FISH_Libs\FISH_RM_COMMON\" -I
+#        "C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\..\FISH_Libs\FISH_RM_COMMON_CODE_CORTEX_M\"
+#        -On)
+#    Locale       =  C
+#    List file    =  
+#        C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\main.lst
+#    Object file  =  
+#        C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\main.o
+#
+###############################################################################
+
+C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\main.c
+      1          // FISH STM32F4 DISCO
+      2          
+      3          // for stm32f4xx.h usage
+      4          #define STM32F40XX
+      5          //Without this:
+      6          // Fatal Error[Pe035]: #error directive: 
+      7          //      "Please select first the target STM32F4xx device
+      8          //      used in your application (in stm32f4xx.h file)" 
+      9          
+     10          // For CMSIS function usage
+     11          #include "stm32f4xx.h"
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void NVIC_SystemReset(void)
+   \                     NVIC_SystemReset: (+1)
+   \   00000000   0xF3BF 0x8F4F      DSB      
+   \   00000004   0x....             LDR.N    R0,??DataTable0  ;; 0xe000ed0c
+   \   00000006   0x6801             LDR      R1,[R0, #+0]
+   \   00000008   0xF411 0x61E0      ANDS     R1,R1,#0x700
+   \   0000000C   0x....             LDR.N    R0,??DataTable0_1  ;; 0x5fa0004
+   \   0000000E   0x4301             ORRS     R1,R0,R1
+   \   00000010   0x....             LDR.N    R0,??DataTable0  ;; 0xe000ed0c
+   \   00000012   0x6001             STR      R1,[R0, #+0]
+   \   00000014   0xF3BF 0x8F4F      DSB      
+   \                     ??NVIC_SystemReset_0: (+1)
+   \   00000018   0xE7FE             B.N      ??NVIC_SystemReset_0
+     12          #include "core_cm4.h"     // For CMSIS NVIC_SystemReset function
+     13          
+     14          
+     15          #pragma call_graph_root = "interrupt"
+
+   \                                 In section .text, align 2
+     16          __weak void HardFault_Handler( void ) {
+   \                     HardFault_Handler: (+1)
+   \   00000000   0xB580             PUSH     {R7,LR}
+     17          
+     18          // Don't use printf or other large lib constructs, use your own or tool debug io  
+     19            NVIC_SystemReset();
+   \   00000002   0x.... 0x....      BL       NVIC_SystemReset
+     20          }
+   \   00000006   0xBD01             POP      {R0,PC}          ;; return
+     21          //__weak void HardFault_Handler( void ) { FM3_COLD(); }
+     22          
+
+   \                                 In section .text, align 2, keep-with-next
+     23          void C_CMSIS_DISABLE_IRQS() {
+     24            __disable_irq();
+   \                     C_CMSIS_DISABLE_IRQS: (+1)
+   \   00000000   0xB672             CPSID    I
+     25          }
+   \   00000002   0x4770             BX       LR               ;; return
+     26          
+
+   \                                 In section .text, align 2, keep-with-next
+     27          void C_CMSIS_ENABLE_IRQS() {
+     28            __enable_irq();
+   \                     C_CMSIS_ENABLE_IRQS: (+1)
+   \   00000000   0xB662             CPSIE    I
+     29          }
+   \   00000002   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable0:
+   \   00000000   0xE000ED0C         DC32     0xe000ed0c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable0_1:
+   \   00000000   0x05FA0004         DC32     0x5fa0004
+     30          
+     31          /*
+     32          void C_CMSIS_REV(unsigned long word)
+     33          {
+     34          // prototype is:
+     35          // unsigned long __REV(unsigned long);
+     36          // This works if word is passed in r0
+     37            __REV(word);
+     38          // Results is returned in r0
+     39          }
+     40          */
+     41          
+     42          
+     43          #ifdef USE_CMAIN // defined in FISH_STM32F4_CONFIG_DEFINES.h
+     44          // May use this to prototype Smart-IO board attached to the fishy disco~!
+     45          int main(void) {
+     46          
+     47           extern void FM3_COLD();
+     48          	volatile static int i = 0 ;
+     49          	while(1) {
+     50          		FM3_COLD();		// FISH_return2c returns here
+     51          		i++ ;
+     52          	}
+     53          	return 0 ;
+     54          }
+     55          #endif
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   C_CMSIS_DISABLE_IRQS
+       0   C_CMSIS_ENABLE_IRQS
+       8   HardFault_Handler
+         8   -> NVIC_SystemReset
+       0   NVIC_SystemReset
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+       4  ??DataTable0_1
+       4  C_CMSIS_DISABLE_IRQS
+       4  C_CMSIS_ENABLE_IRQS
+       8  HardFault_Handler
+      26  NVIC_SystemReset
+
+ 
+ 50 bytes in section .text
+ 
+ 42 bytes of CODE memory (+ 8 bytes shared)
+
+Errors: none
+Warnings: none
