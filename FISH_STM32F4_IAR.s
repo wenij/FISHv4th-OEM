@@ -53,12 +53,10 @@ $FISH_STM32F4_MAIN_INCLUDES.h
 msg_FISH:
 // DC8 "?" IS A NULL TERMINATED STRING
 // DC8 '?' IS NOT
-//#if FISH_PubRel_WORDSET | FISH_DebugSrc_WORDSET
 	DC8     'FISH ARM '
-//#endif
-#if FISH_PubRel_WORDSET & FISH_Debug_WORDSET
+#if FISH_Debug_WORDSET
         DC8     ' 1010,1100 - EHON/EHOFF '
-//        DC8     '-1 True Flag '
+        DC8     '-1 True Flag '
 #endif
 #if VTOR_PATCH & STM32F205RC
 //        DC8     'VTOR_PATCH FOR MS '
@@ -5459,30 +5457,21 @@ FISH_ONLY:
  SECTION .text : CODE (2)
 //	LDR	n, = TASK_NFA           // preserve TOS
 
-
+/* Define TOP of Dictionary:  
+The top of the dictionary is defined in these places
+In SLIBS SV_INIT_VALUES:
+//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
+        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+IN FLASH RAMWORDS:
+//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
+        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+In IAR FISH_ONLY:
+//        LDR     n, = WC_FISH_PubRel_NFA
         LDR     n, = WC_FISH_GPIO_NFA
 
-
-
-// #if FISH_PubRel_WORDSET works, as in v1.7.2, still deciding how to extend in
-// v1.8.
-/*
-#if FISH_PubRel_WORDSET
-        LDR     n, = WC_FISH_PubRel_NFA
-#endif
-
-#if FISH_PubRel_WORDSET &&! FISH_STM32F4_GPIO_WC
-        LDR     n, = WC_FISH_PubRel_NFA
-#endif
-
-#ifdef FISH_STM32F4_GPIO_WC
-        LDR     n, = WC_FISH_GPIO_NFA
-#endif
-
-#ifdef FISH_STM32M407vg_PRO_WORDCAT
-        LDR     n, = WC_FISH_PRO_NFA
-#endif
 */
+        LDR     n, = WC_FISH_GPIO_NFA
+
 	LDR	y, = CURRENT 	        // CURRENT SETTING
 	STR	n, [y]
         LDR     y, = FPC                // FLASH CURRENT

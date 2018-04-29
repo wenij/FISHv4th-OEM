@@ -400,24 +400,21 @@ FF_FINISH:
 RAMWORDS:
 //        DC32    LIT, TASK_NFA         // Fish WITH TASKER IN RAM starts here
 
-
-        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
-
-
-
-/*
-#if FISH_PubRel_WORDSET
-        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
-#endif
-
-#if FISH_PubRel_WORDSET && FISH_STM32F4_GPIO_WC
+/* Define TOP of Dictionary:  
+The top of the dictionary is defined in these places
+In SLIBS SV_INIT_VALUES:
 //        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
         DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
-#endif
-#ifdef FISH_NXP_M0_PRO_WORDCAT
-        DC32    LIT, WC_FISH_PRO_NFA    // OR HERE
-#endif
+IN FLASH RAMWORDS:
+//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
+        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+In IAR FISH_ONLY:
+//        LDR     n, = WC_FISH_PubRel_NFA
+        LDR     n, = WC_FISH_GPIO_NFA
+
 */
+        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+
         DC32    DBASE, PFA, LFA         // RELINK THIS lfa, i.e.
         DC32    STORE                   // repatch to Fish in flash
 

@@ -36,7 +36,6 @@ $PROJ_DIR$\..\FISH_RM_COMMON_CODE_CORTEX_M
 /*
 STM32F205RC-STM118mhg Configuration Assembly Preprocessor Section:
 Assembly Preprocessor Defined Symbols:
-FISH_PubRel_WORDSET     // REMOVE THIS AND DIE~!!! FIX THIS~!!!!!
 FISH_Debug_WORDSET      // Affects prompt only
 VTOR_PATCH              // 205 specific
 STM32F205RC
@@ -46,14 +45,12 @@ STM32F205RC_XRC10_118MHZ
 /*
 STM32F4_PubRel Configuration Assembly Preprocessor Section:
 Assembly Preprocessor Defined Symbols:
-FISH_PubRel_WORDSET
 FISH_STM32F4_GPIO_WC
 STM32F4_XRC08_168MHZ
 */
 /*
 STM32F4_DEBUG Configuration Assembly Preprocessor Section:
 Assembly Preprocessor Defined Symbols:
-FISH_PubRel_WORDSET
 FISH_Debug_WORDSET
 STM32F4_XRC08_168MHZ
 */

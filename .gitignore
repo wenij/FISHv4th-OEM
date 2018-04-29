@@ -9,3 +9,7 @@
 *.out
 *.sim
 *.hex
+*.dnx
+*.wsdt
+*.map
+*.o
