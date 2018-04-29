@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ELF Linker V8.22.1.15669/W32 for ARM                27/Apr/2018  18:39:44
+# IAR ELF Linker V8.22.1.15669/W32 for ARM                28/Apr/2018  20:14:02
 # Copyright 2007-2018 IAR Systems AB.
 #
 #    Output file  =  
@@ -10,12 +10,14 @@
 #        C:\Users\Clyde W Phillips
 #        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\FISH_STM32F407_DISCO_Debug_ddmmyyyy_hhmmss.v1.7.2.map
 #    Command line =  
-#        -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWF2C9.tmp ("C:\Users\Clyde W
+#        -f C:\Users\CLYDEW~1\AppData\Local\Temp\EW1105.tmp ("C:\Users\Clyde W
 #        Phillips
 #        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\FISH_STM32F4_IAR.o"
 #        "C:\Users\Clyde W Phillips
-#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\main.o" -o
+#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\main.o"
 #        "C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\startup_stm32f4xx.o"
+#        -o "C:\Users\Clyde W Phillips
 #        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Exe\FISH_STM32F407_DISCO_Debug_ddmmyyyy_hhmmss.v1.7.2.out"
 #        --redirect _Printf=_PrintfTiny --redirect _Scanf=_ScanfSmallNoMb --map
 #        "C:\Users\Clyde W Phillips
@@ -50,6 +52,7 @@ was not specified.
 *** PLACEMENT SUMMARY
 ***
 
+"A0":  place at 0x08000000 { ro section .intvec };
 "P1":  place in [from 0x08000000 to 0x080fffff] { ro };
 "P2":  place in [from 0x10000000 to 0x1000ffff] {
           section .tcm_pref_stacks_and_vars };
@@ -57,20 +60,114 @@ was not specified.
           section .sram_1rst_dict_stdio_bufs };
 "P4":  place in [from 0x20010000 to 0x2001ffff] {
           section .sram_2nd_intvecs_unint };
+define block CSTACK with size = 8K, alignment = 8 { };
+define block HEAP with size = 8K, alignment = 8 { };
+"A1":  place at end of [from 0x20010000 to 0x2001ffff] {
+          block CSTACK, block HEAP };
 do not initialize { rw, section .tcm_pref_stacks_and_vars };
-
-No sections matched the following patterns:
-
-  ro section .intvec  in "A0"
-
 
   Section                 Kind        Address    Size  Object
   -------                 ----        -------    ----  ------
-"P1":                                          0x420e
-  .text                   ro code  0x08000000  0x41e4  FISH_STM32F4_IAR.o [1]
-  .text                   ro code  0x080041e4     0x8  main.o [1]
-  .text                   ro code  0x080041ec    0x22  fpinit_M.o [3]
-                                 - 0x0800420e  0x420e
+"A0":                                           0x188
+  .intvec                 ro code  0x08000000   0x188  startup_stm32f4xx.o [1]
+                                 - 0x08000188   0x188
+
+"P1":                                          0x43ac
+  .text                   ro code  0x08000188  0x41e8  FISH_STM32F4_IAR.o [1]
+  .text                   ro code  0x08004370    0x34  main.o [1]
+  .text                   ro code  0x080043a4    0x22  fpinit_M.o [3]
+  .text                   ro code  0x080043c8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043cc     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043d0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043d4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043d8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043dc     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043e0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043e4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043e8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043ec     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043f0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043f4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043f8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080043fc     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004400     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004404     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004408     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800440c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004410     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004414     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004418     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800441c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004420     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004424     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004428     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800442c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004430     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004434     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004438     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800443c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004440     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004444     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004448     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800444c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004450     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004454     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004458     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800445c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004460     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004464     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004468     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800446c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004470     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004474     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004478     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800447c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004480     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004484     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004488     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800448c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004490     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004494     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004498     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800449c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044a0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044a4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044a8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044ac     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044b0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044b4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044b8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044bc     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044c0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044c4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044c8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044cc     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044d0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044d4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044d8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044dc     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044e0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044e4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044e8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044ec     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044f0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044f4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044f8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080044fc     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004500     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004504     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004508     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800450c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004510     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004514     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004518     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800451c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004520     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004524     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004528     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x0800452c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004530     0x4  startup_stm32f4xx.o [1]
+                                 - 0x08004534  0x43ac
 
 "P2":                                           0x568
   .tcm_pref_stacks_and_vars
@@ -87,31 +184,39 @@ No sections matched the following patterns:
                           uninit   0x20010000   0x208  FISH_STM32F4_IAR.o [1]
                                  - 0x20010208   0x208
 
+"A1":                                          0x2000
+  CSTACK                           0x2001e000  0x2000  <Block>
+    CSTACK                uninit   0x2001e000  0x2000  <Block tail>
+                                 - 0x20020000  0x2000
+
 
 
 *******************************************************************************
 *** MODULE SUMMARY
 ***
 
-    Module              ro code  rw data
-    ------              -------  -------
+    Module               ro code  rw data
+    ------               -------  -------
 C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj: [1]
-    FISH_STM32F4_IAR.o   16 868   67 204
-    main.o                    8
-    ------------------------------------
-    Total:               16 876   67 204
+    FISH_STM32F4_IAR.o    16 872   67 204
+    main.o                    52
+    startup_stm32f4xx.o      756
+    -------------------------------------
+    Total:                17 680   67 204
 
 command line: [2]
-    ------------------------------------
+    -------------------------------------
     Total:
 
 m7M_tls.a: [3]
-    fpinit_M.o               34
-    ------------------------------------
-    Total:                   34
+    fpinit_M.o                34
+    -------------------------------------
+    Total:                    34
 
-----------------------------------------
-    Grand Total:         16 910   67 204
+    Gaps                       2
+    Linker created                  8 192
+-----------------------------------------
+    Grand Total:          17 716   75 396
 
 
 *******************************************************************************
@@ -120,22 +225,27 @@ m7M_tls.a: [3]
 
 Entry                      Address  Size  Type      Object
 -----                      -------  ----  ----      ------
-C_CMSIS_DISABLE_IRQS    0x080041e5   0x4  Code  Gb  main.o [1]
-C_CMSIS_ENABLE_IRQS     0x080041e9   0x4  Code  Gb  main.o [1]
-FMx_SYSTICK_ISR         0x08000c0d        Code  Gb  FISH_STM32F4_IAR.o [1]
-STM32Fx_COLD_FISH       0x08000b9d        Code  Gb  FISH_STM32F4_IAR.o [1]
-__iar_init_vfp          0x080041ed        Code  Gb  fpinit_M.o [3]
-__iar_program_start     0x08000b9d        Code  Gb  FISH_STM32F4_IAR.o [1]
+CSTACK$$Base            0x2001e000         --   Gb  - Linker created -
+CSTACK$$Limit           0x20020000         --   Gb  - Linker created -
+C_CMSIS_DISABLE_IRQS    0x08004395   0x4  Code  Gb  main.o [1]
+C_CMSIS_ENABLE_IRQS     0x08004399   0x4  Code  Gb  main.o [1]
+FMx_SYSTICK_ISR         0x08000d95        Code  Gb  FISH_STM32F4_IAR.o [1]
+HardFault_Handler       0x0800439d   0x8  Code  Wk  main.o [1]
+NVIC_SystemReset        0x08004371  0x1a  Code  Lc  main.o [1]
+STM32Fx_COLD_FISH       0x08000d25        Code  Gb  FISH_STM32F4_IAR.o [1]
+__iar_init_vfp          0x080043a5        Code  Gb  fpinit_M.o [3]
+__iar_program_start     0x08000d25        Code  Gb  FISH_STM32F4_IAR.o [1]
 __iar_systems$$module {Abs}
                         0x00000001        Data  Gb  command line/config [2]
+__vector_table          0x08000000        Data  Gb  startup_stm32f4xx.o [1]
 
 
 [1] = C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj
 [2] = command line
 [3] = m7M_tls.a
 
-  16 910 bytes of readonly  code memory
-  67 204 bytes of readwrite data memory
+  17 716 bytes of readonly  code memory
+  75 396 bytes of readwrite data memory
 
 Errors: none
 Warnings: none

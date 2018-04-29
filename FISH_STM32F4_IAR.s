@@ -75,7 +75,7 @@ msg_FISH:
 #ifdef FISH_PRO_WORDCAT
 	DC8     'Pro '
 #endif
-        DC8     'RM V1.8 OEM (C)2014-2018 A-TEAM FORTH : '
+        DC8     'RM V4th OEM (C)2014-2018 A-TEAM FORTH : '
         DC8     __DATE__        // Null string
 msg_FISH_TIMESTAMP:
         DC8     ' at '
@@ -5284,8 +5284,8 @@ MS:
 #ifdef STM32F4_IRC16_48MHZ
         DC32    LIT, 47999d     // BB7F 1ms @ 48mhz RELOAD COUNTER VALUE
 #endif
-#ifdef STM32F205RC_XRC10_118MHZ
-        DC32    LIT, 117999d    // 1CCEFh 1ms @ 168mhz RELOAD COUNTER VALUE
+#ifdef STM32F205RC_XRC10_118MHZ // VERIFY THIS!
+        DC32    LIT, 117999d    // 1CCEFh 1ms @ 118mhz RELOAD COUNTER VALUE
 #endif
 #ifdef STM32F4_XRC08_168MHZ
         DC32    LIT, 167999d    // 2903Fh 1ms @ 168mhz RELOAD COUNTER VALUE
@@ -5531,10 +5531,10 @@ $FISH_STM_M3_PRO_WORDSET.s
 #endif
 //=============================== PSTAT GPIO WORDCAT =========================//
 // Conditionally include FISH_STM32F4_GPIO_WC here
-#ifdef FISH_STM32F4_GPIO_WC
+//#ifdef FISH_STM32F4_GPIO_WC
 $FISH_GPIO_WC.h
 // If included link below will point to the GPIO WORDCAT
-#endif
+//#endif
 // FIRST WORDCAT
 
 //------------------------------------------------------------------------------
