@@ -744,6 +744,12 @@ SV_INIT_VALUES:
         DC32    0                       // CSDP
         DC32    0                       // FENCE
 
+
+        DC32    WC_FISH_GPIO_NFA      // CURRENT
+
+
+
+/*
 #if FISH_PubRel_WORDSET
         DC32    WC_FISH_PubRel_NFA      // CURRENT
 #endif
@@ -753,6 +759,7 @@ SV_INIT_VALUES:
 #ifdef FISH_NXP_M0_PRO_WORDCAT
         DC32    WC_FISH_PRO_NFA         // CURRENT
 #endif
+*/
         DC32    msg_MY_OK               // 13d PROMPT
         DC32    0                       // 14d ERROR_HALT
 // 14d WORDS TO COPY

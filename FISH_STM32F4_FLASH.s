@@ -399,17 +399,25 @@ FF_FINISH:
 // Preserve words in ram exit point. EXPLAIN THIS MORE~!
 RAMWORDS:
 //        DC32    LIT, TASK_NFA         // Fish WITH TASKER IN RAM starts here
+
+
+        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+
+
+
+/*
 #if FISH_PubRel_WORDSET
         DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
 #endif
 
 #if FISH_PubRel_WORDSET && FISH_STM32F4_GPIO_WC
 //        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
-        DC32    LIT, WC_FISH_GPIO // FISH in flash starts here
+        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
 #endif
 #ifdef FISH_NXP_M0_PRO_WORDCAT
         DC32    LIT, WC_FISH_PRO_NFA    // OR HERE
 #endif
+*/
         DC32    DBASE, PFA, LFA         // RELINK THIS lfa, i.e.
         DC32    STORE                   // repatch to Fish in flash
 

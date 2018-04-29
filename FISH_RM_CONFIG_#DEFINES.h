@@ -25,9 +25,9 @@
 
 // VTOR_PATCH defined in 205 ASM PREPROC CONFIG - UNTIL 205 VTOR issue RESOLVED.
 
-// COPY OF ALL CONFIGURATION Assembly Preprocessor sections.
+// COPY OF ALL CONFIGURATION Assembly Preprocessor sections:
 
-/* ALL CONFIGURATIONS:
+/* ALL CONFIGURATIONS: OBSOLETE~!!! Our GIT's are all in one for now~!
 Assembly Preprocessor Additional Include Directories:
 $PROJ_DIR$\..\FISH_RM_COMMON
 $PROJ_DIR$\..\FISH_RM_COMMON_CODE_CORTEX_M
@@ -36,9 +36,9 @@ $PROJ_DIR$\..\FISH_RM_COMMON_CODE_CORTEX_M
 /*
 STM32F205RC-STM118mhg Configuration Assembly Preprocessor Section:
 Assembly Preprocessor Defined Symbols:
-FISH_PubRel_WORDSET
-FISH_Debug_WORDSET
-VTOR_PATCH
+FISH_PubRel_WORDSET     // REMOVE THIS AND DIE~!!! FIX THIS~!!!!!
+FISH_Debug_WORDSET      // Affects prompt only
+VTOR_PATCH              // 205 specific
 STM32F205RC
 STM32F205RC_SRAM128
 STM32F205RC_XRC10_118MHZ
