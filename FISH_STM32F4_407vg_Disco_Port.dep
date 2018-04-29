@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>2</fileVersion>
-    <fileChecksum>2609841303</fileChecksum>
+    <fileChecksum>3233543232</fileChecksum>
     <configuration>
         <name>STM32F407vg_Disco</name>
         <outputs>

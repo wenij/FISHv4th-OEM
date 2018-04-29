@@ -744,22 +744,21 @@ SV_INIT_VALUES:
         DC32    0                       // CSDP
         DC32    0                       // FENCE
 
+/* Define TOP of Dictionary:  
+The top of the dictionary is defined in these places
+In SLIBS SV_INIT_VALUES:
+//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
+        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+IN FLASH RAMWORDS:
+//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
+        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+In IAR FISH_ONLY:
+//        LDR     n, = WC_FISH_PubRel_NFA
+        LDR     n, = WC_FISH_GPIO_NFA
 
+*/
         DC32    WC_FISH_GPIO_NFA      // CURRENT
 
-
-
-/*
-#if FISH_PubRel_WORDSET
-        DC32    WC_FISH_PubRel_NFA      // CURRENT
-#endif
-#if FISH_PubRel_WORDSET &! FISH_STM32F4_GPIO_WC
-        DC32    WC_FISH_PubRel_NFA      // CURRENT
-#endif
-#ifdef FISH_NXP_M0_PRO_WORDCAT
-        DC32    WC_FISH_PRO_NFA         // CURRENT
-#endif
-*/
         DC32    msg_MY_OK               // 13d PROMPT
         DC32    0                       // 14d ERROR_HALT
 // 14d WORDS TO COPY

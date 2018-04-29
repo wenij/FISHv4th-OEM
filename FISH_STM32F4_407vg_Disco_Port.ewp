@@ -516,7 +516,6 @@
                 <option>
                     <name>ADefines</name>
                     <state>FISH_Debug_WORDSET</state>
-                    <state>FISH_PubRel_WORDSET</state>
                     <state>FISH_STM32F4_GPIO_WC</state>
                     <state>STM32F4_XRC08_168MHZ</state>
                 </option>
