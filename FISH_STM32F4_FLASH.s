@@ -396,7 +396,7 @@ FF_FINISH:
         DC32    BRAN
         DC32      FFDONE-.
 
-// Preserve words in ram exit point.
+// Preserve words in ram exit point. EXPLAIN THIS MORE~!
 RAMWORDS:
 //        DC32    LIT, TASK_NFA         // Fish WITH TASKER IN RAM starts here
 #if FISH_PubRel_WORDSET
