@@ -5458,8 +5458,15 @@ FISH_ONLY:
 	DC32	.+5
  SECTION .text : CODE (2)
 //	LDR	n, = TASK_NFA           // preserve TOS
+
+
+        LDR     n, = WC_FISH_GPIO_NFA
+
+
+
 // #if FISH_PubRel_WORDSET works, as in v1.7.2, still deciding how to extend in
 // v1.8.
+/*
 #if FISH_PubRel_WORDSET
         LDR     n, = WC_FISH_PubRel_NFA
 #endif
@@ -5469,12 +5476,13 @@ FISH_ONLY:
 #endif
 
 #ifdef FISH_STM32F4_GPIO_WC
-        DC32    LIT, WC_FISH_GPIO // FISH in flash starts here
+        LDR     n, = WC_FISH_GPIO_NFA
 #endif
 
 #ifdef FISH_STM32M407vg_PRO_WORDCAT
         LDR     n, = WC_FISH_PRO_NFA
 #endif
+*/
 	LDR	y, = CURRENT 	        // CURRENT SETTING
 	STR	n, [y]
         LDR     y, = FPC                // FLASH CURRENT

@@ -1,0 +1,11 @@
+
+*.dep
+*.ewp
+*.dbgdt
+*.dnx
+*.ps1
+*.xcl
+*.wsdt
+*.out
+*.sim
+*.hex

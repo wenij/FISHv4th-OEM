@@ -1,17 +1,17 @@
 ###############################################################################
 #                                                                             #
-#     IAR Assembler V8.22.1.15669/W32 for ARM 28/Apr/2018  20:14:02           #
+#     IAR Assembler V8.22.1.15669/W32 for ARM 29/Apr/2018  11:41:09           #
 #     Copyright 1999-2018 IAR Systems AB.                                     #
 #                                                                             #
 #           Source file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\startup_stm32f4xx.s#
 #           List file     =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\startup_stm32f4xx.lst#
 #           Object file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\startup_stm32f4xx.o#
 #           Command line  =  -f                                               #
-#                            C:\Users\CLYDEW~1\AppData\Local\Temp\EW10B6.tmp  #
+#                            C:\Users\CLYDEW~1\AppData\Local\Temp\EWDEA0.tmp  #
 #                            (C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\startup_stm32f4xx.s #
 #                            -OC:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj #
-#                            -s+ -M<> -w+ -r -DFISH_PubRel_WORDSET            #
-#                            -DFISH_Debug_WORDSET -DFISH_STM32F4_GPIO_WC      #
+#                            -s+ -M<> -w+ -r -DFISH_Debug_WORDSET             #
+#                            -DFISH_PubRel_WORDSET -DFISH_STM32F4_GPIO_WC     #
 #                            -DSTM32F4_XRC08_168MHZ                           #
 #                            -LC:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List #
 #                            -cM -i -B -t8 -xD --cpu Cortex-M4 --fpu          #

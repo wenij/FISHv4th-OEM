@@ -7,6 +7,23 @@ FISHv4th_OEM goals:
       We'll see. I'd take a buyout, too~! lol.
         Anywho...
 
+
+/* Define TOP of Dictionary:  
+The top of the dictionary is defined in these places
+In SLIBS SV_INIT_VALUES:
+//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
+        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+IN FLASH RAMWORDS:
+//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
+        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+In IAR FISH_ONLY:
+//        LDR     n, = WC_FISH_PubRel_NFA
+        LDR     n, = WC_FISH_GPIO_NFA
+
+*/
+//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
+        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+
 To clean this up I will endeavoir to eleminate the
 asm preprocessor #defines except for chip (407/205) ones.
 The asm preprocessor #defines mechanism
