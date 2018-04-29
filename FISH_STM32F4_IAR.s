@@ -53,16 +53,18 @@ $FISH_STM32F4_MAIN_INCLUDES.h
 msg_FISH:
 // DC8 "?" IS A NULL TERMINATED STRING
 // DC8 '?' IS NOT
-	DC8     'FISH ARM '
-#if FISH_Debug_WORDSET
+	DC8     'FISH '
+        DC8     'RM V4th OEM ~ '
+	DC8     'ARM '
+#ifdef FISH_Debug_WORDSET
+	DC8     'DebugSrc '
+#endif
+#ifdef FISH_Debug_WORDSET
         DC8     ' 1010,1100 - EHON/EHOFF '
         DC8     '-1 True Flag '
 #endif
 #if VTOR_PATCH & STM32F205RC
 //        DC8     'VTOR_PATCH FOR MS '
-#endif
-#ifdef FISH_Debug_WORDSET
-	DC8     'DebugSrc '
 #endif
 #ifdef  STM32F4_XRC08_168MHZ
         DC8     'STM32F407VG DISCO @168Mhz '
@@ -73,7 +75,7 @@ msg_FISH:
 #ifdef FISH_PRO_WORDCAT
 	DC8     'Pro '
 #endif
-        DC8     'RM V4th OEM (C)2014-2018 A-TEAM FORTH : '
+        DC8     '(C)2014-2018 A-TEAM FORTH : '
         DC8     __DATE__        // Null string
 msg_FISH_TIMESTAMP:
         DC8     ' at '

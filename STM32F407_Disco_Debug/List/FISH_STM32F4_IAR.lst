@@ -1,16 +1,15 @@
 ###################################################################################################
 #                                                                                                 #
-#     IAR Assembler V8.22.1.15669/W32 for ARM 29/Apr/2018  12:14:47                               #
+#     IAR Assembler V8.22.1.15669/W32 for ARM 29/Apr/2018  12:25:11                               #
 #     Copyright 1999-2018 IAR Systems AB.                                                         #
 #                                                                                                 #
 #           Source file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_IAR.s #
 #           List file     =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\FISH_STM32F4_IAR.lst#
 #           Object file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\FISH_STM32F4_IAR.o#
-#           Command line  =  -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWAC2D.tmp                   #
+#           Command line  =  -f C:\Users\CLYDEW~1\AppData\Local\Temp\EW3191.tmp                   #
 #                            (C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_IAR.s #
 #                            -OC:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj #
-#                            -s+ -M<> -w+ -r -DFISH_Debug_WORDSET -DFISH_STM32F4_GPIO_WC          #
-#                            -DSTM32F4_XRC08_168MHZ                                               #
+#                            -s+ -M<> -w+ -r -DSTM32F4_XRC08_168MHZ                               #
 #                            -LC:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List #
 #                            -cM -i -B -t8 -xD --cpu Cortex-M4 --fpu VFPv4_sp                     #
 #                            -IC:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\..\FISH_Libs\FISH_RM_COMMON\ #
@@ -16903,21 +16902,13 @@
    56    00000000 4649534820415         DC8     'FISH ARM '
                   24D20        
    57                           #if FISH_Debug_WORDSET
-   58    00000009 20313031302C3         DC8     ' 1010,1100 - EHON/EHOFF '
-                  1313030202D20
-                  45484F4E2F454
-                  84F464620    
-   59    00000021 2D31205472756         DC8     '-1 True Flag '
-                  520466C616720
    60                           #endif
    61                           #if VTOR_PATCH & STM32F205RC
    63                           #endif
    64                           #ifdef FISH_Debug_WORDSET
-   65    0000002E 4465627567537         DC8     'DebugSrc '
-                  26320        
    66                           #endif
    67                           #ifdef  STM32F4_XRC08_168MHZ
-   68    00000037 53544D3332463         DC8     'STM32F407VG DISCO @168Mhz '
+   68    00000009 53544D3332463         DC8     'STM32F407VG DISCO @168Mhz '
                   4303756472044
                   4953434F20403
                   136384D687A20
@@ -16926,25 +16917,25 @@
    72                           #endif
    73                           #ifdef FISH_PRO_WORDCAT
    75                           #endif
-   76    00000051 524D205634746         DC8     'RM V4th OEM (C)2014-2018 A-TEAM FORTH : '
+   76    00000023 524D205634746         DC8     'RM V4th OEM (C)2014-2018 A-TEAM FORTH : '
                   8204F454D2028
                   4329323031342
                   D323031382041
                   2D5445414D204
                   64F525448203A
                   20           
-   77    00000079 4170722032392         DC8     __DATE__        // Null string
+   77    0000004B 4170722032392         DC8     __DATE__        // Null string
                   03230313800  
    78                           msg_FISH_TIMESTAMP:
-   79    00000085 20617420              DC8     ' at '
-   80    00000089 31323A31343A3         DC8     __TIME__        // Null string
-                  43700        
+   79    00000057 20617420              DC8     ' at '
+   80    0000005B 31323A32353A3         DC8     __TIME__        // Null string
+                  13100        
    81                           #ifdef EOL_NAK
    82                           msg_SIGNON_DLE:
-   83    00000092 1500                  DC8     0x15, 0
+   83    00000064 1500                  DC8     0x15, 0
    84                           #endif
    85                           msg_MY_OK:
-   86    00000094 206F6B2C20676         DC8     " ok, go fish in BASE "
+   86    00000066 206F6B2C20676         DC8     " ok, go fish in BASE "
                   F206669736820
                   696E204241534
                   52000        
@@ -25902,8 +25893,6 @@
 ABORT_STOP_TILL_CO   #define, value: , line:       7:7  
 EOL_DLE              #define, value: , line:       8:7  
 EOL_NAK              #define, value: , line:       9:7  
-FISH_Debug_WORDSET   #define, value: 1, line:         0         57
-FISH_STM32F4_GPIO_WC #define, value: 1, line:         0  
 STM32F4_XRC08_168MHZ #define, value: 1, line:         0      59:17
 TRUE_EQU_NEG_ONE     #define, value: , line:       5:7  
 XON_XOFF             #define, value: , line:       6:7  
@@ -28031,10 +28020,10 @@ copyintvecs         REL    CONST UNTYP.           .text      0
 initART             REL    CONST UNTYP.           .text      184 
 msg_CO              REL    CONST UNTYP.           .text      0 
 msg_FISH            REL    CONST UNTYP.           .text      0 
-msg_FISH_TIMESTAMP  REL    CONST UNTYP.           .text      85 
-msg_MY_OK           REL    CONST UNTYP.           .text      94 
+msg_FISH_TIMESTAMP  REL    CONST UNTYP.           .text      57 
+msg_MY_OK           REL    CONST UNTYP.           .text      66 
 msg_RUN             REL    CONST UNTYP.           .text      0 
-msg_SIGNON_DLE      REL    CONST UNTYP.           .text      92 
+msg_SIGNON_DLE      REL    CONST UNTYP.           .text      64 
 msg_cr              REL    CONST UNTYP.           .text      A 
 msg_dictfull        REL    CONST UNTYP.           .text      8A 
 msg_dictspace       REL    CONST UNTYP.           .text      1C 
@@ -28073,7 +28062,7 @@ zero_OUT            REL    CONST UNTYP.           .text      88
 #           CRC:0            #
 #        Errors:   0         #
 #        Warnings: 0         #
-#        Bytes: 83994        #
+#        Bytes: 83948        #
 ##############################
 
 

@@ -7,7 +7,9 @@ FISHv4th_OEM goals:
       We'll see. I'd take a buyout, too~! lol.
         Anywho...
 
+          Add to test file .TIB and .PAD
 
+// Make changes in all configurations~!
 /* Define TOP of Dictionary:  
 The top of the dictionary is defined in these places
 In SLIBS SV_INIT_VALUES:
@@ -21,11 +23,12 @@ In IAR FISH_ONLY:
         LDR     n, = WC_FISH_GPIO_NFA
 
 */
-//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
-        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
 
 To clean this up I will endeavoir to eleminate the
 asm preprocessor #defines except for chip (407/205) ones.
+ADD THIS to the 205 config for PSTAT:
+STM32F4_FLASH_1_MB
+
 The asm preprocessor #defines mechanism
 is the only way to control the IAR configurations.
 IAR ships with debug and Release Configuration defaulted.
