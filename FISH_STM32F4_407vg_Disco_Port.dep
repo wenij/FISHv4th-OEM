@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>2</fileVersion>
-    <fileChecksum>1962788042</fileChecksum>
+    <fileChecksum>626944766</fileChecksum>
     <configuration>
         <name>FISHv4th 205 PSTAT</name>
         <outputs>
@@ -126,170 +126,14 @@
                 </tool>
             </inputs>
         </file>
-    </configuration>
-    <configuration>
-        <name>STM32F407vg_Disco</name>
-        <outputs>
-            <file>$PROJ_DIR$\main.c</file>
-            <file>$PROJ_DIR$\startup_stm32f4xx.s</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\Exe\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.7.hex</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_UART3_INIT.s</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_STARTUP.s</file>
-            <file>$PROJ_DIR$\FISH_GPIO_WC.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_IAR.s</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_SLIB.s</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\List\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.7.log</file>
-            <file>$PROJ_DIR$\stm32f4xx.h</file>
-            <file>$PROJ_DIR$\ioSTM32F4x7x.h</file>
-            <file>$PROJ_DIR$\core_cm4.h</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\Obj\main.pbi</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\Exe\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.6.out</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_MAIN_INCLUDES.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_SOC_INIT.s</file>
-            <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\List\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.7.map</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\Exe\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.7.out</file>
-            <file>$PROJ_DIR$\core_cm4_simd.h</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\Obj\main.o</file>
-            <file>$PROJ_DIR$\stm32F205RC.icf</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_MACROS.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\Exe\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.6.hex</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_MEMMAP.s</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\Obj\startup_stm32f4xx.o</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\Exe\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.5.1.out</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_FLASH.s</file>
-            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
-            <file>$PROJ_DIR$\core_cmInstr.h</file>
-            <file>$PROJ_DIR$\FISH_IAR.h</file>
-            <file>$PROJ_DIR$\FISH4v4th-OEM Goals~!.c</file>
-            <file>$PROJ_DIR$\FISH_CO_MSGS.h</file>
-            <file>$PROJ_DIR$\FISH_AUTHOR.h</file>
-            <file>$PROJ_DIR$\FISH_RM_CONFIG_#DEFINES.h</file>
-            <file>$PROJ_DIR$\FISH_RM_MSGS.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_EQUATES.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\iccarm_builtin.h</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\Obj\FISH_STM32F4_IAR.o</file>
-            <file>$PROJ_DIR$\core_cmFunc.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
-            <file>$PROJ_DIR$\system_stm32f4xx.h</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\Exe\FISH_STM32F2205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.5.1.hex</file>
-            <file>$PROJ_DIR$\FISH_ARM_CORTEX_M_REGS.h</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\Obj\FISH_STM32F4_407vg_Disco_Port.pbd</file>
-            <file>$PROJ_DIR$\STM32F205RC-STM118mhz\Obj\main.__cstat.et</file>
-        </outputs>
-        <file>
-            <name>$PROJ_DIR$\main.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 21</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 13</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 49</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 10 12 17 40 30 3 31 44 32 24 41 43 20 45</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 17 12 20 10 45 32 30 3 24 43 40 31 44 41</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
+        <forcedrebuild>
             <name>$PROJ_DIR$\startup_stm32f4xx.s</name>
-            <outputs>
-                <tool>
-                    <name>AARM</name>
-                    <file> 27</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
+            <tool>AARM</tool>
+        </forcedrebuild>
+        <forcedrebuild>
             <name>$PROJ_DIR$\FISH_STM32F4_IAR.s</name>
-            <outputs>
-                <tool>
-                    <name>AARM</name>
-                    <file> 42</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>AARM</name>
-                    <file> 15 36 33 11 47 23 37 39 26 8 5 35 4 29 6 38 16</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\STM32F205RC-STM118mhz\Exe\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.6.out</name>
-            <outputs>
-                <tool>
-                    <name>OBJCOPY</name>
-                    <file> 25</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 22 42 21 27</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\STM32F205RC-STM118mhz\Exe\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.7.out</name>
-            <outputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 18 9</file>
-                </tool>
-                <tool>
-                    <name>OBJCOPY</name>
-                    <file> 2</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 22 42 21 27</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\STM32F205RC-STM118mhz\Exe\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.5.1.out</name>
-            <outputs>
-                <tool>
-                    <name>OBJCOPY</name>
-                    <file> 46</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 22 42 21 27</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>[ROOT_NODE]</name>
-            <outputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 19 18 9</file>
-                </tool>
-            </outputs>
-        </file>
+            <tool>AARM</tool>
+        </forcedrebuild>
     </configuration>
     <configuration>
         <name>STM32F407vg_Disco_Debug</name>
