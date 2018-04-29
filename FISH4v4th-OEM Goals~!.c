@@ -1,4 +1,12 @@
 FISHv4th_OEM goals:
+  Initially this is a merge with v4th.
+    Vic and I will enrich the master branch
+      create a PSTAT branch using the
+        IAR Configuration I made called
+          FISHv4th 205 PSTAT
+
+ISSUES:
+  
   HI Vic~!!!
     I'm spouting the same old goal<s>~!
   Create the best merge of v4th and FISH we can.
@@ -9,7 +17,7 @@ FISHv4th_OEM goals:
 
           Add to test file .TIB and .PAD
 
-// Make changes in all configurations~!
+// Made changes in all configurations~!
 /* Define TOP of Dictionary:  
 The top of the dictionary is defined in these places
 In SLIBS SV_INIT_VALUES:
@@ -24,10 +32,15 @@ In IAR FISH_ONLY:
 
 */
 
-To clean this up I will endeavoir to eleminate the
-asm preprocessor #defines except for chip (407/205) ones.
-ADD THIS to the 205 config for PSTAT:
-STM32F4_FLASH_1_MB
+asm preprocessor #define entries are for
+chip specs and IAR configurations ONLY~!
+(407/205) ones:
+  STM32F4_XRC08_168MHZ          // Disco Board. Should rename.
+  UNDEF_VTOR_PATCH              // 205 issue only?
+  STM32F205RC                   // wanna say it's redundant but its foundation.
+  STM32F205RC_SRAM128           //
+  STM32F205RC_FLASH_1_MB        // Simon selected~!
+  STM32F205RC_XRC10_118MHZ      // Best internal xtal.
 
 The asm preprocessor #defines mechanism
 is the only way to control the IAR configurations.
