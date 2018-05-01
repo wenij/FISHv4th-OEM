@@ -50,10 +50,11 @@ We use configurations to run mostly the same code on STM32F0-F4 Chips.
 This is a STM32F407vg Discovery Boards and STM32F205rc example.
 
 The branches we create need to be assigned 2 tasks,
-create a supporting feature for FISH or a v4th enhancencment
-OR
+create a supporting feature for FISH or a v4th enhancencment,
+to be be merged back into the OEM master,
+AND~!
 Create branchs maintained and customized for money or love.
-The branches are pruned off into the product pipeline.
+The branches are pruned off into the product pipelines.
 
 Money love and recognition come back...
 
@@ -92,4 +93,15 @@ Cache TOS and NOS: I hope this isn't a bear~!
 VIC: I need help getting the hi-level single stepping working,
       and IAR debugging best practices~!
       
+NEST initSPI1
+ DC32 rmwamd, RCC_CFGR,0F8000000h,20000000h    ; MCO2 = SYSCLK/2
+ DC32 atk,RCC_AHB1ENR, ork,5h, strk,RCC_AHB1ENR    ; port A,C clk enable
+ DC32 atk,RCC_APB2ENR, ork,1000h, strk,RCC_APB2ENR    ; SPI1 clk enable 84MHz
 
+ DC32 strkk,55550000h, GPIOA_AFRL    ; PA4..7 --> as nSS, SCK, miso, MOSI
+ DC32 rmwamd, GPIOA_MODER,0FF00h,0AA00h    ; PA4..7 as AF
+ 
+ DC32 strkk,4h, SPI1_CR2        ; nSS output (I think)
+ DC32 strkk,007Dh, SPI1_CR1    ;
+
+ DC32 nexit

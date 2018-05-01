@@ -1,12 +1,12 @@
 ###################################################################################################
 #                                                                                                 #
-#     IAR Assembler V8.22.1.15669/W32 for ARM 29/Apr/2018  13:11:37                               #
+#     IAR Assembler V8.22.1.15669/W32 for ARM 30/Apr/2018  17:57:09                               #
 #     Copyright 1999-2018 IAR Systems AB.                                                         #
 #                                                                                                 #
 #           Source file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_IAR.s #
 #           List file     =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\FISH_STM32F4_IAR.lst#
 #           Object file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\FISH_STM32F4_IAR.o#
-#           Command line  =  -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWB924.tmp                   #
+#           Command line  =  -f C:\Users\CLYDEW~1\AppData\Local\Temp\EW77E8.tmp                   #
 #                            (C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_IAR.s #
 #                            -OC:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj #
 #                            -s+ -M<> -w+ -r -DSTM32F4_XRC08_168MHZ                               #
@@ -14052,7 +14052,7 @@
     2                           // Clock defines are in the asm preproccesor
     3                           
     4                           // Configuration:
-    5                           //#define FISH_Debug_WORDSET
+    5                           #define FISH_Debug_WORDSET    // Affecs Prompt only
     6                           
     7                           // this define must keep RESET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     8                           //#define USE_CMAIN     // Affects cstartup_M.c FM0_COLD and RET2c
@@ -14069,7 +14069,7 @@
    19                           //#define TOSCT         // TOS Cache Testing QUERY BACKSPACING OVER INPUT!!!
    20                           //#define SLOW_POWERUP  // For slow power supply
    21                           //#define CLKOUT        // PIO0_1 is CLKOUT
-   22                           //#define TESTRAM       // run flogram at start-up
+   22                           #define TESTRAM       // run flogram at start-up
    23                           //#define DEBUG_FLASH   // 
    24                           
    25                           //#define IOBUFS_DEBUG
@@ -14386,6 +14386,7 @@
   111                           PINIT           EQU     .              // PARAMETER STACK register p
   112                           PSTART          EQU     .
   113                           
+  114                           RAM_END:
    24                           //------------------------------------------------------------------------------
    25                           // Place :NONAME's before dynamic content to make CFA addresses static.
    26                           $FISH_STM32F4_SLIB.s
@@ -16758,10 +16759,11 @@
    52                            ALIGNROM 2,0xFFFFFFFF
    53                           FM4_WARM:
    54                           #ifdef TESTRAM
+   55    00000000 ........              DC32    flogRAM
    56                           #endif
-   57    00000000 ........              DC32    FWARM                   // FISH Init for WTEST code
-   58    00000004 ........              DC32    SoCinit                 // SYSCLK, systick, MS
-   59    00000008 ........              DC32    UART3_INIT
+   57    00000004 ........              DC32    FWARM                   // FISH Init for WTEST code
+   58    00000008 ........              DC32    SoCinit                 // SYSCLK, systick, MS
+   59    0000000C ........              DC32    UART3_INIT
    60                           
    61                           // TEST CODE GOES HERE - Pre FISH Execution Environment
    62                           WTEST:
@@ -16775,13 +16777,13 @@
    70                           // TEST CODE END
    71                           FWARM_STARTING_UP:
    72                           //        DC32    DOTS            // SHOW ANY STACK ARTIFACTS HERE
-   73    0000000C ........              DC32    CR
-   74    00000010 ........FB000         DC32    LIT, 0xFB, EMIT // ANSI ASCII CheckMark
+   73    00000010 ........              DC32    CR
+   74    00000014 ........FB000         DC32    LIT, 0xFB, EMIT // ANSI ASCII CheckMark
                   000........  
-   75    0000001C ........F7000         DC32    LIT, 0xF7, EMIT // ANSI ASCII 2 wavy's
+   75    00000020 ........F7000         DC32    LIT, 0xF7, EMIT // ANSI ASCII 2 wavy's
                   000........  
-   76    00000028 ........              DC32    CR
-   77    0000002C ........              DC32    COLD            // WARM ABORT THEN QUIT
+   76    0000002C ........              DC32    CR
+   77    00000030 ........              DC32    COLD            // WARM ABORT THEN QUIT
    78                           
    79                           #ifdef USE_CMAIN
    81                           #endif
@@ -16905,13 +16907,21 @@
                   20           
    58    00000013 41524D20              DC8     'ARM '
    59                           #ifdef FISH_Debug_WORDSET
+   60    00000017 4465627567537         DC8     'DebugSrc '
+                  26320        
    61                           #endif
    62                           #ifdef FISH_Debug_WORDSET
+   63    00000020 20313031302C3         DC8     ' 1010,1100 - EHON/EHOFF '
+                  1313030202D20
+                  45484F4E2F454
+                  84F464620    
+   64    00000038 2D31205472756         DC8     '-1 True Flag '
+                  520466C616720
    65                           #endif
    66                           #if VTOR_PATCH & STM32F205RC
    68                           #endif
    69                           #ifdef  STM32F4_XRC08_168MHZ
-   70    00000017 53544D3332463         DC8     'STM32F407VG DISCO @168Mhz '
+   70    00000045 53544D3332463         DC8     'STM32F407VG DISCO @168Mhz '
                   4303756472044
                   4953434F20403
                   136384D687A20
@@ -16920,23 +16930,23 @@
    74                           #endif
    75                           #ifdef FISH_PRO_WORDCAT
    77                           #endif
-   78    00000031 2843293230313         DC8     '(C)2014-2018 A-TEAM FORTH : '
+   78    0000005F 2843293230313         DC8     '(C)2014-2018 A-TEAM FORTH : '
                   42D3230313820
                   412D5445414D2
                   0464F52544820
                   3A20         
-   79    0000004D 4170722032392         DC8     __DATE__        // Null string
+   79    0000007B 4170722033302         DC8     __DATE__        // Null string
                   03230313800  
    80                           msg_FISH_TIMESTAMP:
-   81    00000059 20617420              DC8     ' at '
-   82    0000005D 31333A31313A3         DC8     __TIME__        // Null string
-                  33700        
+   81    00000087 20617420              DC8     ' at '
+   82    0000008B 31373A35373A3         DC8     __TIME__        // Null string
+                  03900        
    83                           #ifdef EOL_NAK
    84                           msg_SIGNON_DLE:
-   85    00000066 1500                  DC8     0x15, 0
+   85    00000094 1500                  DC8     0x15, 0
    86                           #endif
    87                           msg_MY_OK:
-   88    00000068 206F6B2C20676         DC8     " ok, go fish in BASE "
+   88    00000096 206F6B2C20676         DC8     " ok, go fish in BASE "
                   F206669736820
                   696E204241534
                   52000        
@@ -25391,6 +25401,129 @@
  5601                           #endif
  5602                           
  5603                           #ifdef TESTRAM
+ 5604                           //:NONAME flogRAM:    ( -- ) Non destructively test RAM
+ 5605                           // RAM_START and RAM_END defined in FISH_M0_EQUATES.H
+ 5606                            SECTION .text : CONST (2)
+ 5607                           flogRAM:
+ 5608    00000000 ........              DC32    .+5
+ 5609                            SECTION .text : CODE (2)
+ 5610    00000000 8046                  mov     r8, t
+ 5611    00000002 8946                  mov     r9, n
+ 5612    00000004 AA46                  mov     r10, i          //  SAVE IP !!!
+ 5613    00000006 2648                  ldr     t, = RAM_START  // RAM_START
+ 5614    00000008 264C                  ldr     y, = RAM_END    // (RAM_END +1)         //  limit
+ 5615                           _flogRAM:
+ 5616    0000000A 0368                  ldr     x, [t]  //  save original contents
+ 5617                           
+ 5618    0000000C 0021                  movs    n, #0   //  all zeros
+ 5619    0000000E 0160                  str     n, [t]
+ 5620    00000010 0268                  ldr     w, [t]
+ 5621    00000012 4A40                  eors    w, w, n
+ 5622    00000014 42D1                  bne     _trap
+ 5623                           
+ 5624    00000016 2449                  ldr     n, =-1  //  all ones
+ 5625    00000018 0160                  str     n, [t]
+ 5626    0000001A 0268                  ldr     w, [t]
+ 5627    0000001C 4A40                  eors    w, w, n
+ 5628    0000001E 3DD1                  bne     _trap
+ 5629                           
+ 5630    00000020 0100                  movs    n, t    //  it's own address
+ 5631    00000022 0160                  str     n, [t]
+ 5632    00000024 0268                  ldr     w, [t]
+ 5633    00000026 4A40                  eors    w, w, n
+ 5634    00000028 38D1                  bne     _trap
+ 5635                           
+ 5636    0000002A C143                  mvns    n, t    //  complement of it's own address
+ 5637    0000002C 0160                  str     n, [t]
+ 5638    0000002E 0268                  ldr     w, [t]
+ 5639    00000030 4A40                  eors    w, w, n
+ 5640    00000032 33D1                  bne     _trap
+ 5641                           
+ 5642                           
+ 5643    00000034 1D49                  ldr     n, = 0xFFFFFFFE
+ 5644    00000036 2025                  movs    i, #32
+ 5645                           _walkzeros:
+ 5646    00000038 0160                  str     n, [t]
+ 5647    0000003A 0268                  ldr     w, [t]
+ 5648    0000003C 4A40                  eors    w, w, n
+ 5649    0000003E 2DD1                  bne     _trap
+ 5650                           
+ 5651    00000040 4900                  lsls    n, n, #1
+ 5652    00000042 491C                  adds    n, n, #1
+ 5653    00000044 6D1E                  subs    i, i, #1
+ 5654    00000046 F7D1                  bne     _walkzeros
+ 5655                           
+ 5656                           
+ 5657    00000048 0121                  movs    n, #1
+ 5658    0000004A 2025                  movs    i, #32
+ 5659                           _walkones:
+ 5660    0000004C 0160                  str     n, [t]
+ 5661    0000004E 0268                  ldr     w, [t]
+ 5662    00000050 4A40                  eors    w, w, n
+ 5663    00000052 23D1                  bne     _trap
+ 5664                           
+ 5665    00000054 4900                  lsls    n, n, #1
+ 5666    00000056 6D1E                  subs    i, i, #1
+ 5667    00000058 F8D1                  bne     _walkones
+ 5668                           
+ 5669                           
+ 5670    0000005A 1449                  ldr     n, = 0xFFFFFFFE
+ 5671    0000005C 2025                  movs    i, #32
+ 5672                           _slidezeros:
+ 5673    0000005E 0160                  str     n, [t]
+ 5674    00000060 0268                  ldr     w, [t]
+ 5675    00000062 4A40                  eors    w, n
+ 5676    00000064 1AD1                  bne     _trap
+ 5677                           
+ 5678    00000066 4900                  lsls    n, n, #1
+ 5679    00000068 6D1E                  subs    i, i, #1
+ 5680    0000006A F8D1                  bne     _slidezeros
+ 5681                           
+ 5682                           
+ 5683    0000006C 0121                  movs    n, #1
+ 5684    0000006E 2025                  movs    i, #32
+ 5685                           _slideones:
+ 5686    00000070 0160                  str     n, [t]
+ 5687    00000072 0268                  ldr     w, [t]
+ 5688    00000074 4A40                  eors    w, n
+ 5689    00000076 11D1                  bne     _trap
+ 5690                           
+ 5691    00000078 4900                  lsls    n, n, #1
+ 5692    0000007A 491C                  adds    n, n, #1
+ 5693    0000007C 6D1E                  subs    i, i, #1
+ 5694    0000007E F7D1                  bne     _slideones
+ 5695                           
+ 5696                           
+ 5697    00000080 0360                  str     x, [t]  //  restore original contents
+ 5698    00000082 001D                  adds    t, t, #4
+ 5699    00000084 A042                  cmp     t, y
+ 5700    00000086 C0D3                  blo     _flogRAM
+ 5701                           
+ 5702                           _notrap:
+ 5703    00000088 4046                  mov     t, r8
+ 5704    0000008A 4946                  mov     n, r9
+ 5705    0000008C 5546                  mov     i, r10  //  RESTORE IP !!!
+ 5706                                   NEXT
+ 5706.1                         // ARMv7-M Thumb = .+5
+ 5706.2  0000008E 55F8042B              ldr     w, [i], #4      ; get IP->cfa to w, incr i after
+ 5706.3                         // ARMv6-M Thumb = .+4
+ 5706.4                         //        LDM   i!, {w} // get IP->cfa to w, incr i after
+ 5706                                   NEXT1
+ 5706.1  00000092 22F00302              BIC     w, w, #3        ; Tested WORKS ALSO Thumb2 klooge: clear the 2 LSbits
+ 5706.2  00000096 52F8043B              LDR     x, [w], #4      ; contents of cfa -> x, bump w to cfa+4
+ 5706.3  0000009A 1847                  BX      x               ; w preserves cfa+4 for DOCOL's benefit
+ 5706.4                         // ARMv6-M Thumb = .+4
+ 5706.5                         //      LDM     w!, {x}         // contents of cfa, (pfa), -> x, bump w to cfa+4
+ 5706.6                         //      BLX     x               // w preserves cfa+4 (pfa) for DOCOL's benefit
+ 5706.7                                 ENDM
+ 5706.8                                 ENDM
+ 5707    0000009C FEE7          _trap:  b       .
+ 5708    0000009E 0000           LTORG
+ 5708.1                                  TABLE
+ 5708.2  000000A0 ........              Reference on line 5613
+ 5708.3  000000A4 ........              Reference on line 5614
+ 5708.4  000000A8 FFFFFFFF              Reference on line 5624
+ 5708.5  000000AC FEFFFFFF              Reference on line 5643,5670
  5709                           #endif  // TESTRAM
  5710                           //------------------------------------------------------------------------------
  5711                           // Placing blocks that can change at end of link map
@@ -25894,7 +26027,9 @@
 ABORT_STOP_TILL_CO   #define, value: , line:      13:7  
 EOL_DLE              #define, value: , line:      14:7  
 EOL_NAK              #define, value: , line:      15:7  
+FISH_Debug_WORDSET   #define, value: , line:       5:7  
 STM32F4_XRC08_168MHZ #define, value: 1, line:         0      59:17
+TESTRAM              #define, value: , line:      22:7  
 TRUE_EQU_NEG_ONE     #define, value: , line:      11:7  
 XON_XOFF             #define, value: , line:      12:7  
 __ARM4TM__           #define, value: 4, line:         0  
@@ -25980,7 +26115,10 @@ i                    #define, value: r5, line:       8:5     611:10   612:10   6
                                                                      4681     4723     4800     4816
                                                                      4836     4857   129:14   446:14
                                                                    575:14     5208     5268     5489
-                                                                    32:17
+                                                                     5612     5644     5653     5653
+                                                                     5658     5666     5666     5671
+                                                                     5679     5679     5684     5693
+                                                                     5693     5705     5706    32:17
 k                    #define, value: r12, line:      19:5     688:10   691:10   691:10   692:10
                                                                    941:10   977:10  1362:10  1373:10
                                                                     26:17    30:17    30:17
@@ -26026,6 +26164,16 @@ n                    #define, value: r1, line:       4:5     611:10   613:10   6
                                                                      5260     5261     5263     5264
                                                                      5475     5478     5480     5481
                                                                      5483     5485     5486     5488
+                                                                     5611     5618     5619     5621
+                                                                     5624     5625     5627     5630
+                                                                     5631     5633     5636     5637
+                                                                     5639     5643     5646     5648
+                                                                     5651     5651     5652     5652
+                                                                     5657     5660     5662     5665
+                                                                     5665     5670     5673     5675
+                                                                     5678     5678     5683     5686
+                                                                     5688     5691     5691     5692
+                                                                     5692     5704
 p                    #define, value: r7, line:      10:5     625:10   635:10   637:10   646:10
                                                                    648:10   657:10   670:10   671:10
                                                                    672:10   709:10   813:10   820:10
@@ -26181,7 +26329,13 @@ t                    #define, value: r0, line:       3:5     623:10   624:10   6
                                                                    572:14   573:14   573:14     5207
                                                                      5208     5238     5241     5241
                                                                      5242     5242     5243     5252
-                                                                     5259     5267
+                                                                     5259     5267     5610     5613
+                                                                     5616     5619     5620     5625
+                                                                     5626     5630     5631     5632
+                                                                     5636     5637     5638     5646
+                                                                     5647     5660     5661     5673
+                                                                     5674     5686     5687     5697
+                                                                     5698     5698     5699     5703
 w                    #define, value: r2, line:       5:5     612:10   613:10   614:10   614:10
                                                                    614:10   614:10   625:10   625:10
                                                                    625:10   625:10   634:10   636:10
@@ -26345,9 +26499,15 @@ w                    #define, value: r2, line:       5:5     612:10   613:10   6
                                                                      5246     5248     5250     5258
                                                                      5259     5261     5267     5268
                                                                      5268     5268     5268     5489
-                                                                     5489     5489     5489    28:17
-                                                                    29:17    32:17    32:17    32:17
-                                                                    32:17
+                                                                     5489     5489     5489     5620
+                                                                     5621     5621     5626     5627
+                                                                     5627     5632     5633     5633
+                                                                     5638     5639     5639     5647
+                                                                     5648     5648     5661     5662
+                                                                     5662     5674     5675     5687
+                                                                     5688     5706     5706     5706
+                                                                     5706    28:17    29:17    32:17
+                                                                    32:17    32:17    32:17
 x                    #define, value: r3, line:       6:5     614:10   614:10   625:10   625:10
                                                                    637:10   637:10   648:10   648:10
                                                                    656:10   658:10   660:10   660:10
@@ -26423,6 +26583,7 @@ x                    #define, value: r3, line:       6:5     614:10   614:10   6
                                                                    129:14   129:14   446:14   446:14
                                                                    575:14   575:14     5208     5208
                                                                      5268     5268     5489     5489
+                                                                     5616     5697     5706     5706
                                                                     24:17    28:17    32:17    32:17
 y                    #define, value: r4, line:       7:5     687:10   690:10   691:10   944:10
                                                                    945:10   958:10   959:10   991:10
@@ -26435,7 +26596,7 @@ y                    #define, value: r4, line:       7:5     687:10   690:10   6
                                                                      5243     5263     5477     5478
                                                                      5479     5480     5482     5483
                                                                      5484     5485     5487     5488
-                                                                    23:17    29:17
+                                                                     5614     5699    23:17    29:17
 
 Segment             Type 	Mode
 ----------------------------------------
@@ -27041,7 +27202,7 @@ FS_EXIT             REL    CONST UNTYP.           .text      EC
 FS_RWORD            REL    CONST UNTYP.           .text      100 
 FS_WRITE            REL    CONST UNTYP.           .text      BC 
 FWARM               REL    CONST UNTYP.           .text      0 
-FWARM_STARTING_UP   REL    CONST UNTYP.           .text      C 
+FWARM_STARTING_UP   REL    CONST UNTYP.           .text      10 
 FWASM               REL    CONST UNTYP.           .text      1 
 FWBEGIN             REL    CONST UNTYP.           .text      7 
 GOTO                REL    CONST UNTYP.           .text      0 
@@ -27377,6 +27538,7 @@ R                   REL    CONST UNTYP.           .text      8
 RAMVARSPACE         REL    CONST UNTYP.           .tcm_pref_ 4 
 RAMVARSPACE_START   REL    CONST UNTYP.           .tcm_pref_ 4 
 RAMWORDS            REL    CONST UNTYP.           .text      D8 
+RAM_END             REL    CONST UNTYP.           .tcm_pref_ 568 
 RAM_INIT_END        REL    CONST UNTYP.           .sram_2nd_ 200 
 RAM_INTVECS         REL    CONST UNTYP.           .sram_2nd_ 0 
 RAM_INTVECS_END     REL    CONST UNTYP.           .sram_2nd_ 200 
@@ -27980,7 +28142,7 @@ WORDSCONT           REL    CONST UNTYP.           .text      AC
 WORDSDONE           REL    CONST UNTYP.           .text      FC 
 WORDS_NFA           REL    CONST UNTYP.           .text      0 
 WORD_NFA            REL    CONST UNTYP.           .text      0 
-WTEST               REL    CONST UNTYP.           .text      C 
+WTEST               REL    CONST UNTYP.           .text      10 
 WWDG_CFR            ABS    CONST UNTYP.           ASEG       40002C04 
 WWDG_CR             ABS    CONST UNTYP.           ASEG       40002C00 
 WWDG_SR             ABS    CONST UNTYP.           ASEG       40002C08 
@@ -28013,18 +28175,26 @@ _WaitBsy10          REL    CONST UNTYP.           .text      3
 __iar_program_start REL    CONST PUB UNTYP.       .text      1 
 _copyintvecs        REL    CONST UNTYP.           .text      11 
 _fillRAM            REL    CONST UNTYP.           .text      7 
+_flogRAM            REL    CONST UNTYP.           .text      B 
+_notrap             REL    CONST UNTYP.           .text      89 
+_slideones          REL    CONST UNTYP.           .text      71 
+_slidezeros         REL    CONST UNTYP.           .text      5F 
+_trap               REL    CONST UNTYP.           .text      9D 
+_walkones           REL    CONST UNTYP.           .text      4D 
+_walkzeros          REL    CONST UNTYP.           .text      39 
 andk                REL    CONST UNTYP.           .text      0 
 atk                 REL    CONST UNTYP.           .text      0 
 begin               REL    CONST UNTYP.           .text      0 
 bisk                REL    CONST UNTYP.           .text      0 
 copyintvecs         REL    CONST UNTYP.           .text      0 
+flogRAM             REL    CONST UNTYP.           .text      0 
 initART             REL    CONST UNTYP.           .text      184 
 msg_CO              REL    CONST UNTYP.           .text      0 
 msg_FISH            REL    CONST UNTYP.           .text      0 
-msg_FISH_TIMESTAMP  REL    CONST UNTYP.           .text      59 
-msg_MY_OK           REL    CONST UNTYP.           .text      68 
+msg_FISH_TIMESTAMP  REL    CONST UNTYP.           .text      87 
+msg_MY_OK           REL    CONST UNTYP.           .text      96 
 msg_RUN             REL    CONST UNTYP.           .text      0 
-msg_SIGNON_DLE      REL    CONST UNTYP.           .text      66 
+msg_SIGNON_DLE      REL    CONST UNTYP.           .text      94 
 msg_cr              REL    CONST UNTYP.           .text      A 
 msg_dictfull        REL    CONST UNTYP.           .text      8A 
 msg_dictspace       REL    CONST UNTYP.           .text      1C 
@@ -28063,7 +28233,7 @@ zero_OUT            REL    CONST UNTYP.           .text      88
 #           CRC:0            #
 #        Errors:   0         #
 #        Warnings: 0         #
-#        Bytes: 83950        #
+#        Bytes: 84180        #
 ##############################
 
 
