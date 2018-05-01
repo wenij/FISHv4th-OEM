@@ -2555,8 +2555,8 @@
                     <name>ADefines</name>
                     <state>UNDEF_VTOR_PATCH</state>
                     <state>STM32F205RC</state>
-                    <state>STM32F4_FLASH_1_MB</state>
                     <state>STM32F205RC_SRAM128</state>
+                    <state>STM32F205RC_FLASH_1_MB</state>
                     <state>STM32F205RC_XRC10_118MHZ</state>
                 </option>
                 <option>

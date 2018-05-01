@@ -111,3 +111,4 @@ BOTTOM_PSTACK   DS32    STACKSIZE
 PINIT	        EQU     .              // PARAMETER STACK register p
 PSTART          EQU     .
 
+RAM_END:
