@@ -2,8 +2,8 @@
 // Valid thru v1.8
 // #defines are placed in the Assembler Preproccesor Defined Symbols section.
 // EQUATES are for REAL VALUES used in FISH assembly code
-// 
-DEFAULT_BAUD    EQU     9600            // 9600 until UART0_INIT USED 2580h
+//
+DEFAULT_BAUD    EQU     115200          // 9600 until UART0_INIT USED 2580h
 DEFAULT_BASE    EQU     10              // BASE at powerup
 XON_CHAR        EQU     17              // ASCII DECIMAL XON_CHAR
 XOFF_CHAR       EQU     19              // ASCII DECIMAL XOFF_CHAR
@@ -11,13 +11,13 @@ IOBUFSIZE       EQU     96              // For Tib and Pad
 MAXWORDLEN	EQU     31              // magic!!! for ID. <<<<<<<<<<<<<<<<<<<<
 
 #ifdef STM32F4_IRC16_16MHZ
-SYSTEMCLOCK     EQU     16000000        // 
+SYSTEMCLOCK     EQU     16000000        //
 #endif
 #ifdef STM32F4_IRC16_32MHZ
-SYSTEMCLOCK     EQU     32000000        // 
+SYSTEMCLOCK     EQU     32000000        //
 #endif
 #ifdef STM32F4_IRC16_48MHZ
-SYSTEMCLOCK     EQU     48000000        // 
+SYSTEMCLOCK     EQU     48000000        //
 #endif
 #ifdef STM32F205RC_XRC10_118MHZ
 //SYSTEMCLOCK     EQU     210000000       // TEST NO PLL CHANGES FROM XRC08_168mhz
