@@ -1,12 +1,12 @@
 ###################################################################################################
 #                                                                                                 #
-#     IAR Assembler V8.22.1.15669/W32 for ARM 23/Oct/2018  15:13:51                               #
+#     IAR Assembler V8.22.1.15669/W32 for ARM 24/Oct/2018  21:35:39                               #
 #     Copyright 1999-2018 IAR Systems AB.                                                         #
 #                                                                                                 #
 #           Source file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_IAR.s #
 #           List file     =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\FISH_STM32F4_IAR.lst#
 #           Object file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\FISH_STM32F4_IAR.o#
-#           Command line  =  -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWE2BA.tmp                   #
+#           Command line  =  -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWC6C8.tmp                   #
 #                            (C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_IAR.s #
 #                            -OC:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj #
 #                            -s+ -M<> -w+ -r -DSTM32F4_XRC08_168MHZ                               #
@@ -13846,23 +13846,45 @@
    13                           $FISH_ARM_CORTEX_M_REGS.h
     1                           // 2018 the syntax will evolve to t_r0. n_r1 etc.
     2                           // Valid thru v1.8
-    3                           #define t       r0      //                          AX
-    4                           #define n       r1      // v4th
-    5                           #define w       r2      // v4th NOS DPUSH           DX
-    6                           #define x       r3      // Execution
-    7                           #define y       r4      //                          BX as scratch (ROT)
-    8                           #define i       r5      // IP                       DX:SI
-    9                           #define r       r6      // Return Stack Pointer
-   10                           #define p       r7      // Parameter Stack Pointer
-   11                           //              r8      // Link register
-   12                           //              r9      // Program Counter
-   13                           //      ARMv6 Cortex M0 LPC 1114 is 16 bit thumb ISA.
-   14                           //      Use of the following registers is limited to local variables mostly.
-   15                           //      ST doesn't seem to have this issue?
-   16                           // speculation
-   17                           #define ra      r10     // 
-   18                           #define rb      r11     // 
-   19                           #define k       r12     // 
+    3                           #define t       r0      // t_r0
+    4                           #define t_r0    r0
+    5                           
+    6                           #define n                               r1      // n_r1         v4th
+    7                           #define n_r1            r1
+    8                           
+    9                           #define w                               r2      // w_r2         FISH next v4th NOS DPUSH
+   10                           #define w_r2            r2
+   11                           
+   12                           #define x                               r3      // x_r3         Execution
+   13                           #define x_r3            r3
+   14                           
+   15                           #define y                               r4      // y_r4         BX as scratch (ROT)
+   16                           #define y_r4            r4
+   17                           
+   18                           #define i                               r5      // i_r5         IP
+   19                           #define i_r5            r5
+   20                           
+   21                           #define r                               r6      // r_r6         Return Stack Pointer
+   22                           #define r_r6    r6
+   23                           
+   24                           #define p                               r7      // p_r7         Parameter Stack Pointer
+   25                           #define p_r7            r7
+   26                           
+   27                           //              r8      // Link register
+   28                           //              r9      // Program Counter
+   29                           //      ARMv6 Cortex M0 LPC 1114 is 16 bit thumb ISA.
+   30                           //      Use of the following registers is limited to local variables mostly.
+   31                           //      ST doesn't seem to have this issue?
+   32                           // speculation
+   33                           
+   34                           #define ra                      r10     // ra_r10
+   35                           #define ra_r10  r10
+   36                           
+   37                           #define rb                      r11     // rb_r11
+   38                           #define rb_r11  r11
+   39                           
+   40                           #define k                               r12     // k_r12
+   41                           #define k_r12           r12
    14                           $FISH_STM32F4_MACROS.h
     1                           // Valid thru v1.8
     2                           
@@ -16939,12 +16961,12 @@
                   412D5445414D2
                   0464F52544820
                   3A20         
-   79    0000007B 4F63742032332         DC8     __DATE__        // Null string
+   79    0000007B 4F63742032342         DC8     __DATE__        // Null string
                   03230313800  
    80                           msg_FISH_TIMESTAMP:
    81    00000087 20617420              DC8     ' at '
-   82    0000008B 31353A31333A3         DC8     __TIME__        // Null string
-                  53100        
+   82    0000008B 32313A33353A3         DC8     __TIME__        // Null string
+                  33900        
    83                           #ifdef EOL_NAK
    84                           msg_SIGNON_DLE:
    85    00000094 1500                  DC8     0x15, 0
@@ -26082,7 +26104,7 @@ __TID__              #define,            line:         0
 __TIME__             #define,            line:         0         82
 __VER__              #define,            line:         0  
 comma_test           #define, value: , line:       900  
-i                    #define, value: r5, line:       8:5     611:10   612:10   614:10   623:10
+i                    #define, value: r5, line:      18:5     611:10   612:10   614:10   623:10
                                                                    625:10   634:10   637:10   645:10
                                                                    648:10   656:10   660:10   678:10
                                                                    686:10   687:10   688:10   694:10
@@ -26123,10 +26145,12 @@ i                    #define, value: r5, line:       8:5     611:10   612:10   6
                                                                      5658     5666     5666     5671
                                                                      5679     5679     5684     5693
                                                                      5693     5705     5706    32:17
-k                    #define, value: r12, line:      19:5     688:10   691:10   691:10   692:10
+i_r5                 #define, value: r5, line:      19:5  
+k                    #define, value: r12, line:      40:5     688:10   691:10   691:10   692:10
                                                                    941:10   977:10  1362:10  1373:10
                                                                     26:17    30:17    30:17
-n                    #define, value: r1, line:       4:5     611:10   613:10   671:10   674:10
+k_r12                #define, value: r12, line:      41:5  
+n                    #define, value: r1, line:       6:5     611:10   613:10   671:10   674:10
                                                                    675:10   773:10   777:10   779:10
                                                                    779:10   891:10   892:10   892:10
                                                                    893:10   904:10   905:10   905:10
@@ -26178,7 +26202,8 @@ n                    #define, value: r1, line:       4:5     611:10   613:10   6
                                                                      5678     5678     5683     5686
                                                                      5688     5691     5691     5692
                                                                      5692     5704
-p                    #define, value: r7, line:      10:5     625:10   635:10   637:10   646:10
+n_r1                 #define, value: r1, line:       7:5  
+p                    #define, value: r7, line:      24:5     625:10   635:10   637:10   646:10
                                                                    648:10   657:10   670:10   671:10
                                                                    672:10   709:10   813:10   820:10
                                                                    835:10   846:10   859:10   881:10
@@ -26230,16 +26255,20 @@ p                    #define, value: r7, line:      10:5     625:10   635:10   6
                                                                      4621     4681     4723   123:14
                                                                    129:14   438:14   439:14     5208
                                                                      5237     5238
+p_r7                 #define, value: r7, line:      25:5  
 pfRAMVectors         #define, value: ((pFunc_t *)0x10000000), line:      90:3  
-r                    #define, value: r6, line:       9:5     701:10   713:10   714:10   714:10
+r                    #define, value: r6, line:      21:5     701:10   713:10   714:10   714:10
                                                                    790:10   803:10   876:10  1063:10
                                                                   1064:10  1069:10  1074:10  1074:10
                                                                   1103:10  1104:10  1350:10    38:11
                                                                     44:11   116:11      836     1658
                                                                      1698     1719     1720     1738
                                                                      1754     1773
-ra                   #define, value: r10, line:      17:5    1135:10  1149:10
-rb                   #define, value: r11, line:      18:5     929:10   935:10
+r_r6                 #define, value: r6, line:      22:5  
+ra                   #define, value: r10, line:      34:5    1135:10  1149:10
+ra_r10               #define, value: r10, line:      35:5  
+rb                   #define, value: r11, line:      37:5     929:10   935:10
+rb_r11               #define, value: r11, line:      38:5  
 t                    #define, value: r0, line:       3:5     623:10   624:10   624:10   625:10
                                                                    635:10   636:10   637:10   646:10
                                                                    647:10   648:10   657:10   658:10
@@ -26340,7 +26369,8 @@ t                    #define, value: r0, line:       3:5     623:10   624:10   6
                                                                      5647     5660     5661     5673
                                                                      5674     5686     5687     5697
                                                                      5698     5698     5699     5703
-w                    #define, value: r2, line:       5:5     612:10   613:10   614:10   614:10
+t_r0                 #define, value: r0, line:       4:5  
+w                    #define, value: r2, line:       9:5     612:10   613:10   614:10   614:10
                                                                    614:10   614:10   625:10   625:10
                                                                    625:10   625:10   634:10   636:10
                                                                    637:10   637:10   637:10   637:10
@@ -26512,7 +26542,8 @@ w                    #define, value: r2, line:       5:5     612:10   613:10   6
                                                                      5688     5706     5706     5706
                                                                      5706    28:17    29:17    32:17
                                                                     32:17    32:17    32:17
-x                    #define, value: r3, line:       6:5     614:10   614:10   625:10   625:10
+w_r2                 #define, value: r2, line:      10:5  
+x                    #define, value: r3, line:      12:5     614:10   614:10   625:10   625:10
                                                                    637:10   637:10   648:10   648:10
                                                                    656:10   658:10   660:10   660:10
                                                                    670:10   673:10   677:10   678:10
@@ -26589,7 +26620,8 @@ x                    #define, value: r3, line:       6:5     614:10   614:10   6
                                                                      5268     5268     5489     5489
                                                                      5616     5697     5706     5706
                                                                     24:17    28:17    32:17    32:17
-y                    #define, value: r4, line:       7:5     687:10   690:10   691:10   944:10
+x_r3                 #define, value: r3, line:      13:5  
+y                    #define, value: r4, line:      15:5     687:10   690:10   691:10   944:10
                                                                    945:10   958:10   959:10   991:10
                                                                    992:10  1063:10  1065:10  1070:10
                                                                   1070:10  1137:10  1138:10  1149:10
@@ -26601,6 +26633,7 @@ y                    #define, value: r4, line:       7:5     687:10   690:10   6
                                                                      5479     5480     5482     5483
                                                                      5484     5485     5487     5488
                                                                      5614     5699    23:17    29:17
+y_r4                 #define, value: r4, line:      16:5  
 
 Segment             Type 	Mode
 ----------------------------------------
