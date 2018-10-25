@@ -1,22 +1,21 @@
+/*
 Fixes in versions comments:
+I have redone a clone of the FISHv4th-OEM branch v1.8x,
+which has none of the PSTAT work.
+I didn't understand that COMMIT affect my local repo's .git folder,
+not the repository. My local commits must be PUSH'd~!
+So I saved the old repo and will repopulate from there with care~!
 
-This FISH v1.7.2 runs.
-  3BS issue~!
-    !!!! It's when you bs 1 more than needed~!
-      From 1 character on up.
-        TIB BS routines need scrutiny~!
+FIRST~!:
+Verifying all files match (old LOCAL repo and new clone)
+ - from explorer view of this project):
+	core_cm3.h
 
-That Fish v1.6 runs fine
 
 Code Compare tool rocks~!
-
-C:\Users\Clyde W Phillips Jr\Desktop\FISH-v1.72\FISH_STM32F4_UART3_INIT.s
-//UART3_INIT: should be renamed.
-//It sets baud rates for the UART's BRR register
-//and programs the BRR, determined by system vars DBAUD and UBAUD or a user
-//supplied decimal baud rate value.
 
 Suggestions:
 FUART_BRR_BAUD  //where FUART denotes FISH word vs user UART words.
 
 
+*/

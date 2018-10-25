@@ -14,10 +14,10 @@
     <StLinkDriver>
         <stlinkserialNo>21201687</stlinkserialNo>
         <stlinkfoundProbes />
-        <CStepIntDis>_ 0</CStepIntDis>
-        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
         <stlinkResetStyle>0</stlinkResetStyle>
         <stlinkResetStrategy>1</stlinkResetStrategy>
+        <CStepIntDis>_ 0</CStepIntDis>
+        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </StLinkDriver>
     <DebugChecksum>
         <Checksum>2033737468</Checksum>
@@ -103,25 +103,10 @@
         <ShowTimeSum>1</ShowTimeSum>
         <SumSortOrder>0</SumSortOrder>
     </EventLog>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints2>
-        <Count>0</Count>
-    </Breakpoints2>
-    <LogFile>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-        <Category>_ 0</Category>
-    </LogFile>
     <TermIOLog>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
     </TermIOLog>
-    <Aliases>
-        <Count>0</Count>
-        <SuppressDialog>0</SuppressDialog>
-    </Aliases>
     <DriverProfiling>
         <Enabled>0</Enabled>
         <Mode>3</Mode>
@@ -135,4 +120,24 @@
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
+    <LogFile>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+        <Category>_ 0</Category>
+    </LogFile>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Count>0</Count>
+    </Breakpoints2>
+    <Aliases>
+        <A0>_ "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_IAR.s" ""</A0>
+        <A1>_ "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_SOC_INIT.s" "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th-OEM\FISH_STM32F4_SOC_INIT.s"</A1>
+        <A2>_ "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\core_cm4.h" ""</A2>
+        <A3>_ "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\main.c" ""</A3>
+        <A4>_ "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\startup_stm32f4xx.s" ""</A4>
+        <Count>5</Count>
+        <SuppressDialog>0</SuppressDialog>
+    </Aliases>
 </settings>

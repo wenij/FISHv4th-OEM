@@ -1,6 +1,4 @@
 
-*.dep
-*.ewp
 *.dbgdt
 *.dnx
 *.ps1
@@ -8,11 +6,8 @@
 *.wsdt
 *.out
 *.sim
-*.hex
 *.dnx
 *.wsdt
-*.map
 *.o
-*.dbgdt
 *.log
 

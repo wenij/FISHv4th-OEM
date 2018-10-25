@@ -1,12 +1,12 @@
 ###################################################################################################
 #                                                                                                 #
-#     IAR Assembler V8.22.1.15669/W32 for ARM 30/Apr/2018  17:57:09                               #
+#     IAR Assembler V8.22.1.15669/W32 for ARM 23/Oct/2018  15:13:51                               #
 #     Copyright 1999-2018 IAR Systems AB.                                                         #
 #                                                                                                 #
 #           Source file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_IAR.s #
 #           List file     =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\FISH_STM32F4_IAR.lst#
 #           Object file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\FISH_STM32F4_IAR.o#
-#           Command line  =  -f C:\Users\CLYDEW~1\AppData\Local\Temp\EW77E8.tmp                   #
+#           Command line  =  -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWE2BA.tmp                   #
 #                            (C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_IAR.s #
 #                            -OC:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj #
 #                            -s+ -M<> -w+ -r -DSTM32F4_XRC08_168MHZ                               #
@@ -14232,8 +14232,8 @@
     2                           // Valid thru v1.8
     3                           // #defines are placed in the Assembler Preproccesor Defined Symbols section.
     4                           // EQUATES are for REAL VALUES used in FISH assembly code
-    5                           // 
-    6                           DEFAULT_BAUD    EQU     9600            // 9600 until UART0_INIT USED 2580h
+    5                           //
+    6                           DEFAULT_BAUD    EQU     115200          // 9600 until UART0_INIT USED 2580h
     7                           DEFAULT_BASE    EQU     10              // BASE at powerup
     8                           XON_CHAR        EQU     17              // ASCII DECIMAL XON_CHAR
     9                           XOFF_CHAR       EQU     19              // ASCII DECIMAL XOFF_CHAR
@@ -14309,48 +14309,51 @@
    34                           //----------- Start of RAM = DICTIONAIRY AND Standard I/O Buffers --------------
    35                              SECTION .sram_1rst_dict_stdio_bufs : DATA (2)
    36                           RAM_START:      // RAM_END IS BEFORE UNINT AREA IN .sram2_64K segment
-   37                           SYSCLOCK        DS32    1               // MUST BE SET AT STARTUP = FULL MHZ #
+   37                           SYSCLOCK        DS32    1               // SET AT STARTUP = FULL MHZ #
    38                           FPA:            DS32    1               // FPADDR 0 = NO FLASH AVAILABLE
    39                           FPC:            DS32    1               // FPCURR
    40                           FPSV:           DS32    1               // FP System VAR
    41                           // The above 4 words are the SIGNATURE for saved code in a flash page.
    42                           // The FISH Dictionary starts 0x10 bytes after RBASE (RAMstart)
    43                           DICTSPACE_START:
-   44                           ORIG:           DS8     64000           // Dictionary at beginning of RAM
+   44                           ORIG:                   DS8     64000                                   // Dictionary at beginning
+                                 of RAM
    45                           DICTSPACE_END:                          // For DICTSPACE calculation
    46                           // Stdio Buffers
-   47                           PAD:            DS8     IOBUFSIZE       // LINE LENGTH
-   48                           TIB:            DS8     IOBUFSIZE       // LINE LENGTH
-   49                           TIB_DMA         DS8     1024
+   47                           PAD:                                                    DS8                     IOBUFSIZE          
+                                             // LINE LENGTH
+   48                           TIB:                                                    DS8                     IOBUFSIZE     //
+                                 LINE LENGTH
+   49                           TIB_DMA                 DS8     1024
    50                           TIB_DMA_BUF_END:
    51                           // FLASH_CODE COMMAND BLOCK IN RAM FOR FLASH PROGRAMMING
    52                           FLASH_CODE_SRAM2_START:
-   53                           FLASH_CODE_RS   DS8     68
+   53                           FLASH_CODE_RS                                                           DS8     68
    54                           FLASH_CODE_SRAM2_END:
    55                           
    56                           //------------------- SRAM2_64K Ram intvecs and unitialized ram STRUCTURES ----------------
    57                              SECTION .sram_2nd_intvecs_unint : DATA (2)
    58                           
-   59                           RAM_INTVECS             DS8     128*4
-   60                           RAM_INTVECS_END:
+   59                           RAM_INTVECS                                                     DS8     128*4
+   60                           RAM_INTVECS_END:                                        EQU     .
    61                           RAM_INIT_END:                // end of 1's fill
    62                           
-   63                           ALL_UNINIT_SRAM2_START: EQU     .
+   63                           ALL_UNINIT_SRAM2_START:                         EQU     .
    64                           // Define use of this resource.
    65                           // DBAUD and UBAUD USED FOR SAVING BAUDRATE BETWEEN RESETS AND HARD FAULT RESETS
-   66                           DBAUD           DS32    1
-   67                           UBAUD           DS32    1
+   66                           DBAUD                                                                   DS32    1
+   67                           UBAUD                                                                   DS32    1
    68                           // Free unitialized ram
    69                           ALL_UNINIT_SRAM2_FREE_START:    EQU     .
    70                           // NEEDS TO STOP before block CSTACK, block HEAP WHICH IS DYNAMIC NOW!
-   71                           ALL_UNINIT_SRAM2_END            EQU     SRAM2_CSTACK
+   71                           ALL_UNINIT_SRAM2_END                                    EQU     SRAM2_CSTACK
    72                           
    73                           //-------------- RAM Stack, system and use vars STRUCTURES ---------------------
    74                             SECTION .tcm_pref_stacks_and_vars : DATA(2)
-   75                           STICKER:                DS32    1       // SYSTICK INTERRUPT ACCUMULATOR
+   75                           STICKER:                                        DS32    1       // SYSTICK INTERRUPT ACCUMULATOR
    76                           // For VARSPACE calculation
    77                           RAMVARSPACE_START:
-   78                           RAMVARSPACE:            DS8     64*4    // VAR's are in RAM
+   78                           RAMVARSPACE:                                    DS8     64*4    // VAR's are in RAM
    79                           END_RAMVARSPACE_SV_START:
    80                           SV_START:
    81                            ALIGNRAM 2
@@ -14359,18 +14362,19 @@
    84                           NBASE:          DS32    1       // BASE_SV for number conversion
    85                           IN:             DS32    1       // IN_SV Offset into tib
    86                           OUT:            DS32    1       // OUT_SV Offset into pad or terminal string
-   87                           CSTATE:         DS32    1       // STATE_SV Compile STATE 0 = 
+   87                           CSTATE:         DS32    1       // STATE_SV Compile STATE 0 =
    88                           // ADDRESS VALUES initialed in FWARM:
    89                           INITSO:         DS32    1       // INITS0_SV Parameter Stack Addr
    90                           INITRO:         DS32    1       // INITR0_SV Return Stack Addr
    91                           INITTIB:        DS32    1       // TIB_SV TIB Addr
    92                           UP:             DS32    1       // UP_SV See VARALLOT
-   93                           DP:             DS32    1       // DP_SV IS See LATEST, COMMA, ALLOT AND CALLOT
-   94                           CSDP            DS32    1       // Create saves DP here to restore if errors 
-   95                           FENCE:          DS32    1       // FENCE_SV See FORGET
+   93                           DP:                     DS32    1       // DP_SV IS See LATEST, COMMA, ALLOT AND CALLOT
+   94                           CSDP            DS32    1       // Create saves DP here to restore if errors
+   95                           FENCE:                  DS32    1       // FENCE_SV See FORGET
    96                           CURRENT:        DS32    1       // CURRENT_SV See LATEST
    97                           PROMPT:         DS32    1       // Init in FWARM TO msg_MY_OK, $ OR 0 (QUIT)
-   98                           ERROR_HALT:     DS32    1       // Init in FWARM & EHOFF to 0 and EHON to 1
+   98                           ERROR_HALT:                     DS32    1       // Init in FWARM & EHOFF to 0 and EHON to
+                                 1
    99                           SV_END:
   100                           // THESE ARE INITIALIZED WHEN USED AT RUN-TIME
   101                           CSP:            DS32    1       // CSP_SV SCSP saves stack pos here
@@ -14380,10 +14384,10 @@
   105                           STACKSIZE       EQU     32*4            // SHOULD BE GOOD
   106                           RPAD            DS32    4
   107                           BOTTOM_RSTACK   DS32    STACKSIZE       // END OF RETURN STACK ADDR
-  108                           RINIT           EQU     .               // RETURN STACK register r
+  108                           RINIT                   EQU     .               // RETURN STACK register r
   109                           SPAD            DS32    4              // IF IN CCM UNDERFLOW = RESERVED MMAP
   110                           BOTTOM_PSTACK   DS32    STACKSIZE
-  111                           PINIT           EQU     .              // PARAMETER STACK register p
+  111                           PINIT                   EQU     .              // PARAMETER STACK register p
   112                           PSTART          EQU     .
   113                           
   114                           RAM_END:
@@ -16935,12 +16939,12 @@
                   412D5445414D2
                   0464F52544820
                   3A20         
-   79    0000007B 4170722033302         DC8     __DATE__        // Null string
+   79    0000007B 4F63742032332         DC8     __DATE__        // Null string
                   03230313800  
    80                           msg_FISH_TIMESTAMP:
    81    00000087 20617420              DC8     ' at '
-   82    0000008B 31373A35373A3         DC8     __TIME__        // Null string
-                  03900        
+   82    0000008B 31353A31333A3         DC8     __TIME__        // Null string
+                  53100        
    83                           #ifdef EOL_NAK
    84                           msg_SIGNON_DLE:
    85    00000094 1500                  DC8     0x15, 0
@@ -23005,8 +23009,8 @@
    33    0000003C ........              DC32    BRAN
    34    00000040 10000000              DC32    BAUD1-.                 // SET UBAUD TO ZERO TO PRESERVE UBAUD
    35                           BAUDDEFAULT:                            // ELSE
-   36    00000044 ........80250         DC32    LIT, DEFAULT_BAUD       // IARBUG , TOR
-                  000          
+   36    00000044 ........00C20         DC32    LIT, DEFAULT_BAUD       // IARBUG , TOR
+                  100          
    37    0000004C ........              DC32    TOR                     // SET
    38                           BAUD1:
    39                           // BAUD IS ON R STACK
@@ -26860,7 +26864,7 @@ DECIMAL             REL    CONST UNTYP.           .text      C
 DECIMAL_NFA         REL    CONST UNTYP.           .text      0 
 DEC_OR_HEX          REL    CONST UNTYP.           .text      EC 
 DEFAULT_BASE        ABS    CONST UNTYP.           ASEG       A 
-DEFAULT_BAUD        ABS    CONST UNTYP.           ASEG       2580 
+DEFAULT_BAUD        ABS    CONST UNTYP.           ASEG       1C200 
 DELAY               REL    CONST UNTYP.           .text      C 
 DELAY_DONE          REL    CONST UNTYP.           .text      2B 
 DELAY_LOOP          REL    CONST UNTYP.           .text      25 
