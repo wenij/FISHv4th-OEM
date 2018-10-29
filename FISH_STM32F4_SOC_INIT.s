@@ -20,6 +20,7 @@ initART:
 copyintvecs:
 	DC32	.+5
  SECTION .text : CODE (2)
+// Note sure why x_r3 style seems to cause problems.
 	mov32	y, RAM_INTVECS
 	mov	x, #0    // BOOT REMAP IN MAIN FLASH ALIASED AT 0
 //      mov32   x, = FLASH_START
@@ -112,8 +113,7 @@ PLL_Q		EQU	6;7
 PLL_Qbits	EQU	(PLL_Q << 24)
 */
 
-// This is for 168MHz HCLK | SYSCLK PCLK2 = 134MHz PCLK1 = 42MHz
-// pROTOTYPING STP RPM 205 CLOCK
+// This is for 118MHz HCLK | SYSCLK PCLK2 = 134MHz PCLK1 = 42MHz
 #ifdef STM32F205RC_XRC10_118MHZ
 
 //PLL_Mbits       EQU     5       ; 10MHz/5 = 2MHz
@@ -183,12 +183,12 @@ RCC_CR_PLLI2SRDY	EQU	08000000h
   DC32	atk,RCC_CR, ork,RCC_CR_PLLI2SON, strk,RCC_CR
   DC32	begin, atk,RCC_CR, andk,RCC_CR_PLLI2SRDY, until	; wait for PLL ready
 
-#endif  // #if STM32F4_XRC08_168MHZ | STM32F205RC_XRC10_118MHZ 
+#endif  // #if STM32F4_XRC08_168MHZ | STM32F205RC_XRC10_118MHZ
 
 // Set SYSCLOCK = SYSTEMCLOCK defined in FISH_STM32F4_EQUATES.s
 // in Assembler -> Preprocessor -> Defined Symbols
   DC32  strva, SYSTEMCLOCK, SYSCLOCK    // HCLK
-  
+
 //------------------------USART3 & GPIO I/O-------------------------------------
 // SETUP USART3 I/O FOR UART3_INIT
 //      SETBITS SETBITS:	( addr val -- ) OR val bits into addr.
@@ -206,7 +206,7 @@ RCC_CR_PLLI2SRDY	EQU	08000000h
 
 // rmwamd standalone low level ILK macro and rmwamd prim.
 // STM DISCO BOARD:    Pc10 TX, pc11 RX, PC0 GND
-  DC32 rmwamd, GPIOC_MODER,00F00003h,00A00001h	
+  DC32 rmwamd, GPIOC_MODER,00F00003h,00A00001h
   DC32 strva, 200Ch, USART3_CR1         ; Enable USART, TX and RX over8=0=16x
 
 //---------------------------USART3_INIT TEST-----------------------------------
@@ -244,6 +244,6 @@ BAUDRATE        SET     ((104 << 4 | 2)); 9600: 16MHz / ( 16 * 104.1875 )
 // SYSTICK CLKSOURCE: Bit 2 = 0 (SYSTEM CLOCK/2 OR 8)
 // SYSTICK CLKSOURCE: Bit 2 = 1 (SYSTEM CLOCK)
 //  DC32    strva, 5, SYST_CSR    // SYSCLK NO IRQ
-  DC32    strva, 7, SYST_CSR    // SYSCLK + SYSTICK IRQ 
+  DC32    strva, 7, SYST_CSR    // SYSCLK + SYSTICK IRQ
 
   DC32	SEMIS

@@ -27,11 +27,11 @@ $FISH_STM32F4_MAIN_INCLUDES.h
 // ADDED EHON and EHOFF to FISH RM
 // Changes iar.s COLD, ERROR and ABORT
 // Changes FISH_STM32F4_SLIB.s SV_INIT_VALUES: & FWARM:
-// Adds 1 word to FISH_STM32F4_MEMMAP.s - ERROR_HALT: SV 
+// Adds 1 word to FISH_STM32F4_MEMMAP.s - ERROR_HALT: SV
 
 // ADDED P(PROMPT), PON(PROMPTON) and POFF(PROMPTOFF) to FISH RM
-// Changes FISH_STM32F4_SLIB.s SV_INIT_VALUES: & FWARM: & QUIT:
-// Adds 1 word to FISH_STM32F4_MEMMAP.s - PROMPT: SV 
+// Changes FISH_STM32F4_SLIB.s SV_INIT_VALUES: & FWARM & QUIT
+// Adds 1 word to FISH_STM32F4_MEMMAP.s - PROMPT: SV
 
 // Added #define TRUE_EQU_NEG_ONE
 // Changed all user visible true flags to -1
@@ -87,7 +87,7 @@ msg_SIGNON_DLE:
 msg_MY_OK:
         DC8     " ok, go fish in BASE "
 //-----------------START OF DICTIONARY = Last word in search--------------------
-// 
+//
 //	NOOP NOOP:	( -- )
  SECTION .text : CONST (2)
 NOOP_NFA:
@@ -578,7 +578,7 @@ LFA:
 	TPUSH
 
 
-//	CFA CFA:        ( pfa -- cfa )
+//	CFA CFA:	( pfa -- cfa )
 //      Convert the parameter field address of a dictionary definition to
 //      its code field address. <if thumb2 execution addr smudged>
 
@@ -597,7 +597,7 @@ CFA:
 	TPUSH
 
 
-//	NFA NFA:        ( pfa -- nfa )
+//	NFA NFA:	( pfa -- nfa )
 //      Convert the parameter field address of a definition to its name
 //      field. Modified for nfa alighnment padding
 
@@ -613,12 +613,12 @@ NFA:
 	DC32    EIGHT, SUBB     // Addr OF lfa, DUPED TO TRAVERSE Padding
 
 NFA_ALIGN_BEGIN:
-	DC32    ONE, SUBB       // ADDR 1 BEFORE lfa, eliminate padding
+	DC32    ONEM            // ADDR 1 BEFORE lfa, eliminate padding
 	DC32    DUP, CAT        // ALIGNROM FF padded?
 	DC32    LIT, 0xFF, SUBB
 	DC32    ZBRAN           // UNTIL
 	DC32    NFA_ALIGN_BEGIN-.
-	    
+
 	DC32    LIT,-1          // DIRECTION FOR TRAVERSE = Toward nfa
 	DC32    TRAVERSE		// \ -- addr2
 	DC32    SEMIS
@@ -694,8 +694,8 @@ QERROR:
 	DC32	ZBRAN	//IF no err leave
 	DC32	 QERROR_FINISH-.
 
-	DC32	ERROR   // nullstr-addr ---  ABORT's
-	DC32	BRAN	// ELSE
+	DC32	ERROR // ( nullstr-addr --- ) ABORT's
+	DC32	BRAN	//ELSE
 	DC32	 QERROR_DONE-.
 
 QERROR_FINISH:
@@ -711,7 +711,7 @@ QERROR_DONE:
 //	equivalent digit, accompanied by a true flag. If the conversion is
 //	invalid, leaves only a false flag.
 
-//      If digit gets 0, space, dot, comma or any non number it returns 0 
+//      If digit gets 0, space, dot, comma or any non number it returns 0
 
  SECTION .text : CONST (2)
 DIGIT_NFA:
@@ -795,7 +795,7 @@ ENCL1:
 
 // FOUND null BEFORE 1ST NON-TERM CHAR
 // RETURN ok args = NULL EX//
-// \ TIB   32 -- ADDR-B4-NULL 0 1 1 So DFIND CAN FIND IT!
+// ( TIB   32 -- ADDR-B4-NULL 0 1 1 ) So DFIND CAN FIND IT!
 //
 	MOV	t, x
 	ADDS    w, w, #1	// w = offset to the delimiter after the text
@@ -841,6 +841,7 @@ NULL:
 //	Parse the text in TIB , until a delimiter c is found, tokenizing input.
 //	Move the token to HERE, with a count byte and 2 nulls at the end.
 //	Leading occurrences of c are ignored. IN is incremented.
+//      IN is initialized by FISH to 1 to account for the count byte in EXPECT.
 //	See IN. Usually used inside a definition.
 
  SECTION .text : CONST (2)
@@ -866,7 +867,7 @@ WORD2:
 WENCL:
 	DC32	IN_SV	// encl TOS = end of word offset to be added to IN
 	DC32	PSTORE  // TIB+IN   0 4
-	DC32	OVER    // 
+	DC32	OVER    //
 	DC32	SUBB    // Char cnt going to R and HERE
 	DC32	TOR
 	DC32	R
@@ -879,11 +880,11 @@ WENCL:
 // MOVE word TO DICT FOR finding ENDING WITH NULLS
         DC32    R
 	DC32	CMOVE   // ( from to count -- )
-// add null to end of token - NUMBER adjusted        
+// add null to end of token - NUMBER adjusted
         DC32    ZERO, HERE, ONEP, RFROM, PLUS, CSTORE
 #ifdef  IOBUFS_DEBUG
         DC32    HERE, ONE, DUMP
-#endif        
+#endif
 	DC32	SEMIS
 
 
@@ -973,8 +974,8 @@ NUMB1:      			// Begin
         DC32      BASE_RESET_THEN_ERROR-.
 
 // Fall thru if comma so reset DPL to create a single number.
-DPL_RESET:        
-        DC32    LIT, -1
+DPL_RESET:
+  DC32    TRUE_NEG_1
 	DC32	BRAN
 	DC32      NUMB1-.
 #endif
@@ -1008,7 +1009,7 @@ NUMB3:        		        // endif
 
 //	ERROR ERROR:	( nullstr --- )
 //	Execute error notification and restart of system.
-//      IN_SV is saved to assist in determining the location of the error.
+//  IN_SV is saved to assist in determining the location of the error.
 
  SECTION .text : CONST (2)
 ERROR_NFA:
@@ -1024,13 +1025,13 @@ ERROR:
 	DC32	NULLSTRLEN, TYPE        // Passed in null string
 #ifdef IO2TP
 ERROR_BP1:
- DC32 NOOP   // View error message
-        DC32    CLRPAD  // Resets OUT
+// DC32 NOOP   // View error message
+   DC32 CLRPAD  // Resets OUT
 #endif
 #ifdef XON_XOFF
         DC32    XOFF    // TEMP TEST THRE
 #endif
-        
+
 //      DO THIS WHERE STATE IS SET BACK TO ZERO
         DC32    STATE_SV, AT
         DC32    ZBRAN
@@ -1114,10 +1115,12 @@ EXPECT:			// ( NOS TOS -- NOS TOS )
 	DC32	PLUS	// ( TIB TIB+LEN+1 -- )
 	DC32	OVER	// ( TIB TIB+LEN+1 TIB -- )
         DC32    ONEP    // ( TIB TIB+LEN+1 TIB+1 -- ) SKIP COUNT BYTE
+
+///* FISH System compiled KEY does not issue XON - user version does!
 #ifdef XON_XOFF
 	DC32	XON
 #endif
-// ( ORGIGINAL-TIB TIB+LEN+1 TIB+1 -- ORGIGINAL-TIB ) 
+// ( ORGIGINAL-TIB TIB+LEN+1 TIB+1 -- ORGIGINAL-TIB )
 //                (Index & Limit)+1 for count byte
 	DC32	XDO	// DO	Index = addr, Limit = addr+cnt
 EXPE1:
@@ -1129,7 +1132,7 @@ EXPE1:
 	DC32	DUP, LIT, 9, EQUAL	// ? TAB
         DC32    ZBRAN                   // Not tab
         DC32     EL1-.                  // Goto MAIN LOOP
-        
+
 // REPLACE TAB WITH SPACE               // -- ch f
         DC32    DROP, BLANK             // Convert tab to space
 EL1:
@@ -1154,14 +1157,14 @@ EL1:
         DC32    ONEM
 	DC32	EQUAL           // ( TOS> I=TIB+? TIB TIB -- f TIB )
 	DC32	DUP             // ( TOS> f TIB -- f f TIB )
-// I AND RFROM STARTS AT TIB+1 
+// I AND RFROM STARTS AT TIB+1
 // REMOVE INDEX FROM LOOP TO REPLACE IT WITH BACKSPACE CORRECTED ADDRESS
 	DC32	RFROM           // ( TOS> f f TIB -- TIB+1 f f TIB )
 // ADDING 2 BECAUSE TIB+1 IS FROM I AND FLAG MAKES IT = TO 1
 // WHEN AT THE BEGIINING (ADDR+1) OF THE ADDR BUFFER
 	DC32	TWO
 	DC32	SUBB
-// ADD FLAG 
+// ADD FLAG
 	DC32	PLUS
 	DC32	TOR
 	DC32	ZBRAN           // If not at beginning of line
@@ -1183,9 +1186,9 @@ EXPE2:
 	DC32	EQUAL
 	DC32	ZBRAN           // If not cr
 	DC32	 EXPE4-.        // Goto save this char and loop again
-        
+
 	DC32	LEAVE           // ( TOS> ODh TIB --  )
-#ifdef  IOBUFS_DEBUG        
+#ifdef  IOBUFS_DEBUG
         DC32    DOTSHEX
 #endif
         // CR DROPPED HERE I USED AT END FOR CASE OF EXPECT COUNT REACHED
@@ -1196,12 +1199,12 @@ EXPE2:
 	DC32	 EXPE5-.
 
 EXPE4:
-	DC32	DUP	        // Regular char 
+	DC32	DUP	        // Regular char
 
 EXPE5:
 	DC32	I               // I=TIB Store char
 	DC32	CSTORE          // or 1rst null in CASE OF CR
-        DC32    ONE, IN_SV, PSTORE
+  DC32  ONE, IN_SV, PSTORE
 	DC32	ZERO            // 1rst or second null if cr
         // CASE OF CR ( TOS> 0 20h TIB -- )
 	DC32	I
@@ -1215,9 +1218,9 @@ EXPE33:
 	DC32	 EXPE1-.        // Loop is LEAVE'd
 
 #ifdef XON_XOFF
-	DC32	XOFF	        // FOR CASE OF count reached befor cr
+	DC32	XOFF	        // Count reached or cr = 2nd XOFF
 #endif
-// Creat count byte        
+// Creat count byte
         // ( ORIGINAL ADDR -- )
         // ORIGINAL ADDR (TIB) ON STACK HERE SO CORRECT FOR $LEN
         DC32    ONEP            // PAST COUNT BYTE FOR CORRECT COUNT
@@ -1251,7 +1254,7 @@ COUNT:
 	DC32	SWAP
 //        DC32    CATLT7F
 	DC32	CAT     // n could be SMUDGE'd count from NFA's
-	DC32	SEMIS   // Only internal usage is ID.
+	DC32	SEMIS   // Only internal usage of smudged count is ID.
 
 
 //      $LEN NULLSTRLEN:	( addr --- addr len )
@@ -1330,7 +1333,7 @@ VS_RECVR_LOOP:
         DC32    LIT, DOVAR, EQUAL       // IS IT A DOVAR
         DC32    ZBRAN
         DC32     VS_RECVR_NEXT-.
-        
+
         DC32    LIT, -4, UP_SV, PSTORE  // DECREMENT UP
 
 VS_RECVR_NEXT:
@@ -1386,7 +1389,7 @@ ABORT:
 	DC32    RPSTO
 #ifdef IO2TP
 //ABORT_BP1:
-//	DC32    NOOP    // TEMP TEST IO2TP
+// DC32 NOOP    // TEMP TEST IO2TP
 	DC32	CLRTIB  // Resets IN
 	DC32	CLRPAD  // Resets OUT
 #endif
@@ -1451,7 +1454,7 @@ COLD_NFA:
 	DC32	ABORT_NFA
 COLD:
 	DC32	DOCOL
-	DC32	WARM		// FISH System VAR init.
+	DC32	WARM		// RAMVARSPACE Init
 	DC32	SIGNON
 #ifdef ABORT_STOP_TILL_CO
         DC32    QUIT
@@ -1466,7 +1469,7 @@ COLD:
  SECTION .text : CONST (2)
 WC_FISH_SYS_NFA:
 	DC8	0x80+4+12        // +4 is format chars constant
-                                // +n is Name lenght
+                       // +n is Name lenght
         DC8     0x0D, 0x0A
 	DC8	'FISH System:'
         DC8     0x0D, 0x0A+0x80
@@ -1548,14 +1551,14 @@ DOTS:
 	DC8	5
 	DC8	'TOS> '
  ALIGNROM 2,0xFFFFFFFF
-      
+
 	DC32	INITSO_SV, AT, SPAT, FOURP
 	DC32	XDO
 
 DOTSLOOP:
 	DC32	I, AT
 	DC32	BASE_SV, AT
-        DC32    LIT, 10, EQUAL                  // 
+        DC32    LIT, 10, EQUAL                  //
         DC32    ZBRAN                           // NOT = DECIMAL
         DC32    DBSUSEDUDOT-.
         DC32    DOT_BASE_SUFFIX
@@ -1591,14 +1594,14 @@ TDUP:
 // TDUP: OPT by picking pops
 	LDR     t, [p]          //
 	LDR     w, [p, #4]      //
-	DPUSH			// 
+	DPUSH			//
 
 
 //	-DUP ZNDUP:	( n1 -- n1 (if zero)
 //                      ( n1 -- n1 n1 (non-zero)
 //	Reproduce n1 only if it is non-zero. Used in type andSPACES.
 //      This is usually used to copy a value just before IF, to eliminate
-//      the need for an ELSE part to drop it. 
+//      the need for an ELSE part to drop it.
 
  SECTION .text : CONST (2)
 DDUP_NFA:
@@ -1906,8 +1909,8 @@ ANDBITS:
 	NEXT
 
 
-//      SETBITS SETBITS:	( addr val -- ) OR val bits into addr.
-//	See also CLRBITS.
+//	SETBITS SETBITS:	( addr val -- )
+//	OR val bits into addr. See also CLRBITS.
 //	Preserves bits at addr - useful for ARM SoC initialization.
 
  SECTION .text : CONST (2)
@@ -1920,15 +1923,15 @@ SETBITS_NFA:
 SETBITS:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POPp2w 		// val
-	POP2n 		// addr
-	LDR     t, [n]	// read[val]
+	POPp2w 		// val w_r2
+	POP2n 		// addr n_r1
+	LDR     t, [n]	// read[val]t_r0
 	ORRS	t, t, w	// modify val
 	STR	t, [n]	// Write val
 	NEXT
 
 
-//      CLRBITS CLRBITS:	( addr val -- )
+//	CLRBITS CLRBITS:	( addr val -- )
 //	XOR val bits into addr. See also SETBITS.
 //	Preserves bits at addr - useful for ARM SoC initialization.
 
@@ -2106,7 +2109,7 @@ AT:
 	LDR     t, [n]
 	TPUSH
 //#endif
-	
+
 //	C@ CAT:	( addr -- b )
 //	Leave the 8 bit contents of addr on the stack.
 //	Pronounced "Char Fetch", as in Fetch byte at addr.
@@ -2138,8 +2141,8 @@ STORE_NFA:
 STORE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t		// ADDR
-	POP2n		// DATA
+	POP2t		// ADDR t_r0
+	POP2n		// DATA n_r1
 	STR	n, [t]
 	NEXT
 
@@ -2232,7 +2235,7 @@ BCOMP_NFA:
 	DC32	LBRAC_NFA
 BCOMP:
 	DC32	DOCOL
-	DC32	DFIND   // noop there for TIB entry
+	DC32	DFIND   // no-op there for TIB entry
 //	-FIND \ --- pfa len tf (found) \ --- ff (not found)
 	DC32	ZEQU
 	DC32	LIT, msg_qstack
@@ -2704,6 +2707,11 @@ IF:
 	DC32	TWO     // 2 is the Error checking number for if.
 	DC32	SEMIS
 
+////////////////////////////////////////////////////////////////////////////////
+// zzzt this is compille time.
+///The ZBRAN control structure is comparing [ QPAIR COMP ]to the old true, ONE
+// instead of ZERO. Comparing to ZERO allows ONE and the new -1 TRUE to work~!
+
 
 //	UNTIL UNTIL:	( f -- ) IMMEDIATE
 //			( addr n -- ) COMPILE:
@@ -2939,7 +2947,7 @@ CREA1:
 // CSDP is reset by SEMIC_CREATE when this definition is completed.
 // SEMIC_CREATE used in ; CON and VAR to reset CSDP.
 
-// This new definitions cstring name has been moved to HERE 
+// This new definitions cstring name has been moved to HERE
         DC32    HERE, DUP       // This will become the new CURRENT (this NFA).
         DC32    CSDP_SV, STORE  // HERE to CSDP to restore in case of error.
 // Dup HERE-NFA to allot NFAx
@@ -2947,7 +2955,7 @@ CREA1:
 // Limit NFA allot to maxwordlen. DOES NOT CHANGE actual count!
 // If count is larger than MAXWORDLEN behaviour of this def is unpredictable!
 	DC32	CAT
-	DC32	LIT, MAXWORDLEN // ELIMINATED WIDTH AND WIDTH_SV 
+	DC32	LIT, MAXWORDLEN // ELIMINATED WIDTH AND WIDTH_SV
 	DC32	MIN
 	DC32	ALLOT_PRIM      // HERE (DP) at end of NFA with padding.
 // Dup HERE-NFA to set count byte, and to be consumed later
@@ -2994,7 +3002,6 @@ CONSTANT_NFA:
 	DC32	CREATE_NFA
 CONSTANT:
 	DC32	DOCOL, CON, SEMIS   // CREATE DOES DICTSPACE CHECK
-
 
  SECTION .text : CONST (2)
 CON_NFA:
@@ -3304,7 +3311,7 @@ TWOSLASH:
 	POP2t
 	ASRS	t, t, #1	//
 	TPUSH
-        
+
 
 //	1- ONEM:	( n -- n-1 )
 
@@ -3400,7 +3407,7 @@ ZERO_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	FOURM_NFA
 ZERO:
-	DC32	DOCON, 0
+	DC32	DOCON, 0x0
 
 
 //	1 ONE: ( -- 1 )
@@ -3412,7 +3419,7 @@ ONE_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	ZERO_NFA
 ONE:
-	DC32	DOCON, 1
+	DC32	DOCON, 0x1
 
 
 //	2 TWO: ( -- 2 )
@@ -3424,7 +3431,7 @@ TWO_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	ONE_NFA
 TWO:
-	DC32	DOCON, 2
+	DC32	DOCON, 0x2
 
 
 //	3 THREE: ( -- 3 )
@@ -3436,7 +3443,7 @@ THREE_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	TWO_NFA
 THREE:
-	DC32	DOCON, 3
+	DC32	DOCON, 0x3
 
 
 //	4 FOUR: ( -- 4 )
@@ -3448,7 +3455,7 @@ FOUR_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	THREE_NFA
 FOUR:
-	DC32	DOCON, 4
+	DC32	DOCON, 0x4
 
 
 //	M* MSTAR:	( n1 n2 -- d=<S32LSW S32MSW> )	SIGNED:
@@ -3712,9 +3719,9 @@ LESSTHAN:
 #else
         MOVS    t, #1
 #endif
-	POP2n				// n2
-	POP2w				// n1
-	CMP     n, w        // n1 < n2
+	POP2n		// n2
+	POP2w		// n1
+	CMP     n, w    // n1 < n2
 	BGT	LESS1
 
 	EORS	t, t    // zero t =< n
@@ -3751,7 +3758,7 @@ ULES2:
 	DC32	SEMIS		//endif
 
 
-//	> GREATERTHAN:	( n1 n2 --  f )	SIGNED:	L0
+//	> GREATERTHAN:	( n1 n2 -- f )	SIGNED:	L0
 //	Leave a true flag if n1 is greater than n2 otherwise a false flag.
 //	-1 1 > . 0  1 -1 > . 1
 
@@ -4034,7 +4041,7 @@ XORR:
 	EORS     t, t, n
 	TPUSH
 
-//	SXTH SXH:	( nl -- n3 )
+//	SXTH SXTH:	( nl -- n3 )
 //	Sign extend HALFWORD on the stack
 
  SECTION .text : CONST (2)
@@ -4052,8 +4059,8 @@ SXH:
 	TPUSH
 
 
-//	SXTB SXB:	( nl -- n3 )
-//	Signe extend byte in the word on the stack
+//	SXTB SXTB:	( nl -- n3 )
+//	Sign extend byte in the word on the stack
 
  SECTION .text : CONST (2)
 SXTB_NFA:
@@ -4088,7 +4095,7 @@ REVW:
 	TPUSH
 
 
-//	ASR ASR:   ( sn count -- sn' )  
+//	ASR ASR:   ( sn count -- sn' )
 //      Shift sn (sign-extended) right by count.
 //	Valid count values are 0 to 31.
 
@@ -4187,8 +4194,8 @@ DOTRU:
 	DC32	DUP, RFROM
 	DC32	SWAP, SUBB, SPACES, TYPE
 #ifdef IO2TP
-          DC32 NOOP
-        DC32    CLRPAD  // Resets OUT
+// DC32 NOOP
+   DC32    CLRPAD  // Resets OUT
 #endif
 	DC32	SEMIS
 
@@ -4266,6 +4273,8 @@ DOTBIN:
 #endif  // not SRM
 
 
+//	.H DOTHEX:	( n -- )
+//	Prints TOS in Hex using DOT, not affecting Base in the system
  SECTION .text : CONST (2)
 DOTHEX_NFA:
 	DC8	0x82
@@ -4300,10 +4309,31 @@ DOTDEC:
 	DC32	SEMIS
 #endif  // not SRM
 
+//	OFF:	( -- 0 ) FALSE/OFF is 0 is FISH
+ SECTION .text : CONST (2)
+OFF_ZERO_NFA:
+    DC8	0x83
+    DC8	'OF'
+    DC8	'F'+0x80
+ ALIGNROM 2,0xFFFFFFFF
+    DC32	DOTDEC_NFA
+OFF_ZERO:
+    DC32	DOCON, 0X0
+
+//	ON:	( -- -1 ) TRUE/ON is -1 is FISH
+ SECTION .text : CONST (2)
+TRUE_NEG_1_NFA:
+    DC8	0x82
+    DC8	'O'
+    DC8	'N'+0x80
+ ALIGNROM 2,0xFFFFFFFF
+    DC32	OFF_ZERO_NFA
+TRUE_NEG_1:
+    DC32	DOCON, -1
 
 //=============================== WORDCAT ====================================//
-//NOEXEC HEADERFORWORDCATEGORIES
-//	WC_NUMBERS_NFA = NUMBER Stuff: CATEGORY
+// NOEXEC HEADERFORWORDCATEGORIES
+// WC_NUMBERS_NFA = NUMBER Stuff: CATEGORY
 
  SECTION .text : CONST (2)
 WC_NUMBERS_NFA:
@@ -4312,16 +4342,17 @@ WC_NUMBERS_NFA:
 	DC8	'NUMBER Stuff:'
         DC8     0x0D, 0x0A+0x80
  ALIGNROM 2,0xFFFFFFFF
-        DC32    DOTDEC_NFA
+//        DC32    DOTDEC_NFA
+        DC32    TRUE_NEG_1_NFA
 
 
-//=============================== UART0_INIT =================================//
+//=============================== UART3_INIT =================================//
 
-// LFA ABOVE NEEDS TO BE WC_NUMBERS_NFA
+// LFA ABOVE NEEDS TO BE WC_NUMBERS_NFA OR CHANGE IT IN THIS LINKED FILE:
 $FISH_STM32F4_UART3_INIT.s
 // LFA BELOW NEEDS TO BE UART3_INIT_NFA
 
-//=============================== UART0_INIT =================================//
+//=============================== UART3_INIT =================================//
 
 //	MYBAUD MYBAUD: ( n -- ) BAUD MUST BE IN DECIMAL or EQUIVALENT!!!
 //	MUST BE USED BEFORE USING UART0_INIT!!!
@@ -4502,7 +4533,7 @@ IDDOT:
 //	NOW COUNT is on NFA, fig code copied it out to pad
 	DC32	COUNT   // Count could be SMUDGE'd.
 	DC32	LIT, MAXWORDLEN // Strip SMUDGEing from count
-	DC32	ANDD            // only time 
+	DC32	ANDD            // only time
 	DC32	TYPE    // TYPE needs actual count un SMUDGE'd
 	DC32	SPACE
 	DC32	SEMIS
@@ -4620,7 +4651,7 @@ EMIT:
  SECTION .text : CODE (2)
 	POP2t		        // GET CHAR
         BL      TXRDY_SUBR
-        LDR     n, = USART3_DR // 
+        LDR     n, = USART3_DR //
 // BSOUT handles negative out issue
         STRB    t, [n]          // EMIT (Send) Char
         LDR     n, = OUT        // Increment Out
@@ -4641,9 +4672,9 @@ EMIT:
 //      +!
         ADDS    x, x, #1        // +  Increment by 1
         STR     x, [w]          // ! new OUT value to OUT
-	
+
         NEXT
-#endif	// IO2TP
+#endif	// else IO2TP
  LTORG
 
 
@@ -4660,21 +4691,26 @@ KEY_INTERPRETED_ENTRY:
 #ifndef IO2TP
 	DC32	DOCOL
         DC32    XON     // EXEC SETS XOFF SO UNDO IT
-        DC32    KEY     // TE GET KEY!
-        DC32    SEMIS
+        DC32    KEY     // Then GET KEY!
+  DC32  SEMIS
 
-
-//:NONAME KEY KEY:      ( -- CH ) 0-7Fh
+//:NONAME KEY KEY:      ( -- CH )
+// This is the FISH System KEY compiled in the FISH RM
+// KEY_INTERPRETED_ENTRY is the user interpreted/compiled hi-level version
+// That issues XON  before calling this KEY
 KEY:
 	DC32	.+5
  SECTION .text : CODE (2)
         LDR     w, = USART3_DR // Data Register w_r2
         LDR     x, = USART3_SR // Status Register x_r3
+        // USART3_SR = COh IS NO KEY, GOES TO 03 QND WAITS FOR A KEY
+        // USART3_SR = F0h THE COh ?
 rxRDY?:
-        LDR     n, [x]         // Get Line Status value from [x_r3], put in n_r2 
+        LDR     n, [x]         // Get Line Status value from [x_r3], put in n_r2
 //      LSRS    n, n, #5       // Bit 5 RXNE: Read data register not empty
 // THIS IS ___ AND FAILS TEXT DOWNLOAD
         LSRS    n, n, #6       // Bit 6 ORIG - REQ'D FOR TEXT FILE DOWNLOAD
+                                // Bit 6 TC: Transmission complete
         BCC     rxRDY?         // sets carry flag to fall thru
 
         LDR     t, [w]         // t_r0 w_r2 should be uart data register
@@ -4736,14 +4772,13 @@ CRS_NFA:
         DC32	QKEY_NFA
 CRS:
         DC32	DOCOL
-        DC32    ZERO
+        DC32  ZERO
         DC32	XDO
 CRS_BEGIN:
 	DC32	CR
 	DC32	XLOOP
-        DC32     CRS_BEGIN-.
+        	DC32     CRS_BEGIN-.
         DC32    SEMIS
-
 
 //	CR CR:	( -- )
 //      Emit cr (0x0d) and lf (0x0A)
@@ -4772,7 +4807,7 @@ CR:
 
 //=============================== WORDCAT ====================================//
 //NOEXEC HEADERFORWORDCATEGORIES
-//	WC_UART0_NFA = FISH IO: CATEGORY
+//	WC_UART3_NFA = FISH IO: CATEGORY
 
  SECTION .text : CONST (2)
 WC_UARTx_NFA:
@@ -4783,7 +4818,7 @@ WC_UARTx_NFA:
  ALIGNROM 2,0xFFFFFFFF
         DC32    CR_NFA
 
-//      CMSIS_ENABLE_IRQS IRQS_RESUME:  ( -- )
+//	CMSIS_ENABLE_IRQS IRQS_RESUME:	( -- )
  SECTION .text : CONST (2)
 IRQS_RESUME_NFA:
 	DC8	0x8B
@@ -4799,7 +4834,7 @@ CMSIS_ENABLE_IRQS:
         BL      C_CMSIS_ENABLE_IRQS
         NEXT
 
-//      CMSIS_DISABLE_IRQS IRQS_SUSPEND:        ( -- )
+//	CMSIS_DISABLE_IRQS IRQS_SUSPEND:	( -- )
  SECTION .text : CONST (2)
 IRQS_SUSPEND_NFA:
 	DC8	0x8C
@@ -4816,7 +4851,7 @@ CMSIS_DISABLE_IRQS:
         NEXT
 
 
-//	SYSTICK_IRQ_OFF SYSTICK_IRQ_OFF:       	( -- )
+//	SYSTICK_IRQ_OFF SYSTICK_IRQ_OFF:	( -- )
 //      Turn SYSTICK interrupt off.
 //      STCTR only incremented when SYSTICK interrupt is on.
 //      STI_ON: 7 E000E010h !  STI_OFF: 5 E000E010h ! E000E010h @ .H
@@ -4957,7 +4992,7 @@ DOTDICTSPACE_NFA:
  ALIGNROM 2,0xFFFFFFFF
 //	DC32	FLASH_FORGET_NFA
 //      DC32    P_NFA
-        DC32    EHON_NFA
+	DC32    EHON_NFA
 DOTDICTSPACE:
 	DC32	DOCOL
 	DC32	DICTSPACE
@@ -4969,7 +5004,7 @@ DOTDICTSPACE:
 #ifdef IO2TP
 //DOTDICTSPACE_BP1:
 // DC32 NOOP
-        DC32    CLRPAD  // Resets OUT
+	DC32    CLRPAD  // Resets OUT
 #endif
 	DC32	SEMIS
 
@@ -4999,7 +5034,7 @@ DOTVARSPACE:
 #ifdef IO2TP
 //DOTVARSPACE_BP1:
 // DC32 NOOP
-        DC32    CLRPAD  // Resets OUT
+	DC32    CLRPAD  // Resets OUT
 #endif
 	DC32	SEMIS
 
@@ -5021,8 +5056,8 @@ DUMP:
 
 	DC32	OVER, QALIGNED  // \ -- addr n
 // DON'T SAVE BASE UNTIL AFTER ALIGNED TEST
-        DC32    BASE_TO_R12     // Save current BASE
-        DC32    HEX
+	DC32    BASE_TO_R12     // Save current BASE
+	DC32    HEX
 	DC32	ZERO, XDO
 DUMP_ADDR_LINE:
 	DC32	CR
@@ -5034,31 +5069,31 @@ DUMP_EACH_LOC:
 // but to see character strings REVW is needed
 // but the addresses are scrambled!
 //        DC32    REVW                    // Reverse bytes in word
-        DC32    LIT, 14, DOTRU          // Diplay in Field
+	DC32    LIT, 14, DOTRU          // Diplay in Field
 	DC32	FOURP
 	DC32	XLOOP
-	DC32	 DUMP_EACH_LOC-.
+	DC32	  DUMP_EACH_LOC-.
 
 #ifdef IO2TP
 DUMP_BP1:
- DC32 NOOP
-        DC32    CLRPAD  // Resets OUT
+ DC32 NOOP	// IO2TP DUMP
+	DC32    CLRPAD  // Resets OUT
 #endif
-        DC32    QKEY
-        DC32    ZBRAN
-        DC32     DUMP_CONT-.
-        DC32    LEAVE
+	DC32    QKEY
+	DC32    ZBRAN
+	DC32     DUMP_CONT-.
+	DC32    LEAVE
 DUMP_CONT:
-        DC32    XLOOP
+	DC32    XLOOP
 	DC32	DUMP_ADDR_LINE-.
 
-        DC32    DROP, CR
-        DC32    BASE_FROM_R12   // Restore BASE
+	DC32    DROP, CR
+	DC32    BASE_FROM_R12   // Restore BASE
 	DC32	SEMIS
 
 
-//      VBASE VBASE:	( -- addr )
-//      Return base addr of VAR's .
+//	VBASE VBASE:	( -- addr )
+//       Return base addr of VAR's .
 
  SECTION .text : CONST (2)
 VBASE_NFA:
@@ -5068,11 +5103,11 @@ VBASE_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	DUMP_NFA
 VBASE:
-        DC32    DOCON,  RAMVARSPACE_START
+	DC32    DOCON,  RAMVARSPACE_START
 
 
-//      DBASE DBASE:	( -- addr )
-//      Return base addr of the dictionary.
+//	DBASE DBASE:	( -- addr )
+//	Return base addr of the dictionary.
 
  SECTION .text : CONST (2)
 DBASE_NFA:
@@ -5082,11 +5117,11 @@ DBASE_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	VBASE_NFA
 DBASE:
-        DC32    DOCON,  ORIG
+	DC32    DOCON,  ORIG
 
 
-//      RBASE RBASE:	( -- addr )
-//      Return base addr of RAM THE DICTIONARY IS IN!.
+//	RBASE RBASE:	( -- addr )
+//	Return base addr of RAM.
 
  SECTION .text : CONST (2)
 RBASE_NFA:
@@ -5096,7 +5131,7 @@ RBASE_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	DBASE_NFA
 RBASE:
-        DC32    DOCON,  RAM_START    // RAM WHERE DICT ALLOACTED IN MEMMAP
+	DC32    DOCON,  RAM_START    // RAM WHERE DICT ALLOACTED IN MEMMAP
 
 
 //	CLS CLS:	( -- )
@@ -5110,18 +5145,18 @@ CLS_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	RBASE_NFA
 CLS:
-        DC32	DOCOL
-        DC32    PDOTQ
-        DC8     4
-        DC8     0x1B, '['       // ESC[ = ANSI VT100 ESC SETUP
-        DC8     '2J'            // Clearscreen
+	DC32	DOCOL
+	DC32    PDOTQ
+	DC8     4
+	DC8     0x1B, '['       // ESC[ = ANSI VT100 ESC SETUP
+	DC8     '2J'            // Clearscreen
  ALIGNROM 2,0xFFFFFFFF
-        DC32    PDOTQ
-        DC8     4
-        DC8     0x1B, '['       // ESC[ = ANSI VT00 ESC SETUP
-        DC8     ';H'            // CURSORHOME \ upper left corner
+	DC32    PDOTQ
+	DC8     4
+	DC8     0x1B, '['       // ESC[ = ANSI VT00 ESC SETUP
+	DC8     ';H'            // CURSORHOME \ upper left corner
  ALIGNROM 2,0xFFFFFFFF
-        DC32    CR              // Reset OUT
+	DC32    CR              // Reset OUT
 	DC32	SEMIS
 
 
@@ -5146,32 +5181,32 @@ PAREN:
 	DC32	DOCOL
 PML_LOOP:
 	DC32    LIT, ')'
-        DC32    TIB_CHAR_SCAN   // ( c -- f )
+	DC32    TIB_CHAR_SCAN   // ( c -- f )
 //
-        DC32    ZEQU            // If null
-        DC32    ZBRAN           // found fall thru
-        DC32      PE_DONE-.     // else were done
+	DC32    ZEQU            // If null
+	DC32    ZBRAN           // found fall thru
+	DC32      PE_DONE-.     // else were done
 
 // Acting like the outer interpreter here, signal DLE
-        DC32    CR, LIT, 0x10, EMIT
-        DC32    QUERY
+	DC32    CR, LIT, 0x10, EMIT
+	DC32    QUERY
 //  AND IF ONLY CR (null) ERR
 //        DC32    TIB_SV, CAT
-        DC32    LIT, TIB+1, CAT // PAST COUNT BYTE
-        DC32    ZBRAN
-        DC32      PAREN_ERR-.
+	DC32    LIT, TIB+1, CAT // PAST COUNT BYTE
+	DC32    ZBRAN
+	DC32      PAREN_ERR-.
 
 //  If closing paren not in this line LOOP
-        DC32    BRAN
-        DC32      PML_LOOP-.
+	DC32    BRAN
+	DC32      PML_LOOP-.
 
 PE_DONE:
-        DC32    SEMIS
+	DC32    SEMIS
 
 PAREN_ERR:
-        DC32    LIT, msg_paren_err
+	DC32    LIT, msg_paren_err
 	DC32	NULLSTRLEN, TYPE        // Passed in null string
-        DC32    SEMIS
+	DC32    SEMIS
 
 
 //	BACKSLASH BACKSLASH:	( --  )
@@ -5185,9 +5220,9 @@ BACKSLASH_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	PAREN_NFA
 BACKSLASH:
-        DC32    DOCOL
-        DC32    ZERO, TIB_SV, IN_SV, AT, PLUS, CSTORE
-        DC32    SEMIS
+	DC32    DOCOL
+	DC32    ZERO, TIB_SV, IN_SV, AT, PLUS, CSTORE
+	DC32    SEMIS
 
 
 //	SYSCLK SYSCLK:	( -- value )
@@ -5270,7 +5305,7 @@ DELAY_DONE:
 
 
 //	MS MS: ( n -- ) n * 1 millisecond execution time
-//      SYSTICK_IRQ_ON/OFF  STI_ON: 7 E000E010h !  STI_OFF: 5 E000E010h ! 
+//      SYSTICK_IRQ_ON/OFF  STI_ON: 7 E000E010h !  STI_OFF: 5 E000E010h !
 
  SECTION .text : CONST (2)
 MS_NFA:
@@ -5294,13 +5329,13 @@ MS:
         DC32    SEMIS
 
 
-//      WORDCAT WORDCAT: ( -- )
-//      Creates a Word Category NFA and LFA that cannot be searched for,
-//      but is displayed by WORDS and MYWORDS to label a group of Words.
-//      Define a group of Words and then add a category name with WORDCAT.
-//      EX: WORDCAT MY APP WORDS:
-//      It must be on a line of it's own.
-//      The colon at the end is FISH convention.
+//	WORDCAT WORDCAT: ( -- )
+//	Creates a Word Category NFA and LFA that cannot be searched for,
+//	but is displayed by WORDS and MYWORDS to label a group of Words.
+//	Define a group of Words and then add a category name with WORDCAT.
+//	EX: WORDCAT MY APP WORDS:
+//	It must be on a line of it's own.
+//	The colon at the end is FISH convention.
  SECTION .text : CONST (2)
 WORDCAT_NFA:
 	DC8	0x87
@@ -5358,7 +5393,7 @@ WORDS1:  // ADD nfa length to current out_uv & verify it doesn't violate csll.
         DC32    EQUAL, ZEQU     // -- nfa zerro flag
         DC32    ZBRAN           // -- nfa zero
         DC32     WORDS2-.       // wc_ goto
-        
+
         DC32    DROP            // -- nfa
         DC32    DUP, PFA, LFA   // -- nfa lfa
         DC32    OVER, SUBB      // -- nfa (lfa - nfa)
@@ -5419,7 +5454,7 @@ NOT_WC:
 
 #ifdef  IO2TP
 WORDS_BP2:
- DC32 NOOP
+ DC32 NOOP	// WORDS IO2TP BP2
 #endif
 WORDSDONE:
 	DC32	DROP, CR
@@ -5459,8 +5494,9 @@ FISH_ONLY:
  SECTION .text : CODE (2)
 //	LDR	n, = TASK_NFA           // preserve TOS
 
-/* Define TOP of Dictionary:  
-The top of the dictionary is defined in these places
+/* To make a new WORDCAT the current TOP of the Dictionary:
+iNCLUDE NEW WC FILE IN IAR.S: FISH OEM WORDCAT LIST
+The top of the dictionary is defined in these places:
 In SLIBS SV_INIT_VALUES:
 //        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
         DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
@@ -5469,7 +5505,13 @@ IN FLASH RAMWORDS:
         DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
 In IAR FISH_ONLY:
 //        LDR     n, = WC_FISH_PubRel_NFA
-        LDR     n, = WC_FISH_GPIO_NFA
+*/
+
+// THe wordcat is at the end of the file.
+// The words are defined ahead of the wordcat.
+
+// BTW the flashloader demo is here:
+// https://www.st.com/en/development-tools/flasher-stm32.html
 
 */
         LDR     n, = WC_FISH_GPIO_NFA
@@ -5493,7 +5535,6 @@ In IAR FISH_ONLY:
 //	FISH FISH:	( -- )
 //	Print Flash Status and FISH Signon Message.
 
-
  SECTION .text : CONST (2)
 FISH_NFA:
 	DC8	0x84
@@ -5503,7 +5544,7 @@ FISH_NFA:
 	DC32	FISH_ONLY_NFA
 FISH:
 	DC32	DOCOL
-        DC32    FLASH_SCAN
+  DC32    FLASH_SCAN
 	DC32	SIGNON
 	DC32	SEMIS
 
@@ -5520,17 +5561,20 @@ WC_FISH_PubRel_NFA:
  ALIGNROM 2,0xFFFFFFFF
         DC32    FISH_NFA
 
-;**** FIRST WORD LISTED****
+;**** FIRST WORD LISTED IS A WORDCAT~!****
 
-//=============================== Obsolete WORDCAT ===========================//
-// THIS IS BECOMING OBSOLETE
-// IT needs to be combined with the next logocal cat which is GPIO
-#ifdef FISH_STM_M3_PRO_WORDCAT
-$FISH_STM_M3_PRO_WORDSET.s
-#endif
-//=============================== PSTAT GPIO WORDCAT =========================//
-// Conditionally include FISH_STM32F4_GPIO_WC here
-//#ifdef FISH_STM32F4_GPIO_WC
+//========================== FISH OEM WORDCAT LIST ===========================//
+/* To make a new WORDCAT the current TOP of the Dictionary:
+iNCLUDE NEW WC FILE IN IAR.S: FISH OEM WORDCAT LIST
+The top of the dictionary is defined in these places:
+In SLIBS SV_INIT_VALUES:
+//        DC32    WC_FISH_PubRel_NFA // FISH in flash starts here = CURRENT
+IN FLASH RAMWORDS:
+//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here = CURRENT
+In IAR FISH_ONLY:
+//        LDR     n, = WC_FISH_PubRel_NFA
+*/
+//======================== B.I.G.PSTAT GPIO WORDCAT ==========================//
 $FISH_GPIO_WC.h
 // If included link below will point to the GPIO WORDCAT
 //#endif
@@ -5538,7 +5582,7 @@ $FISH_GPIO_WC.h
 
 //------------------------------------------------------------------------------
 // FOR MULTI TASKING MUST BE PLACED IN RAM AND OFFSET USED IN SYSTEM VARS!!!!!!
-//            T A S K 
+//            T A S K
 //
 ;.data		// Place TASK at beginning of RAM, or not.
 /*
