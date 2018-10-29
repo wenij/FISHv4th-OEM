@@ -2936,7 +2936,7 @@
                 </option>
                 <option>
                     <name>RunToEnable</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>RunToName</name>
@@ -2972,7 +2972,7 @@
                 </option>
                 <option>
                     <name>OCDynDriverList</name>
-                    <state>STLINK_ID</state>
+                    <state>JLINK_ID</state>
                 </option>
                 <option>
                     <name>OCLastSavedByProductVersion</name>

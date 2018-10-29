@@ -12,7 +12,7 @@ BELL:
 	DC32	DOCOL, LIT, 0x07, EMIT, SEMIS
 
 //:NONAME EIGHT:      ( -- n )
-//:NONAME BACKSPACE_CHAR:  ( -- n ) 
+//:NONAME BACKSPACE_CHAR:  ( -- n )
 EIGHT:
 BACKSPACE_CHAR:
         DC32    DOCON, 8
@@ -28,14 +28,14 @@ BSOUT:
         DC32    PLUS
         DC32    ZERO, SWAP, CSTORE // 0 char, terminate string
         DC32    LIT, -4, OUT_SV, PSTORE // Keep OUT in synch
-        DC32    LIT, -1, IN_SV, PSTORE // Keep IN in synch
+        DC32    TRUE_NEG_1, IN_SV, PSTORE // Keep IN in synch
         DC32    SEMIS
 
-//:NONAME zero_IN:       ( -- ) 
+//:NONAME zero_IN:       ( -- )
 zero_IN:
         DC32	DOCOL, strva, 0, IN, SEMIS
 
-//:NONAME zero_OUT:       ( -- ) 
+//:NONAME zero_OUT:       ( -- )
 zero_OUT:
         DC32	DOCOL, strva, 0, OUT, SEMIS
 
@@ -55,10 +55,10 @@ PRINT_SUFFIX:
         DC32    ZBRAN
         DC32     DEC_OR_HEX-.
 
-IS_BIN:        
+IS_BIN:
         DC32    LIT, 'b', EMIT, DROP
         DC32    SEMIS
-        
+
 DEC_OR_HEX:
         DC32    LIT, 10, EQUAL
         DC32    ZBRAN
@@ -230,7 +230,7 @@ PDOTQ:
 //:NONAME QUERY:	( -- ) Use Expect to fill TIB
 //	Input characters into TIB as a NULL terminated string using EXPECT.
 //      TIB is filled until CR/EMTER or count argument to EXPECT is reached.
-//      IN is set to zero and the string in TIB is NULL terminated. 
+//      IN is set to zero and the string in TIB is NULL terminated.
 QUERY:
 	DC32	DOCOL
 	DC32	TIB_SV
@@ -255,7 +255,7 @@ PNUM1:				// Begin
 	DC32	BASE_SV, AT	// ( LSW MSW c base -- )
 	DC32    DIGIT   	// ( LSW MSW c base -- 0 0 digit 1 (ok)
                                // | ( 0 0 0 (bad))
-//      If digit gets 0, space, dot, comma or any non number it returns 0 
+//      If digit gets 0, space, dot, comma or any non number it returns 0
 //      Branches to RFROM, SEMIS...
 	DC32	ZBRAN		//
 	DC32     PNUM2-.	// If digit retuned 0 branch, else fall thru
@@ -432,7 +432,7 @@ INTE5:
 
 //:NONAME QUIT:	( -- ) The Outer Interpreter.
 //	USE QUERY TO GET INPUT. IF INPUT = CR EXECUTE NULL TO RETURN
-//	THEN INTERPRET EXECUTES WORDS, CONVERTS NUMBERS OR RESTART THRU ABORT 
+//	THEN INTERPRET EXECUTES WORDS, CONVERTS NUMBERS OR RESTART THRU ABORT
 QUIT:
 	DC32	DOCOL
 	DC32	LBRAC   // Set CSTATE to zero - not compiling.
@@ -446,7 +446,7 @@ QUIT1:                  // Begin
 // DC32 NOOP
  DC32    CLRPAD  // Resets OUT
 #endif
-// ISSUE ONLY CR IF COMPILING OR IF PROMPT: SET TO 0 WITH POFF(PROMPTOFF)
+// ISSUE ONLY CR IF COMPILING OR IF PROMPT SV SET TO 0 WITH POFF(PROMPTOFF)
 	DC32	STATE_SV        // 0xC0 is compiling
 	DC32	AT
 	DC32	ZEQU            // NOT = TO ZERO IF COMPILING SO 0 IF COMPILING
@@ -467,7 +467,7 @@ QUIT1:                  // Begin
         DC32    DOTDEC
 #ifdef IO2TP
 BP2_QUIT:
- DC32 NOOP
+  DC32 NOOP	// I)2TP BP2_QUIT
 	DC32	CLRPAD  // Resets OUT
 	DC32	CLRTIB  // Resets IN
 #endif
@@ -545,7 +545,7 @@ SIGNON:
 
 #ifdef IO2TP
 SIGNON_BP1:
- DC32 NOOP
+ DC32 NOOP	//\IO2TP SIGNON_BP1:
         DC32    CLRPAD  // Resets OUT
 #endif
         DC32    SEMIS
@@ -556,7 +556,7 @@ SIGNON_BP1:
 WARM:
 	DC32	DOCOL
 	DC32	FWARM
-        DC32    FLASH_SCAN
+	DC32	FLASH_SCAN
 	DC32	SEMIS
 
 //:NONAME	TRAVERSE TRAVERSE: ( addr1 n -- addr2 ) Used in NFA and PFA
@@ -597,6 +597,18 @@ LABEL:
 //:NONAME SECTION:
 // Upper case names are FISH model primitives.
 // lower case names are v4th model primitives.
+// Starting with v4th prims so moving them to their own file will be easier.
+
+//:NONAME inc:    ( -- ) Increment the top of the stack (TOS) value.
+// Used proper LABELs for values vs address here.
+// Want to go thru these one by one.
+oneplus
+inctos
+inc	; ( i -- i+1 )
+	adds	t,#1
+	NEXT
+
+
 
 //:NONAME strva:    ( -- ) GET VALUE THEN ADDR FROM NEXT 2 CELLS AND WRITE TO ADDR
 //      Use proper LABEL for values/addresses!!! EX: FPA vs FPADDR
@@ -608,9 +620,9 @@ STRVA:
 strda:
 	DC32	.+5
  SECTION .text : CODE (2)
-        LDM     i!, {n} // GET [i] TO n.
-        LDM     i!, {w} // next [i] yp w.
-        STR     n, [w]  // n w ! w/o stack
+        LDM     i!, {n} // GET [i] TO n_r2.
+        LDM     i!, {w} // next [i] yp w_r3.
+        STR     n, [w]  // n_r2 w_r3 ! (w/o stack~!)
         NEXT
 
 //:NONAME atk:	 (  -- ) get value at inline const address
@@ -619,7 +631,7 @@ strda:
 atk:	; ( x1 -- x1, x2 )
 	DC32	.+5
  SECTION .text : CODE (2)
-//	DUP     
+//	DUP
 	ILK	t
 	ldr	t, [t]
 	TPUSH
@@ -632,7 +644,7 @@ ork:
 	DC32	.+5
  SECTION .text : CODE (2)
 	ILK	w
-        POP2t
+	POP2t
 	orrs	t,w
 	TPUSH
 
@@ -643,7 +655,7 @@ andk:
 	DC32	.+5
  SECTION .text : CODE (2)
 	ILK	w
-        POP2t
+	POP2t
 	ands	t,w
 	TPUSH
 
@@ -654,7 +666,7 @@ strk:	; ( x -- )
 	DC32	.+5
  SECTION .text : CODE (2)
 	ILK	x
-        POP2t
+	POP2t
 	str	t, [x]
 //	DROP
 	NEXT
@@ -664,7 +676,7 @@ strk:	; ( x -- )
 // ALIASES: rmwkkk AND rmwamd
  SECTION .text : CONST (2)
  ALIGNROM 2,0xFFFFFFFF
-RMWAMD:	
+RMWAMD:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2x   // addr_ilk1
@@ -706,7 +718,7 @@ begin:	; r:( -- addr )
 until:	; ( x -- )
 	DC32	.+5
  SECTION .text : CODE (2)
-        POP2t
+	POP2t
 	cmp	t, #0
 //	DROP
 	ite	eq
@@ -722,15 +734,15 @@ until:	; ( x -- )
 SV_INIT_VALUES:
 // 4 words of System Variables
         DC32    DEFAULT_BASE            // NBASE
-// EXPECT manages TIB with in (or should!) 
+// EXPECT manages TIB with in (or should!)
 //3BS FIX is for doing this.
 // IN_SV should be the actual store pointer for EXPECT?
         DC32    0                       // IN_SV returns addr of integer offset
                                         // into TIB
 // IN_SV should be the actual store pointer for EXPECT?
-// OUT_SV 
+// OUT_SV
         DC32    0                       // OUT_SV returns addr of integer offset
-                                        // of counted cahracters in the current 
+                                        // of counted cahracters in the current
                                         // output string to the terminal.
 
         DC32    0                       // CSTATE
@@ -744,14 +756,13 @@ SV_INIT_VALUES:
         DC32    0                       // CSDP
         DC32    0                       // FENCE
 
-/* Define TOP of Dictionary:  
-The top of the dictionary is defined in these places
+/* To make a new WORDCAT the current TOP of the Dictionary:
+iNCLUDE NEW WC FILE IN IAR.S: FISH OEM WORDCAT LIST
+The top of the dictionary is defined in these places:
 In SLIBS SV_INIT_VALUES:
-//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
-        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+//        DC32    WC_FISH_PubRel_NFA // FISH in flash starts here = CURRENT
 IN FLASH RAMWORDS:
-//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
-        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+//        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here = CURRENT
 In IAR FISH_ONLY:
 //        LDR     n, = WC_FISH_PubRel_NFA
         LDR     n, = WC_FISH_GPIO_NFA
@@ -761,7 +772,9 @@ In IAR FISH_ONLY:
 
         DC32    msg_MY_OK               // 13d PROMPT
         DC32    0                       // 14d ERROR_HALT
+//------------------------------------------------------------------------------
 // 14d WORDS TO COPY
+//------------------------------------------------------------------------------
 //:NONAME FWARM   ( -- ) FISH SYSTEM VAR Initialization primitive.
  SECTION .text : CONST (2)
  ALIGNROM 2,0xFFFFFFFF
@@ -779,7 +792,7 @@ FWBEGIN:
         ADDS    n, n, #4
         SUBS    w, w, #1
         BNE     FWBEGIN
-        
+
         NEXT
  LTORG  // Always outside of code, else data in words
 
@@ -787,6 +800,8 @@ FWBEGIN:
  SECTION .text : CODE (2)
  ALIGNROM 2,0xFFFFFFFF
 DOCOL:	// no cfa for DOCOL!!!!!	<<<<<<<<<<<<<<<<<<
+	// i_r5		IP
+	// w_r2
 	PUSHi2r		// save IP to Rstack
 	MOV	i, w	// jam new IP = cfa+4
 	NEXT
@@ -800,6 +815,8 @@ DOCOL:	// no cfa for DOCOL!!!!!	<<<<<<<<<<<<<<<<<<
 SEMIS:
 	DC32	.+5
  SECTION .text : CODE (2)
+	// i_r5		IP
+	// r_r6		Return Stack Pointer
 	POPr2i	// pop docol saved IP from Rstack
 	NEXT
 
@@ -830,7 +847,7 @@ DOCON:
 LIT:
 	DC32	.+5
  SECTION .text : CODE (2)
-	LIT2t 	// LDM i!, {t}, means 
+	LIT2t 	// LDM i!, {t}, means
 		// fetch memory i points to into {t}, inc i after
 	TPUSH
 
@@ -954,7 +971,7 @@ PFIN2:
 	LDRB    n, [w]          // GET TXT 1RST CHAR
 	CMP	t, n	        // eor was working but this make 0x80 subb
 	BEQ	PFIN2           // matched try next char
-  
+
 	MOVS	y, #0x80
 	SUBS	t, t, y		// ascii only in t and n
 	cmp	t, n
@@ -1047,6 +1064,27 @@ ZBRAN:
 
 	ADDS	i, i, #4	// NO - CONTINUE...
 	NEXT
+
+//:NONAME TBRAN:	( f -- ) Branch if ANY TRUE, NOT JUST TRUE_NEG_1.
+//      In IAR branch target MUST BE ON Next LINE!!!<<<<<<<<<<<<<<<<<<<<<<<<
+//	The run-time proceedure to conditionally branch. If f is false
+//	(zero), the following in-line parameter is added to the interpretive
+//	pointer to branch ahead or back. Compiled by IF, UNTIL, and WHILE.
+ SECTION .text : CONST (2)
+ ALIGNROM 2,0xFFFFFFFF
+TBRAN:
+	DC32	.+5
+ SECTION .text : CODE (2)
+	POP2t
+	CMP	t, #0		// ZERO?
+#ifdef TOSCT                    // CMP CONSUMES t
+        LDR     t, [p]          // REFRESH t
+#endif
+	bne	BRAN1		// YES, BRANCH
+
+	ADDS	i, i, #4	// NO - CONTINUE...
+	NEXT
+ LTORG
 
 //:NONAME XLOOP:	( -- ) Loop primitive in a definition.
 //      The run-time proceedure compiled by LOOP which increments
@@ -1141,7 +1179,7 @@ TCS_LOOP:
         ADDS    w, w, #1        // When matched
         CMP     t, n            // Character passed to test
         BEQ     TCS_FOUND
-        
+
         CMP     t, #0           // Null at end of TIB?
         BNE     TCS_LOOP        // no keep looking
 
@@ -1178,26 +1216,26 @@ IF_EOL_SEND_XOFF:
 #ifdef  IO2TP
 	NEXT
 #else
-        LDR     n, = 0Ah        // ^J n_r1
-        CMP     t, n            // set carry flag or not
-        BNE     CR_CHECK
+	LDR     n, = 0Ah        // ^J n_r1
+	CMP     t, n            // set carry flag or not
+	BNE     CR_CHECK
 
 SUB_CR_4_NL:
-        POP2t
-        LDR     t, = 0Dh        // ^M
-        PUSHt
-        B       EOL_SEND_XOFF
+	POP2t
+	LDR     t, = 0Dh        // ^M
+	PUSHt
+	B       EOL_SEND_XOFF
 
 CR_CHECK:
-        LDR	n, = 0Dh        // n_r1
+	LDR	n, = 0Dh        // n_r1
 	CMP	t, n            // LEAVE CHAR IN T_r0!!!!
 	BNE	NOT_CR
 
 EOL_SEND_XOFF:
 
 #ifndef IO2TP
-        BL      TXRDY_SUBR
-        BL      XOFF_SUBR
+	BL      TXRDY_SUBR
+	BL      XOFF_SUBR
 #endif
 
 NOT_CR:
@@ -1217,57 +1255,57 @@ NOT_CR:
 NUMBERSUFFIX:
 	DC32	.+5
  SECTION .text : CODE (2)
-        NDPOP2t         // macro = copy tos to t, leave it on the stack
-        LDRB    n, [t]  // get string lentgth
-        CMP     n, #1   // Let NUMBER handle single char
-        BEQ     NSEXIT1
+	NDPOP2t         // macro = copy tos to t, leave it on the stack
+	LDRB    n, [t]  // get string lentgth
+	CMP     n, #1   // Let NUMBER handle single char
+	BEQ     NSEXIT1
 
 // Not allowing . or , as first char.
-        CMP     n, #2   // Handle case where is not 2nd char.
-        BEQ     NSTWO
+	CMP     n, #2   // Handle case where is not 2nd char.
+	BEQ     NSTWO
 
 NSNOTTWO:
-        ADD     n, n, t // point to end of string
-        LDRB    w, [n]  // get possible suffix
-        CMP     w, #'b' // 62h
-        BEQ     USEBIN
-        CMP     w, #'%'
-        BEQ     USEBIN
-        
-        CMP     w, #'d' // 64h
-        BEQ     USEDEC
-        CMP     w, #'#'
-        BEQ     USEDEC
-        
-        CMP     w, #'h' // 68h
-        BEQ     USEHEX
-        CMP     w, #'$'
-        BEQ     USEHEX
+	ADD     n, n, t // point to end of string
+	LDRB    w, [n]  // get possible suffix
+	CMP     w, #'b' // 62h
+	BEQ     USEBIN
+	CMP     w, #'%'
+	BEQ     USEBIN
+
+	CMP     w, #'d' // 64h
+	BEQ     USEDEC
+	CMP     w, #'#'
+	BEQ     USEDEC
+
+	CMP     w, #'h' // 68h
+	BEQ     USEHEX
+	CMP     w, #'$'
+	BEQ     USEHEX
 
 NSEXIT1:
-        NEXT
+	NEXT
 
 NSTWO:  // HERE BECAUSE INPUT LEN IS 2 SO IF . IS 2nd char leave it
-        LDRB    w, [t, #2]      // GET 2nd CHAR (cntbyte 1rst)
-        CMP     w, #'.'         // IF IT'S A DOT
-        BNE     NSNOTTWO
-        NEXT
+	LDRB    w, [t, #2]      // GET 2nd CHAR (cntbyte 1rst)
+	CMP     w, #'.'         // IF IT'S A DOT
+	BNE     NSNOTTWO
+	NEXT
 
 USEBIN:
-        LDR     y, =2
-        B       CLRSUFFIX
+	LDR     y, =2
+	B       CLRSUFFIX
 USEDEC:
-        LDR     y, =10
-        B       CLRSUFFIX
+	LDR     y, =10
+	B       CLRSUFFIX
 USEHEX:
-        LDR     y, =16
+	LDR     y, =16
 
 CLRSUFFIX:
-        LDR     w, =0X00        // =0x20
-        STRB    w, [n]
-        LDR     w, =NBASE       // BASE_SV in FISH
-        STR     y, [w]
-        NEXT
+	LDR     w, =0X00        // =0x20
+	STRB    w, [n]
+	LDR     w, =NBASE       // BASE_SV in FISH
+	STR     y, [w]
+	NEXT
  LTORG
 
 //:NONAME USTAR:	(u1 u2 --  ud=<LSW MSW> ) USED INTERNALLY - NOT UNSIGNED
@@ -1284,7 +1322,7 @@ USTAR:
 //	MOV	w, t	// LSW
 //	MOV	t, n	// MSW
 // UMULL ilegal register R0 is not allowed here
-        UMULL   w, t, t, n	; rdLO rdHi rn * rs
+	UMULL   w, t, t, n	; rdLO rdHi rn * rs
 	DPUSH		//  --  LSW MSW )
 
 //:NONAME	USLASH:	( d n --- u32REM u32QUO ) USED INTERNALLY - NOT UNSIGNED
@@ -1304,8 +1342,8 @@ USLASH:
 	POP2w			// ULSW dividendLO
 	CMP     t, #0           // divide by zero is divisor = 0
 	BEQ     DZERO           // J Not Below
-        TEQ     x, #0           ; fIG BEHAVIOR
-        BNE     DZERO           ; TREAT DIVIDEN HI N=0 AS ERR
+	TEQ     x, #0           ; fIG BEHAVIOR
+	BNE     DZERO           ; TREAT DIVIDEN HI N=0 AS ERR
 
 // IMPORT c_64by32div		// LSW of quo in t (r0), rem in w (r2)
 //  	BL	c_64by32div
@@ -1313,20 +1351,20 @@ USLASH:
         ;Quotient = int ( Dividend / Divisor ) ;UDIV only does this part
         ;UDIV RD = DIVIDEN / DIVISOR (rEV)          t                 w          t
 // Error[438]: This instruction is not available in the selected cpu/core
-        UDIV    t, w, t         ;DIV	AX,BX = QUOTIENT = INT ( dividendLO / DIVISOR )
-        
+	UDIV    t, w, t         ;DIV	AX,BX = QUOTIENT = INT ( dividendLO / DIVISOR )
+
         ;Rem =  Dividend - Quotient * Divisor ;This part you need to add;
         ;MLS RD, QUOTIENT, DIVISOR, DIVIDEND
         ;MLS RD = ( ARG1 * ARG2 ) - ARG3
         ;MLS    w, t, QUO  n, DIVOR  W DIVIDEND  I.E MLS RD = W - ( T * N ))
 // Error[438]: This instruction is not available in the selected cpu/core
-        MLS     w, t,      n,        w
+	MLS     w, t,      n,        w
 	DPUSH			//  --  LSW MSW )
 
 DZERO:
 	EORS	t, t, t		// zero
-	SUBS	t, t, #1        // 
-	MOV     w, t            // 
+	SUBS	t, t, #1        //
+	MOV     w, t            //
 	DPUSH			//  --  LSW MSW )
 
 //:NONAME SPSTO:	( -- ) Initialize the stack pointer from INITSO.
@@ -1357,24 +1395,24 @@ RPSTO:
 BASE_TO_R12:
 	DC32	.+5
  SECTION .text : CODE (2)
-        LDR     w, =NBASE
+	LDR     w, =NBASE
 	LDR	n, [w]
-        MOV     k, n
+	MOV     k, n
 	NEXT
  LTORG
- 
+
 //:NONAME BASE_FROM_R12:    ( -- ) Set BASE from r12
  SECTION .text : CONST (2)
  ALIGNROM 2,0xFFFFFFFF
 BASE_FROM_R12:
 	DC32	.+5
  SECTION .text : CODE (2)
-        LDR     w, =NBASE
-        MOV     n, k
+	LDR     w, =NBASE
+	MOV     n, k
 	STR	n, [w]
-        NEXT
+	NEXT
  LTORG
- 
+
 //------------------------------------------------------------------------------
 // SECTION HEADER TO RE ALIGN ALL CODE AFTER THIS INCLUDE
  SECTION .text : CONST (2)
