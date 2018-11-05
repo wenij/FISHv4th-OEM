@@ -2,7 +2,7 @@
 <project>
     <fileVersion>3</fileVersion>
     <configuration>
-        <name>STM32F407vg_Disco_Debug</name>
+        <name>DISCO and 205 FISHv4th-OEM</name>
         <toolchain>
             <name>ARM</name>
         </toolchain>

@@ -8,8 +8,10 @@ So I saved the old repo and will repopulate from there with care~!
 
 FIRST~!:
 Verifying all files match (old LOCAL repo and new clone)
- - from explorer view of this project):
-	core_cm3.h
+IN THE big-pstat branch I cloned.
+FISHv4th-OEM_branch_BIG-PSTAT in my Desktop.
+It is not where my copied directory of the last good is...
+Using Dev ant's Code Compare.
 
 
 Code Compare tool rocks~!
