@@ -70,7 +70,7 @@ msg_FISH:
         DC8     'STM32F407VG DISCO @168Mhz '
 #endif
 #ifdef STM32F205RC_XRC10_118MHZ
-        DC8     'STM32F205RC STP RPM Board @118Mhz '
+        DC8     'STM32F205RC PSTAT or STP RPM Board @118Mhz '
 #endif
 #ifdef FISH_PRO_WORDCAT
 	DC8     'Pro '
@@ -1375,6 +1375,7 @@ BYE:
 //	ABORT ABORT:	( -- )
 //	Clear the stacks, zero out and execute RUN or QUIT
 //	DOES NOT RESET DICTIONAIRY. SEE COLD.
+// When QUIT is run you have to type a CR to see PROMPT_SV
 
  SECTION .text : CONST (2)
 ABORT_NFA:
@@ -1397,43 +1398,43 @@ ABORT:
 //	DC32	QSTACK	// IF STACK error abort using QERROR->ERROR
 
 // LOOK UP RUN AND EXEC IT
-        DC32    LIT, msg_RUN
-        DC32    LATEST
+	DC32    LIT, msg_RUN
+	DC32    LATEST
 //ABORT_BP1_B4_PFIND_RUN:
 // DC32 NOOP
-        DC32    PFIND   // 0 OR pfa len 1
-        DC32    ZBRAN
-        DC32      ABORT_QUIT-.
+	DC32    PFIND   // 0 OR pfa len 1
+	DC32    ZBRAN
+	DC32      ABORT_QUIT-.
 
-        DC32    DROP    // LEN
-        DC32    CFA, EXEC
+	DC32    DROP    // LEN
+	DC32    CFA, EXEC
 ABORT_QUIT:
-//      DC32    SEMIC_CREATE // Use ERROR if need to recover from bad definition
+//	DC32    SEMIC_CREATE // Use ERROR if need to recover from bad definition
 #ifdef ABORT_STOP_TILL_CO
-        DC32    LIT, ERROR_HALT, AT
-        DC32    ZBRAN
-        DC32      CO_END-.
+	DC32    LIT, ERROR_HALT, AT
+	DC32    ZBRAN
+	DC32      CO_END-.
 // halt on all errors until "CO" entered
 // BEGIN
-        DC32    LIT, msg_CO, NULLSTRLEN, TYPE
+	DC32    LIT, msg_CO, NULLSTRLEN, TYPE
 NOT_CO:
-        DC32    QKEY
-        DC32    ZBRAN
-        DC32      NOT_CO-.
+	DC32    QKEY
+	DC32    ZBRAN
+	DC32      NOT_CO-.
 // IF KEY = "C'
-        DC32    KEY, LIT, 43h, EQUAL
-        DC32    ZBRAN
-        DC32      NOT_CO-.
+	DC32    KEY, LIT, 43h, EQUAL
+	DC32    ZBRAN
+	DC32      NOT_CO-.
 // NEXT KEY "0"
-        DC32    KEY, LIT, 4Fh, EQUAL
-        DC32    ZBRAN
-        DC32      NOT_CO-.
+	DC32    KEY, LIT, 4Fh, EQUAL
+	DC32    ZBRAN
+	DC32      NOT_CO-.
 // NEXT KEY "Enter"
-        DC32    KEY, LIT, 0Dh, EQUAL
-        DC32    ZBRAN
-        DC32      NOT_CO-.
+	DC32    KEY, LIT, 0Dh, EQUAL
+	DC32    ZBRAN
+	DC32      NOT_CO-.
 // UNTIL
-        DC32    CR
+	DC32    CR
 CO_END:
 #endif
 	DC32	QUIT	// OI
@@ -2733,6 +2734,7 @@ UNTIL_NFA:
 UNTIL:
 	DC32	DOCOL
 	DC32	ONE
+        // QPAIR \ ( n1 n2 -- ) COMPILE time Issue an error message if n1 does not equal n2.
 	DC32	QPAIR
 	DC32	COMP
 	DC32	ZBRAN
