@@ -2,7 +2,7 @@
 <project>
     <fileVersion>3</fileVersion>
     <configuration>
-        <name>DISCO and 205 FISHv4th-OEM</name>
+        <name>STM32F407vg_Disco_Debug</name>
         <toolchain>
             <name>ARM</name>
         </toolchain>
@@ -52,7 +52,7 @@
                 </option>
                 <option>
                     <name>RunToName</name>
-                    <state>FM3_COLD</state>
+                    <state>main</state>
                 </option>
                 <option>
                     <name>CExtraOptionsCheck</name>
@@ -80,7 +80,7 @@
                 </option>
                 <option>
                     <name>OCProductVersion</name>
-                    <state>7.10.1.6733</state>
+                    <state>8.22.1.15696</state>
                 </option>
                 <option>
                     <name>OCDynDriverList</name>
@@ -140,7 +140,7 @@
                 </option>
                 <option>
                     <name>OverrideDefFlashBoard</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OCImagesOffset1</name>
@@ -278,10 +278,6 @@
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
-                    <name>CatchSFERR</name>
-                    <state>1</state>
-                </option>
-                <option>
                     <name>OCDriverInfo</name>
                     <state>1</state>
                 </option>
@@ -349,7 +345,7 @@
                 </option>
                 <option>
                     <name>RDICatchUndef</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>RDICatchSWI</name>
@@ -357,11 +353,11 @@
                 </option>
                 <option>
                     <name>RDICatchData</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>RDICatchPrefetch</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>RDICatchIRQ</name>
@@ -377,31 +373,35 @@
                 </option>
                 <option>
                     <name>CatchMMERR</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CatchNOCPERR</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CatchCHKERR</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CatchSTATERR</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CatchBUSERR</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CatchINTERR</name>
-                    <state>0</state>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>CatchSFERR</name>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CatchHARDERR</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CatchDummy</name>
@@ -494,10 +494,6 @@
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
-                    <name>CatchSFERR</name>
-                    <state>1</state>
-                </option>
-                <option>
                     <name>OCDriverInfo</name>
                     <state>1</state>
                 </option>
@@ -573,7 +569,7 @@
                 </option>
                 <option>
                     <name>IjetCpuClockEdit</name>
-                    <state>72.0</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>IjetSwoPrescalerList</name>
@@ -649,6 +645,10 @@
                     <state>1</state>
                 </option>
                 <option>
+                    <name>CatchSFERR</name>
+                    <state>1</state>
+                </option>
+                <option>
                     <name>CatchHARDERR</name>
                     <state>1</state>
                 </option>
@@ -690,7 +690,7 @@
                 </option>
                 <option>
                     <name>IjetPreferETB</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IjetTraceSettingsList</name>
@@ -724,12 +724,8 @@
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
-                    <name>CCCatchSFERR</name>
-                    <state>0</state>
-                </option>
-                <option>
                     <name>JLinkSpeed</name>
-                    <state>32</state>
+                    <state>1000</state>
                 </option>
                 <option>
                     <name>CCJLinkDoLogfile</name>
@@ -749,7 +745,7 @@
                 </option>
                 <option>
                     <name>JLinkInitialSpeed</name>
-                    <state>32</state>
+                    <state>1000</state>
                 </option>
                 <option>
                     <name>CCDoJlinkMultiTarget</name>
@@ -866,6 +862,10 @@
                     <state>0</state>
                 </option>
                 <option>
+                    <name>CCCatchSFERR</name>
+                    <state>0</state>
+                </option>
+                <option>
                     <name>CCCatchHARDERR</name>
                     <state>0</state>
                 </option>
@@ -892,7 +892,7 @@
                 </option>
                 <option>
                     <name>CCCpuClockEdit</name>
-                    <state>72.0</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>CCSwoClockAuto</name>
@@ -1008,7 +1008,7 @@
                 </option>
                 <option>
                     <name>CCSTLinkInterfaceRadio</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCSTLinkInterfaceCmdLine</name>
@@ -1021,7 +1021,7 @@
                 </option>
                 <option>
                     <name>CCCpuClockEdit</name>
-                    <state>72.0</state>
+                    <state>168.0</state>
                 </option>
                 <option>
                     <name>CCSwoClockAuto</name>
@@ -1357,7 +1357,7 @@
                 </option>
                 <option>
                     <name>CCXds100InterfaceRadio</name>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCXds100InterfaceCmdLine</name>
@@ -1366,7 +1366,7 @@
                 <option>
                     <name>CCXds100ProbeList</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>CCXds100SWOPortRadio</name>
