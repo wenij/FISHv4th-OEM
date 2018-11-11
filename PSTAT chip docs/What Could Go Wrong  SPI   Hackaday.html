@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html itemscope="itemscope" itemtype="http://schema.org/Article" lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="dQIcgy2eQ8-zyE6l15aOsCdxiVDUKl84C_zi-lJivYE" />
+<meta name="google-site-verification" content="I41e_5mBeAM8AcOI8rSwPioPyN1DXJomC2U2trjvVTI" />
+<meta name="viewport" content="width=960">
+<title>What Could Go Wrong: SPI | Hackaday</title>
+<script>document.documentElement.className = "js"</script>
+
+<link rel="shortcut icon" href="https://s2.wp.com/wp-content/themes/vip/hackaday-2/favicon.ico" />
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="https://hackaday.com/xmlrpc.php">
+<link href="http://google.com/+hackaday" rel="publisher" />
+
+<!--[if lt IE 9]>
+    <script src="https://s2.wp.com/wp-content/themes/vip/hackaday-2/js/html5.js"></script>
+<![endif]-->
+
+<meta name="google-site-verification" content="I41e_5mBeAM8AcOI8rSwPioPyN1DXJomC2U2trjvVTI" />
+		<script src='https://r-login.wordpress.com/remote-login.php?action=js&amp;host=hackaday.com&amp;id=4779443&amp;t=1538764306&amp;back=https%3A%2F%2Fhackaday.com%2F2016%2F07%2F01%2Fwhat-could-go-wrong-spi%2F' type="text/javascript"></script>
+		<script type="text/javascript">
+		/* <![CDATA[ */
+			if ( 'function' === typeof WPRemoteLogin ) {
+				document.cookie = "wordpress_test_cookie=test; path=/";
+				if ( document.cookie.match( /(;|^)\s*wordpress_test_cookie\=/ ) ) {
+					WPRemoteLogin();
+				}
+			}
+		/* ]]> */
+		</script>
+		<link rel='dns-prefetch' href='//s2.wp.com' />
+<link rel='dns-prefetch' href='//s1.wp.com' />
+<link rel='dns-prefetch' href='//s0.wp.com' />
+<link rel='dns-prefetch' href='//hackadaycom.wordpress.com' />
+<link rel="alternate" type="application/rss+xml" title="Hackaday &raquo; Feed" href="https://hackaday.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Hackaday &raquo; Comments Feed" href="https://hackaday.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Hackaday &raquo; What Could Go Wrong: SPI Comments Feed" href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/feed/" />
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					oldonload();
+					func();
+				}
+			}
+		}
+		/* ]]> */
+	</script>
+			<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/s1.wp.com\/wp-includes\/js\/wp-emoji-release.min.js?m=1532082729h&ver=4.9.8"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='all-css-0-1' href='https://s0.wp.com/_static/??-eJyNUdFugzAM/KF5VjvKnqZ9iwlucHFIRExZ/36hCE3VNtSX6M6+OzsJzglcHIwHwzBB0snLkFGl54wXtkSuhzt7dTm/4N9yF0cu9ZDIFkXgVoiVQ5Ht2WZpPVux5w2D8deuJaR6G7TArqy3u9mcihqaJo2cM5QzyBTAurLbb99axqskXIKppRscMdtN+Zlr8FS6sRcGpRmNQ1Kykvd0QI5OSEGK5JGsZsEh2trcwF6q5wgaHZnE4YHAWUnGPevIjUZfoL//zQ/978m6Cr3GhnQRfIaPw+n4Xr9Vh6q+fAOxmuQ6?cssminify=yes' type='text/css' media='all' />
+<script type='text/javascript'>
+/* <![CDATA[ */
+var SafeCommentsAjax = {"ajaxurl":"https:\/\/hackaday.com\/wp-admin\/admin-ajax.php"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://s1.wp.com/_static/??-eJyFz9sKwjAMANAfsqtz88EH8VtqzWbqerFJN/XrjaIP4lAIBNKTS/WUFAY7lAOQdhLnAvn6SpWjhf4FlMc+G4bKY3hjGwND4If1cY8DqEKQTS81GdTFGZcisQciQTOvnydhGBGmv8wBJ2NPKgPh7WsqH0H26RGTTkPpMZAm04HoFDML817Y87/GmYu07/y2XtebVbNs2tbdAT4jc6w='></script>
+<link rel='stylesheet' id='all-css-0-2' href='https://s0.wp.com/wp-content/mu-plugins/highlander-comments/style.css?m=1530132353h&cssminify=yes' type='text/css' media='all' />
+<!--[if lt IE 8]>
+<link rel='stylesheet' id='highlander-comments-ie7-css'  href='https://s2.wp.com/wp-content/mu-plugins/highlander-comments/style-ie7.css?m=1351637563h&#038;ver=20110606' type='text/css' media='all' />
+<![endif]-->
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://hackadaycom.wordpress.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://s1.wp.com/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress.com" />
+<link rel="canonical" href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/" />
+<link rel='shortlink' href='https://wp.me/pk3lN-SWU' />
+<link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/?format=json&amp;url=https%3A%2F%2Fhackaday.com%2F2016%2F07%2F01%2Fwhat-could-go-wrong-spi%2F&amp;for=wpcom-auto-discovery" /><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/?format=xml&amp;url=https%3A%2F%2Fhackaday.com%2F2016%2F07%2F01%2Fwhat-could-go-wrong-spi%2F&amp;for=wpcom-auto-discovery" />
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="What Could Go Wrong: SPI" />
+<meta property="og:url" content="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/" />
+<meta property="og:description" content="Serial Peripheral Interface (SPI) is not really a protocol, but more of a general idea. It&#8217;s the bare-minimum way to transfer a lot of data between two chips as quickly as possible, and for t…" />
+<meta property="article:published_time" content="2016-07-01T17:01:02+00:00" />
+<meta property="article:modified_time" content="2016-07-01T17:01:05+00:00" />
+<meta property="og:site_name" content="Hackaday" />
+<meta property="og:image" content="https://hackadaycom.files.wordpress.com/2015/06/embedelliott.jpg" />
+<meta property="og:image:width" content="800" />
+<meta property="og:image:height" content="250" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:creator" content="@hackaday" />
+<meta name="twitter:site" content="@hackaday" />
+<meta name="twitter:text:title" content="What Could Go Wrong: SPI" />
+<meta name="twitter:image" content="https://hackadaycom.files.wordpress.com/2015/06/embedelliott.jpg?w=640" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom" />
+
+<!-- End Jetpack Open Graph Tags -->
+<link rel='openid.server' href='https://hackadaycom.wordpress.com/?openidserver=1' />
+<link rel='openid.delegate' href='https://hackadaycom.wordpress.com/' />
+<link rel="search" type="application/opensearchdescription+xml" href="https://hackaday.com/osd.xml" title="Hackaday" />
+<link rel="search" type="application/opensearchdescription+xml" href="https://s1.wp.com/opensearch.xml" title="WordPress.com" />
+
+<link rel="image_src" href="https://hackadaycom.files.wordpress.com/2015/09/embedelliott-thumb.jpg?w=600&amp;h=600"/>
+<meta itemprop="name" content="What Could Go Wrong: SPI">
+<meta itemprop="description" content="Serial Peripheral Interface (SPI) is not really a protocol, but more of a general idea. It&#039;s the bare-minimum way to transfer a lot of data between two chips as quickly as possible, and for that reaso...">
+<meta itemprop="image" content="https://hackadaycom.files.wordpress.com/2015/09/embedelliott-thumb.jpg?w=600&amp;h=600">
+
+		<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+				<style type="text/css">
+			.recentcomments a {
+				display: inline !important;
+				padding: 0 !important;
+				margin: 0 !important;
+			}
+
+			table.recentcommentsavatartop img.avatar, table.recentcommentsavatarend img.avatar {
+				border: 0px;
+				margin: 0;
+			}
+
+			table.recentcommentsavatartop a, table.recentcommentsavatarend a {
+				border: 0px !important;
+				background-color: transparent !important;
+			}
+
+			td.recentcommentsavatarend, td.recentcommentsavatartop {
+				padding: 0px 0px 1px 0px;
+				margin: 0px;
+			}
+
+			td.recentcommentstextend {
+				border: none !important;
+				padding: 0px 0px 2px 10px;
+			}
+
+			.rtl td.recentcommentstextend {
+				padding: 0px 10px 2px 0px;
+			}
+
+			td.recentcommentstexttop {
+				border: none;
+				padding: 0px 0px 0px 10px;
+			}
+
+			.rtl td.recentcommentstexttop {
+				padding: 0px 10px 0px 0px;
+			}
+		</style>
+		<meta name="application-name" content="Hackaday" /><meta name="msapplication-window" content="width=device-width;height=device-height" /><meta name="msapplication-tooltip" content="Fresh hacks every day" /><meta name="msapplication-task" content="name=Subscribe;action-uri=https://hackaday.com/feed/;icon-uri=https://secure.gravatar.com/blavatar/5560f98f805877b0e332f191cb9e0af3?s=16" /><style type="text/css" id="syntaxhighlighteranchor"></style>
+		<link rel="stylesheet" id="custom-css-css" type="text/css" href="https://s2.wp.com/?custom-css=1&#038;csblog=k3lN&#038;cscache=6&#038;csrev=108" />
+		
+<script src="//use.typekit.net/mpm6gph.js"></script>
+<script>try{Typekit.load();}catch(e){}</script>
+
+<!-- Supplyframe Ads -->
+	<script type='text/javascript'>
+		function OA_show(e){if(typeof OA_output[e]=="undefined"){return}else{document.write(OA_output[e])}}function OA_showpop(e){zones=window.OA_zones?window.OA_zones:false;var t=e;if(typeof window.OA_zones!="undefined"){if(typeof zones[e]=="undefined"){return}t=zones[e]}var n="<"+"script type='text/javascript' ";n+="src='"+OA_p+"?zoneid="+t;n+="&source="+escape(OA_source)+"&r="+OA_r;OA_spc+="&amp%3Bblock=1";if(window.location)n+="&loc="+escape(window.location);if(document.referrer)n+="&referer="+escape(document.referrer);n+="'><"+"/script>";document.write(n)}if(typeof OA_zones!="undefined"){var OA_zoneids="";for(var zonename in OA_zones)OA_zoneids+=escape(zonename+"="+OA_zones[zonename]+"|");OA_zoneids+="&nz=1"}else{var OA_zoneids=escape("426|427|428|429")}if(typeof OA_source=="undefined"){OA_source=""}var OA_p=location.protocol=="https:"?"https://ads.supplyframe.com/openads/www/delivery/spc.php":"http://ads.supplyframe.com/openads/www/delivery/spc.php";var OA_r=Math.floor(Math.random()*99999999);OA_output=new Array;var OA_spc="<"+"script type='text/javascript' ";OA_spc+="src='"+OA_p+"?zones="+OA_zoneids;OA_spc+="&source="+escape(OA_source)+"&r="+OA_r;OA_spc+="&amp%3Bblock=1";OA_spc+=document.charset?"&charset="+document.charset:document.characterSet?"&charset="+document.characterSet:"";if(window.location)OA_spc+="&loc="+escape(window.location);if(document.referrer)OA_spc+="&referer="+escape(document.referrer);OA_spc+="'><"+"/script>";document.write(OA_spc);var OA_fo="";OA_fo+="<"+"script type='text/javascript' src='//ads.supplyframe.com/openads/www/delivery/fl.js'><"+"/script>\n";document.write(OA_fo);
+	</script>
+
+</head>
+
+<body class="post-template-default single single-post postid-211228 single-format-standard mp6 customizer-styles-applied group-blog highlander-enabled highlander-light">
+<div id="page" class="hfeed site">
+    <div id="leaderboard">
+        <script type='text/javascript'>
+            OA_show(426);
+        </script>
+    </div>
+
+    <a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+    <header id="masthead" class="site-header" role="banner">
+        <div class="site-branding">
+            <a href="https://hackaday.com/" rel="home">
+                <img src="https://s2.wp.com/wp-content/themes/vip/hackaday-2/img/logo.png" alt="Logo" class="logo-img">
+            </a>
+            <h1 class="site-title">
+                <a href="https://hackaday.com/" rel="home">Hackaday</a>
+            </h1>
+        </div>
+
+        <button class="menu-toggle"><span class="icon icon-navbar-toggle">Primary Menu</span></button>
+
+        <nav id="site-navigation" class="main-navigation" role="navigation">
+            <div class="menu-main-container"><ul id="menu-main" class="menu"><li id="menu-item-90201" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-90201"><a href="https://www.hackaday.com/">Home</a></li>
+<li id="menu-item-136904" class="menu-item menu-item-type-post_type menu-item-object-page current_page_parent menu-item-136904"><a href="https://hackaday.com/blog/">Blog</a></li>
+<li id="menu-item-115276" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-115276"><a href="https://hackaday.io?from=had&#038;utm_source=hackaday&#038;utm_medium=menu&#038;utm_campaign=blog">Hackaday.io</a></li>
+<li id="menu-item-97770" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-97770"><a href="https://store.hackaday.com?from=had&#038;utm_source=hackaday&#038;utm_medium=menu&#038;utm_campaign=blog">Store</a></li>
+<li id="menu-item-136905" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-136905"><a title="Build Something that Matters" href="https://hackaday.io/prize">Hackaday Prize</a></li>
+<li id="menu-item-77211" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-77211"><a href="https://hackaday.com/submit-a-tip/">Submit</a></li>
+<li id="menu-item-101802" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-101802"><a href="https://hackaday.com/about/">About</a></li>
+</ul></div>		<aside id="hackaday_calendar-2" class="widget widget_hackaday_calendar"><div id="hackaday_calendar_wrap"><label class="calendar_current_time">October 5, 2018</label></div></aside>        </nav><!-- #site-navigation -->
+    </header><!-- #masthead -->
+
+    <div id="content" class="site-content">
+
+    <div id="primary" class="content-area">
+        <main id="main" class="site-main" role="main">
+
+        
+            
+<article itemscope itemtype="http://schema.org/Article" id="post-211228" class="post-211228 post type-post status-publish format-standard has-post-thumbnail hentry category-curated category-hackaday-columns category-how-to category-skills tag-debugging tag-embed-with-elliot tag-spi tag-troubleshooting">
+    <header class="entry-header">
+        <h1 class="entry-title" itemprop="name">What Could Go Wrong: SPI</h1>
+        <div class="entry-meta">
+            <a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comments" class="comments-counts"><span class="icon-hackaday icon-hackaday-comment"></span>
+                41 Comments            </a>
+            <ul class="meta-authors vcard author">
+                <li>by:</li>
+                <span class="fn"><a href="https://hackaday.com/author/hexagon5un/" title="Posts by Elliot Williams" class="author url fn" rel="author">Elliot Williams</a></span>
+            </ul>
+        </div><!-- .entry-meta -->
+
+        <div class="entry-meta entry-meta-last">
+            <span class="entry-date published updated" itemprop="datePublished" content="July 1, 2016"><a href="https://hackaday.com/2016/07/01/" title="July 1, 2016 - 10:01 am">July 1, 2016</a></span>
+            <ul class="share-post">
+                <li><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhackaday.com%2F2016%2F07%2F01%2Fwhat-could-go-wrong-spi%2F" target="_blank"><span class="icon-hackaday icon-hackaday-facebook"></span></a></li>
+               <li><a href="https://twitter.com/intent/tweet?text=What+Could+Go+Wrong%3A+SPI via @hackaday&amp;url=https%3A%2F%2Fhackaday.com%2F2016%2F07%2F01%2Fwhat-could-go-wrong-spi%2F" target="_blank"><span class="icon-hackaday icon-hackaday-twitter"></span></a></li>
+                <li><a href="https://plus.google.com/share?url=https%3A%2F%2Fhackaday.com%2F2016%2F07%2F01%2Fwhat-could-go-wrong-spi%2F&h1=en-US" target="_blank"><span class="icon-hackaday icon-hackaday-google"></span></a></li>
+            </ul>
+        </div><!-- .entry-meta -->
+
+        <div class="entry-featured-image"><img itemprop="image" content="https://hackadaycom.files.wordpress.com/2015/09/embedelliott-thumb.jpg?w=600&h=600" src="https://hackadaycom.files.wordpress.com/2015/06/embedelliott.jpg?w=800" alt=""></a></div>
+    </header><!-- .entry-header -->
+
+    <div class="entry-content" itemprop="articleBody">
+        <p><a href="https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus" target="_blank">Serial Peripheral Interface</a> (SPI) is not really a protocol, but more of a general idea. It&#8217;s the bare-minimum way to transfer a lot of data between two chips as quickly as possible, and for that reason alone, it&#8217;s one of my favorites. But that doesn&#8217;t mean that everything is hugs and daffodils. Even despite SPI&#8217;s simplicity, there are still a few ways that things can go wrong.</p>
+<p>In the <a href="http://wp.me/pk3lN-SCc" target="_blank">previous article</a> in this series, inspired by actual reader questions, I looked into troubleshooting asynchronous serial connections. Now that you&#8217;ve got that working, it&#8217;s time to step up to debugging your SPI bus! After a brief overview of the system, we&#8217;ll get into how to diagnose SPI, and how to fix it.</p>
+<p><span id="more-211228"></span></p>
+<h2 id="what-is-spi">What is SPI?</h2>
+<p><a href="https://hackadaycom.files.wordpress.com/2016/06/spi_shift_registers_ring.png" target="_blank"><img data-attachment-id="211243" data-permalink="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/spi_shift_registers_ring/" data-orig-file="https://hackadaycom.files.wordpress.com/2016/06/spi_shift_registers_ring.png" data-orig-size="2128,1260" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="SPI_shift_registers_ring" data-image-description="" data-medium-file="https://hackadaycom.files.wordpress.com/2016/06/spi_shift_registers_ring.png?w=400&#038;h=237" data-large-file="https://hackadaycom.files.wordpress.com/2016/06/spi_shift_registers_ring.png?w=800" class="alignright wp-image-211243 size-medium" src="https://hackadaycom.files.wordpress.com/2016/06/spi_shift_registers_ring.png?w=400&#038;h=237" width="400" height="237" srcset="https://hackadaycom.files.wordpress.com/2016/06/spi_shift_registers_ring.png?w=400&amp;h=237 400w, https://hackadaycom.files.wordpress.com/2016/06/spi_shift_registers_ring.png?w=800&amp;h=474 800w, https://hackadaycom.files.wordpress.com/2016/06/spi_shift_registers_ring.png?w=250&amp;h=148 250w, https://hackadaycom.files.wordpress.com/2016/06/spi_shift_registers_ring.png?w=768&amp;h=455 768w" sizes="(max-width: 400px) 100vw, 400px" /></a>The core idea of SPI is that each device has a shift-register that it can use to send or receive a byte of data. These two shift registers are connected together in a ring, the output of one going to the input of the other and vice-versa. One device, the <em>master</em>, controls the common clock signal that makes sure that each register shifts one bit in just exactly as the other is shifting one bit out (and vice-versa). It&#8217;s hard to get simpler than that.</p>
+<p>It&#8217;s this simplicity that makes SPI fast. While asynchronous serial communications can run in the hundred-of-thousands of bits per second, SPI is usually good for ten megabits per second or more. You often see asynchronous serial between man and machine, because people are fairly slow. But between machine and machine, it&#8217;s going to be SPI or I2C (and that&#8217;s the next article).</p>
+<p><a href="https://hackadaycom.files.wordpress.com/2016/06/spi_bus.png" target="_blank"><img data-attachment-id="211236" data-permalink="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/spi_bus/" data-orig-file="https://hackadaycom.files.wordpress.com/2016/06/spi_bus.png" data-orig-size="2128,1090" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="spi_bus" data-image-description="" data-medium-file="https://hackadaycom.files.wordpress.com/2016/06/spi_bus.png?w=400&#038;h=205" data-large-file="https://hackadaycom.files.wordpress.com/2016/06/spi_bus.png?w=800" class="wp-image-211236 size-medium alignleft" src="https://hackadaycom.files.wordpress.com/2016/06/spi_bus.png?w=400&#038;h=205" width="400" height="205" srcset="https://hackadaycom.files.wordpress.com/2016/06/spi_bus.png?w=400&amp;h=205 400w, https://hackadaycom.files.wordpress.com/2016/06/spi_bus.png?w=800&amp;h=410 800w, https://hackadaycom.files.wordpress.com/2016/06/spi_bus.png?w=250&amp;h=128 250w, https://hackadaycom.files.wordpress.com/2016/06/spi_bus.png?w=768&amp;h=393 768w" sizes="(max-width: 400px) 100vw, 400px" /></a>Turning this pair of shift registers into a full-blown data bus involves a couple more wires, so let&#8217;s look into that now, and cover the labelling of these wires as we go. The master controls the clock (CLK or SCK) line, that&#8217;s shared among all of the devices on the bus. Instead of a simple ring as drawn above, the master&#8217;s shift register is effectively in a ring with <em>each</em> of the slave devices, and the lines making up this ring are labelled MISO (&#8220;master-in, slave-out&#8221;) and MOSI (&#8220;master-out, slave-in&#8221;) depending on the direction of data flow.</p>
+<p>Since all of the rings are shared, each slave has an additional dedicated line that tells it when to attach and detach from the bus. That is, each slave has a slave-select (SS or sometimes called chip-select CS) line, and when it&#8217;s high, the slave disconnects its MISO line, and ignores what comes in over MOSI. When the individual SS line is pulled low, the slave engages. Note that the master is responsible for keeping one and only one SS line active low at any given time.</p>
+<h4>Typical SPI Communication:</h4>
+<ol>
+<li>The master pulls the slave&#8217;s personal slave-select line low, at which point the slave wakes up, starts listening, and connects to the MISO line. Depending on the <em>phase</em> (covered in detail just below) both chips may also set up their first bit of output.</li>
+<li>The master sends the first clock pulse and the first bit of data moves from master to slave (along MOSI) and from slave to master (along MISO).</li>
+<li>The master keeps cycling the clock, bits are traded, and after eight bits, both sides read in the received data and queue up the next byte for transmission.</li>
+<li>After a number of bytes are traded this way, the master again drives the SS line high and the slave disengages.</li>
+</ol>
+<p><a href="https://hackadaycom.files.wordpress.com/2016/06/scope_03.png" target="_blank"><img data-attachment-id="211238" data-permalink="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/scope_03/" data-orig-file="https://hackadaycom.files.wordpress.com/2016/06/scope_03.png" data-orig-size="1024,706" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="scope_03" data-image-description="" data-medium-file="https://hackadaycom.files.wordpress.com/2016/06/scope_03.png?w=400&#038;h=276" data-large-file="https://hackadaycom.files.wordpress.com/2016/06/scope_03.png?w=800" class="size-medium wp-image-211238 alignright" src="https://hackadaycom.files.wordpress.com/2016/06/scope_03.png?w=400&#038;h=276" alt="scope_03" width="400" height="276" srcset="https://hackadaycom.files.wordpress.com/2016/06/scope_03.png?w=400&amp;h=276 400w, https://hackadaycom.files.wordpress.com/2016/06/scope_03.png?w=800&amp;h=552 800w, https://hackadaycom.files.wordpress.com/2016/06/scope_03.png?w=250&amp;h=172 250w, https://hackadaycom.files.wordpress.com/2016/06/scope_03.png?w=768&amp;h=530 768w" sizes="(max-width: 400px) 100vw, 400px" /></a>Here&#8217;s a concrete transaction, between a microcontroller master and a 25LC256 SPI EEPROM. First, the master drops the CS line. Then it starts clocking in the command &#8212; in this case binary <code>00000011</code>, the read command. The next two bytes from the master are the read address. All the while, the slave has been holding its MISO line low, returning zeros. After receiving the read address, the slave starts sending back its data. In the case of this EEPROM, it will keep sending sequential bytes until the master stops clocking and raises the CS line, ending the transaction.</p>
+<p>Looks easy enough when it&#8217;s working!</p>
+<h2 id="phase-and-polarity">Phase and Polarity</h2>
+<p>Here&#8217;s the number-one problem with SPI lines, and the first place to look if you&#8217;re troubleshooting. If you look carefully at the traces above, you&#8217;ll notice that both chips pushed their data out on the MISO/MOSI lines at the falling edge of a clock cycle. What you can&#8217;t see, but you could probably guess, is that they both read in on the rising edge &#8212; right in the middle of a clock period.</p>
+<figure id="attachment_211241" style="width: 387px" class="wp-caption alignleft"><a href="https://hackadaycom.files.wordpress.com/2016/06/spi_polarities1.png" target="_blank"><img data-attachment-id="211241" data-permalink="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/spi_polarities/" data-orig-file="https://hackadaycom.files.wordpress.com/2016/06/spi_polarities1.png" data-orig-size="563,597" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="spi_polarities" data-image-description="" data-medium-file="https://hackadaycom.files.wordpress.com/2016/06/spi_polarities1.png?w=377&#038;h=400" data-large-file="https://hackadaycom.files.wordpress.com/2016/06/spi_polarities1.png?w=563" class="wp-image-211241 size-medium" src="https://hackadaycom.files.wordpress.com/2016/06/spi_polarities1.png?w=377&#038;h=400" width="377" height="400" srcset="https://hackadaycom.files.wordpress.com/2016/06/spi_polarities1.png?w=377&amp;h=400 377w, https://hackadaycom.files.wordpress.com/2016/06/spi_polarities1.png?w=236&amp;h=250 236w, https://hackadaycom.files.wordpress.com/2016/06/spi_polarities1.png 563w" sizes="(max-width: 377px) 100vw, 377px" /></a><figcaption class="wp-caption-text">Phase/Polarity Diagram from a STM32 Manual</figcaption></figure>
+<p>The choice of which edge to read data on, as well as whether the clock signal idles high or low, presents two binary variables that can change from one chip to the next, giving us four different &#8220;versions&#8221; of SPI. The idle state of the clock signal is called clock <em>polarity</em>, and it&#8217;s easy to explain. A clock that idles high has a polarity = 1, and vice-versa.</p>
+<p>Unfortunately, if you like thinking about when in the clock cycle the chip reads the data, the industry decided to latch on to another aspect of the transmission which maps to the same thing: the <em>phase</em>. Phase describes whether the data is going to be read on the first clock transition (phase = 0) or the second (phase = 1). If the clock idles low (polarity = 0) the first transition is going to be upward, so a system that samples on the upswing will have phase = 0. If the clock idled low, however, the first transition is necessarily down, so a system that samples on the upswing will have phase = 1 &#8212; sampling on the second transition. My head hurts even writing it out.</p>
+<p>Here&#8217;s how I cope. First, I look at when the data is sampled. If data is sampled on the upwards clock edge, the phase equals the polarity, otherwise it&#8217;s the opposite. A read-on-rising-edge is 0,0 or 1,1. And since the polarity makes sense, it&#8217;s easy to pick between the two. If it idles low, you have 0,0.</p>
+<table width="70%" rules="all" cellspacing="0" cellpadding="4">
+<thead>
+<tr>
+<th align="left" valign="top"></th>
+<th align="left" valign="top">Sample on Rising Edge</th>
+<th align="left" valign="top">Sample on Falling Edge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top">
+<p class="table"><strong>Clock Idles Low</strong></p>
+</td>
+<td align="left" valign="top">Phase: 0<br />
+Polarity: 0</td>
+<td align="left" valign="top">Phase: 1<br />
+Polarity: 0</td>
+</tr>
+<tr>
+<td align="left" valign="top">
+<p class="table"><strong>Clock Idles High</strong></p>
+</td>
+<td align="left" valign="top">Phase: 1<br />
+Polarity: 1</td>
+<td align="left" valign="top">Phase: 0<br />
+Polarity: 1</td>
+</tr>
+</tbody>
+</table>
+<p>Most everyone uses 0,0 or 1,1: data is read on the upward-going edge, and reset on the downswing. Some devices are picky about which of these two you&#8217;re using, while others aren&#8217;t. For instance, the Microchip 25LCxxx series of SPI memories samples on the upswing and doesn&#8217;t care at all about how the clock idles. That&#8217;s my kind of chip.</p>
+<p>Where this ends up, if you&#8217;re too lazy to read the datasheet or if you&#8217;re reverse-engineering, is a four-way choice. If it&#8217;s your only variable, it&#8217;s not hard to brute-force. Most chips have a status register or a chip ID. Set the phase and polarity on your microcontroller, and send the command to read the known data out of the slave device, and verify the answer. If phase and polarity is your only problem, you&#8217;ll have the right configuration in a jiffy. If your problems run deeper, you&#8217;ll have to move on. And if you don&#8217;t have the datasheet, you&#8217;ve got four times the work to do, so get this right if you can.</p>
+<h2 id="speed">Speed</h2>
+<p>Because SPI is clocked, and the slave-select line delimits a conversation, there&#8217;s not much that can go wrong in syncronizing two devices. Not much, except when the master talks too fast for the slave to follow. The good news? This is easy to debug.</p>
+<p>For debugging purposes, there&#8217;s nothing to lose by going slow. Nearly every chip that can handle SPI data at 10 MHz can handle it at 100 kHz as well. (If you know exceptions, post up in the comments!) On the other hand, due to all sorts of real-world issues with voltages propagating from one side of a wire to another and the chip&#8217;s ability to push current into the wire to overcome its parasitic capacitance, the maximum speed at which your system can run is variable. For really high SPI speeds (say, 100 MHz and above?) your system design may be the limiting factor.</p>
+<p>So test it. Start slowly and work your way up until you start noticing errors, and then back off. I&#8217;ve never had problems with short lines at 10 MHz, but you never know. The images here are from the EEPROM, which is rated for 10 MHz, soldered on a sketchy breakout board and connected through a bunch of 20 cm (8&#8243;) DuPont cables. You can see it meeting (just barely) the requirements at 9 MHz, but lagging at 18 MHz. At 35 MHz, it can&#8217;t even switch the line fast enough to produce any signal at all.</p>
+<div class="tiled-gallery type-rectangular tiled-gallery-unresized" data-original-width="800" data-carousel-extra='{&quot;blog_id&quot;:4779443,&quot;permalink&quot;:&quot;https:\/\/hackaday.com\/2016\/07\/01\/what-could-go-wrong-spi\/&quot;,&quot;likes_blog_id&quot;:4779443}' itemscope itemtype="http://schema.org/ImageGallery" > <div class="gallery-row" style="width: 800px; height: 369px;" data-original-width="800" data-original-height="369" > <div class="gallery-group images-1" style="width: 534px; height: 369px;" data-original-width="534" data-original-height="369" > <div class="tiled-gallery-item tiled-gallery-item-large" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"> <a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/scope_10-2/" border="0" itemprop="url"> <meta itemprop="width" content="530"> <meta itemprop="height" content="365"> <img data-attachment-id="211250" data-orig-file="https://hackadaycom.files.wordpress.com/2016/06/scope_10.png" data-orig-size="1024,706" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="scope_10" data-image-description="" data-medium-file="https://hackadaycom.files.wordpress.com/2016/06/scope_10.png?w=400" data-large-file="https://hackadaycom.files.wordpress.com/2016/06/scope_10.png?w=800" src="https://hackadaycom.files.wordpress.com/2016/06/scope_10.png?w=530&#038;h=365" width="530" height="365" data-original-width="530" data-original-height="365" itemprop="http://schema.org/image" title="scope_10" alt="9.1 MHz -- Looking Good" style="width: 530px; height: 365px;" /> </a> <div class="tiled-gallery-caption" itemprop="caption description"> 9.1 MHz &#8212; Looking Good </div> </div> </div> <!-- close group --> <div class="gallery-group images-2" style="width: 266px; height: 369px;" data-original-width="266" data-original-height="369" > <div class="tiled-gallery-item tiled-gallery-item-large" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"> <a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/scope_11/" border="0" itemprop="url"> <meta itemprop="width" content="262"> <meta itemprop="height" content="181"> <img data-attachment-id="211251" data-orig-file="https://hackadaycom.files.wordpress.com/2016/06/scope_11.png" data-orig-size="1024,706" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="scope_11" data-image-description="" data-medium-file="https://hackadaycom.files.wordpress.com/2016/06/scope_11.png?w=400" data-large-file="https://hackadaycom.files.wordpress.com/2016/06/scope_11.png?w=800" src="https://hackadaycom.files.wordpress.com/2016/06/scope_11.png?w=262&#038;h=181" width="262" height="181" data-original-width="262" data-original-height="181" itemprop="http://schema.org/image" title="scope_11" alt="18.2 MHz -- Missed a Bit" style="width: 262px; height: 181px;" /> </a> <div class="tiled-gallery-caption" itemprop="caption description"> 18.2 MHz &#8212; Missed a Bit </div> </div> <div class="tiled-gallery-item tiled-gallery-item-large" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"> <a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/scope_12/" border="0" itemprop="url"> <meta itemprop="width" content="262"> <meta itemprop="height" content="180"> <img data-attachment-id="211252" data-orig-file="https://hackadaycom.files.wordpress.com/2016/06/scope_12.png" data-orig-size="1024,706" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="scope_12" data-image-description="" data-medium-file="https://hackadaycom.files.wordpress.com/2016/06/scope_12.png?w=400" data-large-file="https://hackadaycom.files.wordpress.com/2016/06/scope_12.png?w=800" src="https://hackadaycom.files.wordpress.com/2016/06/scope_12.png?w=262&#038;h=180" width="262" height="180" data-original-width="262" data-original-height="180" itemprop="http://schema.org/image" title="scope_12" alt="35 MHz -- Total Disaster" style="width: 262px; height: 180px;" /> </a> <div class="tiled-gallery-caption" itemprop="caption description"> 35 MHz &#8212; Total Disaster </div> </div> </div> <!-- close group --> </div> <!-- close row --> <div class="gallery-row" style="width: 800px; height: 553px;" data-original-width="800" data-original-height="553" > <div class="gallery-group images-1" style="width: 800px; height: 553px;" data-original-width="800" data-original-height="553" > <div class="tiled-gallery-item tiled-gallery-item-large" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"> <a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/dscf8465_thumbnail/" border="0" itemprop="url"> <meta itemprop="width" content="796"> <meta itemprop="height" content="549"> <img data-attachment-id="211254" data-orig-file="https://hackadaycom.files.wordpress.com/2016/06/dscf8465_thumbnail.png" data-orig-size="1024,706" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="DSCF8465_thumbnail" data-image-description="" data-medium-file="https://hackadaycom.files.wordpress.com/2016/06/dscf8465_thumbnail.png?w=400" data-large-file="https://hackadaycom.files.wordpress.com/2016/06/dscf8465_thumbnail.png?w=800" src="https://hackadaycom.files.wordpress.com/2016/06/dscf8465_thumbnail.png?w=796&#038;h=549" width="796" height="549" data-original-width="796" data-original-height="549" itemprop="http://schema.org/image" title="DSCF8465_thumbnail" alt="Tested Under Optimal Conditions" style="width: 796px; height: 549px;" /> </a> <div class="tiled-gallery-caption" itemprop="caption description"> Tested Under Optimal Conditions </div> </div> </div> <!-- close group --> </div> <!-- close row --> </div>
+<h2 id="more-clocking">More Clocking!</h2>
+<p>If you&#8217;re sending a command to an SPI slave and expecting an answer that never comes, double-check that the master is continuing to toggle the clock until the slave is done.</p>
+<p>This can be counter-intuitive, but remember how SPI works &#8212; it&#8217;s a ring of shift-registers. To get data out of the slave&#8217;s shift register and into the master (and vice-versa) there needs to be clock pulses. The master is responsible for sending this clock, and knowing how long it needs to toggle the clock.</p>
+<p>For the EEPROM I&#8217;m using as a demo, it will continue to spit out sequential bytes until the clock stops. Most memories work this way. But other devices, like temperature sensors, will often only return a byte or two. If you keep clocking after that, they often return all zeros. When the slave must return a variable-length packet, it can either transmit the expected length first, or send bytes terminated with an end-of-data marker. This is all higher-layer stuff. I just want you to remember that if you want data back from the slave, you have to give it a clock.</p>
+<h2 id="bus-problems">Bus Problems</h2>
+<p>So far, I&#8217;ve been considering what can go wrong for each individual slave on the bus. If you add more devices to the bus (each with their own CS line, but sharing CLK, MISO, and MOSI) things can get hairy. In principle, all devices have tri-state drivers for their output lines so that they can pull it high or low, and detach when necessary. In principle, devices never speak (transmit on the MISO line) except when they&#8217;re spoken to (their CS is dropped low by the master). In theory, everything works out just fine.</p>
+<h3 id="switching-phase-and-polarity">Switching Phase and Polarity</h3>
+<p>Remember the four possible combinations of phase and polarity? That goes for each device on your bus. Keeping track of which device is being spoken to and setting a couple configuration bits isn&#8217;t hard, it&#8217;s just that you can&#8217;t forget to do it. Demonstrate to yourself that you can talk to all of the devices already on the bus each time you add a new one. And if you ever change modes, start writing the code you&#8217;ll need to change back.</p>
+<h3 id="bad-actors">Bad Actors</h3>
+<p><a href="https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_good.png" target="_blank"><img data-attachment-id="211257" data-permalink="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/spi_diagram_good-2/" data-orig-file="https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_good.png" data-orig-size="640,432" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="spi_diagram_good" data-image-description="" data-medium-file="https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_good.png?w=400" data-large-file="https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_good.png?w=640" class="wp-image-211257 size-thumbnail alignright" src="https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_good.png?w=250&#038;h=169" alt="spi_diagram_good" width="250" height="169" srcset="https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_good.png?w=250&amp;h=169 250w, https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_good.png?w=500&amp;h=338 500w, https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_good.png?w=400&amp;h=270 400w" sizes="(max-width: 250px) 100vw, 250px" /></a>The master can only address one slave at a time. If you&#8217;re getting garbage across MISO, make sure that only one CS line is asserted low at a time. If that&#8217;s the case, it&#8217;s conceivable that one of the slaves is misbehaving. You can try unplugging devices one at a time until you find the culprit.</p>
+<p>[Paul Stoffregen] was having <a href="https://hackaday.com/2014/11/25/better-spi-bus-design/">trouble with SPI compatibility</a> on the Arduino platform due to slaves that weren&#8217;t releasing the MISO line. His solution is to add a tri-state buffer chip to the offending device, and tie the tri-state line to the chip&#8217;s CS line, so that it can never tie down the MOSI line except when it&#8217;s being used. This is a great solution to the problem.</p>
+<h3 id="open-collectors">Open Collectors</h3>
+<p>While some slaves drive the MISO line too much, others drive it too little. In particular some slave devices may fail to pull up the MISO line, scrimping on one transistor and <a href="https://en.wikipedia.org/wiki/Open_Collector" target="_blank">only pulling the line down</a>. If this is the case, the MISO line might need a pull-up resistor attached. Again, this is non-standard, but is for instance true of SD-MMC memory cards that use the SPI-like interface. By adding pull-up resistors to the MISO line, you can pretend that it&#8217;s SPI.</p>
+<h3>The Test</h3>
+<p><a href="https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_bias.png" target="_blank"><img data-attachment-id="211258" data-permalink="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/spi_diagram_bias/" data-orig-file="https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_bias.png" data-orig-size="640,432" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="spi_diagram_bias" data-image-description="" data-medium-file="https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_bias.png?w=400" data-large-file="https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_bias.png?w=640" class="alignright size-thumbnail wp-image-211258" src="https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_bias.png?w=250&#038;h=169" alt="spi_diagram_bias" width="250" height="169" srcset="https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_bias.png?w=250&amp;h=169 250w, https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_bias.png?w=500&amp;h=338 500w, https://hackadaycom.files.wordpress.com/2016/06/spi_diagram_bias.png?w=400&amp;h=270 400w" sizes="(max-width: 250px) 100vw, 250px" /></a></p>
+<p>To test for MISO-line problems, both bad actors and open collectors, you can temporarily attach a pair of (say) 100 kOhm resistors to the line, one to VCC and one to GND, serving as a weak bias to the mid-rail voltage. Put all the CS lines high, so the slaves should detach from the bus. If any chip is failing to tri-state, you&#8217;ll see the line pulled up or down when it should be resting in the middle. Those are the bad actors. Now run the bus. If a chip can only pull the line down, you&#8217;ll see what looks like valid data, but it will vary between mid-rail and GND instead of VCC and GND. There&#8217;s your open collectors.</p>
+<h3 id="initialization">Initialization</h3>
+<p>Not unrelated, what happens when the microcontroller that serves as your SPI bus master is just booting up? The voltage levels on the SPI bus (and the CS lines) are floating &#8212; essentially random. The clock line might pick up power-line signals and oscillate at 50 or 60 Hz, and some chips might start talking to each other, or get into strange states, before the micro asserts control.</p>
+<p>For this reason, some people advocate (weak) pullup resistors on the CS lines, so that even before the microcontroller is up and running, all of the SPI devices are de-selected. You might think that this is a power-waster, but since the CS lines idle high anyway, the resistors only conduct when a chip is selected. I&#8217;ve never had trouble bringing SPI chips up from power-down myself, but give it a shot if you experience odd behavior on startup.</p>
+<h2 id="pullups-termination">Summary</h2>
+<p>Debugging a broken SPI bus isn&#8217;t actually that hard. Since the lines are unambiguously named (CLK, MISO, MOSI) you don&#8217;t have to think very hard when wiring the circuit up, but double-check your wiring anyway. Most of the time, you&#8217;ll have the configured phase and polarity incorrectly, which can be solved with an oscilloscope and a peek into the datasheet. After that, it might be a speed issue, which is easily fixed by just slowing down until it works and troubleshooting from there. You are clocking the slave&#8217;s data out, right?</p>
+<p>If you&#8217;ve got a bus of SPI devices, you can troubleshoot each one individually, as long as they&#8217;re behaving. Pulling the MISO line weakly to mid-rail and seeing if it stays there can verify that they are. And don&#8217;t forget to switch modes between slaves if you need to.</p>
+<p>If you&#8217;re using an SD-MMC card, or if all else fails, or if you&#8217;re just somehow superstitious, you can try adding pull-up resistors to various lines to stabilize them during power-up or for some other magical reasons. SPI <em>should</em> be a bus with push-pull drivers on all sides, so you shouldn&#8217;t need pull-ups. But then again, your bus should also be working.</p>
+<p>As always, I&#8217;d love to hear your SPI debugging tips, tricks, and horror stories!</p>
+            </div><!-- .entry-content -->
+
+    <footer class="entry-footer">
+        <span class="cat-links">Posted in <a href="https://hackaday.com/category/curated/" rel="category tag">Curated</a>, <a href="https://hackaday.com/category/hackaday-columns/" rel="category tag">Hackaday Columns</a>, <a href="https://hackaday.com/category/how-to/" rel="category tag">how-to</a>, <a href="https://hackaday.com/category/curated/skills/" rel="category tag">Skills</a></span><span class="tags-links">Tagged <a href="https://hackaday.com/tag/debugging/" rel="tag">debugging</a>, <a href="https://hackaday.com/tag/embed-with-elliot/" rel="tag">embed with elliot</a>, <a href="https://hackaday.com/tag/spi/" rel="tag">spi</a>, <a href="https://hackaday.com/tag/troubleshooting/" rel="tag">troubleshooting</a></span><meta itemprop="url" content="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/"/>    </footer><!-- .entry-footer -->
+</article><!-- #post-## -->
+
+            	<nav class="navigation post-navigation" role="navigation">
+		<h1 class="screen-reader-text">Post navigation</h1>
+		<div class="nav-links">
+			<div class="nav-previous"><a href="https://hackaday.com/2016/07/01/spotmini-struts-its-stuff/" rel="prev"><span class="meta-nav">&larr;</span>&nbsp;SpotMini Struts Its Stuff</a></div><div class="nav-next"><a href="https://hackaday.com/2016/07/01/interactive-weddingbots-built-into-nespresso-capsules/" rel="next">Interactive WeddingBots Built Into Nespresso Capsules&nbsp;<span class="meta-nav">&rarr;</span></a></div>		</div><!-- .nav-links -->
+	</nav><!-- .navigation -->
+	
+            <div class="content-ads-holder">
+                <script type='text/javascript'>
+                    /* [id429] 300x250 */
+                    OA_show(429);
+                </script>
+            </div>
+
+            
+<div id="comments" class="comments-area">
+
+    
+            <h2 class="comments-title">
+            41 thoughts on &ldquo;<span>What Could Go Wrong: SPI</span>&rdquo;        </h2>
+
+        
+        <ol class="comment-list">
+            	<li id="comment-3075659" class="comment byuser comment-author-jaromirs even thread-even depth-1 parent  highlander-comment">
+		<article id="div-comment-3075659" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn"><a href='https://hackaday.io/hacker/2648-jaromirsukuba' rel='external nofollow' class='url'>jaromirs</a></b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075659">
+						<time datetime="2016-07-01T11:04:22+00:00">
+							July 1, 2016 at 11:04 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Good article, I like it.</p>
+<p>Another idea for article: I2C bus. I think there is even more things to go wrong, like misbehaving slave holding SDA, causing bus contention (by the way, do you know how to get out of this? I battled this in one of my projects), proper pull-up resistor values, fast and ultra-fast I2C modes (being partially incompatible with good old I2C), SMBus which is actually more-less compatible, but not static. And don&#8217;t get me started about multimaster I2C.<br />
+Honestly, I hate I2C and use it where really needed. It takes a lot of work to make properly and that&#8217;s why it usually isn&#8217;t done properly. What is the last time you&#8217;ve seen timeouts and its handling in I2C master libraries?</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075659"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075659', '7e5da5dde7', 'safe-comments-result-3075659');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075659#respond' onclick='return addComment.moveForm( "div-comment-3075659", "3075659", "respond", "211228" )' aria-label='Reply to jaromirs'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3075666" class="comment byuser comment-author-mikehackaday odd alt depth-2   highlander-comment">
+		<article id="div-comment-3075666" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn"><a href='http://jumptuck.com' rel='external nofollow' class='url'>Mike Szczys</a></b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075666">
+						<time datetime="2016-07-01T11:14:30+00:00">
+							July 1, 2016 at 11:14 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>I2C is up next. I&#8217;m looking forward to it as well. I generally go for SPI just because I find I2C a pain to work with.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075666"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075666', '7e5da5dde7', 'safe-comments-result-3075666');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075666#respond' onclick='return addComment.moveForm( "div-comment-3075666", "3075666", "respond", "211228" )' aria-label='Reply to Mike Szczys'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3075692" class="comment even depth-2 parent  highlander-comment">
+		<article id="div-comment-3075692" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">Moryc</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075692">
+						<time datetime="2016-07-01T12:09:25+00:00">
+							July 1, 2016 at 12:09 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>I2C slave mode for 8-bit PICs is almost impossible. Microchip screwed up their only app note on the subject. Master mode on the other hand works like a charm. Clearly Microchip dislikes I2C slavery&#8230;</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075692"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075692', '7e5da5dde7', 'safe-comments-result-3075692');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075692#respond' onclick='return addComment.moveForm( "div-comment-3075692", "3075692", "respond", "211228" )' aria-label='Reply to Moryc'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3075738" class="comment odd alt depth-3 parent  highlander-comment">
+		<article id="div-comment-3075738" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">AC</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075738">
+						<time datetime="2016-07-01T13:39:33+00:00">
+							July 1, 2016 at 1:39 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>I2C slave mode has never &#8220;worked like a charm&#8221; on any mcu in my experience. There are inevitably small delays while the processor determines whether to read or write and how to reply. This can be handled with clock stretching at the cost of data rate on your bus. Being able to add more devices to a bus with minimal hw development is the cool part of I2C, and you can&#8217;t reliably use many other devices on a bus that is clogged by one mcu.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075738"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075738', '7e5da5dde7', 'safe-comments-result-3075738');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075738#respond' onclick='return addComment.moveForm( "div-comment-3075738", "3075738", "respond", "211228" )' aria-label='Reply to AC'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3075783" class="comment even depth-4 parent  highlander-comment">
+		<article id="div-comment-3075783" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">AC</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075783">
+						<time datetime="2016-07-01T14:49:28+00:00">
+							July 1, 2016 at 2:49 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Hey YOU!<br />
+Quit using my name unless you are making a point about Brian!<br />
+And since I got called out for only making fun of Brian and never contributing anything&#8230;</p>
+<p>If you don&#8217;t need the extra speed, the only thing bad I have to say about I2C is that level shifting and isolating are much more of a pain than with SPI.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075783"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075783', '7e5da5dde7', 'safe-comments-result-3075783');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075783#respond' onclick='return addComment.moveForm( "div-comment-3075783", "3075783", "respond", "211228" )' aria-label='Reply to AC'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3077873" class="comment odd alt depth-5  max-depth highlander-comment">
+		<article id="div-comment-3077873" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">Thomas Edison</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3077873">
+						<time datetime="2016-07-03T23:22:02+00:00">
+							July 3, 2016 at 11:22 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>I suggest you both switch to DC instead of arguing about AC.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3077873"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3077873', '7e5da5dde7', 'safe-comments-result-3077873');">Report comment</a></span>            </div>
+					</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li id="comment-3075785" class="comment even depth-4 parent  highlander-comment">
+		<article id="div-comment-3075785" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">Moryc</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075785">
+						<time datetime="2016-07-01T14:54:20+00:00">
+							July 1, 2016 at 2:54 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>When both datasheet and app note lies, you are screwed, Implementation example is wrong, datasheet is wrong, and only random post on forum points to the solution. So after a year I have semi-working slave, that locks out the MCU whenever CTMU acquisition is interrupted by I2C request. So I&#8217;ll have to switch from &#8220;as fast as possible&#8221; sequence to &#8220;take your time, interrupts ar disabled anyway&#8221; model. Also XC8 sucks monkey balls when it comes to adhering to ANSI C standard. I tested that with other project that used standard implementation of linear feedback shift register for PRNG&#8230;</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075785"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075785', '7e5da5dde7', 'safe-comments-result-3075785');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075785#respond' onclick='return addComment.moveForm( "div-comment-3075785", "3075785", "respond", "211228" )' aria-label='Reply to Moryc'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3077047" class="comment odd alt depth-5  max-depth highlander-comment">
+		<article id="div-comment-3077047" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">AC</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3077047">
+						<time datetime="2016-07-02T18:33:04+00:00">
+							July 2, 2016 at 6:33 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>I absolutely hate it when engineers start blaming anyone they can find as long as it&#8217;s not their fault they couldn&#8217;t get something working.  It&#8217;s the app note, or the software library, or the development board, ignoring the fact that there are probably thousands and thousands of those things out in the wild begin used by people who know what they are doing every day.  It&#8217;s one thing to have an actual bug, and when that happens companies document that stuff in an errata.  It&#8217;s a very very safe bet that your Adruino/PIC LED flasher project is not doing something so exotic that you uncovered a previously unknown bug.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3077047"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3077047', '7e5da5dde7', 'safe-comments-result-3077047');">Report comment</a></span>            </div>
+					</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li id="comment-3075709" class="comment byuser comment-author-tekkieneet even depth-2   highlander-comment">
+		<article id="div-comment-3075709" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn"><a href='http://techn0neet.wordpress.com' rel='external nofollow' class='url'>tekkieneet</a></b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075709">
+						<time datetime="2016-07-01T12:53:24+00:00">
+							July 1, 2016 at 12:53 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>The only way to get out of this is to segment your I2C bus into smaller sections to isolate the problem.  If you don&#8217;t have multiple I2C master on your uC, an I2C MUX can be used.  I2C MUX also help to lower the capacitance on a heavily load bus by breaking it up so you can run the bus at a faster speed.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075709"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075709', '7e5da5dde7', 'safe-comments-result-3075709');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075709#respond' onclick='return addComment.moveForm( "div-comment-3075709", "3075709", "respond", "211228" )' aria-label='Reply to tekkieneet'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3077477" class="comment odd alt depth-2   highlander-comment">
+		<article id="div-comment-3077477" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">LinuxDude</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3077477">
+						<time datetime="2016-07-03T07:08:21+00:00">
+							July 3, 2016 at 7:08 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>&gt; misbehaving slave holding SDA, causing bus contention<br />
+Any &#8220;bus&#8221; topology suffers from this. Should SPI device go nuts, communication is going to be disrupted for all bus members. That&#8217;s inherent drawback of any bus topology.</p>
+<p>I2C also got some advantages:<br />
+1) Multi-master. It is difficult to use SPI for &#8220;communication of equals&#8221;, where either device could start communication. I.e. there&#8217;re no multi-master setups for SPI, not by standard/obvious means at least. One could extend it to handle roles switching but it not going to be something standard or expected. OTOH I2C allows multi-master setups. </p>
+<p>2) I2C is much better at defining bus states. No this phases/idle states crap, idle state and phases things are defined in specs. If someone violates it, they do not talk i2C, but something else. As simple as that.</p>
+<p>3) Btw, there is SMBus, which is derived from I2C in its core and extended to handle System Management things better. It specifies &#8220;bus reset&#8221; procedure, partially handling what you&#8217;ve scared of. Upon certain bus condition devices MUST release bus and reset internal states related to bus handling if they are SMBus-compatible. Obviously, older I2C devices not aware of SMBus do not have this knowledge, so it is half-way there. But lo, SPI entirely missing this procedure and who told you nothing could go wrong with SPI devices?</p>
+<p>4) In I2C slaves could delay communication a bit. Requirement to output reply right after command received could be difficult to implement in some cases. What if one needs plenty of processing before answer is known?! I2C deals with it to some degree. though mentioned caveats apply.</p>
+<p>As disadvantage, I2C is slow. Nearly all devices talk 100kHz mode. But only some devices are talking faster 400kHz mode. There is even faster mode specified, but it is obvious even less devices understand it. </p>
+<p>Another nasty thing about I2C it is open-drain/open-collector thing. This could be a bit nasty in terms of power usage. It requires pull-ups. It wastes power to heat them when lines are held in low state. So once there is intense date exchange it wastes plenty of power for no good reason. Not a big deal on mostly idle bus, but suxx otherwise.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3077477"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3077477', '7e5da5dde7', 'safe-comments-result-3077477');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3077477#respond' onclick='return addComment.moveForm( "div-comment-3077477", "3077477", "respond", "211228" )' aria-label='Reply to LinuxDude'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3116790" class="comment even depth-2   highlander-comment">
+		<article id="div-comment-3116790" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">Joe</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3116790">
+						<time datetime="2016-08-04T12:49:45+00:00">
+							August 4, 2016 at 12:49 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Use I2C isolators or hubs for devices you&#8217;re not sure are going to hang up the bus. Isolators have timers that cut off devices on the individual ports (usually 4 per chip) but do nothing for addressing. Hubs actually have addresses and are also called I2C bus extenders or address extenders because of that. Sitting at 0x50 or 0x70 and having 2, 3 or 4 ports that can be turned on or off. TI PCA9518 or ISO1540 come to mind.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3116790"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3116790', '7e5da5dde7', 'safe-comments-result-3116790');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3116790#respond' onclick='return addComment.moveForm( "div-comment-3116790", "3116790", "respond", "211228" )' aria-label='Reply to Joe'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li id="comment-3075660" class="comment odd alt thread-odd thread-alt depth-1   highlander-comment">
+		<article id="div-comment-3075660" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">k-ww</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075660">
+						<time datetime="2016-07-01T11:05:55+00:00">
+							July 1, 2016 at 11:05 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>If you clock the SPI bus too slow for a ADC, conversion errors cans creep in &#8211; check the specs on an ADC for it&#8217;s minimum clock speed.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075660"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075660', '7e5da5dde7', 'safe-comments-result-3075660');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075660#respond' onclick='return addComment.moveForm( "div-comment-3075660", "3075660", "respond", "211228" )' aria-label='Reply to k-ww'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3075671" class="comment even thread-even depth-1   highlander-comment">
+		<article id="div-comment-3075671" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">Daniel</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075671">
+						<time datetime="2016-07-01T11:21:31+00:00">
+							July 1, 2016 at 11:21 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>I once had to interface an ADS7843. We had some serious nonlinear distortions on large touch screens until someone tried to use a slower SPI clock.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075671"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075671', '7e5da5dde7', 'safe-comments-result-3075671');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075671#respond' onclick='return addComment.moveForm( "div-comment-3075671", "3075671", "respond", "211228" )' aria-label='Reply to Daniel'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3075673" class="comment odd alt thread-odd thread-alt depth-1 parent  highlander-comment">
+		<article id="div-comment-3075673" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">Alphatek</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075673">
+						<time datetime="2016-07-01T11:23:07+00:00">
+							July 1, 2016 at 11:23 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Bits, not bytes. SPI can transfer any number of bits in a unit. Case in point would be the common Nokia-style LCDs, which use 9 bits (1 for data/command flag, and 8 for payload)</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075673"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075673', '7e5da5dde7', 'safe-comments-result-3075673');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075673#respond' onclick='return addComment.moveForm( "div-comment-3075673", "3075673", "respond", "211228" )' aria-label='Reply to Alphatek'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3077483" class="comment even depth-2   highlander-comment">
+		<article id="div-comment-3077483" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">LinuxDude</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3077483">
+						<time datetime="2016-07-03T07:21:54+00:00">
+							July 3, 2016 at 7:21 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Another fancy thing is the fact JTAG is mostly some specific subflavor of SPI. Also, SD cards are required to be able to operate in &#8220;SPI mode&#8221; where one could use microcontroller to talk to card (multi-bit modes are using different protocol and most uCs do not have suitable hardware aka full-fledged mmc/sd controller, larger socs do). For MMC cards SPI mode is optional but most MMC cards actually implement it, just like SD cards.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3077483"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3077483', '7e5da5dde7', 'safe-comments-result-3077483');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3077483#respond' onclick='return addComment.moveForm( "div-comment-3077483", "3077483", "respond", "211228" )' aria-label='Reply to LinuxDude'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li id="comment-3075688" class="comment odd alt thread-even depth-1 parent  highlander-comment">
+		<article id="div-comment-3075688" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">FRank SMith</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075688">
+						<time datetime="2016-07-01T11:47:20+00:00">
+							July 1, 2016 at 11:47 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Elliot</p>
+<p>As ever nice description and helpful tips but you only mention 8 bit SPI. Personally I have experience of 16 and 32 bit buses meeting all the other SPI requirements. Further, I have met three systems which are supposedly using SPI buses but which have no slave select lines and an arbitrary bit length. These are great fun to debug until you get hold of the loop length particularly if the micro clocks everything continually.</p>
+<p>The trick here is simply to go back to basics and check the chip specs and assuming they are all SPI compatible chips or shift registers, not micros, simply add the bits up. I have just finished working with a system that had fifteen, eight bit registers cascaded on a so called SPI bus; it works like a dream once you understand what is going on.</p>
+<p>Frank</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075688"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075688', '7e5da5dde7', 'safe-comments-result-3075688');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075688#respond' onclick='return addComment.moveForm( "div-comment-3075688", "3075688", "respond", "211228" )' aria-label='Reply to FRank SMith'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3075723" class="comment byuser comment-author-hexagon5un bypostauthor even depth-2 parent  highlander-comment">
+		<article id="div-comment-3075723" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn"><a href='https://hackaday.io/hexagon5un' rel='external nofollow' class='url'>Elliot Williams</a></b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075723">
+						<time datetime="2016-07-01T13:18:34+00:00">
+							July 1, 2016 at 1:18 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Good points Frank and Alphatek &#8212; you&#8217;re absolutely right about bits vs bytes.  9 bits is just perverse.  Alphatek, how did you work around it?  Bit-bang one and use the hardware for eight?  Or just do it manual all the way?</p>
+<p>In comparison, the multiples of 8-bits are pretty pleasant to deal with, no?  The memory chip in the example, for instance, takes a 15-bit address with one bit of padding so that it fits nicely into two bytes.  Just remember which byte goes first, and all&#8217;s well.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075723"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075723', '7e5da5dde7', 'safe-comments-result-3075723');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075723#respond' onclick='return addComment.moveForm( "div-comment-3075723", "3075723", "respond", "211228" )' aria-label='Reply to Elliot Williams'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3075746" class="comment odd alt depth-3   highlander-comment">
+		<article id="div-comment-3075746" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">Alphatek</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075746">
+						<time datetime="2016-07-01T13:57:13+00:00">
+							July 1, 2016 at 1:57 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>In one case, pure software bitbang (8051), in another bitbang+hw (attiny), and on another, got the hardware design to cope with arbitrary bits 2-32.</p>
+<p>I wholeheartedly agree that i2c is evil incarnate, especially as a slave!</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075746"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075746', '7e5da5dde7', 'safe-comments-result-3075746');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075746#respond' onclick='return addComment.moveForm( "div-comment-3075746", "3075746", "respond", "211228" )' aria-label='Reply to Alphatek'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3075793" class="comment even depth-3   highlander-comment">
+		<article id="div-comment-3075793" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">fonz</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075793">
+						<time datetime="2016-07-01T15:20:43+00:00">
+							July 1, 2016 at 3:20 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>I&#8217;m my experience the only thing standard about SPI is that is usually 3 or 4 pins and one of them clock. Especially things like ADCs seem to do all kinds of things like, strange number of bits, 3 wire with opposite clock polarity for reads or half bit turn around, data lines doubling as busy indicators many of them making DMA or hardware chipselect useless</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075793"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075793', '7e5da5dde7', 'safe-comments-result-3075793');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075793#respond' onclick='return addComment.moveForm( "div-comment-3075793", "3075793", "respond", "211228" )' aria-label='Reply to fonz'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3076615" class="comment byuser comment-author-jamespotts138164748 odd alt depth-3   highlander-comment">
+		<article id="div-comment-3076615" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn"><a href='http://pottsylvania.wordpress.com' rel='external nofollow' class='url'>BeagleBoy</a></b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3076615">
+						<time datetime="2016-07-02T08:01:14+00:00">
+							July 2, 2016 at 8:01 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>I had to do 17-bit reads and writes to configure a sensor.  And the spi engine would insist on whole bytes.  This would leave the shift register on the device partway shifted.  So after each transaction, I&#8217;d have to initiate a bunch of throwaway reads until the device&#8217;s register was back around to the first bit.</p>
+<p>That&#8217;s what you get when you buy $20000 sensors, I guess.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3076615"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3076615', '7e5da5dde7', 'safe-comments-result-3076615');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3076615#respond' onclick='return addComment.moveForm( "div-comment-3076615", "3076615", "respond", "211228" )' aria-label='Reply to BeagleBoy'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3077368" class="comment even depth-3   highlander-comment">
+		<article id="div-comment-3077368" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">FRank SMith</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3077368">
+						<time datetime="2016-07-03T01:42:53+00:00">
+							July 3, 2016 at 1:42 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>I used a micro so it was easy build a pair of circular buffers to act as the shift registers and go. The length is then almost irrelevant, the input static bytes/bits and output circular on the transmit, the opposite for the receive. The only caution is not to read the response at the wrong time or you get a corrupt answer. The data in the recieve circular buffer is only complete between frames.</p>
+<p>As for I2C I&#8217;ve had no problems using PICs and NXP parts it just works once configured correctly. The biggest problem is if you need lots of address range, extra lines or chips are necessary. My problem there was the mapping of a custom TFT to the internal registers of the driver and nothing to do with the chips! Let a draughtsman choose the interconnect layout and the glass will look great but your code will be dreadful.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3077368"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3077368', '7e5da5dde7', 'safe-comments-result-3077368');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3077368#respond' onclick='return addComment.moveForm( "div-comment-3077368", "3077368", "respond", "211228" )' aria-label='Reply to FRank SMith'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li id="comment-3075698" class="comment odd alt thread-odd thread-alt depth-1 parent  highlander-comment">
+		<article id="div-comment-3075698" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn"><a href='https://pi-plates.com' rel='external nofollow' class='url'>Jerry Wasinger</a></b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075698">
+						<time datetime="2016-07-01T12:28:21+00:00">
+							July 1, 2016 at 12:28 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Because my products depend on SPI, I have an approach/avoidance reaction every time a new Raspberry Pi or RPi OS update is announced. I&#8217;m always worried they&#8217;ve done something new to screw up the SPI clock, or if they&#8217;ve changed the timing between the end of a transfer and the rising edge of chip select. Both of these things have bit me in the past since I use the SPI peripheral on a PIC microprocessor.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075698"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075698', '7e5da5dde7', 'safe-comments-result-3075698');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075698#respond' onclick='return addComment.moveForm( "div-comment-3075698", "3075698", "respond", "211228" )' aria-label='Reply to Jerry Wasinger'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3077486" class="comment even depth-2   highlander-comment">
+		<article id="div-comment-3077486" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">LinuxDude</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3077486">
+						<time datetime="2016-07-03T07:30:09+00:00">
+							July 3, 2016 at 7:30 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Hmm, have RPi spiggots failed to learn to use Linux&#8217;s own SPI framework to do it right and rather keeping reinventing that damn wheel more and more? I&#8217;m using differend SBCs and do not really get why SPI should be an issue. Though RPi aren&#8217;t great engineers and always manage to screw everything up, be it SoC boot (GPU booting CPU? What the hell is that?) or power management (or to be exact utter lack of it, while even $5 Allwinner and Rockchip SoCs could do real dynamic voltage-frequency scaling!). No wonder they could screw SPI up either.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3077486"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3077486', '7e5da5dde7', 'safe-comments-result-3077486');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3077486#respond' onclick='return addComment.moveForm( "div-comment-3077486", "3077486", "respond", "211228" )' aria-label='Reply to LinuxDude'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li id="comment-3075710" class="comment odd alt thread-even depth-1 parent  highlander-comment">
+		<article id="div-comment-3075710" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">Kldc</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075710">
+						<time datetime="2016-07-01T12:56:29+00:00">
+							July 1, 2016 at 12:56 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Can you say something about SPI Mode 0,0 and Mode 1,1, that is often mentioned in datasheets? What does it mean?</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075710"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075710', '7e5da5dde7', 'safe-comments-result-3075710');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075710#respond' onclick='return addComment.moveForm( "div-comment-3075710", "3075710", "respond", "211228" )' aria-label='Reply to Kldc'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3076635" class="comment even depth-2   highlander-comment">
+		<article id="div-comment-3076635" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">fonz</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3076635">
+						<time datetime="2016-07-02T08:34:27+00:00">
+							July 2, 2016 at 8:34 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p><a href="https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus#Clock_polarity_and_phase" rel="nofollow" target="_blank">https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus#Clock_polarity_and_phase</a><br />
+<a href="https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus#Mode_numbers" rel="nofollow" target="_blank">https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus#Mode_numbers</a></p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3076635"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3076635', '7e5da5dde7', 'safe-comments-result-3076635');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3076635#respond' onclick='return addComment.moveForm( "div-comment-3076635", "3076635", "respond", "211228" )' aria-label='Reply to fonz'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3076755" class="comment byuser comment-author-hexagon5un bypostauthor odd alt depth-2   highlander-comment">
+		<article id="div-comment-3076755" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn"><a href='https://hackaday.io/hexagon5un' rel='external nofollow' class='url'>Elliot Williams</a></b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3076755">
+						<time datetime="2016-07-02T11:14:14+00:00">
+							July 2, 2016 at 11:14 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Phase, Polarity.  There&#8217;s a headlined section in the article, and I even made a table that breaks it down for you.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3076755"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3076755', '7e5da5dde7', 'safe-comments-result-3076755');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3076755#respond' onclick='return addComment.moveForm( "div-comment-3076755", "3076755", "respond", "211228" )' aria-label='Reply to Elliot Williams'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li id="comment-3075715" class="comment byuser comment-author-tekkieneet even thread-odd thread-alt depth-1 parent  highlander-comment">
+		<article id="div-comment-3075715" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn"><a href='http://techn0neet.wordpress.com' rel='external nofollow' class='url'>tekkieneet</a></b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075715">
+						<time datetime="2016-07-01T13:02:29+00:00">
+							July 1, 2016 at 1:02 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>BTW those clock looks horrible &#8211; lots of ringing and undershoots.  Plenty of newbie mistakes: using ground strap on scope probes for high speed signals, loose wires without series terminations.</p>
+<p>You should have series termination (probably around 100 ohms) and or slow down the slew rate (if your chip supports it) if you are dealing with loose wires.  Going with ribbon cables with alternating ground returns would help quite a bit.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075715"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075715', '7e5da5dde7', 'safe-comments-result-3075715');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075715#respond' onclick='return addComment.moveForm( "div-comment-3075715", "3075715", "respond", "211228" )' aria-label='Reply to tekkieneet'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3075717" class="comment byuser comment-author-wallyware odd alt depth-2   highlander-comment">
+		<article id="div-comment-3075717" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">wallyware</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075717">
+						<time datetime="2016-07-01T13:07:46+00:00">
+							July 1, 2016 at 1:07 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>I suspect grounding the scope probes is all that&#8217;s required&#8230;</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075717"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075717', '7e5da5dde7', 'safe-comments-result-3075717');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075717#respond' onclick='return addComment.moveForm( "div-comment-3075717", "3075717", "respond", "211228" )' aria-label='Reply to wallyware'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3075740" class="comment byuser comment-author-hexagon5un bypostauthor even depth-2 parent  highlander-comment">
+		<article id="div-comment-3075740" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn"><a href='https://hackaday.io/hexagon5un' rel='external nofollow' class='url'>Elliot Williams</a></b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075740">
+						<time datetime="2016-07-01T13:42:37+00:00">
+							July 1, 2016 at 1:42 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>LOL, did you see the picture of the &#8220;test setup&#8221;?  It&#8217;s totally worst-case scenario!  It&#8217;s the fastest thing I could lash up using wires on-hand to get some scope shots for the article.  There&#8217;s no way you&#8217;d ever do anything that horrid in practice.  Dupont cables flopping all around in the breeze and all.  </p>
+<p>You criticize the grounding?  It&#8217;s worse than you think!  I didn&#8217;t just use the ground strap &#8212; I used a jumper wire upstream of the ground strap.  The ground path to the scope is like 20cm long with a sketchy joint in the middle.</p>
+<p>My point was actually, given how horrid it all was, that it works just fine up to (spec) 10 MHz.  SPI is, signal-wise, reasonably forgiving at fairly decent speeds.</p>
+<p>In an earlier draft I talked about slowing down edges, but it didn&#8217;t make the final cut.  Best/simplest solution, short of the chip doing it for you, is an RC filter right next to the output pin.  That way you avoid dumping power into a grounded resistor as you would with termination, _and_ you limit the frequencies on the data lines, which cleans up radiation problems.  (&#8220;Best&#8221; is IMO, natch.)  </p>
+<p>But because termination of SPI lines is not really needed in most projects (or maybe just in my experience!) I left that section out.  To be discussed in comments.  :)</p>
+<p>Why termination instead of slew-rate limiting?</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075740"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075740', '7e5da5dde7', 'safe-comments-result-3075740');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075740#respond' onclick='return addComment.moveForm( "div-comment-3075740", "3075740", "respond", "211228" )' aria-label='Reply to Elliot Williams'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3075845" class="comment odd alt depth-3   highlander-comment">
+		<article id="div-comment-3075845" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn"><a href='https://www.facebook.com/mike.lu.tamu' rel='external nofollow' class='url'>Mike Lu</a></b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075845">
+						<time datetime="2016-07-01T17:10:29+00:00">
+							July 1, 2016 at 5:10 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>FPGAs often do run the SPI bus fast enough for termination to be an issue. In my experience adding a series 100R/100p RC snubber (play with the values) at the receiving end does pretty well to suppress overshoot.</p>
+<p>For some real fun, select the wrong clock phase by mistake. The result is often a system that works intermittently or mostly works but is unusually sensitive to signal quality.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075845"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075845', '7e5da5dde7', 'safe-comments-result-3075845');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075845#respond' onclick='return addComment.moveForm( "div-comment-3075845", "3075845", "respond", "211228" )' aria-label='Reply to Mike Lu'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li id="comment-3077010" class="comment even depth-2   highlander-comment">
+		<article id="div-comment-3077010" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">Luke Weston</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3077010">
+						<time datetime="2016-07-02T17:41:24+00:00">
+							July 2, 2016 at 5:41 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>It is a really good example that illustrates what fail looks like, in a high-speed digital system.<br />
+High-speed digital integrity requires attention to the driver devices, transmission lines, impedance control and termination, and all sorts of other stuff which is basically bringing in all the same sorts of challenges and skills one encounters in RF design. None of this stuff is specifically unique to SPI.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3077010"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3077010', '7e5da5dde7', 'safe-comments-result-3077010');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3077010#respond' onclick='return addComment.moveForm( "div-comment-3077010", "3077010", "respond", "211228" )' aria-label='Reply to Luke Weston'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li id="comment-3075841" class="comment odd alt thread-even depth-1 parent  highlander-comment">
+		<article id="div-comment-3075841" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">drenehtsral</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075841">
+						<time datetime="2016-07-01T17:04:36+00:00">
+							July 1, 2016 at 5:04 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Once I had occasion to work with an SPI slave (which was, under the hood, a microcontroller itself) that would reliably receive and transmit at 1MHz _unless_ the previous command you&#8217;d sent it was one of a select few that caused it to miss bytes here and there if you sent two in a row without stretching the clock.</p>
+<p>Also, beware: some devices maintain a notion of transactions that must begin with a falling edge of /CS and end with a rising edge of /CS, while others you can just tie /CS low and send multiple back-to-back commands if you really need to save a pin.  If you ever go out of sync with no way to signal a new transaction you can be up a creek (or at least need to reset the slave device entirely).</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075841"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075841', '7e5da5dde7', 'safe-comments-result-3075841');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075841#respond' onclick='return addComment.moveForm( "div-comment-3075841", "3075841", "respond", "211228" )' aria-label='Reply to drenehtsral'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-3075917" class="comment byuser comment-author-remydyer even depth-2   highlander-comment">
+		<article id="div-comment-3075917" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">remydyer</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075917">
+						<time datetime="2016-07-01T18:15:53+00:00">
+							July 1, 2016 at 6:15 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>The maxrefdes24 &#8220;alameda&#8221; PMOD board with 4x isolated voltage/current 16 bit outputs is like this.<br />
+There are 5 different chips on the one SPI bus, and four of them are the output buffer / monitor chips which have to be all in the one 64 bit long transaction, because the chips are wired in a proprietary daisy chain configuration so they all expose just one CS.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075917"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075917', '7e5da5dde7', 'safe-comments-result-3075917');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075917#respond' onclick='return addComment.moveForm( "div-comment-3075917", "3075917", "respond", "211228" )' aria-label='Reply to remydyer'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li id="comment-3075863" class="comment odd alt thread-odd thread-alt depth-1   highlander-comment">
+		<article id="div-comment-3075863" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">TheRegnirps</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075863">
+						<time datetime="2016-07-01T17:33:27+00:00">
+							July 1, 2016 at 5:33 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>&#8220;If the clock idled low, however, the first transition is necessarily down,&#8221; low should be high.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075863"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075863', '7e5da5dde7', 'safe-comments-result-3075863');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075863#respond' onclick='return addComment.moveForm( "div-comment-3075863", "3075863", "respond", "211228" )' aria-label='Reply to TheRegnirps'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3075956" class="comment byuser comment-author-remydyer even thread-even depth-1   highlander-comment">
+		<article id="div-comment-3075956" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">remydyer</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3075956">
+						<time datetime="2016-07-01T19:16:56+00:00">
+							July 1, 2016 at 7:16 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>It&#8217;s a good article. </p>
+<p>I&#8217;d prefer such titled articles not leave anything out though. </p>
+<p>Eg: Most significant bit first vs the opposite : although I can&#8217;t bring to mind a specific device that goes LSB first. </p>
+<p>I think the MSB convention (bit big endian) is so the data on the oscilloscope screen reads left-to-right how you would write it. </p>
+<p>Another point is that SPI in particular tend to emit a lot of noise &#8211; especially where you use it between boards, which is becoming more popular to do what with the rash of convenient readily available PMOD&#8217;s. </p>
+<p>I&#8217;ve yet to actually implement it, but I&#8217;ve found wirewrap with twisted pairs and differential logic signalling good for suppressing such noise &#8211; even if the devices don&#8217;t support differential signalling.</p>
+<p> If you have a thevenin equivalent R nearby the slave device&#8217;s non-complement CLK input &#8211; what&#8217;s important for EMI is that the pair as a whole&#8217;s current doesn&#8217;t fluctuate with the signal. This is easy from an FPGA where you have nearby optional outputs designed to generate a complement of the signal right at the pin and in exact phase with the (on chip) clock.<br />
+It&#8217;s not a bad idea while you&#8217;re at it to make sure there are at least anti-reflection series resistors at the signal source too. </p>
+<p>Even without the slave chip &#8220;using&#8221; the clock complement signal (since it would just be hitting the equivalent load resistor) this will massively reduce EMI emissions since it will carry the current for the pair whenever the clock line is low, so that the return path had only got a constant current source and therefore no ground bounce. </p>
+<p>The final thing to do is to pass all wires through a suppression ferrite to absorb common mode noise &#8211; make sure you pick one made from ferrite with a lot of loss in the VHF. </p>
+<p>Of course, if you&#8217;re connecting between FPGA&#8217;s, SPI with proper differential logic signals are even better &#8211; you can very easily hit half gigabit transfer rates, so long as you don&#8217;t mind the extra pair for the clock.<br />
+This makes particular sense if you need to split a design between chips &#8211; very long shift registers are very &#8220;cheap&#8221; routing and register cost wise on FPGA&#8217;s. </p>
+<p>Oh, and it&#8217;s fairly easy to make pretty good twisted pair (or twisted triple: to accomodate the return current if it&#8217;s the only link between two boards) with 30AWG wire, a vice and a drill. </p>
+<p>If it&#8217;s important, you can even hook up a signal gen and oscilloscope at the &#8220;vice&#8221; end, and put an impedance matching SMD resistor at the drill end, and then run the drill just past where the reflections die. (It&#8217;ll unwind a bit when released, of course). </p>
+<p>This is a good way to get the right twist rate to use for the wire you have: there are calculators, but experiment is best.  </p>
+<p>For twisted triple, remember that it&#8217;s supposed to be two transmission lines that are that just happen to be close by : you don&#8217;t care about the actual differential line impedance, you want each impedance to the return to not reflect.<br />
+In that case you should put the scope on one line, and make sure you&#8217;re sending well-synchronised complementary edges down the other. </p>
+<p>In fact this is kinda true of all differential digital : the impedance that actually matters most is the single-side to ground one. What&#8217;s confusing is that differential impedance matters for analog differential signals. But digital ones are really two signals which have the same length (and thus timing), and whose currents sum over time to some DC value. They still both need the third connection for the return path to ground &#8211; unless they&#8217;re transformer-coupled like Ethernet uses.<br />
+(But once you start with the transformer coupling, you can&#8217;t do SPI anymore, since then you need to whiten the data to ensure the transformers don&#8217;t end up saturating when too many like bits get sent in a row. You can still do this fairly easily, with 8/10b encoding &#8211; and this also allows you to ditch the clock connection as well, but it&#8217;s no longer as simple to set up and diagnose as SPI. </p>
+<p>All of the above assumes no multidrop busses, of course: but you can have as many bus segments as you have PMOD&#8217;s on an FPGA, each &#8220;SPI bus master&#8221; can be just a single-page module of  Verilog. </p>
+<p>You bit-bang the CS lines with your soft-core, but use the SPI master to handle the actual send and receive shift registers.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3075956"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3075956', '7e5da5dde7', 'safe-comments-result-3075956');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3075956#respond' onclick='return addComment.moveForm( "div-comment-3075956", "3075956", "respond", "211228" )' aria-label='Reply to remydyer'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3080324" class="comment byuser comment-author-8r13n odd alt thread-odd thread-alt depth-1   highlander-comment">
+		<article id="div-comment-3080324" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">8r13n</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3080324">
+						<time datetime="2016-07-06T11:12:08+00:00">
+							July 6, 2016 at 11:12 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Something that&#8217;s tripped me up with SPI, when reading multiple values quickly from a high res ADC I also needed to monitor a &#8220;busy pin&#8221; that indicated when the ADC was ready to be read.  For this reason the hardware feature on my MPU (ARM STM32F4) couldn&#8217;t be used to simple read 256, etc values from my ADC.  Instead I had to read one value, wait and repeat.  I really wish their hardware feature supported this fairly common challange.  On the same thread, the hardware feature didn&#8217;t support 18bit transactions.  Only 8 and 16bit.  So I was forced to do three 8bit reads and process the data :/  Their new F7 chip supports 24bit reads, but still no 18bit love.  That kindof flexibility at the hardware feature level would be really nice in the future.  Presuming 18bit ADCs are here to stay.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3080324"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3080324', '7e5da5dde7', 'safe-comments-result-3080324');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3080324#respond' onclick='return addComment.moveForm( "div-comment-3080324", "3080324", "respond", "211228" )' aria-label='Reply to 8r13n'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3085274" class="comment even thread-even depth-1 parent  highlander-comment">
+		<article id="div-comment-3085274" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn"><a href='http://bendreth.com' rel='external nofollow' class='url'>wheels</a></b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3085274">
+						<time datetime="2016-07-11T11:43:44+00:00">
+							July 11, 2016 at 11:43 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>One other problem that may arise is SPI peripherals that don&#8217;t behave nicely. Some years ago, I worked with the AD7714 programmable ADC. This chip kept the shift register active at all times, and used the rising edge of chip select to transfer the shift register contents into the internal data register.</p>
+<p>The controller board(s) I was using had the SPI chip select lines multiplexed with other functions (keypad, LCD) because of limited I/O capacity, so scanning the keypad or sending certain characters to the LCD would cause a momentary chip select with no data clocked on the SPI lines. This had no effect on any other SPI peripheral chip we were using, but it caused the last data sent to any other SPI peripheral to update the configuration for the AD7714 with incorrect data.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3085274"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3085274', '7e5da5dde7', 'safe-comments-result-3085274');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3085274#respond' onclick='return addComment.moveForm( "div-comment-3085274", "3085274", "respond", "211228" )' aria-label='Reply to wheels'>Reply</a></div>		</article><!-- .comment-body -->
+	<ol class="children">
+	<li id="comment-4573245" class="comment odd alt depth-2   highlander-comment">
+		<article id="div-comment-4573245" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn"><a href='http://twitter.com/whatnick' rel='external nofollow' class='url'>Tisham Dhar (@whatnick)</a></b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-4573245">
+						<time datetime="2018-05-21T23:42:13+00:00">
+							May 21, 2018 at 11:42 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>For such edge cases you need a configurable serial bus the FRDM K82F has flexio &#8211; <a href="https://mcuoneclipse.com/tag/flexio/" rel="nofollow" target="_blank">https://mcuoneclipse.com/tag/flexio/</a> , this lets you implement your own bus protocols.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-4573245"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '4573245', '7e5da5dde7', 'safe-comments-result-4573245');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=4573245#respond' onclick='return addComment.moveForm( "div-comment-4573245", "4573245", "respond", "211228" )' aria-label='Reply to Tisham Dhar (@whatnick)'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+	<li id="comment-3457940" class="comment even thread-odd thread-alt depth-1   highlander-comment">
+		<article id="div-comment-3457940" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">Ankit</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3457940">
+						<time datetime="2017-03-16T07:35:43+00:00">
+							March 16, 2017 at 7:35 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Is there any advantage of different SPI modes(the CPOL/CPHA) ? Or these modes are there because there was 4 different ways ?</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3457940"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3457940', '7e5da5dde7', 'safe-comments-result-3457940');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3457940#respond' onclick='return addComment.moveForm( "div-comment-3457940", "3457940", "respond", "211228" )' aria-label='Reply to Ankit'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-3525499" class="comment odd alt thread-even depth-1   highlander-comment">
+		<article id="div-comment-3525499" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">Leveson</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-3525499">
+						<time datetime="2017-04-14T05:19:23+00:00">
+							April 14, 2017 at 5:19 am						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>It&#8217;s so refreshing to find an article where the writer is truly trying to make themselves understood &#8211; rather than showing off their superior knowledge! Well done on this SPI piece &#8211; a lot of very useful information, clearly explained.</p>
+<p>Thanks Elliot!</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-3525499"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '3525499', '7e5da5dde7', 'safe-comments-result-3525499');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=3525499#respond' onclick='return addComment.moveForm( "div-comment-3525499", "3525499", "respond", "211228" )' aria-label='Reply to Leveson'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+	<li id="comment-4503260" class="comment even thread-odd thread-alt depth-1   highlander-comment">
+		<article id="div-comment-4503260" class="comment-body">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+										<b class="fn">Harish</b> <span class="says">says:</span>				</div><!-- .comment-author -->
+
+				<div class="comment-metadata">
+					<a href="https://hackaday.com/2016/07/01/what-could-go-wrong-spi/#comment-4503260">
+						<time datetime="2018-04-24T20:22:50+00:00">
+							April 24, 2018 at 8:22 pm						</time>
+					</a>
+									</div><!-- .comment-metadata -->
+
+							</footer><!-- .comment-meta -->
+
+			<div class="comment-content">
+				<p>Hi,<br />
+I am using two types of EEPROMs. First one is 25LC320E and 25LC32AE. First one have less clock(2MHz) supported and second one have clock (5MHz) supported at 2.5 &#8211; 5.5V chip. With my first one my sw working(read and write successful) but when i replace with second one this is not happening. Can you suggest any issue regarding.<br />
+I refered both the data sheets and everything seems to be correct.</p>
+			</div><!-- .comment-content -->
+			<div class="report-abuse">
+                
+			<span id="safe-comments-result-4503260"><a class="hide-if-no-js" href="javascript:void(0);" onclick="safe_report_comments_flag_comment( '4503260', '7e5da5dde7', 'safe-comments-result-4503260');">Report comment</a></span>            </div>
+			<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://hackaday.com/2016/07/01/what-could-go-wrong-spi/?replytocom=4503260#respond' onclick='return addComment.moveForm( "div-comment-4503260", "4503260", "respond", "211228" )' aria-label='Reply to Harish'>Reply</a></div>		</article><!-- .comment-body -->
+	</li><!-- #comment-## -->
+        </ol><!-- .comment-list -->
+
+        
+    
+    
+    	<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="/2016/07/01/what-could-go-wrong-spi/#respond" style="display:none;">Cancel reply</a></small></h3>			<form action="https://hackaday.com/wp-comments-post.php" method="post" id="commentform" class="comment-form" novalidate>
+				<input type="hidden" id="highlander_comment_nonce" name="highlander_comment_nonce" value="f7e0b50641" /><input type="hidden" name="_wp_http_referer" value="/2016/07/01/what-could-go-wrong-spi/" />
+<input type="hidden" name="hc_post_as" id="hc_post_as" value="guest" />
+
+<div class="comment-form-field comment-textarea">
+	<label for="comment">Enter your comment here...</label>
+	<div id="comment-form-comment"><textarea id="comment" name="comment" title="Enter your comment here..."></textarea></div>
+</div>
+
+<div id="comment-form-identity">
+	<div id="comment-form-nascar">
+		<p>Fill in your details below or click an icon to log in:</p>
+		<ul>
+			<li class="selected" style="display:none;">
+				<a href="#comment-form-guest" id="postas-guest" class="nascar-signin-link"
+                   title="Login via Guest">
+									</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:WordPress.com" id="postas-wordpress" class="nascar-signin-link"
+                   title="Login via WordPress.com">
+					<svg xmlns="http://www.w3.org/2000/svg" role="presentation" viewBox="0 0 24 24" ><rect x="0" fill="none" width="24" height="24"/><g><path fill="#0087be" d="M12.158 12.786l-2.698 7.84c.806.236 1.657.365 2.54.365 1.047 0 2.05-.18 2.986-.51-.024-.037-.046-.078-.065-.123l-2.762-7.57zM3.008 12c0 3.56 2.07 6.634 5.068 8.092L3.788 8.342c-.5 1.117-.78 2.354-.78 3.658zm15.06-.454c0-1.112-.398-1.88-.74-2.48-.456-.74-.883-1.368-.883-2.11 0-.825.627-1.595 1.51-1.595.04 0 .078.006.116.008-1.598-1.464-3.73-2.36-6.07-2.36-3.14 0-5.904 1.613-7.512 4.053.21.008.41.012.58.012.94 0 2.395-.114 2.395-.114.484-.028.54.684.057.74 0 0-.487.058-1.03.086l3.275 9.74 1.968-5.902-1.4-3.838c-.485-.028-.944-.085-.944-.085-.486-.03-.43-.77.056-.742 0 0 1.484.114 2.368.114.94 0 2.397-.114 2.397-.114.486-.028.543.684.058.74 0 0-.488.058-1.03.086l3.25 9.665.897-2.997c.456-1.17.684-2.137.684-2.907zm1.82-3.86c.04.286.06.593.06.924 0 .912-.17 1.938-.683 3.22l-2.746 7.94c2.672-1.558 4.47-4.454 4.47-7.77 0-1.564-.4-3.033-1.1-4.314zM12 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></g></svg>				</a>
+			</li>
+			<li>
+			<li>
+				<a href="#comment-form-load-service:Twitter" id="postas-twitter" class="nascar-signin-link"
+                   title="Login via Twitter">
+					<svg xmlns="http://www.w3.org/2000/svg" role="presentation" viewBox="0 0 24 24" ><rect x="0" fill="none" width="24" height="24"/><g><path fill="#1DA1F2" d="M22.23 5.924c-.736.326-1.527.547-2.357.646.847-.508 1.498-1.312 1.804-2.27-.793.47-1.67.812-2.606.996C18.325 4.498 17.258 4 16.078 4c-2.266 0-4.103 1.837-4.103 4.103 0 .322.036.635.106.935-3.41-.17-6.433-1.804-8.457-4.287-.353.607-.556 1.312-.556 2.064 0 1.424.724 2.68 1.825 3.415-.673-.022-1.305-.207-1.86-.514v.052c0 1.988 1.415 3.647 3.293 4.023-.344.095-.707.145-1.08.145-.265 0-.522-.026-.773-.074.522 1.63 2.038 2.817 3.833 2.85-1.404 1.1-3.174 1.757-5.096 1.757-.332 0-.66-.02-.98-.057 1.816 1.164 3.973 1.843 6.29 1.843 7.547 0 11.675-6.252 11.675-11.675 0-.178-.004-.355-.012-.53.802-.578 1.497-1.3 2.047-2.124z"/></g></svg>				</a>
+			</li>
+			<li>
+				<a href="#comment-form-load-service:Facebook" id="postas-facebook" class="nascar-signin-link"
+                   title="Login via Facebook">
+					<svg xmlns="http://www.w3.org/2000/svg" role="presentation" viewBox="0 0 24 24" ><rect x="0" fill="none" width="24" height="24"/><g><path fill="#3B5998" d="M20.007 3H3.993C3.445 3 3 3.445 3 3.993v16.013c0 .55.445.994.993.994h8.62v-6.97H10.27V11.31h2.346V9.31c0-2.325 1.42-3.59 3.494-3.59.993 0 1.847.073 2.096.106v2.43h-1.438c-1.128 0-1.346.537-1.346 1.324v1.734h2.69l-.35 2.717h-2.34V21h4.587c.548 0 .993-.445.993-.993V3.993c0-.548-.445-.993-.993-.993z"/></g></svg>				</a>
+			</li>
+		</ul>
+	</div>
+
+	<div id="comment-form-guest" class="comment-form-service selected">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+<a href="https://gravatar.com/site/signup/" target="_blank">				<img src="" alt="Gravatar" width="25" class="no-grav" />
+</a>			</div>
+
+				<div class="comment-form-fields">
+				<div class="comment-form-field comment-form-email">
+					<label for="email">Email <span class="required">(required)</span> <span class="nopublish">(Address never made public)</span></label>
+					<div class="comment-form-input"><input id="email" name="email" type="email" value="" /></div>
+				</div>
+				<div class="comment-form-field comment-form-author">
+					<label for="author">Name <span class="required">(required)</span></label>
+					<div class="comment-form-input"><input id="author" name="author" type="text" value="" /></div>
+				</div>
+				<div class="comment-form-field comment-form-url">
+					<label for="url">Website</label>
+					<div class="comment-form-input"><input id="url" name="url" type="url" value="" /></div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+	<div id="comment-form-wordpress" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="" alt="WordPress.com Logo" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="wp_avatar" id="wordpress-avatar" class="comment-meta-wordpress" value="" />
+				<input type="hidden" name="wp_user_id" id="wordpress-user_id" class="comment-meta-wordpress" value="" />
+				<input type="hidden" name="wp_access_token" id="wordpress-access_token" class="comment-meta-wordpress" value="" />
+						<p class="comment-form-posting-as pa-wordpress">
+			<strong></strong>
+			You are commenting using your WordPress.com account.			<span class="comment-form-log-out">
+				(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'wordpress' );">Log&nbsp;Out</a>&nbsp;/&nbsp;
+				<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)
+			</span>
+			<span class="pa-icon"><svg xmlns="http://www.w3.org/2000/svg" role="presentation" viewBox="0 0 24 24" ><rect x="0" fill="none" width="24" height="24"/><g><path fill="#0087be" d="M12.158 12.786l-2.698 7.84c.806.236 1.657.365 2.54.365 1.047 0 2.05-.18 2.986-.51-.024-.037-.046-.078-.065-.123l-2.762-7.57zM3.008 12c0 3.56 2.07 6.634 5.068 8.092L3.788 8.342c-.5 1.117-.78 2.354-.78 3.658zm15.06-.454c0-1.112-.398-1.88-.74-2.48-.456-.74-.883-1.368-.883-2.11 0-.825.627-1.595 1.51-1.595.04 0 .078.006.116.008-1.598-1.464-3.73-2.36-6.07-2.36-3.14 0-5.904 1.613-7.512 4.053.21.008.41.012.58.012.94 0 2.395-.114 2.395-.114.484-.028.54.684.057.74 0 0-.487.058-1.03.086l3.275 9.74 1.968-5.902-1.4-3.838c-.485-.028-.944-.085-.944-.085-.486-.03-.43-.77.056-.742 0 0 1.484.114 2.368.114.94 0 2.397-.114 2.397-.114.486-.028.543.684.058.74 0 0-.488.058-1.03.086l3.25 9.665.897-2.997c.456-1.17.684-2.137.684-2.907zm1.82-3.86c.04.286.06.593.06.924 0 .912-.17 1.938-.683 3.22l-2.746 7.94c2.672-1.558 4.47-4.454 4.47-7.77 0-1.564-.4-3.033-1.1-4.314zM12 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></g></svg></span>
+		</p>
+					</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-googleplus" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="" alt="Google+ photo" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="googleplus_avatar" id="googleplus-avatar" class="comment-meta-googleplus" value="" />
+				<input type="hidden" name="googleplus_user_id" id="googleplus-user_id" class="comment-meta-googleplus" value="" />
+				<input type="hidden" name="googleplus_access_token" id="googleplus-access_token" class="comment-meta-googleplus" value="" />
+						<p class="comment-form-posting-as pa-googleplus">
+			<strong></strong>
+			You are commenting using your Google+ account.			<span class="comment-form-log-out">
+				(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'googleplus' );">Log&nbsp;Out</a>&nbsp;/&nbsp;
+				<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)
+			</span>
+			<span class="pa-icon"><svg xmlns="http://www.w3.org/2000/svg" role="presentation" x="0px" y="0px" viewBox="0 0 60 60" ><path fill="#519bf7" d="M56.3,30c0,-1.6 -0.2,-3.4 -0.6,-5h-3.1H42.2H30v10.6h14.8C44,39.3 42,42 39.1,43.9l8.8,6.8C53,46 56.3,39 56.3,30z" /><path fill="#3db366" d="M30,57.5c6.7,0 13.1,-2.4 17.9,-6.8l-8.8,-6.8c-2.5,1.6 -5.6,2.4 -9.1,2.4c-7.2,0 -13.3,-4.7 -15.4,-11.2l-9.3,7.1C9.8,51.3 19.1,57.5 30,57.5z" /><path fill="#fdc600" d="M5.3,42.2l9.3,-7.1c-0.5,-1.6 -0.8,-3.3 -0.8,-5.1s0.3,-3.5 0.8,-5.1l-9.3,-7.1C3.5,21.5 2.5,25.6 2.5,30S3.5,38.5 5.3,42.2z" /><path fill="#f15b44" d="M40.1,17.4l8,-8C43.3,5.1 37,2.5 30,2.5C19.1,2.5 9.8,8.7 5.3,17.8l9.3,7.1c2.1,-6.5 8.2,-11.1 15.4,-11.1C33.9,13.7 37.4,15.1 40.1,17.4z" /></svg></span>
+		</p>
+					</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-twitter" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="" alt="Twitter picture" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="twitter_avatar" id="twitter-avatar" class="comment-meta-twitter" value="" />
+				<input type="hidden" name="twitter_user_id" id="twitter-user_id" class="comment-meta-twitter" value="" />
+				<input type="hidden" name="twitter_access_token" id="twitter-access_token" class="comment-meta-twitter" value="" />
+						<p class="comment-form-posting-as pa-twitter">
+			<strong></strong>
+			You are commenting using your Twitter account.			<span class="comment-form-log-out">
+				(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'twitter' );">Log&nbsp;Out</a>&nbsp;/&nbsp;
+				<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)
+			</span>
+			<span class="pa-icon"><svg xmlns="http://www.w3.org/2000/svg" role="presentation" viewBox="0 0 24 24" ><rect x="0" fill="none" width="24" height="24"/><g><path fill="#1DA1F2" d="M22.23 5.924c-.736.326-1.527.547-2.357.646.847-.508 1.498-1.312 1.804-2.27-.793.47-1.67.812-2.606.996C18.325 4.498 17.258 4 16.078 4c-2.266 0-4.103 1.837-4.103 4.103 0 .322.036.635.106.935-3.41-.17-6.433-1.804-8.457-4.287-.353.607-.556 1.312-.556 2.064 0 1.424.724 2.68 1.825 3.415-.673-.022-1.305-.207-1.86-.514v.052c0 1.988 1.415 3.647 3.293 4.023-.344.095-.707.145-1.08.145-.265 0-.522-.026-.773-.074.522 1.63 2.038 2.817 3.833 2.85-1.404 1.1-3.174 1.757-5.096 1.757-.332 0-.66-.02-.98-.057 1.816 1.164 3.973 1.843 6.29 1.843 7.547 0 11.675-6.252 11.675-11.675 0-.178-.004-.355-.012-.53.802-.578 1.497-1.3 2.047-2.124z"/></g></svg></span>
+		</p>
+					</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-facebook" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="" alt="Facebook photo" width="25" class="no-grav" />
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="fb_avatar" id="facebook-avatar" class="comment-meta-facebook" value="" />
+				<input type="hidden" name="fb_user_id" id="facebook-user_id" class="comment-meta-facebook" value="" />
+				<input type="hidden" name="fb_access_token" id="facebook-access_token" class="comment-meta-facebook" value="" />
+						<p class="comment-form-posting-as pa-facebook">
+			<strong></strong>
+			You are commenting using your Facebook account.			<span class="comment-form-log-out">
+				(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( 'facebook' );">Log&nbsp;Out</a>&nbsp;/&nbsp;
+				<a href="#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)
+			</span>
+			<span class="pa-icon"><svg xmlns="http://www.w3.org/2000/svg" role="presentation" viewBox="0 0 24 24" ><rect x="0" fill="none" width="24" height="24"/><g><path fill="#3B5998" d="M20.007 3H3.993C3.445 3 3 3.445 3 3.993v16.013c0 .55.445.994.993.994h8.62v-6.97H10.27V11.31h2.346V9.31c0-2.325 1.42-3.59 3.494-3.59.993 0 1.847.073 2.096.106v2.43h-1.438c-1.128 0-1.346.537-1.346 1.324v1.734h2.69l-.35 2.717h-2.34V21h4.587c.548 0 .993-.445.993-.993V3.993c0-.548-.445-.993-.993-.993z"/></g></svg></span>
+		</p>
+					</div>
+	
+		</div>
+	</div>
+
+
+	<div id="comment-form-load-service" class="comment-form-service">
+		<div class="comment-form-posting-as-cancel"><a href="javascript:HighlanderComments.cancelExternalWindow();">Cancel</a></div>
+		<p>Connecting to %s</p>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+var highlander_expando_javascript = function(){
+	var input = document.createElement( 'input' ),
+	    comment = jQuery( '#comment' );
+
+	if ( 'placeholder' in input ) {
+		comment.attr( 'placeholder', jQuery( '.comment-textarea label' ).remove().text() );
+	}
+
+	// Expando Mode: start small, then auto-resize on first click + text length
+	jQuery( '#comment-form-identity' ).hide();
+	jQuery( '#comment-form-subscribe' ).hide();
+	jQuery( '#commentform .form-submit' ).hide();
+
+	comment.css( { 'height':'10px' } ).one( 'focus', function() {
+		var timer = setInterval( HighlanderComments.resizeCallback, 10 )
+		jQuery( this ).animate( { 'height': HighlanderComments.initialHeight } ).delay( 100 ).queue( function(n) { clearInterval( timer ); HighlanderComments.resizeCallback(); n(); } );
+		jQuery( '#comment-form-identity' ).slideDown();
+		jQuery( '#comment-form-subscribe' ).slideDown();
+		jQuery( '#commentform .form-submit' ).slideDown();
+	});
+}
+jQuery(document).ready( highlander_expando_javascript );
+</script>
+
+<div id="comment-form-subscribe">
+	<p class="comment-subscription-form"><input type="checkbox" name="subscribe" id="subscribe" value="subscribe" style="width: auto;"/> <label class="subscribe-label" id="subscribe-label" for="subscribe" style="display: inline;">Notify me of new comments via email.</label></p><p class="post-subscription-form"><input type="checkbox" name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto;"/> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog"  style="display: inline;">Notify me of new posts via email.</label></p></div>
+
+
+
+
+<p class="form-submit"><input name="submit" type="submit" id="comment-submit" class="submit" value="Post Comment" /> <input type='hidden' name='comment_post_ID' value='211228' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="3e28010811" /></p>
+<input type="hidden" name="genseq" value="1538764306" />
+<p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="232"/></p>			</form>
+			</div><!-- #respond -->
+	<div style="clear: both"></div><p class="akismet_comment_form_privacy_notice">This site uses Akismet to reduce spam. <a href="https://akismet.com/privacy/" target="_blank" rel="nofollow noopener">Learn how your comment data is processed</a>.</p>
+</div><!-- #comments -->
+
+        
+        </main><!-- #main -->
+    </div><!-- #primary -->
+
+
+<div id="secondary" class="widget-area" role="complementary">
+
+    <div class="sidebar-ads-holder">
+        <script type='text/javascript'>
+            /* [id466] 300x250 */
+            OA_show(428);
+        </script>
+    </div>
+
+    <!-- store ad -->
+    <iframe class="sidebar-store-ad" scrolling="no" frameborder="0" align="top" marginwidth="0" marginheight="0" src="//search.supplyframe.com/partner/31/464/<search term>"></iframe>
+
+    <aside id="search-2" class="widget widget_search"><h1 class="widget-title">Search</h1><form role="search" method="get" class="search-form" action="https://hackaday.com/">
+				<label>
+					<span class="screen-reader-text">Search for:</span>
+					<input type="search" class="search-field" placeholder="Search &hellip;" value="" name="s" />
+				</label>
+				<input type="submit" class="search-submit" value="Search" />
+			</form></aside><aside id="hackadayfollowus-2" class="widget widget-follow-us"><h1 class="widget-title">Never miss a hack</h1>
+			<a href="https://www.facebook.com/pages/Hack-a-Day/136115233068429" target="_blank" class="icon-social icon-facebook">Follow on facebook</a>
+			<a href="https://plus.google.com/+hackaday/posts" target="_blank" class="icon-social icon-plusone">Follow on google+</a>
+			<a href="https://twitter.com/hackaday" target="_blank" class="icon-social icon-twitter">Follow on twitter</a>
+			<a href="https://www.youtube.com/user/hackaday" target="_blank" class="icon-social icon-youtube">Follow on youtube</a>
+			<a href="https://hackaday.com/blog/feed/" target="_blank" class="icon-social icon-rss">Follow on rss</a>
+			<a href="mailto:tips@hackaday.com" class="icon-social icon-contact">Contact us</a>
+		</aside><aside id="hackadaysubscribe-3" class="widget widget-had-subscribe"><h1 class="widget-title">Subscribe</h1>
+            <form role="subscribe" action="//hackaday.us9.list-manage.com/subscribe/post?u=dfadb71b0b15629cef5abf016&amp;id=f37880df9f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="subscribe-form validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">
+                    <input type="email" value="" name="EMAIL" class="subscribe-field" placeholder="Enter Email Address" id="mce-EMAIL" required>
+                </label>
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfadb71b0b15629cef5abf016_f37880df9f" tabindex="-1" value=""></div>
+                <input type="submit" class="subscribe-submit" id="mc-embedded-subscribe" value="Subscribe">
+                </div>
+            </form>
+		</aside><aside id="hackadayrecentposts-2" class="widget widget-recent-posts"><h1 class="widget-title">If you missed it</h1>
+	<ul>
+			<li>
+			<a href="https://hackaday.com/2018/10/05/electromagnetic-field-2018-event-review/" class="recent-image">
+						<img src="https://hackadaycom.files.wordpress.com/2018/09/emf2018-thumbnail.jpg?w=300&#038;h=300" alt="">
+			</a>
+			<div class="entry-intro">
+				<h2>
+					<a href="https://hackaday.com/2018/10/05/electromagnetic-field-2018-event-review/">Electromagnetic Field 2018: Event Review</a>
+				</h2>
+				<a href="https://hackaday.com/2018/10/05/electromagnetic-field-2018-event-review//#comments" class="comment-link">
+					<span class="icon-hackaday icon-hackaday-comment"></span> 1 Comment				</a>
+			</div>
+		</li>
+			<li>
+			<a href="https://hackaday.com/2018/10/04/how-precise-is-that-part-know-your-gdt/" class="recent-image">
+						<img src="https://hackadaycom.files.wordpress.com/2018/07/tolerance-stacking-thumb.jpg?w=300&#038;h=300" alt="">
+			</a>
+			<div class="entry-intro">
+				<h2>
+					<a href="https://hackaday.com/2018/10/04/how-precise-is-that-part-know-your-gdt/">How Precise is That Part? Know Your GD&amp;T</a>
+				</h2>
+				<a href="https://hackaday.com/2018/10/04/how-precise-is-that-part-know-your-gdt//#comments" class="comment-link">
+					<span class="icon-hackaday icon-hackaday-comment"></span> 11 Comments				</a>
+			</div>
+		</li>
+			<li>
+			<a href="https://hackaday.com/2018/10/04/malicious-component-found-on-server-motherboards-supplied-to-numerous-companies/" class="recent-image">
+						<img src="https://hackadaycom.files.wordpress.com/2018/10/malicious-components-found-on-supermicro-motherboards-thumb.jpg?w=300&#038;h=300" alt="">
+			</a>
+			<div class="entry-intro">
+				<h2>
+					<a href="https://hackaday.com/2018/10/04/malicious-component-found-on-server-motherboards-supplied-to-numerous-companies/">Malicious Component Found on Server Motherboards Supplied to Numerous Companies</a>
+				</h2>
+				<a href="https://hackaday.com/2018/10/04/malicious-component-found-on-server-motherboards-supplied-to-numerous-companies//#comments" class="comment-link">
+					<span class="icon-hackaday icon-hackaday-comment"></span> 199 Comments				</a>
+			</div>
+		</li>
+			<li>
+			<a href="https://hackaday.com/2018/10/03/icestorm-tools-roundup/" class="recent-image">
+						<img src="https://hackadaycom.files.wordpress.com/2018/10/icebb600-rotated-wb.png?w=300&#038;h=300" alt="">
+			</a>
+			<div class="entry-intro">
+				<h2>
+					<a href="https://hackaday.com/2018/10/03/icestorm-tools-roundup/">Icestorm Tools Roundup: Open Source FPGA Dev Guide</a>
+				</h2>
+				<a href="https://hackaday.com/2018/10/03/icestorm-tools-roundup//#comments" class="comment-link">
+					<span class="icon-hackaday icon-hackaday-comment"></span> 4 Comments				</a>
+			</div>
+		</li>
+			<li>
+			<a href="https://hackaday.com/2018/10/02/bitcoins-double-spending-flaw-was-hush-hush-during-rollout/" class="recent-image">
+						<img src="https://hackadaycom.files.wordpress.com/2018/10/blockchain-thumb.jpg?w=300&#038;h=300" alt="">
+			</a>
+			<div class="entry-intro">
+				<h2>
+					<a href="https://hackaday.com/2018/10/02/bitcoins-double-spending-flaw-was-hush-hush-during-rollout/">Bitcoin&#8217;s Double Spending Flaw Was Hush-Hush During Rollout</a>
+				</h2>
+				<a href="https://hackaday.com/2018/10/02/bitcoins-double-spending-flaw-was-hush-hush-during-rollout//#comments" class="comment-link">
+					<span class="icon-hackaday icon-hackaday-comment"></span> 15 Comments				</a>
+			</div>
+		</li>
+		</ul>
+	<a href="https://hackaday.com/category/featured/">More from this category</a>
+	</aside><aside id="categories-2" class="widget widget_categories"><h1 class="widget-title">Categories</h1><form action="https://hackaday.com" method="get"><label class="screen-reader-text" for="cat">Categories</label><select  name='cat' id='cat' class='postform' >
+	<option value='-1'>Select Category</option>
+	<option class="level-0" value="114554125">3d Printer hacks</option>
+	<option class="level-0" value="18020710">Android Hacks</option>
+	<option class="level-0" value="18020705">Arduino Hacks</option>
+	<option class="level-0" value="27981650">ARM</option>
+	<option class="level-0" value="422573560">Ask Hackaday</option>
+	<option class="level-0" value="64298109">ATtiny Hacks</option>
+	<option class="level-0" value="25122024">Beer Hacks</option>
+	<option class="level-0" value="422577767">Biography</option>
+	<option class="level-0" value="12115263">blackberry hacks</option>
+	<option class="level-0" value="422570206">Business</option>
+	<option class="level-0" value="422573558">car hacks</option>
+	<option class="level-0" value="11894719">Cellphone Hacks</option>
+	<option class="level-0" value="35745764">chemistry hacks</option>
+	<option class="level-0" value="422573559">classic hacks</option>
+	<option class="level-0" value="31677810">clock hacks</option>
+	<option class="level-0" value="18755632">cnc hacks</option>
+	<option class="level-0" value="568165">computer hacks</option>
+	<option class="level-0" value="422573570">cons</option>
+	<option class="level-0" value="5738">contests</option>
+	<option class="level-0" value="422573551">cooking hacks</option>
+	<option class="level-0" value="2588813">Crowd Funding</option>
+	<option class="level-0" value="421976847">Curated</option>
+	<option class="level-0" value="422570209">Current Events</option>
+	<option class="level-0" value="10969032">digital audio hacks</option>
+	<option class="level-0" value="10969033">digital cameras hacks</option>
+	<option class="level-0" value="10969034">downloads hacks</option>
+	<option class="level-0" value="107827385">drone hacks</option>
+	<option class="level-0" value="63176382">Engine Hacks</option>
+	<option class="level-0" value="422570207">Engineering</option>
+	<option class="level-0" value="212825112">Fail of the Week</option>
+	<option class="level-0" value="35890">Featured</option>
+	<option class="level-0" value="422570208">Fiction</option>
+	<option class="level-0" value="551890">firefox hacks</option>
+	<option class="level-0" value="53446541">FPGA</option>
+	<option class="level-0" value="18020562">g1 hacks</option>
+	<option class="level-0" value="422578065">Games</option>
+	<option class="level-0" value="320557">google hacks</option>
+	<option class="level-0" value="10969036">gps hacks</option>
+	<option class="level-0" value="24535490">green hacks</option>
+	<option class="level-0" value="190105353">Hackaday Columns</option>
+	<option class="level-0" value="27311668">Hackaday links</option>
+	<option class="level-0" value="289711781">Hackaday Store</option>
+	<option class="level-0" value="21755374">Hackerspaces</option>
+	<option class="level-0" value="422573553">HackIt</option>
+	<option class="level-0" value="10969037">handhelds hacks</option>
+	<option class="level-0" value="422573549">hardware</option>
+	<option class="level-0" value="421979219">History</option>
+	<option class="level-0" value="66307084">Holiday Hacks</option>
+	<option class="level-0" value="10969038">home entertainment hacks</option>
+	<option class="level-0" value="5660882">home hacks</option>
+	<option class="level-0" value="422573566">how-to</option>
+	<option class="level-0" value="422570204">Interest</option>
+	<option class="level-0" value="908478">internet hacks</option>
+	<option class="level-0" value="831">Interviews</option>
+	<option class="level-0" value="1416772">iphone hacks</option>
+	<option class="level-0" value="1275163">ipod hacks</option>
+	<option class="level-0" value="4157506">Kindle hacks</option>
+	<option class="level-0" value="46717088">Kinect hacks</option>
+	<option class="level-0" value="10969048">laptops hacks</option>
+	<option class="level-0" value="422573554">Laser Hacks</option>
+	<option class="level-0" value="422573557">LED Hacks</option>
+	<option class="level-0" value="422573568">Lifehacks</option>
+	<option class="level-0" value="729674">Linux Hacks</option>
+	<option class="level-0" value="20732807">lockpicking hacks</option>
+	<option class="level-0" value="10969060">Mac Hacks</option>
+	<option class="level-0" value="422573573">Major Tom</option>
+	<option class="level-0" value="11284667">Medical Hacks</option>
+	<option class="level-0" value="139916">Microcontrollers</option>
+	<option class="level-0" value="5611793">Misc Hacks</option>
+	<option class="level-0" value="18020730">Multitouch Hacks</option>
+	<option class="level-0" value="22652725">Musical Hacks</option>
+	<option class="level-0" value="18020722">Netbook Hacks</option>
+	<option class="level-0" value="6166512">Network Hacks</option>
+	<option class="level-0" value="103">News</option>
+	<option class="level-0" value="1861880">Nintendo DS Hacks</option>
+	<option class="level-0" value="114555425">Nintendo Game Boy Hacks</option>
+	<option class="level-0" value="18020685">Nintendo Hacks</option>
+	<option class="level-0" value="422573552">Nintendo Wii Hacks</option>
+	<option class="level-0" value="118011206">Nook Hacks</option>
+	<option class="level-0" value="422570205">Original Art</option>
+	<option class="level-0" value="114556430">Palm Pre Hacks</option>
+	<option class="level-0" value="422573571">Parts</option>
+	<option class="level-0" value="10969081">Peripherals Hacks</option>
+	<option class="level-0" value="16325149">Phone Hacks</option>
+	<option class="level-0" value="10969088">Playstation Hacks</option>
+	<option class="level-0" value="2060">Podcasts</option>
+	<option class="level-0" value="10969096">Portable Audio Hacks</option>
+	<option class="level-0" value="10969099">Portable Video Hacks</option>
+	<option class="level-0" value="588444">PSP Hacks</option>
+	<option class="level-0" value="23971578">Radio Hacks</option>
+	<option class="level-0" value="47">Rants</option>
+	<option class="level-0" value="69218551">Raspberry Pi</option>
+	<option class="level-0" value="21870780">Repair Hacks</option>
+	<option class="level-0" value="422578063">Retrocomputing</option>
+	<option class="level-0" value="212824350">Retrotechtacular</option>
+	<option class="level-0" value="422573565">Reviews</option>
+	<option class="level-0" value="10969101">Robots Hacks</option>
+	<option class="level-0" value="422573563">Roundup</option>
+	<option class="level-0" value="422578013">Science</option>
+	<option class="level-0" value="10969111">Security Hacks</option>
+	<option class="level-0" value="422570203">Skills</option>
+	<option class="level-0" value="422573572">Slider</option>
+	<option class="level-0" value="2301">Software Development</option>
+	<option class="level-0" value="3796421">Software Hacks</option>
+	<option class="level-0" value="10969116">Solar Hacks</option>
+	<option class="level-0" value="422577709">Space</option>
+	<option class="level-0" value="10969121">Tablet Hacks</option>
+	<option class="level-0" value="3075183">Teardown</option>
+	<option class="level-0" value="12936984">Tech Hacks</option>
+	<option class="level-0" value="227104736">The Hackaday Prize</option>
+	<option class="level-0" value="10969130">Tool Hacks</option>
+	<option class="level-0" value="25277004">Toy Hacks</option>
+	<option class="level-0" value="10969134">Transportation Hacks</option>
+	<option class="level-0" value="1">Uncategorized</option>
+	<option class="level-0" value="422573556">Video Hacks</option>
+	<option class="level-0" value="34942364">Virtual Reality</option>
+	<option class="level-0" value="50802420">Weapons Hacks</option>
+	<option class="level-0" value="12552193">Wearable Hacks</option>
+	<option class="level-0" value="39510952">Weekly Roundup</option>
+	<option class="level-0" value="4891215">Wireless Hacks</option>
+	<option class="level-0" value="7079455">Xbox Hacks</option>
+</select>
+</form>
+<script type='text/javascript'>
+/* <![CDATA[ */
+(function() {
+	var dropdown = document.getElementById( "cat" );
+	function onCatChange() {
+		if ( dropdown.options[ dropdown.selectedIndex ].value > 0 ) {
+			dropdown.parentNode.submit();
+		}
+	}
+	dropdown.onchange = onCatChange;
+})();
+/* ]]> */
+</script>
+
+			</aside><aside id="hackadayrecentposts-3" class="widget widget-recent-posts"><h1 class="widget-title">Our Columns</h1>
+	<ul>
+			<li>
+			<a href="https://hackaday.com/2018/10/05/supercon-talks-that-inspire-you-to-take-on-something-new/" class="recent-image">
+						<img src="https://hackadaycom.files.wordpress.com/2018/10/2018-supercon-speakers-announcement-5-thumb.jpg?w=300&#038;h=300" alt="">
+			</a>
+			<div class="entry-intro">
+				<h2>
+					<a href="https://hackaday.com/2018/10/05/supercon-talks-that-inspire-you-to-take-on-something-new/">Supercon Talks That Inspire You to Take On Something New</a>
+				</h2>
+				<a href="https://hackaday.com/2018/10/05/supercon-talks-that-inspire-you-to-take-on-something-new//#comments" class="comment-link">
+					<span class="icon-hackaday icon-hackaday-comment"></span> 2 Comments				</a>
+			</div>
+		</li>
+			<li>
+			<a href="https://hackaday.com/2018/10/05/easy-fpga-cpu-with-max1000/" class="recent-image">
+						<img src="https://hackadaycom.files.wordpress.com/2018/01/max600.png?w=300&#038;h=300" alt="">
+			</a>
+			<div class="entry-intro">
+				<h2>
+					<a href="https://hackaday.com/2018/10/05/easy-fpga-cpu-with-max1000/">Easy FPGA CPU with MAX1000</a>
+				</h2>
+				<a href="https://hackaday.com/2018/10/05/easy-fpga-cpu-with-max1000//#comments" class="comment-link">
+					<span class="icon-hackaday icon-hackaday-comment"></span> 1 Comment				</a>
+			</div>
+		</li>
+			<li>
+			<a href="https://hackaday.com/2018/10/04/supercon-how-many-hardware-talks-can-be-packed-into-one-conference/" class="recent-image">
+						<img src="https://hackadaycom.files.wordpress.com/2018/10/2018-supercon-speakers-announcement-4-thumb.jpg?w=300&#038;h=300" alt="">
+			</a>
+			<div class="entry-intro">
+				<h2>
+					<a href="https://hackaday.com/2018/10/04/supercon-how-many-hardware-talks-can-be-packed-into-one-conference/">Supercon: How Many Hardware Talks Can Be Packed Into One Conference?</a>
+				</h2>
+				<a href="https://hackaday.com/2018/10/04/supercon-how-many-hardware-talks-can-be-packed-into-one-conference//#comments" class="comment-link">
+					<span class="icon-hackaday icon-hackaday-comment"></span> 3 Comments				</a>
+			</div>
+		</li>
+			<li>
+			<a href="https://hackaday.com/2018/10/03/new-part-day-the-fifty-cent-usb-chip/" class="recent-image">
+						<img src="https://hackadaycom.files.wordpress.com/2018/10/ch330-thmb.png?w=300&#038;h=300" alt="">
+			</a>
+			<div class="entry-intro">
+				<h2>
+					<a href="https://hackaday.com/2018/10/03/new-part-day-the-fifty-cent-usb-chip/">New Part Day: The Fifty Cent USB Chip</a>
+				</h2>
+				<a href="https://hackaday.com/2018/10/03/new-part-day-the-fifty-cent-usb-chip//#comments" class="comment-link">
+					<span class="icon-hackaday icon-hackaday-comment"></span> 110 Comments				</a>
+			</div>
+		</li>
+			<li>
+			<a href="https://hackaday.com/2018/10/03/supercon-on-the-rise-more-amazing-talks-revealed/" class="recent-image">
+						<img src="https://hackadaycom.files.wordpress.com/2018/10/2018-supercon-speakers-announcement-3-thumb.jpg?w=300&#038;h=300" alt="">
+			</a>
+			<div class="entry-intro">
+				<h2>
+					<a href="https://hackaday.com/2018/10/03/supercon-on-the-rise-more-amazing-talks-revealed/">Supercon on the Rise: More Amazing Talks Revealed</a>
+				</h2>
+				<a href="https://hackaday.com/2018/10/03/supercon-on-the-rise-more-amazing-talks-revealed//#comments" class="comment-link">
+					<span class="icon-hackaday icon-hackaday-comment"></span> 3 Comments				</a>
+			</div>
+		</li>
+		</ul>
+	<a href="https://hackaday.com/category/hackaday-columns/">More from this category</a>
+	</aside><aside id="recent-comments-2" class="widget widget_recent_comments"><h1 class="widget-title">Recent comments</h1>				<ul id="recentcomments">
+											<li class="recentcomments">
+							PirateLabs on <a href="https://hackaday.com/2018/10/05/this-rocket-cookstove-is-hot-stuff/#comment-5213607">This Rocket Cookstove Is Hot Stuff!</a>						</li>
+
+												<li class="recentcomments">
+							Alan on <a href="https://hackaday.com/2018/10/05/3d-printed-sneakers-are-now-a-thing/#comment-5213604">3D Printed Sneakers Are Now A Thing</a>						</li>
+
+												<li class="recentcomments">
+							<a href='http://pingwee.net' rel='external nofollow' class='url'>eLR!C</a> on <a href="https://hackaday.com/2018/10/04/linux-fu-keep-an-eye-on-that-file/#comment-5213596">Linux Fu: Keep an Eye on that File</a>						</li>
+
+												<li class="recentcomments">
+							Tom Nardi on <a href="https://hackaday.com/2018/10/04/tiny-plotter-is-made-of-strings-and-cardboard/#comment-5213590">Tiny Plotter Is Made Of Strings And Cardboard</a>						</li>
+
+												<li class="recentcomments">
+							efahrenholz on <a href="https://hackaday.com/2018/10/04/tiny-plotter-is-made-of-strings-and-cardboard/#comment-5213582">Tiny Plotter Is Made Of Strings And Cardboard</a>						</li>
+
+												<li class="recentcomments">
+							<a href='http://orangetide383044615.wordpress.com' rel='external nofollow' class='url'>jonmayo</a> on <a href="https://hackaday.com/2018/10/05/3d-printed-sneakers-are-now-a-thing/#comment-5213521">3D Printed Sneakers Are Now A Thing</a>						</li>
+
+												<li class="recentcomments">
+							AndyPanda on <a href="https://hackaday.com/2018/10/05/this-rocket-cookstove-is-hot-stuff/#comment-5213518">This Rocket Cookstove Is Hot Stuff!</a>						</li>
+
+												<li class="recentcomments">
+							Hirudinea on <a href="https://hackaday.com/2018/10/05/this-rocket-cookstove-is-hot-stuff/#comment-5213496">This Rocket Cookstove Is Hot Stuff!</a>						</li>
+
+												<li class="recentcomments">
+							Caber on <a href="https://hackaday.com/2018/10/05/3d-printed-sneakers-are-now-a-thing/#comment-5213485">3D Printed Sneakers Are Now A Thing</a>						</li>
+
+												<li class="recentcomments">
+							Ostracus on <a href="https://hackaday.com/2018/10/04/malicious-component-found-on-server-motherboards-supplied-to-numerous-companies/#comment-5213450">Malicious Component Found on Server Motherboards Supplied to Numerous Companies</a>						</li>
+
+										</ul>
+				</aside><aside id="hackadayfeed-2" class="widget widget-hackaday-feed"><h1 class="widget-title">Now on Hackaday.io</h1>
+			<ul>
+									<li><a href="http://www.hackaday.io/project/160437-noise-nugget">mario liked Noise Nugget.</a></li>
+										<li><a href="http://www.hackaday.io/project/160332-mini-tracker">Raúl Luna has updated the project titled Mini Tracker.</a></li>
+										<li><a href="http://www.hackaday.io/project/161461-vfd-worldclock-30">Schupp has updated the project titled VFD Worldclock 3.0.</a></li>
+										<li><a href="http://www.hackaday.io/project/160675-atari-paddles-to-msx-adapter">Michael Cullen liked Atari Paddles to MSX adapter.</a></li>
+										<li><a href="http://www.hackaday.io/project/161396-fatcat-altoids-tin-mod-tracker">mario liked FATCAT: Altoids Tin Mod Tracker.</a></li>
+										<li><a href="http://www.hackaday.io/project/135292-iruv-invisible-qr-code-navigation-robotics/discussion-114373">Josh Starnes wrote a reply on IR/UV Invisible  QR Code Navigation Robotics.</a></li>
+										<li><a href="http://www.hackaday.io/project/160740-low-power-environment-monitor-logger">Michael Cullen liked Low Power Environment Monitor / Logger.</a></li>
+										<li><a href="http://www.hackaday.io/project/161645/log/153866">industrialdecliner has added a new log for Geometer.</a></li>
+										<li><a href="http://www.hackaday.io/project/161645-geometer">industrialdecliner has updated details to Geometer.</a></li>
+										<li><a href="http://www.hackaday.io/project/25359-esp8266-twitter-client">riccardocomini liked ESP8266 Twitter Client.</a></li>
+						</ul>
+	</aside>
+    <div class="sidebar-ads-holder">
+        <script type='text/javascript'>
+            /* [id465] 160x600 */
+            OA_show(427);
+        </script>
+    </div>
+
+</div><!-- #secondary -->
+
+    </div><!-- #content -->
+
+</div><!-- #page -->
+
+<footer id="colophon" class="site-footer" role="contentinfo">
+    <div id="footer" class="site-footer-container">
+
+        <a href="https://hackaday.com/" rel="home">
+            <img src="https://s2.wp.com/wp-content/themes/vip/hackaday-2/img/logo.png" alt="Logo" class="logo-img">
+        </a>
+
+        <div class="menu-footer-menu-container"><ul id="menu-footer-menu" class="menu"><li id="menu-item-141410" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-141410"><a href="https://hackaday.com/">Home</a></li>
+<li id="menu-item-141411" class="menu-item menu-item-type-post_type menu-item-object-page current_page_parent menu-item-141411"><a href="https://hackaday.com/blog/">Blog</a></li>
+<li id="menu-item-141412" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-141412"><a href="http://hackaday.io">Hackaday.io</a></li>
+<li id="menu-item-141413" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-141413"><a href="http://store.hackaday.com">Store</a></li>
+<li id="menu-item-141414" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-141414"><a title="Build Something that Matters" href="http://hackaday.io/prize">Hackaday Prize</a></li>
+<li id="menu-item-152823" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-152823"><a href="http://www.youtube.com/user/hackaday/videos">Video</a></li>
+<li id="menu-item-141415" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-141415"><a href="https://hackaday.com/submit-a-tip/">Submit a tip</a></li>
+<li id="menu-item-141417" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-141417"><a href="https://hackadaycom.wordpress.com/about/">About</a></li>
+<li id="menu-item-141418" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-141418"><a href="https://hackaday.com/contact-us/">Contact us</a></li>
+</ul></div>
+        <aside id="hackadayfollowus-3" class="widget widget-follow-us"><h1 class="footer-widget-title">Never miss a hack</h1>
+			<a href="https://www.facebook.com/pages/Hack-a-Day/136115233068429" target="_blank" class="icon-social icon-facebook">Follow on facebook</a>
+			<a href="https://plus.google.com/+hackaday/posts" target="_blank" class="icon-social icon-plusone">Follow on google+</a>
+			<a href="https://twitter.com/hackaday" target="_blank" class="icon-social icon-twitter">Follow on twitter</a>
+			<a href="https://www.youtube.com/user/hackaday" target="_blank" class="icon-social icon-youtube">Follow on youtube</a>
+			<a href="https://hackaday.com/blog/feed/" target="_blank" class="icon-social icon-rss">Follow on rss</a>
+			<a href="mailto:tips@hackaday.com" class="icon-social icon-contact">Contact us</a>
+		</aside><aside id="hackadaysubscribe-2" class="widget widget-had-subscribe"><h1 class="footer-widget-title">Subscribe to Newsletter</h1>
+            <form role="subscribe" action="//hackaday.us9.list-manage.com/subscribe/post?u=dfadb71b0b15629cef5abf016&amp;id=f37880df9f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="subscribe-form validate" target="_blank" novalidate>
+                <div id="mc_embed_signup_scroll">
+                <label for="mce-EMAIL">
+                    <input type="email" value="" name="EMAIL" class="subscribe-field" placeholder="Enter Email Address" id="mce-EMAIL" required>
+                </label>
+                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                <div style="position: absolute; left: -5000px;"><input type="text" name="b_dfadb71b0b15629cef5abf016_f37880df9f" tabindex="-1" value=""></div>
+                <input type="submit" class="subscribe-submit" id="mc-embedded-subscribe" value="Subscribe">
+                </div>
+            </form>
+		</aside>
+        <div class="site-info">
+            Copyright &copy; 2018            <span class="sep"> | </span>
+            <strong>Hackaday, Hack A Day, and the Skull and Wrenches Logo are Trademarks of Hackaday.com</strong>
+            <span class="sep"> | </span>
+            <a href="https://supplyframe.com/company/privacy" target="_blank">Privacy Policy</a>
+            <span class="sep"> | </span>
+            <a href="https://supplyframe.com/company/terms" target="_blank">Terms of Service</a>
+            <br />Powered by <a href="https://vip.wordpress.com/?utm_source=vip_powered_wpcom&#038;utm_medium=web&#038;utm_campaign=VIP%20Footer%20Credit&#038;utm_term=hackaday.com" rel="generator nofollow" class="powered-by-wpcom">WordPress.com VIP</a>        </div><!-- .site-info -->
+
+    </div>
+</footer><!-- #colophon -->
+
+<img src="//analytics.supplyframe.com/trackingservlet/impression?action=pageImpression&amp;zone=HDay_article&amp;extra=title%3DWhat+Could+Go+Wrong%3A+SPI" id="hdTrack" class="trackImg"><script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-42734042-1', 'auto');
+    ga('require', 'displayfeatures');
+    ga('send', 'pageview');
+</script>
+
+<!-- wpcom_wp_footer -->
+
+			<div class="cookie-notifications" style="display:none;">
+				<div class="container">
+					<div class="close cookie-notifications-btn"><img src="https://hackadaycom.files.wordpress.com/2018/04/close.png" style="width:16px;height:16px;"></div>
+					<p>
+						By using our website and services, you expressly agree to the placement of our performance, functionality and advertising cookies. <a target="_blank" href="https://hackaday.io/privacy-policy">Learn more</a> 
+						<button class="accept cookie-notifications-btn">Accept</button>
+					</p>
+				</div>
+			</div>
+		
+			<div style="display:none">
+	</div>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var HighlanderComments = {"loggingInText":"Logging In\u2026","submittingText":"Posting Comment\u2026","postCommentText":"Post Comment","connectingToText":"Connecting to %s","commentingAsText":"%1$s: You are commenting using your %2$s account.","logoutText":"Log Out","loginText":"Log In","connectURL":"https:\/\/hackadaycom.wordpress.com\/public.api\/connect\/?action=request","logoutURL":"https:\/\/hackadaycom.wordpress.com\/wp-login.php?action=logout&_wpnonce=d4b129cb53","homeURL":"https:\/\/hackaday.com\/","postID":"211228","gravDefault":"mystery","enterACommentError":"Please enter a comment","enterEmailError":"Please enter your email address here","invalidEmailError":"Invalid email address","enterAuthorError":"Please enter your name here","gravatarFromEmail":"This picture will show whenever you leave a comment. Click to customize it.","logInToExternalAccount":"Log in to use details from one of these accounts.","change":"Change","changeAccount":"Change Account","comment_registration":"","userIsLoggedIn":"","isJetpack":"","text_direction":"ltr"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://s2.wp.com/_static/??/wp-content/js/jquery/jquery.autoresize.js,/wp-content/mu-plugins/highlander-comments/script.js?m=1521806916j'></script>
+
+	<div id="carousel-reblog-box">
+		<form action="#" name="carousel-reblog">
+			<textarea id="carousel-reblog-content" name="carousel-reblog-content" placeholder="Add your thoughts here... (optional)"></textarea>
+			<label for="carousel-reblog-to-blog-id" id="carousel-reblog-lblogid">Post to</label>
+			<select name="carousel-reblog-to-blog-id" id="carousel-reblog-to-blog-id">
+						</select>
+
+			<div class="submit">
+				<span class="canceltext"><a href="#" class="cancel">Cancel</a></span>
+				<input type="submit" name="carousel-reblog-submit" class="button" id="carousel-reblog-submit" value="Reblog Post" />
+				<input type="hidden" id="carousel-reblog-blog-id" value="4779443" />
+				<input type="hidden" id="carousel-reblog-blog-url" value="https://hackaday.com" />
+				<input type="hidden" id="carousel-reblog-blog-title" value="Hackaday" />
+				<input type="hidden" id="carousel-reblog-post-url" value="" />
+				<input type="hidden" id="carousel-reblog-post-title" value="" />
+			</div>
+
+			<input type="hidden" id="_wpnonce" name="_wpnonce" value="9d12c8835e" /><input type="hidden" name="_wp_http_referer" value="/2016/07/01/what-could-go-wrong-spi/" />		</form>
+
+		<div class="arrow"></div>
+	</div>
+<link rel='stylesheet' id='all-css-0-3' href='https://s0.wp.com/wp-content/mu-plugins/carousel/jetpack-carousel.css?m=1524699534h&cssminify=yes' type='text/css' media='all' />
+<!--[if lte IE 8]>
+<link rel='stylesheet' id='jetpack-carousel-ie8fix-css'  href='https://s1.wp.com/wp-content/mu-plugins/carousel/jetpack-carousel-ie8fix.css?m=1412618825h&#038;ver=20121024' type='text/css' media='all' />
+<![endif]-->
+<link rel='stylesheet' id='all-css-2-3' href='https://s2.wp.com/wp-content/mu-plugins/tiled-gallery/tiled-gallery.css?m=1443731146h&cssminify=yes' type='text/css' media='all' />
+<script type='text/javascript'>
+/* <![CDATA[ */
+var wpcomVipAnalytics = {"is_404":"0","is_home":"0","is_single":"1","is_front_page":"0","is_archive":"0","percentToTrack":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var jetpackCarouselStrings = {"widths":[370,700,1000,1200,1400,2000],"is_logged_in":"","lang":"en","ajaxurl":"https:\/\/hackaday.com\/wp-admin\/admin-ajax.php","nonce":"cd829a3a08","display_exif":"1","display_geo":"1","single_image_gallery":"1","single_image_gallery_media_file":"","background_color":"black","comment":"Comment","post_comment":"Post Comment","write_comment":"Write a Comment...","loading_comments":"Loading Comments...","download_original":"View full size <span class=\"photo-size\">{0}<span class=\"photo-size-times\">\u00d7<\/span>{1}<\/span>","no_comment_text":"Please be sure to submit some text with your comment.","no_comment_email":"Please provide an email address to comment.","no_comment_author":"Please provide your name to comment.","comment_post_error":"Sorry, but there was an error posting your comment. Please try again later.","comment_approved":"Your comment was approved.","comment_unapproved":"Your comment is in moderation.","camera":"Camera","aperture":"Aperture","shutter_speed":"Shutter Speed","focal_length":"Focal Length","copyright":"Copyright","comment_registration":"0","require_name_email":"1","login_url":"https:\/\/hackadaycom.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Fhackaday.com%2F2016%2F07%2F01%2Fwhat-could-go-wrong-spi%2F","blog_id":"4779443","meta_data":["camera","aperture","shutter_speed","focal_length","copyright"],"local_comments_commenting_as":"<fieldset><label for=\"email\">Email (Required)<\/label> <input type=\"text\" name=\"email\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-email-field\" \/><\/fieldset><fieldset><label for=\"author\">Name (Required)<\/label> <input type=\"text\" name=\"author\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-author-field\" \/><\/fieldset><fieldset><label for=\"url\">Website<\/label> <input type=\"text\" name=\"url\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-url-field\" \/><\/fieldset>","reblog":"Reblog","reblogged":"Reblogged","reblog_add_thoughts":"Add your thoughts here... (optional)","reblogging":"Reblogging...","post_reblog":"Post Reblog","stats_query_args":"blog=4779443&v=wpcom&tz=-7&user_id=0&subd=hackadaycom","is_public":"1","reblog_enabled":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://s0.wp.com/_static/??-eJyVUVtSwzAMvBCKaUv5YzgKo9pqqsQvbDklt8eh01JKyYQZf9irXa3WUscIOnghL6rLytDAmuJH0+UHdVVyBaItLfusLPeU1XuhQgf0xlK6JcuBXKUMHNUBdY8GR1hP3T0O3KJw8IsluecIln0P+6BLhj3/mu1vrWXdL2Z3NVIaGxPkdJbb6MTxQmevbTGVWCs6OFelkCjasXG8PHZLYWYFRzYtSVZUajX0TGDxqIRctCh0g8/0WcPk3H0NAOjRjsI6zwjQ1BCww6QcZqFUbxAGSomnxBfsnx0k1ez53gfm+P1n1/hpV+eVXbPuWGpMoWSyqiOJ1QnOwIxG2JKBFq2dfH685sL1nB0JbJpH9VbnVfuQXOW/upfVdvO02W7Xz6vuE/BhRzI='></script>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script><script src="//stats.wp.com/w.js?56" type="text/javascript" async defer></script>
+<script type="text/javascript">
+_tkq = window._tkq || [];
+_stq = window._stq || [];
+_tkq.push(['storeContext', {'blog_id':'4779443','blog_tz':'-7','user_lang':'en','blog_lang':'en','user_id':'0'}]);
+_stq.push(['view', {'blog':'4779443','v':'wpcom','tz':'-7','user_id':'0','post':'211228','subd':'hackadaycom'}]);
+function st_vt() {var x=document.createElement("img");x.src="https://pixel.wp.com/g.gif?blog=4779443&v=wpcomvt&tz=-7&user_id=0&post=211228&subd=hackadaycom&rand="+Math.random();}
+_stq.push(['extra', {'crypt':'UE40eW5QN0p8M2Y/RE1BNmNJfGhxNCVxUDExYmtib2E/SzdEJm0lUEtbdFU0fFk4cHZvcUFrZT90Tn4yQm1+R3NyNTdkRXFNdWdRL28yNk8rbmNjbWVqU35PYUcuJnlOQ3EmcVpVVis9T2dqY0YuN1YsWzh+PUx2VHx4azZiVUFVbGZLJlM5NGpBSHhZM3BfeHg3bVdrd1h5Yk0rRXlUR0hHelh0P3VQJnclenZKSy5Banx1NT9WSFJWRVVUcVAmVDNhMDJJMzgwS3dCfFAsfmR1UF96NVJdUGRhMnU4TzhQRUljdTNvSWlwSV9wSEliVltTemQ9JjRZdTVKXzFRQzhYZSt5UVtmM01MeD1TREJYSyZBc2hVMVtOTk9BR0hoLVgmYk1tT3Q3XUk4V1JWLUk5YVR+bUo='}]);
+_stq.push([ 'clickTrackerInit', '4779443', '211228' ]);
+	</script>
+<noscript><img src="https://pixel.wp.com/b.gif?v=noscript" style="height:0px;width:0px;overflow:hidden" alt="" /></noscript>
+<script>
+if ( 'object' === typeof wpcom_mobile_user_agent_info ) {
+
+	wpcom_mobile_user_agent_info.init();
+	var mobileStatsQueryString = "";
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedPlatformName )
+		mobileStatsQueryString += "&x_" + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedUserAgentName )
+		mobileStatsQueryString += "&x_" + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
+	
+	if( wpcom_mobile_user_agent_info.isIPad() )
+		mobileStatsQueryString += "&x_" + 'ipad_views' + '=' + 'views';
+
+	if( "" != mobileStatsQueryString ) {
+		new Image().src = document.location.protocol + '//pixel.wp.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
+	}
+	
+}
+</script>
+</body>
+</html>
+<!--
+	generated 89 seconds ago
+	generated in 0.311 seconds
+	served from batcache in 0.002 seconds
+	expires in 211 seconds
+-->

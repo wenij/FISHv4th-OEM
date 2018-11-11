@@ -4,7 +4,7 @@
 // EQUATES are for REAL VALUES used in FISH assembly code
 //
 DEFAULT_BAUD    EQU     115200          // 9600 until UART0_INIT USED 2580h
-DEFAULT_BASE    EQU     10              // BASE at powerup
+DEFAULT_BASE    EQU     16              // BASE at powerup
 XON_CHAR        EQU     17              // ASCII DECIMAL XON_CHAR
 XOFF_CHAR       EQU     19              // ASCII DECIMAL XOFF_CHAR
 IOBUFSIZE       EQU     96              // For Tib and Pad

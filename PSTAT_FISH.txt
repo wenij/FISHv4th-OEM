@@ -14,137 +14,42 @@ EHON
 040013018h CONSTANT	SPI1-TXCRCR
 
 : .SPI1 ( -- )
-\ THIS IS RECURSIVELY PRINTING THE OUTPUT PATTERN WITH ? VALUES
-	\ MY IMMEDIATE AND HEX ALT ISNT WORKING ON ? [ HEX ]
-	CR
-	." SPI1-CR1 ADDR IS: " SPI1-CR1 .H ." AND THE VALUE IS: " SPI1-CR1	@ .B	CR
-	." SPI1-CR2 ADDR IS: " SPI1-CR2 .H ." AND THE VALUE IS: " SPI1-CR2	@ .B	CR
-	." SPI1-SR ADDR IS: " SPI1-SR .H ." AND THE VALUE IS: " SPI1-SR	@ .B	CR
-	." SPI1-DR ADDR IS: " SPI1-DR .H ." AND THE VALUE IS: " SPI1-DR	@ .B	CR
+CR
+." SPI1-CR1 ADDR IS: " SPI1-CR1 .H ." AND THE VALUE IS: " SPI1-CR1	@ .B	CR
+." SPI1-CR2 ADDR IS: " SPI1-CR2 .H ." AND THE VALUE IS: " SPI1-CR2	@ .B	CR
+." SPI1-SR ADDR IS: " SPI1-SR .H ." AND THE VALUE IS: " SPI1-SR	@ .B	." <<< 10b IS TXE" CR
+." SPI1-DR ADDR IS: " SPI1-DR .H ." AND THE VALUE IS: " SPI1-DR	@ .B	CR
 ;
-
-.SPI1
 
 \ The gpio registers involved.
 040020000h	CONSTANT	GPIOA-MODER
 040020004h	CONSTANT	GPIOA-OTYPER
 040020008h	CONSTANT	GPIOA-OSPEEDR
 04002000Ch	CONSTANT	GPIOx-PUPDR
-\ GPIOA_IDR                           40020010h
-\ GPIOA_ODR                           40020014h
-\ GPIOA_BSRR                          40020018h
-\ GPIOA_LCKR                          4002001Ch
-\ GPIOA_AFRL                          40020020h
-\ GPIOA_AFRH                          40020024h
+040020010h	CONSTANT	GPIOA_IDR
+040020014h	CONSTANT	GPIOA_ODR
+\ 040020018h	CONSTANT	GPIOA_BSRR	
+\ 04002001Ch	CONSTANT	GPIOA_LCKR	
+040020020h	CONSTANT	GPIOA_AFRL	
+040020024h	CONSTANT	GPIOA_AFRH	
 
-: WD ( n=8bits -- ) \ write to spi1 odr 7 layer fifo
-	SPI1-DR C!
-;
+: WDR ( n=8bits -- ) \ write to spi1 odr 7 layer fifo
+NOOP ( not without a chip select ~ ) ;
 
-
-: DS BEGIN 0FFh DAC-WRITE ?KEY UNTIL ;
+: RDR ( n=8bits -- ) \ read spi1 odr 7 layer fifo
+	SPI1-DR C@ ;
 
 \ I NEED MACROS FOR A BUNCH OF THIS:
 \ $ creation
 \ WC creation
 \ talking Create Does~!
 
-\ SPI1 LOOPBACK TEST
-: SR  CR ." SR = "
-SPI1-SR @ DUP .H SPACE .B
-;
-
-: TS
-CR
+: .SPI1-DIRECTION?
+CR ." THIS IS FROM ALT TESTING OF WHY SPI1 HAS ISSUES" CR
 SPI1-CR1 @ 0C37Dh = IF ." IN UNIDIRECTIONAL MODE " THEN
 SPI1-CR1 @ 037Dh = IF ." IN BIDIRECTIONAL  MODE " THEN
-7 0 DO
-45 I + DUP SPI1-DR C!
-CR ." BYTE WROTE = " .H
-SR
-CR
-." DR = " SPI1-DR ?
-LOOP
 ;
 
-
-// 1RST TRY DOCS HARD TO FIND~!
-/*
-typedef enum gpio_af {
-    GPIO_AF_SPI_1_2              = 5,
-    GPIO_AF_USART_1_2_3          = 7,
-} gpio_af;
-*/
-
-/* Intialize PORTB_MODER pins this way.
-Value at end is this init								...........
-PB15  BT-RST	        is active high.	0x1
-PB14  BT-CSn	        is active low. 	0x1 SANITYY CHECK CS-BT USES THIS!!!
-PB13  DAC-CSn        	is active low. 	0x1
-PB12	ADC-CSn					is active low. 	0x1
-PB11	SDA2						I2C START (NOT USED)
-PB10	SCL2
-PB9		NC
-PB8		NC
-PB7		SDA1
-PB6		SCL1						I2C END (NOT USED)
-PB5		SPI1-MOSI				is AF, SPI1_MOSI 0x2
-PB4		SPI1-MISO				is AF, SPI1_MISO 0x2
-PB3		JTDO/SPI1-SCLK	is AF, SPI1_SCLK 0x2
-PB2		BOOT0		        Do not program	 0x0
-PB1		ADC-PDN	        is active low. 	 0x1
-PB0     ADC-RSTn				is active high.	 0x1
-
-//--------------------------------PORTC-----------------------------------------
-// GPIO PORT C Reset value: 0x0000 0000
-
-
-// MODER is a 2 bit init for each of the 16 ports in a bank.
-// Enable PB0-1, and PB12-15 as Outputs for SPI BT, ADC and DAC BT RST
-// PROGRAM SPI1 AF ON PB3, PB4 AND PB5
-// USART3 inited on PORT C, in the first section, after system clocks setup.
-// PORTC - Do std GPIO and level set init. Then do alternate function config.
-/* Intialize PORTC pins this way.
-Value at end is this init								...........
-PC15
-PC14
-PC13
-PC12
-PC11    UART3_TX        is AF.
-PC10    UART3_RX        is AF.
-PC9     SWITCH4         is active high.
-PC8     SWITCH3         is active high.
-PC7     SWITCH2         is active high.
-PC6     SWITCH1         is active high.
-PC5     ADC_DATA_READY  is actve high.
-PC4
-PC3
-PC2     GAIN_SWITCH2    is active low.
-PC1     GAIN_SWITCH1    is active low.
-PC0     GAIN_SWITCH0    is active low.
-
-FOR PSTAT init add pc0-pc9 init here
-
-QUIT
---
-hmm, NEW~! afrh values for gpioc in cube~ INVESTIGATE~!!!
-
---
-yay:
-BUT lsb ORDER IS disordered is WHAT SCOPE SEEs~!
-Yet register LSBFIRST bit is zero~!
-\ CHECK RXE AND OVERRUN~!
-Saw a 3C7h init of spi ....
-
-\ BIT and BITS SET AND SEE WORDS FOR MEMORY AND REGISTER
-\ update GLOSSARY WITH BETTER EXAMPLES/EXPLNATIONS
-EHON
-POFF
-\ The spi1 register addresses.
-040013000h	CONSTANT	SPI1-CR1
-040013004h	CONSTANT	SPI1-CR2
-040013008h	CONSTANT	SPI1-SR
-04001300Ch	CONSTANT	SPI1-DR
 
 \ The gpio registers involved.
 040020414h	CONSTANT	GPIOB-ODR
@@ -162,23 +67,39 @@ POFF
 \ 1 9 LSL .SB TOS> 1000000000b
 
 : SETBIT ( 0-based-bit# adrr -- )
-		>R	\ STORE @ADDR VALUE
-			\ PATTERN: BITMASK=TOS, SHIFT THE BITMASK
-   		1h SWAP LSL
-			\ PATTERN: OR TOS WITH BITMASK
-			R	@ AND
-		R>
+	>R	\ STORE @ADDR VALUE
+		\ PATTERN: BITMASK=TOS, SHIFT THE BITMASK
+	1h SWAP LSL
+		\ PATTERN: OR TOS WITH BITMASK
+		R	@ XOR \ WHAT IS IT IT'S NOT AND!
+	R>
 \			CR .SH
-		!
+	!
 ;
 
 : CLRBIT ( 0-based-bit# addr -- )
-		>R
-   		1h SWAP LSL
-			R @	XOR
-		R>
+	>R
+	1h SWAP LSL
+		R @	XOR
+	R>
 \			CR .SH
-		!
+	!
+;
+
+\ PSTAT SPI1 CHIP SELECT WORDS.
+: .ADC-CS ( -- )	\ PB12
+	CR GPIOC-ODR @ 1000h AND ." ADC-CS IS " IF ." ON" ELSE ." OFF" THEN CR  ;
+
+: .BT-CS ( -- )		\ PB14
+	CR GPIOC-ODR @ 4000h AND ." BT-CS IS " IF ." ON" ELSE ." OFF" THEN CR ;
+
+: .DAC-CS ( -- )	\ PB13
+	CR GPIOC-ODR @ 2000h AND ." DAC-CS IS " IF ." ON" ELSE ." OFF" THEN CR;
+
+: .CS	( -- )
+	CR	.ADC-CS
+	CR	.BT-CS
+	CR	.DAC-CS
 ;
 
 \ PSTAT SWITCH WORDS, ON THE DAC
@@ -194,36 +115,121 @@ POFF
 : SW4 ( ON | OFF -- )	\ BIT 6
 	IF 6 GPIOC-ODR SETBIT ELSE 6 GPIOC-ODR CLRBIT THEN ;
 
-\ SPI1 WORDS FOR THE DAC
-: RX-OK? BEGIN SPI1-SR @ 2 AND UNTIL ;
+\ SPI1 WORDS FOR THE DAC.
+\ ~WORD-OK IS A WAIT UNTIL LOOP IS TRUE.
+\ ?WORD IS A DISPLAY WORD.
+\ WORD? IS FLAG GENERATOR, ON OR OFF.
 
-: DW ( n2 n1 -- )
-\ 13d GPIOB-ODR CLRBIT \ DAC PB13 CS (LEDRED) low=ON
-	GPIOB-ODR 1 13d LSL CLRBITS \ DAC PB13 CS (LEDRED) low=ON
-		RX-OK? 3Fh SPI1-DR !
-		RX-OK? ( n1 )  SPI1-DR !
-		RX-OK? ( n2 ) SPI1-DR !
+(
+TXE: Transmit buffer empty
+0: Tx buffer not empty
+1: Tx buffer empty
+)
+: ~TXE ( -- ) \ Until spi1 TXE ok.
+ BEGIN SPI1-SR @ 2 AND UNTIL ;
+
+: TXE? ( -- ON/OFF ) \ push on or off = TXE
+ SPI1-SR @ 2 AND IF ON ELSE OFF THEN ;
+
+(
+RXNE: Receive buffer not empty
+0: Rx buffer empty
+1: Rx buffer not empty
+)
+: ~RXNE	( -- )
+ BEGIN SPI1-SR @ 1 AND UNTIL ;
+
+: RXNE?	( -- ON/OFF )	\ push on or off = RXNE
+ SPI1-SR @ 1 AND IF ON ELSE OFF THEN ;
+
+: ?RXNE  ;
+
+: ?TXE ;
+
+: ?OVR ;
+
+: ?BSY ;
+
+: ?MODF ;
+
+\ TWO THINGS DONE - C! AND ...
+: DW ( N3 n2 n1=MSB -- )
+ 	13d GPIOB-ODR CLRBIT \ DAC PB13 CS (LEDRED) low=ON
+	~TXE	( N2 )	3Fh AND SPI1-DR C!
+	~TXE	( n2 )  SPI1-DR C!
+	~TXE	( n3 ) 	SPI1-DR C!
 	GPIOB-ODR 1 13d LSL SETBITS \ DAC PB13 CS (LEDRED) high=OFF
 ;
 
-GPIOB-ODR 1 14d LSL CLRBITS
-: TS
+: TS	( -- )
 	GPIOB-ODR 3 13d LSL CLRBITS \ DAC (LEDRED) and BT (LEDGREEN) CS low=ON PB13 & PB14
 
 \ CHECK FOR OVERRUN
-\		SPI1-SR @ 0F0h AND IF ." OVERRUN ERROR, ABORTING " ABORT THEN
+	SPI1-SR @ 0F0h AND IF ." OVERRUN ERROR, GOING BYE " BYE THEN
 \ now do the 3 write ramp.
 
 \	DO A 3 BYTE Write FOR THE DAC
 	FFh 0 DO	\ use I for the last 2 bytes and 1rst bYte will always be 3Fh
-		I I DW
-		1 MS
+		I I I DW
+		100 MS
 	LOOP	\ write spi dr
 	1 MS
 	GPIOB-ODR 3 13d LSL SETBITS \ DAC and BT CS HIGH PB13 & PB14
 ;
 
-: RUN BEGIN TS ?KEY UNTIL ;
+: DAC-SCOPE-TEST BEGIN TS ?KEY UNTIL ;
+
+\ loopback test WORDS here:
+: DAC-LB	( N1 N2 N3 -- )\
+	." DAC-CS LOOPBACK TEST"
+	14d GPIOB-ODR CLRBIT \ DAC PB13 CS (LEDRED) low=ON
+	.DAC-CS
+	DUP 3Fh AND CR ." 1RST BYTE WRITTEN = " .H
+	~TXE	3Fh AND SPI1-DR C!
+	~RXNE	SPI1-DR C@
+	CR ." 1RST BYTE READ BACK = " .H
+
+	DUP CR ." 2ND BYTE WRITTEN = " .H
+	~TXE	SPI1-DR C!
+	~RXNE	SPI1-DR C@
+	CR ." 2ND BYTE READ BACK = " .H
+
+	DUP CR ." 3RD BYTE WRITTEN = " .H
+	~TXE	SPI1-DR C!
+	~RXNE	SPI1-DR C@
+	CR ." 3RD BYTE READ BACK = " .H
+	GPIOB-ODR 1 14d LSL SETBITS \ DAC PB13 CS (LEDRED) high=OFF
+	.DAC-CS
+CR ." CHECKed, no OVERRUN~! " CR
+;
+
+(
+DAC-LB SHOW FF READ BACK NO MATTER WAHT VALUE, SELECTING THE DAC
+THIS NEXT WORD WILL NOT SELECT ANY SPI1 PRERIPHERAL AND SEE...
+)
+
+: SPI1-ONLY-LB	( N1 N2 N3 -- )
+	." NO CHIP SELECTED LOOPBACK TEST" CR 
+	13d GPIOB-ODR CLRBIT \ DAC PB13 CS (LEDRED) low=ON
+	.CS
+	DUP 3Fh AND CR ." 1RST BYTE WRITTEN = " .H
+	~TXE	3Fh AND SPI1-DR C!
+	~RXNE	SPI1-DR C@
+	CR ." 1RST BYTE READ BACK = " .H
+	.CS
+	DUP CR ." 2ND BYTE WRITTEN = " .H
+	~TXE	SPI1-DR C!
+	~RXNE	SPI1-DR C@
+	CR ." 2ND BYTE READ BACK = " .H
+	.CS
+	DUP CR ." 3RD BYTE WRITTEN = " .H
+	~TXE	SPI1-DR C!
+	~RXNE	SPI1-DR C@
+	CR ." 3RD BYTE READ BACK = " .H
+\	GPIOB-ODR 1 13d LSL SETBITS \ DAC PB13 CS (LEDRED) high=OFF
+CR ." CHECKed, no OVERRUN~! " CR
+;
+
 
 : SEEBIT@ ( 1-based-bit# addr -- )
 	SWAP \ MAKES STACK ARGS SAME AS SETBIT/CLRBIT
@@ -255,17 +261,100 @@ READ-SPI1-SR CR
 
 : .SW4 ." SW4 (PC9) IS " 6 GPIOC-ODR SEEBIT@	;
 
-EHOFF
-.SW1
-.SW2
-.SW3
-.SW4
+: .SW CR .SW1 CR .SW2 CR .SW3 CR .SW4 CR ;
 
 \ RUN
 \ DURING RUN TALKING TO DAC THE RXNE IS SET? DAC DOESN'T TALK BACK.
 
+\ BUT lsb ORDER IS disordered is WHAT SCOPE SEEs~!
+\ Yet register LSBFIRST bit is zero~!
+\ CHECK RXE AND OVERRUN~!
+\ 1RST TRY DOCS HARD TO FIND~! CUBE DOES THIS.
+(
+typedef enum gpio_af {
+    GPIO_AF_SPI_1_2              = 5,
+    GPIO_AF_USART_1_2_3          = 7,
+} gpio_af;
+)
+
+(
+\ --------------------------------PORTB-----------------------------------------
+\ Intialize PORTB_MODER pins this way.
+\ Value at end is this init..........
+PB15  BT-RST	        is active high.	0x1
+PB14  BT-CSn	        is active low. 	0x1
+PB13  DAC-CSn        	is active low. 	0x1
+PB12  ADC-CSn		is active low. 	0x1
+PB11  SDA2		I2C START NOT USED
+PB10  SCL2		
+PB9   NC
+PB8   NC
+PB7   SDA1
+PB6   SCL1		I2C END NOT USED
+PB5   SPI1-MOSI		is AF, SPI1_MOSI 0x2
+PB4   SPI1-MISO		is AF, SPI1_MISO 0x2
+PB3   JTDO/SPI1-SCLK	is AF, SPI1_SCLK 0x2
+PB2   BOOT0		Do not program	 0x0
+PB1   ADC-PDN	        is active low. 	 0x1
+PB0   ADC-RSTn		is active high.	 0x1
+)
+
+(
+\ --------------------------------PORTC-----------------------------------------
+\ GPIO PORT C Reset value: 0x0000 0000
+\ MODER is a 2 bit init for each of the 16 ports in a bank.
+\ Enable PB0-1, and PB12-15 as Outputs for SPI BT, ADC and DAC BT RST
+\ PROGRAM SPI1 AF ON PB3, PB4 AND PB5
+\ USART3 inited on PORT C, in the first section, after system clocks setup.
+\ PORTC - Do std GPIO and level set init. Then do alternate function config.
+\ Intialize PORTC pins this way.
+\ Value at end is this init
+PC15
+PC14
+PC13
+PC12
+PC11    UART3_TX        is AF.
+PC10    UART3_RX        is AF.
+PC9     SWITCH4         is active high.
+PC8     SWITCH3         is active high.
+PC7     SWITCH2         is active high.
+PC6     SWITCH1         is active high.
+PC5     ADC_DATA_READY  is actve high.
+PC4
+PC3
+PC2     GAIN_SWITCH2    is active low.
+PC1     GAIN_SWITCH1    is active low.
+PC0     GAIN_SWITCH0    is active low.
+)
+
+\ ------------------------------------------------------------------------------
+\ BIT and BITS SET AND SEE WORDS FOR MEMORY AND REGISTER
+\ update GLOSSARY WITH BETTER EXAMPLES/EXPLNATIONS
+
+EHOFF
+
+\ STACK SANITY CHECK
 .S
-\ THERE IS STACK RESIDUE FROM THE CODE, RIGHT?
+
+\ SPI DIRECTION
+.SPI1-DIRECTION?
+
+\ DAC SWITCHES
+.SW
+
+.SPI1
+
+.CS
+
+FFh 7Fh A0h DAC-LB
+
+\ SANITY CHECK WORDS
+.CS
+
+FFh 7Fh A1h SPI1-ONLY-LB
+
+\ SANITY CHECK WORDS
+.CS
 
 PON
 

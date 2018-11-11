@@ -1,0 +1,1055 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+
+
+
+
+
+
+
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Things to remember when developing a program for STM32 using STM32-Library.</title></head><body>
+<br>
+
+<div style="text-align: center;"><img style="width: 512px; height: 323px;" alt="" src="../../Loghi/logoMaster.png"><br>
+<br>
+<hr style="width: 100%; height: 2px;">
+<div style="text-align: center; font-weight: bold;"><span style="font-family: sans-serif;"><span style="font-weight: bold;"><a name="INDEX"></a></span></span><big><big><big><big style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;"><br>
+Things
+to remember when developing a program for STM32 using STM32-Library</span></big><br>
+</big></big></big></div>
+<small><br>
+</small>
+<div style="text-align: center;"><small><span style="font-family: sans-serif; font-weight: bold;"><span style="font-family: sans-serif;"></span></span></small><img style="width: 834px; height: 116px;" alt="" src="../../Loghi/NoResp.png"><br>
+
+</div>
+<hr style="width: 100%; height: 2px;">
+<div style="text-align: center;"><br>
+<a href="../../index.html"><span style="font-family: sans-serif; font-weight: bold; font-style: italic;">Home
+Page</span></a><br>
+<a href="../../STM32.html"><span style="font-weight: bold; font-family: sans-serif;">STM32 Page</span></a><br>
+<a style="font-weight: bold;" href="http://www.emcu.it/STM32.html#TUTORIAL_and_SW_examples"><span style="font-family: sans-serif;">STM32 Tutorials</span></a><br>
+<br>
+<hr style="width: 100%; height: 2px;">
+<div style="text-align: left;">
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"><span style="font-weight: bold;"><br><big style="color: rgb(204, 0, 0); font-style: italic;"><big>
+INDEX</big></big></span><br>
+<br>
+</span>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif; font-weight: bold;"><a href="#Tools_that_are_necessary">Tools that are necessary</a><br>
+<a href="#Introduction">Introduction</a></span><br>
+<a href="#Explanations"><span style="font-family: sans-serif; font-weight: bold;">Explanations</span></a><br>
+<a style="font-weight: bold;" href="#In_practice"><span style="font-family: sans-serif;">In practice</span></a><br>
+<a href="#Software_ready_to_use_for_KEIL"><span style="font-family: sans-serif;">Download the example ready to use for KEIL</span></a><br style="font-family: sans-serif;">
+<a href="#Software_ready_to_use_for_ATOLLIC"><span style="font-family: sans-serif;">Download the example ready to use for ATOLLIC</span></a><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">Please read also this: <span style="font-weight: bold;"><a href="../STM32Library/TwoWordsConcerningSTM32Library.html" target="_blank">Two Words Concerning STM32 Library</a></span></span><br>
+</div>
+<br>
+<br>
+<hr style="width: 100%; height: 2px;"><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</div>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif; font-weight: bold;"><a name="Tools_that_are_necessary"></a><br><big style="font-style: italic; color: rgb(204, 0, 0);"><big>
+Tools that are necessary</big></big><br>
+<br>
+</span>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"><span style="font-weight: bold;">Harware:</span><br>
+</span>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"><br>
+STM32 VL Discovery, see <a href="../../STM32Discovery/STM32ValueLineDiscovery.html" target="_blank"><span style="font-weight: bold;">here</span></a><br>
+One trimmer of 200K</span><br>
+<span style="font-family: sans-serif;">Some wires for connections</span><br>
+<span style="font-family: sans-serif;">Optional is an oscilloscopre
+(Max freq &gt; 25MHz)</span><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;"><br>
+<br>
+<span style="font-weight: bold;">Datasheet:</span><br>
+</span>
+<div style="margin-left: 40px;"><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">DS6517: Low &amp; medium-density value line (STM32F100x4 STM32F100x6 STM32F100x8 STM32F100xB)</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">RM0041: STM32F100xx advanced ARM-based 32-bit MCUs</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">PM0056: STM32F10xxx/20xxx/21xxx/L1xxxx Cortex-M3 programming manual&nbsp;&nbsp;&nbsp; </span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">PM0063: STM32F100xx value line Flash programming</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">PM0075: STM32F10xxx Flash memory microcontrollers</span><br>
+<span style="font-family: sans-serif;">All of the datasheet for STM32F100RBT6 are <a style="font-weight: bold;" href="http://www.st.com/internet/mcu/product/216844.jsp" target="_blank">here</a>.</span><br>
+<br>
+<br>
+</div>
+<span style="font-family: sans-serif;"><span style="font-weight: bold;">
+Software:</span><br>
+</span>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"><br>
+Windows XP (SP3)</span><br>
+<span style="font-family: sans-serif;"><span style="font-weight: bold;">STM Library </span>version:&nbsp;
+V3.4.0
+<br><span style="font-weight: bold;">
+KEIL</span> Version:&nbsp; uVision4&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;<br>
+</span>
+<div style="margin-left: 120px;"><small><span style="font-family: sans-serif; font-style: italic;">IDE-Version:
+µVision V4.10
+</span><br style="font-style: italic;">
+<span style="font-family: sans-serif; font-style: italic;">Toolchain:
+RealView MDK-ARM&nbsp; Version: 4.12
+</span><br style="font-style: italic;">
+<span style="font-family: sans-serif; font-style: italic;">Toolchain
+Path: BIN40\
+</span><br style="font-style: italic;">
+<span style="font-family: sans-serif; font-style: italic;">C Compiler:
+Armcc.Exe - V4.1.0.481 [Evaluation]
+</span><br style="font-style: italic;">
+<span style="font-family: sans-serif; font-style: italic;">Assembler:
+Armasm.Exe - V4.1.0.481 [Evaluation]
+</span><br style="font-style: italic;">
+<span style="font-family: sans-serif; font-style: italic;">Linker/Locator:
+ArmLink.Exe - V4.1.0.481 [Evaluation]
+</span><br style="font-style: italic;">
+<span style="font-family: sans-serif; font-style: italic;">Librarian:
+ArmAr.Exe - V4.1.0.481 [Evaluation]
+</span><br style="font-style: italic;">
+<span style="font-family: sans-serif; font-style: italic;">Hex
+Converter: FromElf.Exe - V4.1.0.481 [Evaluation]
+</span><br style="font-style: italic;">
+<span style="font-family: sans-serif; font-style: italic;">CPU DLL:
+SARMCM3.DLL - V4.12
+</span><br style="font-style: italic;">
+<span style="font-family: sans-serif; font-style: italic;">Dialog DLL:
+DARMSTM.DLL - V1.47
+</span><br style="font-style: italic;">
+<span style="font-family: sans-serif; font-style: italic;">Target DLL:
+STLink\ST-LINKIII-KEIL.dll - V1.5.1
+</span><br style="font-style: italic;">
+<span style="font-family: sans-serif; font-style: italic;">Dialog DLL:
+TARMSTM.DLL - V1.47</span></small><br>
+</div>
+<span style="font-family: sans-serif;"></span></div>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;">Now is also available the download of this example for <span style="font-weight: bold;">ATOLLIC</span> - TrueSTUDIO Lite v.2.1.0</span><br>
+<br>
+<span style="font-family: sans-serif;">
+</span></div>
+
+<div style="text-align: center;"><a style="font-style: italic;" href="#INDEX"><span style="font-family: sans-serif;">Click here to go
+to INDEX</span></a><br>
+</div>
+<br>
+</div>
+<span style="font-family: sans-serif; font-weight: bold;"><br>
+</span>
+<hr style="width: 100%; height: 2px;"><br>
+<span style="font-family: sans-serif; font-weight: bold;"><a name="Introduction"></a><br><big style="font-style: italic; color: rgb(204, 0, 0);"><big>
+Introduction</big></big></span><br style="font-family: sans-serif;">
+<br style="font-family: sans-serif;">
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;">The
+idea of this tutorial is born from the necessity to preparing a basic
+course for explain the "tips and tricks" concerning the STM32 (Cortex
+M3). For do this I decided to develop a real-program that test some
+peripherals of the&nbsp;<a href="../../STM32Discovery/STM32ValueLineDiscovery.html" target="_blank">STM32 Discovery</a>. <br>
+The practice is crucial to learn anything.</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">In this program we do the test
+of: <span style="font-weight: bold;">I/O</span>, <span style="font-weight: bold;">ADC</span>, <span style="font-weight: bold;">DMA</span>, <span style="font-weight: bold;">USART1</span>, <span style="font-weight: bold;">SPI1</span> and <span style="font-weight: bold;">MCO</span> <span style="font-weight: bold;">pin</span>.</span><br>
+<span style="font-family: sans-serif;">For do this is necessary only
+one trimmer (200K) and if you have an oscilloscope it </span><span style="font-family: sans-serif;"> is </span><span style="font-family: sans-serif;">possible see
+the MCO output that is SYSCLK.</span><br>
+<span style="font-family: sans-serif;">The image below show the
+configuration.</span><br>
+<br>
+<img style="width: 964px; height: 569px;" alt="" src="Connessioni.png"><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div style="text-align: center;"><a style="font-style: italic;" href="#INDEX"><span style="font-family: sans-serif;">Click here to go
+to INDEX</span></a><br>
+</div>
+</div>
+</div>
+<div style="margin-left: 40px;"><br>
+<hr style="width: 100%; height: 2px;"><br>
+<span style="font-family: sans-serif; font-weight: bold;"><a name="Explanations"></a><br><big style="font-style: italic; color: rgb(204, 0, 0);"><big>
+Explanations</big></big><br>
+<br>
+</span>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;">There
+are some things you should remember when you decide to use an STM32 and
+the STM32-Library.</span><span style="font-family: sans-serif; font-weight: bold;"></span><br>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"><span style="font-weight: bold;"><br>
+</span>Please read also this: <span style="font-weight: bold;"><a href="../STM32Library/TwoWordsConcerningSTM32Library.html" target="_blank">Two Words Concerning STM32 Library</a><br>
+<a href="#Its_a_must_initialize_the_structure">Initialize the structure
+that refer the peripherals that you need to use</a><br>
+</span></span><a href="#Make_attention_to_configure_correctly"><span style="font-family: sans-serif;"><span style="font-weight: bold;">Configure
+correctly the I/O for use the peripherals</span></span></a><br>
+<span style="font-family: sans-serif; font-weight: bold;"><a href="#Dont_forget_to_clock_the_peripherals.">Clock the peripherals</a><br>
+</span><a href="#Add_the_appropriate_peripheral_driver"><span style="font-family: sans-serif; font-weight: bold;">Add the
+appropriate peripheral driver file into: StdPeriph-Driver</span></a><br>
+<a href="#Configure_the_right_SYSCLK_that_you_need"><span style="font-family: sans-serif; font-weight: bold;">Configure the
+right SYSCLK that you need use in your application</span></a><br>
+<span style="font-family: sans-serif; font-weight: bold;"><a href="#Select_the_mcu_that_you_need_to_use.">Select the mcu that you
+need to use</a><br>
+</span><span style="font-family: sans-serif;"><span style="font-weight: bold;"><a href="#Configure_the_file:_stm3210x_conf.h">Configure the file:
+stm3210x_conf.h</a><br>
+</span></span><span style="font-family: sans-serif;"><span style="font-weight: bold;"><a href="#Configure_the_file:_stm3210x.h">Configure
+the file: stm3210x.h</a></span></span><span style="font-family: sans-serif;"><span style="font-weight: bold;"><br>
+</span></span><span style="font-family: sans-serif; font-weight: bold;"></span><br>
+<div style="text-align: center;"><a style="font-style: italic;" href="Things%20to%20remember%20when%20developing%20a%20program%20for%20STM32%20using%20STM32-Library.html#INDEX"><span style="font-family: sans-serif;">Click here to go
+to INDEX</span></a>
+</div>
+<br>
+</div>
+<hr style="width: 100%; height: 2px;"><span style="font-family: sans-serif;"><br>
+<span style="font-weight: bold;"><a name="Its_a_must_initialize_the_structure"></a><br>
+It's a must initialize the structure that refer the peripherals that you
+need to use, for do this are necessary two steps:</span></span><br style="font-family: sans-serif;">
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"><br>
+1)
+Declare the appropriate variable</span><br style="font-family: sans-serif;">
+</div>
+<div style="margin-left: 80px; font-family: sans-serif;"><small><span style="font-style: italic; color: rgb(0, 153, 0);"><br>
+/* Private
+variables ---------------------------------------------------------*/
+</span><br style="font-style: italic;">
+<span style="font-style: italic;">GPIO_InitTypeDef <span style="font-weight: bold;">GPIO_InitStructure</span>;
+</span><br style="font-style: italic;">
+<span style="font-style: italic;">RCC_ClocksTypeDef RCC_ClockFreq;
+</span><br style="font-style: italic;">
+<span style="font-style: italic;">ErrorStatus HSEStartUpStatus;
+</span><br style="font-style: italic;">
+<span style="font-style: italic;">ADC_InitTypeDef
+ADC_InitStructure;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span><br style="font-style: italic;">
+<span style="font-style: italic;">DMA_InitTypeDef
+DMA_InitStructure;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span><br style="font-style: italic;">
+<span style="font-style: italic;">USART_InitTypeDef
+USART_InitStructure;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span><br style="font-style: italic;">
+</small><span style="font-style: italic;"><small>SPI_InitTypeDef&nbsp;
+<span style="font-weight: bold;">SPI_InitStructure</span>;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </small>&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><br>
+<br>
+</div>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;">2)
+Initialize the peripheral structure. <small><br>
+</small></span>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"><small>Below there is the I/O and SPI example.</small></span><br>
+</div>
+
+</div>
+<div style="margin-left: 80px; font-family: sans-serif; font-style: italic;"><small><span style="color: rgb(0, 153, 0);"><br>
+/* Configure Leds (PC8 &amp; PC9)
+mounted on STM32 Discovery board - OutPut Push Pull*/
+</span><br>
+GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9;
+<br>
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+<br>
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+<br>
+GPIO_Init(GPIOC, &amp;<span style="font-weight: bold;">GPIO_InitStructure</span>);<br>
+<span style="color: rgb(0, 153, 0);">// Configure SPI</span><br>
+SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
+<br>
+SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
+<br>
+SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
+<br>
+SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;
+<br>
+SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;
+<br>
+SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
+<br>
+SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_64;
+<br>
+SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
+<br>
+SPI_InitStructure.SPI_CRCPolynomial = 7;
+<br>
+SPI_Init(SPI1, &amp;<span style="font-weight: bold;">SPI_InitStructure</span>);
+<br>
+SPI_Cmd(SPI1, ENABLE);&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <span style="color: rgb(0, 153, 0);">/* Enable the SPI&nbsp; */&nbsp; </span><br>
+</small></div>
+<span style="font-family: sans-serif;"><br>
+<br>
+</span>
+<div style="text-align: center;"><span style="font-family: sans-serif;">Click
+<a href="#Explanations"><span style="font-weight: bold;">here</span></a>
+to back to Explanations</span><br>
+<br>
+<br>
+<span style="font-family: sans-serif;"></span></div>
+<hr style="width: 100%; height: 2px;"><br>
+<span style="font-family: sans-serif;"><span style="font-weight: bold;"><a name="Make_attention_to_configure_correctly"></a><br>
+Make attention to configure correctly the I/O for use the peripherals.</span></span><br>
+<span style="font-family: sans-serif;">Below there are the examples that show how to configure the I/O for use the:<br>
+Output, Input, ADC, USART1 and SPI1.</span><br>
+<br>
+<div style="margin-left: 40px; font-family: sans-serif;"><small><span style="font-style: italic;"></span><span style="font-style: italic;"></span></small><small style="font-style: italic;"><span style="color: rgb(0, 153, 0);">&nbsp; /* Configure Leds (PC8 &amp; PC9) mounted on STM32 Discovery board - OutPut Push Pull*/
+</span><br>
+&nbsp; GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9;
+<br>
+&nbsp; GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+<br>
+&nbsp; GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+<br>
+&nbsp; GPIO_Init(GPIOC, &amp;GPIO_InitStructure);
+<br>
+&nbsp;<br>
+&nbsp; <span style="color: rgb(0, 153, 0);">// Configure BLUE Botton (B1 User - PA0) on STM32 Discovery board - Input Floatting
+</span><br>
+&nbsp; GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+<br>
+&nbsp; GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+<br>
+&nbsp; GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+<br>
+&nbsp;
+<br>
+<span style="color: rgb(0, 153, 0);">&nbsp; // COnfigure ADC on ADC1_IN10&nbsp;&nbsp;&nbsp; pin PC0
+</span><br>
+&nbsp; GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+<br>
+&nbsp; GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+<br>
+&nbsp; GPIO_Init(GPIOC, &amp;GPIO_InitStructure);
+<br>
+&nbsp;<br>
+<span style="color: rgb(0, 153, 0);">&nbsp; /* Configure USART1 Tx (PA9) as alternate function push-pull */
+</span><br>
+&nbsp; GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+<br>
+&nbsp; GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+<br>
+&nbsp; GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+<br>
+&nbsp; GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+<br>
+&nbsp;<br>
+<span style="color: rgb(0, 153, 0);">&nbsp; /* Configure USART1 Rx (PA10) as input floating */
+</span><br>
+&nbsp; GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+<br>
+&nbsp; GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+<br>
+&nbsp; GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+<br>
+&nbsp;<br>
+<span style="color: rgb(0, 153, 0);">&nbsp; // Configure SPI - CLK PA5, MISO PA6, MOSI PA7
+</span><br>
+&nbsp; GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
+<br>
+&nbsp; GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+<br>
+&nbsp; GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+<br>
+&nbsp; GPIO_Init(GPIOA, &amp;GPIO_InitStructure);</small><br>
+</div>
+<br>
+<br>
+<div style="text-align: center;"><span style="font-family: sans-serif;">Click
+<a href="Things%20to%20remember%20when%20developing%20a%20program%20for%20STM32%20using%20STM32-Library.html#Explanations"><span style="font-weight: bold;">here</span></a>
+to back to Explanations</span><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;"><br>
+<br>
+</span>
+<hr style="width: 100%; height: 2px;"><br>
+<span style="font-family: sans-serif; font-weight: bold;"><a name="Dont_forget_to_clock_the_peripherals."></a><br>
+Don't forget to clock the peripherals.</span><br>
+<span style="font-family: sans-serif;">All STM32 peripherals after the
+pawer-on are not clocked.</span><br>
+<span style="font-family: sans-serif;">For clock the peripherals you must look where
+the peripherals are connected (APB1, APB2, AHB - see the block diagram
+of mcu)</span>.<br>
+<br>
+<div style="margin-left: 40px; font-style: italic;"><small><span style="font-family: sans-serif; color: rgb(0, 153, 0);">// Enable CLK
+to port ADC1, GPIOC/A, USART1, SPI1&nbsp;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">RCC_APB2PeriphClockCmd (
+RCC_APB2Periph_ADC1 | RCC_APB2Periph_GPIOC | </span><br>
+</small></div>
+<div style="font-style: italic;">
+<div style="margin-left: 200px;"><small><span style="font-family: sans-serif;">RCC_APB2Periph_GPIOA |
+RCC_APB2Periph_USART1&nbsp;
+</span><span style="font-family: sans-serif;">| RCC_APB2Periph_SPI1, ENABLE);
+</span></small><br style="font-family: sans-serif;">
+</div>
+</div>
+<div style="margin-left: 40px; font-style: italic;"><small><span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp;/*
+Enable DMA1 clock */
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1,
+ENABLE);</span><br>
+<br>
+</small>
+<div style="text-align: center;"><small><img style="width: 556px; height: 581px;" alt="" src="STM32F100xx-BlockDiagr.png"></small><br>
+</div>
+</div>
+<br>
+<br>
+<div style="text-align: center;"><span style="font-family: sans-serif;">Click
+<a href="Things%20to%20remember%20when%20developing%20a%20program%20for%20STM32%20using%20STM32-Library.html#Explanations"><span style="font-weight: bold;">here</span></a>
+to back to Explanations</span><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;"><br>
+<br>
+</span>
+<hr style="width: 100%; height: 2px;"><br>
+<span style="font-family: sans-serif; font-weight: bold;"><a name="Add_the_appropriate_peripheral_driver"></a><br>
+Add the appropriate peripheral driver file into: StdPeriph_Driver</span>
+<small><span style="font-family: sans-serif; font-style: italic;">(see
+below)</span></small><br>
+<br>
+<div style="text-align: center;"><img style="width: 676px; height: 613px;" alt="" src="add.png"><br>
+</div>
+<br>
+<br>
+<div style="text-align: center;"><span style="font-family: sans-serif;">Click
+<a href="Things%20to%20remember%20when%20developing%20a%20program%20for%20STM32%20using%20STM32-Library.html#Explanations"><span style="font-weight: bold;">here</span></a>
+to back to Explanations</span><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;"><br>
+<br style="font-family: sans-serif;">
+</span>
+<hr style="width: 100%; height: 2px;"><br>
+<span style="font-family: sans-serif; font-weight: bold;"><a name="Configure_the_right_SYSCLK_that_you_need"></a><br></span><span style="font-family: sans-serif;"><span style="font-weight: bold;">Don't forget to enable the external or internal oscillator that you need to use for SYSCLK.<br>
+At power-on for default is enabled the internal RC oscillator HSI.<br>
+Remember tha there are different sources of clock that for stm32F100xx are:</span></span><span style="font-family: sans-serif; font-weight: bold;"><br>
+</span><span style="font-family: sans-serif;">&#9679; HSI oscillator clock</span> <span style="font-family: sans-serif;">(RC internal)</span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">&#9679; HSE oscillator clock</span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">&#9679; PLL clock</span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">&#9679; 40 kHz low speed internal RC
+(LSI RC) which drives the independent watchdog and optionally the RTC
+used for Auto-wakeup from Stop/Standby mode.</span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">&#9679; 32.768 kHz low speed external crystal (LSE crystal) which optionally drives the real-time clock (RTCCLK)</span><br style="font-family: sans-serif;">
+
+<br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">Normaly after the reset, the HSI
+oscillator </span><span style="font-family: sans-serif;">(RC internal) </span><span style="font-family: sans-serif;">as selected as system clock. <br>
+The HSI oscillator is 8MHz
+internal RC oscillator.</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;"> In our case we decide to use:<br>
+</span>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;">HSE
+oscillator that is crystal oscillator</span> <small style="font-style: italic;"><span style="font-family: sans-serif;">(On the STM32 Discovery there is 8 MHz quartz mounted)</span></small><br>
+<span style="font-family: sans-serif;">Configure the SYSCLK to 24MHz</span><br>
+<span style="font-family: sans-serif;">Allow the SYSCLK to be output into the external MCO pin</span><br>
+<span style="font-family: sans-serif;"></span></div>
+<div style="margin-left: 40px;"><br>
+<small><span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp;
+// Sets System clock frequency to 24MHz
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; <span style="font-weight: bold;">SetSysClockTo24()</span>;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // Only for debug the clock
+tree&nbsp; ***********************************************
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; // Put the clock configuration
+into RCC_APB2PeriphClockCmd
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,
+ENABLE);
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Output clock on MCO pin
+---------------------------------------------*/
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //&nbsp; RCC_MCOConfig(RCC_MCO_HSE); //
+Put on MCO pin the: freq. of external crystal
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; RCC_MCOConfig(RCC_MCO_SYSCLK);&nbsp; // Put on MCO
+pin the: System clock selected&nbsp;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //
+******************************************************************************</span></small><br>
+<br>
+<br>
+<br>
+<small><span style="font-family: sans-serif; color: rgb(0, 153, 0);">/**
+
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp; *
+Sets System clock frequency to 24MHz and configure HCLK, PCLK2 and
+PCLK1 prescalers.
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp;
+*&nbsp;&nbsp;&nbsp;&nbsp;
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp; *
+param&nbsp; None
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp; *
+retval None
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp; */
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">void <span style="font-weight: bold;">SetSysClockTo24</span>(void)
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">{
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp; /*
+SYSCLK, HCLK, PCLK2 and PCLK1 configuration
+-----------------------*/&nbsp;&nbsp;&nbsp;
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp; /*
+RCC system reset(for debug purpose) */
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; RCC_DeInit();
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; <span style="color: rgb(0, 153, 0);">/* Enable HSE */
+</span></span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;
+RCC_HSEConfig(RCC_HSE_ON);
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;<span style="color: rgb(0, 153, 0);"> /* Wait till HSE is ready */
+</span></span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; HSEStartUpStatus =
+RCC_WaitForHSEStartUp();
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; if (HSEStartUpStatus ==
+SUCCESS)
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; {
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;<span style="color: rgb(0, 153, 0);">&nbsp; /* Flash 0 wait state */
+</span></span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;
+FLASH_SetLatency(FLASH_Latency_0);
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 153, 0);">/* HCLK = SYSCLK */
+</span></span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;
+RCC_HCLKConfig(RCC_SYSCLK_Div1);&nbsp;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;<span style="color: rgb(0, 153, 0);"> /* PCLK2 = HCLK */
+</span></span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;
+RCC_PCLK2Config(RCC_HCLK_Div1);&nbsp;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;<span style="color: rgb(0, 153, 0);"> /* PCLK1 = HCLK */
+</span></span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;
+RCC_PCLK1Config(RCC_HCLK_Div1);
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;<span style="color: rgb(0, 153, 0);"> /* PLLCLK = (8MHz/2) * 6 = 24 MHz */
+</span></span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;
+RCC_PREDIV1Config(RCC_PREDIV1_Source_HSE, RCC_PREDIV1_Div2);
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;
+RCC_PLLConfig(RCC_PLLSource_PREDIV1, RCC_PLLMul_6);
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;<span style="color: rgb(0, 153, 0);"> /* Enable PLL */&nbsp;
+</span></span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;
+RCC_PLLCmd(ENABLE);
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp; <span style="color: rgb(0, 153, 0);">/* Wait till PLL is ready */
+</span></span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp; while
+(RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET)
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp; {
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp; }
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;<span style="color: rgb(0, 153, 0);"> /* Select PLL as system clock source
+*/
+</span></span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;
+RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;<span style="color: rgb(0, 153, 0);"> /* Wait till PLL is used as system
+clock source */
+</span></span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp; while
+(RCC_GetSYSCLKSource() != 0x08)
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp; {
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp; }
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; }
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; else
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; { <br>
+<span style="color: rgb(0, 153, 0);">&nbsp;&nbsp;&nbsp; /* If HSE fails
+to start-up, the application will have wrong clock configuration.
+</span></span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+User can add here some code to deal with this error
+*/&nbsp;&nbsp;&nbsp;&nbsp;
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp;</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">&nbsp;&nbsp;&nbsp;
+/* Go to infinite loop */
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp; while (1)
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp; {
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp; }
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">&nbsp; }
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">}</span></small><br>
+<br>
+<div style="text-align: center;"><img style="width: 663px; height: 612px;" alt="" src="ClockTree.png"><br>
+</div>
+</div>
+<br>
+<br>
+<div style="text-align: center;"><span style="font-family: sans-serif;">Click
+<a href="Things%20to%20remember%20when%20developing%20a%20program%20for%20STM32%20using%20STM32-Library.html#Explanations"><span style="font-weight: bold;">here</span></a>
+to back to Explanations</span><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;"><br>
+<br>
+</span>
+<hr style="width: 100%; height: 2px;"><br>
+<span style="font-family: sans-serif; font-weight: bold;"><a name="Select_the_mcu_that_you_need_to_use."></a><br>
+Select the mcu that you need to use.</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">For do this there are two steps
+to do.</span><br style="font-family: sans-serif;">
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"><br>
+First: select the eva-board that contain your mcu family, in our case is: STM32100B-EVAL</span><br>
+<br>
+<div style="text-align: center;"><img style="width: 562px; height: 98px;" alt="" src="stm32100B.png"><br>
+<br style="font-family: sans-serif;">
+</div>
+</div>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;">Second:
+press on the icon:</span> <img style="width: 32px; height: 32px;" alt="" src="conf.png" align="middle"><span style="font-family: sans-serif;"> and check the page below.</span><br>
+<br>
+<div style="text-align: center;"><img style="width: 624px; height: 464px;" alt="" src="stm32f100rb.png"><br>
+</div>
+</div>
+<br>
+<br>
+<div style="text-align: center;"><span style="font-family: sans-serif;">Click
+<a href="Things%20to%20remember%20when%20developing%20a%20program%20for%20STM32%20using%20STM32-Library.html#Explanations"><span style="font-weight: bold;">here</span></a>
+to back to Explanations</span><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;"><br>
+<br>
+</span>
+<hr style="width: 100%; height: 2px;"><br>
+<span style="font-family: sans-serif;"><span style="font-weight: bold;"><a name="Configure_the_file:_stm3210x_conf.h"></a><br>
+Configure the file: stm3210x_conf.h</span>, see the line number from 25
+to 49 and remove from the comment the peripheral that you need to use
+(see below).</span><br style="font-family: sans-serif;">
+<br style="font-family: sans-serif;">
+<div style="margin-left: 40px;"><small><span style="font-family: sans-serif; color: rgb(0, 153, 0);">/* Includes
+------------------------------------------------------------------*/
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+Uncomment the line below to enable peripheral header file inclusion */
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">#include "stm32f10x_adc.h"
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+#include "stm32f10x_bkp.h" */
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+#include "stm32f10x_can.h" */
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+#include "stm32f10x_cec.h" */
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+#include "stm32f10x_crc.h" */
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">#include "stm32f10x_dac.h"&nbsp;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+#include "stm32f10x_dbgmcu.h" */
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">#include "stm32f10x_dma.h"&nbsp;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">#include "stm32f10x_exti.h"
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">#include
+"stm32f10x_flash.h"&nbsp;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">//
+#include "stm32f10x_fsmc.h"&nbsp;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">#include "stm32f10x_gpio.h"
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+#include "stm32f10x_i2c.h" */
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+#include "stm32f10x_iwdg.h" */
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+#include "stm32f10x_pwr.h" */
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">#include "stm32f10x_rcc.h"
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+#include "stm32f10x_rtc.h" */
+</span><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+#include "stm32f10x_sdio.h" */
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">#include "stm32f10x_spi.h"&nbsp;
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+#include "stm32f10x_tim.h" */
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">#include "stm32f10x_usart.h"
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif; color: rgb(0, 153, 0);">/*
+#include "stm32f10x_wwdg.h" */
+</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">#include "misc.h"&nbsp;<span style="color: rgb(0, 153, 0);"> /* High level functions for NVIC and
+SysTick (add-on to CMSIS functions) */
+</span></span><br style="font-family: sans-serif;">
+</small></div>
+<br>
+<div style="text-align: center;"><img style="width: 1101px; height: 596px;" alt="" src="STM32F10X_CONF.png"><br>
+</div>
+
+<br>
+<div style="text-align: center;"><span style="font-family: sans-serif;">Click
+<a href="Things%20to%20remember%20when%20developing%20a%20program%20for%20STM32%20using%20STM32-Library.html#Explanations"><span style="font-weight: bold;">here</span></a>
+to back to Explanations</span><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;"><br>
+<br>
+</span>
+<hr style="width: 100%; height: 2px;"><br>
+<span style="font-family: sans-serif;"><span style="font-weight: bold;"><a name="Configure_the_file:_stm3210x.h"></a><br>
+Configure the file: stm3210x.h, </span>see the line number from 49 to
+58 and remove the comment from the line that identify the mcu that you
+need to use, in our case is:&nbsp; </span><span style="font-family: sans-serif;">#define STM32F10X_MD_VL&nbsp;</span> <span style="font-family: sans-serif;">(see below).</span><br>
+<br>
+<div style="margin-left: 40px;"><small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">/* Uncomment the line below according
+to the target STM32 device used in your </span></small><small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">application&nbsp;
+
+</span></small><small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">*/
+</span></small><small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;"></span></small><br style="font-family: sans-serif;">
+<small><span style="font-family: sans-serif;">#if !defined
+(STM32F10X_LD) &amp;&amp; !defined (STM32F10X_LD_VL) &amp;&amp;
+!defined (STM32F10X_MD) &amp;&amp; !defined (STM32F10X_MD_VL)
+&amp;&amp; !defined (STM32F10X_HD) &amp;&amp; !defined
+(STM32F10X_HD_VL) &amp;&amp; !defined (STM32F10X_XL) &amp;&amp;
+!defined (STM32F10X_CL)&nbsp;
+</span></small><br style="font-family: sans-serif;">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp; /* #define STM32F10X_LD
+*/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*!&lt; STM32F10X_LD:
+STM32 Low density devices */
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp; /* #define STM32F10X_LD_VL
+*/&nbsp; /*!&lt; STM32F10X_LD_VL: STM32 Low density Value Line devices
+*/&nbsp;&nbsp;
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp; /* #define STM32F10X_MD
+*/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*!&lt; STM32F10X_MD: STM32
+Medium density devices */
+</span></small><br style="font-family: sans-serif;">
+<small><span style="font-family: sans-serif;">#define
+STM32F10X_MD_VL&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style="color: rgb(0, 153, 0);">/*!&lt; STM32F10X_MD_VL: STM32 Medium
+density Value Line devices */&nbsp;&nbsp;</span>
+</span></small><br style="font-family: sans-serif;">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp; /* #define STM32F10X_HD
+*/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*!&lt; STM32F10X_HD:
+STM32 High density devices */
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp; /* #define STM32F10X_HD_VL
+*/&nbsp; /*!&lt; STM32F10X_HD_VL: STM32 High density value line devices
+*/&nbsp;&nbsp;
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp; /* #define STM32F10X_XL
+*/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*!&lt; STM32F10X_XL:
+STM32 XL-density devices */
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp; /* #define STM32F10X_CL
+*/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*!&lt; STM32F10X_CL:
+STM32 Connectivity line devices */
+</span></small><br style="font-family: sans-serif;">
+<small><span style="font-family: sans-serif;">#endif
+</span></small><br style="font-family: sans-serif;">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">/*&nbsp; Tip: To avoid modifying this
+file each time you need to switch between these
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+devices, you can define the device in your toolchain compiler
+preprocessor.
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp;</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp;- Low-density devices are
+STM32F101xx, STM32F102xx and STM32F103xx microcontrollers </span></small><small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">where
+the Flash memory density ranges between 16 and 32 Kbytes.
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp;- Low-density value line
+devices are STM32F100xx microcontrollers where the Flash </span></small><small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">memory
+density ranges between 16 and 32 Kbytes.
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp;- Medium-density devices are
+STM32F101xx, STM32F102xx and STM32F103xx microcontrollers </span></small><small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">where
+the Flash memory density ranges between 64 and 128 Kbytes.
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp;- Medium-density value line
+devices are STM32F100xx microcontrollers where the </span></small><small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">Flash
+memory density ranges between 64 and 128 Kbytes.&nbsp;&nbsp;&nbsp;
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp;- High-density devices are
+STM32F101xx and STM32F103xx microcontrollers where</span></small><small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">
+the Flash memory density ranges between 256 and 512 Kbytes.
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp;- High-density value line
+devices are STM32F100xx microcontrollers where the </span></small><small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">Flash
+memory density ranges between 256 and 512 Kbytes.&nbsp;&nbsp;&nbsp;
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp;- XL-density devices are
+STM32F101xx and STM32F103xx microcontrollers where</span></small><small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">
+the Flash memory density ranges between 512 and 1024 Kbytes.
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp;- Connectivity line devices are
+STM32F105xx and STM32F107xx microcontrollers.
+</span></small><br style="font-family: sans-serif; color: rgb(0, 153, 0);">
+<small style="color: rgb(0, 153, 0);"><span style="font-family: sans-serif;">&nbsp; */</span></small><br>
+</div>
+<br>
+<div style="text-align: center;"><img style="width: 1171px; height: 603px;" alt="" src="STM32F10X.png"><br>
+
+</div>
+<div style="text-align: center;"><span style="font-family: sans-serif;">Click
+<a href="Things%20to%20remember%20when%20developing%20a%20program%20for%20STM32%20using%20STM32-Library.html#Explanations"><span style="font-weight: bold;">here</span></a>
+to back to Explanations</span></div>
+<div style="text-align: center;"><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;"></span><span style="font-family: sans-serif;"><br></span><span style="font-family: sans-serif;"></span><span style="font-family: sans-serif; font-weight: bold;"></span></div>
+<span style="font-family: sans-serif; font-weight: bold;"><br>
+</span>
+<hr style="width: 100%; height: 2px;"><br>
+
+<span style="font-family: sans-serif; font-weight: bold;"><br>
+<big><a name="In_practice"></a><br>
+<big style="font-style: italic; color: rgb(204, 0, 0);">In practice</big></big></span><br>
+<span style="font-family: sans-serif;">
+<br>
+</span>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"><span style="font-family: sans-serif; font-weight: bold;">Software
+explanation:</span></span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">
+</span></div>
+
+<div style="margin-left: 80px;"><span style="font-family: sans-serif;"><br>
+Configure <span style="font-weight: bold;">SYSCLK</span> (System clock) to 24Mhz (HSE)</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">Send to the <span style="font-weight: bold;">MCO</span> (PA8) the SYSCLK</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">Configure <span style="font-weight: bold;">LD3</span> &amp; <span style="font-weight: bold;">LD4</span> (Led)</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;"><span style="font-weight: bold;">LD4</span> flashes according with ADC
+measure</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;"><span style="font-weight: bold;">ADC</span> (used on the ADC1_IN10 pin PC0)
+used in <span style="font-weight: bold;">DMA</span> mode that determines the speed of LD4 flashing</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;"><span style="font-weight: bold;">Push Button-BLUE</span> (B1 USER) if is
+press the LD3 go ON</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;"><span style="font-weight: bold;">USART1</span> is configure to send the
+status of Push Button-BLUE (B1 USER - see the variable: <span style="font-weight: bold;">RxChar</span>)</span><br style="font-family: sans-serif;">
+<div style="margin-left: 40px; font-family: sans-serif;">The USART1
+SetUp is:<br>
+<div style="margin-left: 40px;">USART1 used in UART1 mode<br>
+BaudRate 9600<br>
+WordLength 8bit<br>
+StopBits 1<br>
+Parity NO<br>
+FlowControl None<br>
+</div>
+</div>
+<span style="font-family: sans-serif;"><span style="font-weight: bold;">SPI1</span> (used on PA5 (CLK), PA6
+(MISO), PA7 (MOSI)</span><span style="font-family: sans-serif; font-weight: bold;"></span>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;">SPI
+is configure to send the status of Push Button-BLUE (B1 USER - see the
+variable: <span style="font-weight: bold;">SPI1val</span>)</span><br>
+</div>
+<span style="font-family: sans-serif;"></span></div>
+
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"></span><span style="font-family: sans-serif;"></span><br>
+<span style="font-family: sans-serif;">
+</span><span style="font-family: sans-serif;"><span style="font-weight: bold;">In this program we do the test of: </span></span><br>
+<span style="font-family: sans-serif;">
+</span></div>
+
+<div style="margin-left: 80px;"><span style="font-family: sans-serif; font-weight: bold;"><br>
+</span><span style="font-family: sans-serif;">I/O </span><br>
+<span style="font-family: sans-serif;">ADC via </span><span style="font-family: sans-serif;">DMA </span><br>
+<span style="font-family: sans-serif;">USART1</span><br>
+<span style="font-family: sans-serif;">SPI1 </span><br>
+<span style="font-family: sans-serif;">MCO pin</span><br>
+<span style="font-family: sans-serif;"></span></div>
+
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"></span><span style="font-family: sans-serif;"></span><br>
+<span style="font-family: sans-serif; font-weight: bold;">How to use this program:</span><br style="font-family: sans-serif;">
+<div style="margin-left: 40px;"><br>
+<big style="font-weight: bold;"><span style="font-family: sans-serif; color: rgb(153, 0, 0);">Using the KEIL IDE</span></big><br style="font-family: sans-serif;">
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"><br>
+We suppose that you use this program under debug.</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">When the program running you see the LD4 (blue) that flashing. The frequence depend of the value of the trimmer.</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">If you press B1 the LD3 go ON (green).</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">If you stop the code execution you must see the values below that means: B1</span><span style="font-family: sans-serif;"> is PRESSED</span><span style="font-family: sans-serif;">.</span><br>
+</div>
+
+
+
+
+<br>
+<div style="text-align: center;"><img style="width: 636px; height: 170px;" alt="" src="Watch1.png"><br>
+</div>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;">If you release B1 and stop the code execution you must see the values below that means: </span><span style="font-family: sans-serif;">NO press on </span><span style="font-family: sans-serif;">B1.</span><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;">
+<br>
+</span>
+<div style="text-align: center;"><span style="font-family: sans-serif;"><img style="width: 638px; height: 155px;" alt="" src="watch0.png"></span><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;"><br>
+</span><big style="font-weight: bold;"><span style="font-family: sans-serif; color: rgb(153, 0, 0);">Using the ATOLLIC TrueSTUDIO Lite v2.1.0</span></big><br style="font-family: sans-serif;">
+
+<div style="margin-left: 40px;"><span style="font-family: sans-serif;"><br>
+In debug for show the variables:<br>
+RxChar, SPI1val and ADCConvertedValue<br>
+you must enter in the <span style="font-weight: bold;">Variables</span> windows and then press the <span style="font-weight: bold;">right mouse botton</span>.<br>
+From the menu that appear select <span style="font-weight: bold;">Add Global Variables</span>.. and select the variables mentioned above.<br>
+See below.<br>
+</span>
+<div style="text-align: center;"><span style="font-family: sans-serif;"><img style="width: 679px; height: 381px;" alt="" src="ato1.png"></span><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;"><br>
+We suppose that you use this program under debug.</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">When the program running you see the LD4 (blue) that flashing. The frequence depend of the value of the trimmer.</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">If you press B1 the LD3 go ON (green).</span><br style="font-family: sans-serif;">
+<span style="font-family: sans-serif;">If you stop the code execution you must see the values below that means: B1</span><span style="font-family: sans-serif;"> is PRESSED</span><span style="font-family: sans-serif;">.<br>
+<br>
+</span>
+<div style="text-align: center;"><span style="font-family: sans-serif;"><img style="width: 641px; height: 171px;" alt="" src="ato2.png"></span><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;"><br>
+</span><span style="font-family: sans-serif;">If you release B1 and stop the code execution you must see the values below that means: </span><span style="font-family: sans-serif;">NO press on </span><span style="font-family: sans-serif;">B1.<br>
+<br>
+</span>
+<div style="text-align: center;"><span style="font-family: sans-serif;"><img style="width: 636px; height: 162px;" alt="" src="ato3.png"></span><br>
+<span style="font-family: sans-serif;"></span></div>
+</div>
+<br>
+<span style="font-family: sans-serif;">
+<span style="font-weight: bold;">RxChar</span>: monitor the UART1<br>
+<span style="font-weight: bold;">SPI1val</span>: monitor the SPI1<br>
+<span style="font-weight: bold;">ADCConvertedValue</span>: monitor the value of volt from the trimmer<br>
+<br>
+</span></div>
+<br>
+<div style="text-align: center;"><a style="font-style: italic;" href="Things%20to%20remember%20when%20developing%20a%20program%20for%20STM32%20using%20STM32-Library.html#INDEX"><span style="font-family: sans-serif;">Click here to go
+to INDEX</span></a><br>
+<br>
+</div>
+<span style="font-family: sans-serif; font-weight: bold;"><big><big style="font-style: italic; color: rgb(204, 0, 0);"><br>
+</big></big></span>
+<hr style="width: 100%; height: 2px;"><br>
+<br>
+<span style="font-family: sans-serif; font-weight: bold;"><big><big style="font-style: italic; color: rgb(204, 0, 0);"><a name="Software_ready_to_use_for_KEIL"></a><br>
+Software ready to use for KEIL</big></big></span><br>
+<span style="font-family: sans-serif;">
+</span><span style="font-family: sans-serif; font-weight: bold;"><br>
+If you
+want receive this program </span><span style="font-family: sans-serif; font-weight: bold;">ready to use </span><span style="font-family: sans-serif; font-weight: bold;">for KEIL </span><span style="font-family: sans-serif;">(</span><big><span style="font-family: sans-serif;"><small style="font-weight: bold;"><span style="color: rgb(204, 0, 0);">STM32-Discovery-Test-forKEIL</span></small></span></big><span style="font-family: sans-serif;"><small style="font-weight: bold;"><span style="color: rgb(204, 0, 0);"></span></small></span><span style="font-family: sans-serif;">) </span><span style="font-family: sans-serif; font-weight: bold;">please click <a target="_blank" href="../STM32-SW.html">here</a>.</span><br><span style="font-family: sans-serif;">After you have unzipped the STM32-Discovery-Test you must go in the MDK-ARM directory and double click on <span style="font-weight: bold;">Project.uvproj</span> for run the KEIL IDE, see below.</span><br>
+&nbsp;<br>
+<div style="text-align: center;"><img style="width: 932px; height: 371px;" alt="" src="HowToRun.png"><br>
+<br>
+<a style="font-style: italic;" href="Things%20to%20remember%20when%20developing%20a%20program%20for%20STM32%20using%20STM32-Library.html#INDEX"><span style="font-family: sans-serif;">Click here to go
+to INDEX</span></a><br>
+
+</div>
+</div>
+
+
+
+<span style="font-family: sans-serif; font-weight: bold;"></span><br>
+<div style="margin-left: 40px;"><span style="font-family: sans-serif; font-weight: bold;"><br>
+</span>
+<hr style="width: 100%; height: 2px;"><span style="font-family: sans-serif; font-weight: bold;"><br>
+<br>
+</span><span style="font-family: sans-serif; font-weight: bold;"><big><big style="font-style: italic; color: rgb(204, 0, 0);"><a name="Software_ready_to_use_for_ATOLLIC"></a><br>
+Software ready to use for ATOLLIC<br>
+<br>
+</big></big></span><span style="font-family: sans-serif; font-weight: bold;">If you
+want receive this program ready to use for ATOLLIC TrueSTUDIO Lite v.2.1.9 </span><span style="font-family: sans-serif;">(</span><big><span style="font-family: sans-serif;"><small style="font-weight: bold;"><span style="color: rgb(204, 0, 0);">STM32-Discovery-Test-forAtollic</span></small></span></big><span style="font-family: sans-serif;">) </span><span style="font-family: sans-serif; font-weight: bold;">please click <a target="_blank" href="../STM32-SW.html">here</a>.</span><br>
+<span style="font-family: sans-serif;">After you have unzipped the STM32-Discovery-Test-forAtollic you must do:<br>
+Run ATOLLIC TrueSTDUDIO Lite v.2.1.0 and select the <span style="font-weight: bold;">TrueStudio</span> directory</span><span style="font-family: sans-serif;">.<br>
+In my case is:<br>
+C:\ESEMPI-SW\STM32-Examples\Lib340_IO-ADC-UART-SPI_STM32FDiscov-ATOLv210\Project\STM32F10x_StdPeriph_Template\<span style="font-weight: bold;">TrueSTUDIO</span><br>
+see below.<br>
+</span>
+<div style="text-align: center;"><span style="font-family: sans-serif;"><img style="width: 592px; height: 240px;" alt="" src="ato4.png"></span><br>
+<img style="width: 770px; height: 483px;" alt="" src="ato5.png"><br>
+<span style="font-family: sans-serif;"></span></div>
+<span style="font-family: sans-serif;"><br>
+<br>
+</span></div>
+<span style="font-family: sans-serif; font-weight: bold;"><br>
+</span>
+<div style="text-align: center;"><a style="font-style: italic;" href="Things%20to%20remember%20when%20developing%20a%20program%20for%20STM32%20using%20STM32-Library.html#INDEX"><span style="font-family: sans-serif;">Click here to go
+to INDEX</span></a>
+</div>
+<span style="font-family: sans-serif; font-weight: bold;"></span></div>
+<span style="font-family: sans-serif; font-weight: bold;"></span></div>
+</div>
+<br>
+<hr style="width: 100%; height: 2px; margin-right: auto;">
+<div style="text-align: left; margin-left: 40px;"><br>
+</div>
+</div>
+
+</body></html>

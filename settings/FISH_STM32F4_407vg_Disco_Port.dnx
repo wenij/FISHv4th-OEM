@@ -12,30 +12,29 @@
         <ByteLimit>50</ByteLimit>
     </Stack>
     <StLinkDriver>
-        <stlinkserialNo>21201687</stlinkserialNo>
-        <stlinkfoundProbes />
-        <stlinkResetStyle>0</stlinkResetStyle>
-        <stlinkResetStrategy>1</stlinkResetStrategy>
         <CStepIntDis>_ 0</CStepIntDis>
-        <LeaveTargetRunning>_ 1</LeaveTargetRunning>
+        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </StLinkDriver>
     <DebugChecksum>
-        <Checksum>2133049918</Checksum>
+        <Checksum>1223938093</Checksum>
     </DebugChecksum>
-    <Exceptions>
-        <StopOnUncaught>_ 0</StopOnUncaught>
-        <StopOnThrow>_ 0</StopOnThrow>
-    </Exceptions>
     <CodeCoverage>
         <Enabled>_ 0</Enabled>
     </CodeCoverage>
     <Disassembly>
-        <MixedMode>1</MixedMode>
         <InstrCount>0</InstrCount>
     </Disassembly>
+    <Exceptions>
+        <StopOnUncaught>_ 0</StopOnUncaught>
+        <StopOnThrow>_ 0</StopOnThrow>
+    </Exceptions>
     <CallStack>
         <ShowArgs>0</ShowArgs>
     </CallStack>
+    <JLinkDriver>
+        <CStepIntDis>_ 0</CStepIntDis>
+        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
+    </JLinkDriver>
     <SWOTraceHWSettings>
         <OverrideDefaultClocks>0</OverrideDefaultClocks>
         <CpuClock>72000000</CpuClock>
@@ -54,25 +53,6 @@
         <ITMportsLogFile>0</ITMportsLogFile>
         <ITMlogFile>$PROJ_DIR$\ITM.log</ITMlogFile>
     </SWOTraceHWSettings>
-    <JLinkDriver>
-        <CStepIntDis>_ 0</CStepIntDis>
-        <LeaveTargetRunning>_ 1</LeaveTargetRunning>
-    </JLinkDriver>
-    <Interrupts>
-        <Enabled>1</Enabled>
-    </Interrupts>
-    <MemConfig>
-        <Base>1</Base>
-        <Manual>0</Manual>
-        <Ddf>1</Ddf>
-        <TypeViol>0</TypeViol>
-        <Stop>1</Stop>
-    </MemConfig>
-    <Simulator>
-        <Freq>10000000</Freq>
-        <FreqHi>0</FreqHi>
-        <MultiCoreRunAll>1</MultiCoreRunAll>
-    </Simulator>
     <Trace1>
         <Enabled>0</Enabled>
         <ShowSource>1</ShowSource>
@@ -138,17 +118,12 @@
         <LogFile>_ ""</LogFile>
     </TermIOLog>
     <Aliases>
-        <A0>_ "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_IAR.s" ""</A0>
-        <A1>_ "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_SOC_INIT.s" "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th-OEM\FISH_STM32F4_SOC_INIT.s"</A1>
-        <A2>_ "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\core_cm4.h" ""</A2>
-        <A3>_ "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\main.c" ""</A3>
-        <A4>_ "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\startup_stm32f4xx.s" ""</A4>
-        <Count>5</Count>
+        <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>
     </Aliases>
     <DriverProfiling>
         <Enabled>0</Enabled>
-        <Mode>3</Mode>
+        <Mode>1</Mode>
         <Graph>0</Graph>
         <Symbiont>0</Symbiont>
         <Exclusions />
