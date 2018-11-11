@@ -2,7 +2,7 @@
 // Clock defines are in the asm preproccesor
 
 // Configuration:
-#define FISH_Debug_WORDSET    // Affecs Prompt only
+//#define FISH_Debug_WORDSET    // Affecs Prompt only
 
 // this define must keep RESET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //#define USE_CMAIN     // Affects cstartup_M.c FM0_COLD and RET2c
@@ -19,7 +19,7 @@
 //#define TOSCT         // TOS Cache Testing QUERY BACKSPACING OVER INPUT!!!
 //#define SLOW_POWERUP  // For slow power supply
 //#define CLKOUT        // PIO0_1 is CLKOUT
-#define TESTRAM       // run flogram at start-up
+//#define TESTRAM       // run flogram at start-up
 //#define DEBUG_FLASH   // 
 
 //#define IOBUFS_DEBUG

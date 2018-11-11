@@ -72,8 +72,8 @@ msg_FISH:
 #ifdef STM32F205RC_XRC10_118MHZ
         DC8     'STM32F205RC PSTAT or STP RPM Board @118Mhz '
 #endif
-#ifdef FISH_PRO_WORDCAT
-	DC8     'Pro '
+#ifdef FISH_GPIO_WORDCAT
+	DC8     'GPIO '
 #endif
         DC8     '(C)2014-2018 A-TEAM FORTH : '
         DC8     __DATE__        // Null string
@@ -86,7 +86,7 @@ msg_SIGNON_DLE:
 #endif
 msg_MY_OK:
         DC8     " ok, go fish in BASE "
-//-----------------START OF DICTIONARY = Last word in search--------------------
+//---START OF DICTIONARY = Last word in search--------------------
 //
 //	NOOP NOOP:	( -- )
  SECTION .text : CONST (2)
@@ -129,22 +129,23 @@ EXEC_ACTION:
 // TXRDY_SUBR:
  SECTION .text : CODE (2)
 TXRDY_SUBR:
-        MOV     w, lr           // Allow for interrupts to use LR
-        LDR     y, = USART3_SR  // Line Status Register
+        MOV     w_r2, lr						// Allow for interrupts to use LR
+        LDR     y_r4, = USART3_SR		// Line Status Register
 txRDY?:
-        LDR     n, [y]          // Get Line Status
+        LDR     n_r1, [y]						// Get Line Status
+
 // THIS IS TXE TEST AND FAILS IN TEXT DOWNLOAD
 //        LSRS    n, n, #7      // 80h Bit 7 TXE: Transmit data register empty
 // THIS IS ___ AND WORKS IN TEXT DOWNLOAD
-        LSRS    n, n, #8        // 100h Bit 8 ORIG
+        LSRS    n_r1, n_r1, #8	// 100h Bit 8 ORIG
         BCC     txRDY?          // Ready
-        BX      w               // lr  - SUBR RETURN
+        BX      w_r2						// lr  - SUBR RETURN
 
 // XOFF_SUBR:
 #ifdef XON_XOFF
  SECTION .text : CODE (2)
 XOFF_SUBR:
-        MOV     w, lr           // Allow for interrupts to use LR
+	MOV	w, lr           // Allow for interrupts to use LR
 	LDR	n,= USART3_DR
 	LDR	y,  = XOFF_CHAR
 	STRB	y, [n]
@@ -1373,7 +1374,7 @@ BYE:
 
 
 //	ABORT ABORT:	( -- )
-//	Clear the stacks, zero out and execute RUN or QUIT
+//	Clear the stacks, zero's out, and execute RUN or QUIT
 //	DOES NOT RESET DICTIONAIRY. SEE COLD.
 // When QUIT is run you have to type a CR to see PROMPT_SV
 
@@ -1387,14 +1388,15 @@ ABORT_NFA:
 ABORT:
 	DC32	DOCOL
 	DC32	SPSTO
-	DC32    RPSTO
+	DC32	RPSTO
 #ifdef IO2TP
 //ABORT_BP1:
 // DC32 NOOP    // TEMP TEST IO2TP
 	DC32	CLRTIB  // Resets IN
 	DC32	CLRPAD  // Resets OUT
 #endif
-        DC32    zero_OUT
+	DC32	zero_OUT
+// 2018nOV08 FIND
 //	DC32	QSTACK	// IF STACK error abort using QERROR->ERROR
 
 // LOOK UP RUN AND EXEC IT
@@ -1456,6 +1458,7 @@ COLD_NFA:
 COLD:
 	DC32	DOCOL
 	DC32	WARM		// RAMVARSPACE Init
+        DC32    CLS
 	DC32	SIGNON
 #ifdef ABORT_STOP_TILL_CO
         DC32    QUIT
@@ -5759,7 +5762,7 @@ _trap:	b	.
 
 // $PROJ_DIR$\..\FISH_RM_COMMON
 // $PROJ_DIR$\..\FISH_RM_CORTEX_M_COMMON_CODE
-// In Assembler preprocessor set additional include directories 
+// In Assembler preprocessor set additional include directories
 $FISH_RM_MSGS.h
 // equals below
 //#include ".\..\FISH_COMMON_CODE\FISH_RM_MSGS.h"
