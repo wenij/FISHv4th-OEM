@@ -7,7 +7,7 @@
 //	Beauty is you can put any ISA in a macro and no prob till referenced!
 NEXT	MACRO	
 // ARMv7-M Thumb = .+5
-	ldr	w, [i], #4      ; get IP->cfa to w, incr i after
+	ldr	w_r2, [i_r5], #4      ; get IP->cfa to w, incr i after
 // ARMv6-M Thumb = .+4
 //        LDM	i!, {w}	// get IP->cfa to w, incr i after
 	NEXT1
@@ -15,8 +15,8 @@ NEXT	MACRO
 #ifndef ss
 // ARMv7-M Thumb = .+5
 NEXT1	MACRO	
-	BIC	w, w, #3        ; Tested WORKS ALSO Thumb2 klooge: clear the 2 LSbits
-	LDR	x, [w], #4	; contents of cfa -> x, bump w to cfa+4
+	BIC	w_r2, w_r2, #3        ; Tested WORKS ALSO Thumb2 klooge: clear the 2 LSbits
+	LDR	x_r3, [w_r2], #4	; contents of cfa -> x, bump w to cfa+4
 	BX	x		; w preserves cfa+4 for DOCOL's benefit
 // ARMv6-M Thumb = .+4
 //	LDM	w!, {x}		// contents of cfa, (pfa), -> x, bump w to cfa+4
@@ -26,21 +26,21 @@ NEXT1	MACRO
 // ELSE
 #else
 NEXT1	MACRO	
-	LDR	x, =ssNEXT1	// meta-single-step for debugging
-	BX	x
+	LDR	x_r3, =ssNEXT1	// meta-single-step for debugging
+	BX	x_r3
 	ENDM
 // LTORG
 #endif
 // ENDIF
 
-TPUSH	MACRO	
-	PUSHt	// push t to p, pre decrement p
+TPUSH_r0        MACRO	
+	PUSHt_r0	// push t to p, pre decrement p
 	NEXT
 	ENDM
 
 DPUSH	MACRO	
 	PUSHw	// push w to p, post decrement p
-	TPUSH
+	TPUSH_r0
 	ENDM
 
 //------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ DPUSH	MACRO
 //	Meaning that TOS is = to current p or r
 //	Therefore PUSH is pre decrement
 
-PUSHt	MACRO
+PUSHt_r0        MACRO
 	STR	t, [p, #-4]!    // Pre-increment
 //      SUBS	p, p, #4	// push t to p, pre decrement p
 //	STR	t, [p]

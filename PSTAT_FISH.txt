@@ -34,7 +34,9 @@ CR
 040020024h	CONSTANT	GPIOA_AFRH	
 
 : WDR ( n=8bits -- ) \ write to spi1 odr 7 layer fifo
-NOOP ( not without a chip select ~ ) ;
+NOOP ( not without a chip select ~ ) 
+\ use to see phantom loopback
+	SPI1-DR C! ;
 
 : RDR ( n=8bits -- ) \ read spi1 odr 7 layer fifo
 	SPI1-DR C@ ;
@@ -84,22 +86,6 @@ SPI1-CR1 @ 037Dh = IF ." IN BIDIRECTIONAL  MODE " THEN
 	R>
 \			CR .SH
 	!
-;
-
-\ PSTAT SPI1 CHIP SELECT WORDS.
-: .ADC-CS ( -- )	\ PB12
-	CR GPIOC-ODR @ 1000h AND ." ADC-CS IS " IF ." ON" ELSE ." OFF" THEN CR  ;
-
-: .BT-CS ( -- )		\ PB14
-	CR GPIOC-ODR @ 4000h AND ." BT-CS IS " IF ." ON" ELSE ." OFF" THEN CR ;
-
-: .DAC-CS ( -- )	\ PB13
-	CR GPIOC-ODR @ 2000h AND ." DAC-CS IS " IF ." ON" ELSE ." OFF" THEN CR;
-
-: .CS	( -- )
-	CR	.ADC-CS
-	CR	.BT-CS
-	CR	.DAC-CS
 ;
 
 \ PSTAT SWITCH WORDS, ON THE DAC
@@ -152,8 +138,28 @@ RXNE: Receive buffer not empty
 
 : ?MODF ;
 
+\ .BT-CS	PB14	IS LEDGREEN
+\ .DAC-CS	PB13	IS LEDRED
+\ .ADC-CS	PB12	IS LEDBLUE
+\ PSTAT SPI1 CHIP SELECT WORDS.
+: .ADC-CS ( -- )	\ PB12
+	GPIOC-ODR @ 1000h AND ." ADC-CS IS "	IF ." ON" ELSE ." OFF" THEN  CR ;
+
+: .BT-CS ( -- )		\ PB14
+	GPIOC-ODR @ 4000h AND ." BT-CS IS "	IF ." ON" ELSE ." OFF" THEN CR ;
+
+: .DAC-CS ( -- )	\ PB13
+	GPIOC-ODR @ 2000h AND ." DAC-CS IS " IF ." ON" ELSE ." OFF" THEN CR ;
+
+: .CS	( -- )
+	CR	.ADC-CS
+	CR	.BT-CS
+	CR	.DAC-CS
+;
+
 \ TWO THINGS DONE - C! AND ...
 : DW ( N3 n2 n1=MSB -- )
+\ this may have to read back false values, because the spi engine always reads back something.
  	13d GPIOB-ODR CLRBIT \ DAC PB13 CS (LEDRED) low=ON
 	~TXE	( N2 )	3Fh AND SPI1-DR C!
 	~TXE	( n2 )  SPI1-DR C!
@@ -247,12 +253,6 @@ READ-SPI1-DR CR
 : READ-SPI1-SR SPI1-SR @ DUP .B ;
 READ-SPI1-SR CR
 
-\ THESE ARE NOT NEEDED AS: (VERIFIED)
-
-\ .BT-CS	PB14	IS LEDGREEN
-\ .DAC-CS	PB13	IS LEDRED
-\ .ADC-CS	PB12	IS LEDBLUE
-
 : .SW1 ." SW1 (PC6) IS " 9 GPIOC-ODR SEEBIT@	;
 
 : .SW2 ." SW2 (PC7) IS " 8 GPIOC-ODR SEEBIT@	;
@@ -263,8 +263,7 @@ READ-SPI1-SR CR
 
 : .SW CR .SW1 CR .SW2 CR .SW3 CR .SW4 CR ;
 
-\ RUN
-\ DURING RUN TALKING TO DAC THE RXNE IS SET? DAC DOESN'T TALK BACK.
+\ DURING dac writes THE RXNE IS SET? DAC DOESN'T TALK BACK.
 
 \ BUT lsb ORDER IS disordered is WHAT SCOPE SEEs~!
 \ Yet register LSBFIRST bit is zero~!
@@ -280,7 +279,11 @@ typedef enum gpio_af {
 (
 \ --------------------------------PORTB-----------------------------------------
 \ Intialize PORTB_MODER pins this way.
-\ Value at end is this init..........
+\ GPIO PORT B Reset value: 0x0000 0280 = JTAG, WHICH WE DISABLE FOR SPI AND USE SWD
+\ MODER is a 2 bit init for each of the 16 ports in a bank.
+\ Enable PB12-15, and PB0-1 as Outputs for SPI BT, ADC and DAC BT CS AND RST
+\ PROGRAM SPI1 AF ON PB3, PB4 AND PB5, TAKING OVER THE JTAG PINS
+\ PORTB - Do std GPIO and level set init. Then do alternate function config.
 PB15  BT-RST	        is active high.	0x1
 PB14  BT-CSn	        is active low. 	0x1
 PB13  DAC-CSn        	is active low. 	0x1
@@ -303,12 +306,10 @@ PB0   ADC-RSTn		is active high.	 0x1
 \ --------------------------------PORTC-----------------------------------------
 \ GPIO PORT C Reset value: 0x0000 0000
 \ MODER is a 2 bit init for each of the 16 ports in a bank.
-\ Enable PB0-1, and PB12-15 as Outputs for SPI BT, ADC and DAC BT RST
-\ PROGRAM SPI1 AF ON PB3, PB4 AND PB5
+\ Enable PC5 as input, and PC0-2-15 as Outputs for the ADC GAIN SWITCHES.
 \ USART3 inited on PORT C, in the first section, after system clocks setup.
 \ PORTC - Do std GPIO and level set init. Then do alternate function config.
 \ Intialize PORTC pins this way.
-\ Value at end is this init
 PC15
 PC14
 PC13
@@ -348,14 +349,16 @@ EHOFF
 
 FFh 7Fh A0h DAC-LB
 
-\ SANITY CHECK WORDS
+\ SANITY SHOWS A LOCKED UP MISO.
 .CS
 
 FFh 7Fh A1h SPI1-ONLY-LB
 
 \ SANITY CHECK WORDS
 .CS
-
+\ EHON WORKING ONCE? DOES IT NEEDS A FIXIN?
+\ WDR RDR ARE ATOMIC WORDS FOR THE LOOPBACK ISSUE.
 PON
 
+3Dh WDR
 
