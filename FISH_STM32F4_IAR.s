@@ -409,7 +409,7 @@ ALIGNED:
 	ADDS    t, t, #3
 	LDR	n, =-4
 	ANDS	t, t, n
-	TPUSH
+	TPUSH_r0
  LTORG
 
 
@@ -576,7 +576,7 @@ LFA:
  SECTION .text : CODE (2)
 	POP2t
 	SUBS     t, t, #8
-	TPUSH
+	TPUSH_r0
 
 
 //	CFA CFA:	( pfa -- cfa )
@@ -595,7 +595,7 @@ CFA:
  SECTION .text : CODE (2)
 	POP2t
 	SUBS     t, t, #4
-	TPUSH
+	TPUSH_r0
 
 
 //	NFA NFA:	( pfa -- nfa )
@@ -748,7 +748,7 @@ DIGI1:
 	// Number error
 DIGI2:
 	MOVS   t, #0		// FALSE FLAG
-	TPUSH
+	TPUSH_r0
 
 
 //	ENCLOSE ENCL:	( addr1 c -- addr1 n1 n2 n3 )
@@ -1285,7 +1285,7 @@ NSLEN_LOOP:
 	B		NSLEN_LOOP
 
 NSLEN_DONE:
-	TPUSH
+	TPUSH_r0
 
 
 //	FORGET FORGET:	( -- )
@@ -1663,7 +1663,7 @@ I:
 	DC32	.+5
  SECTION .text : CODE (2)
 	LDR     t, [r]	// GET INDEX VALUE
-	TPUSH
+	TPUSH_r0
 
 
 //	SP@ SPAT:	( -- addr )
@@ -1683,7 +1683,7 @@ SPAT:
 	DC32	.+5
  SECTION .text : CODE (2)
 	MOV	t, p
-	TPUSH
+	TPUSH_r0
 
 
 //	RP@ RPAT:	( -- addr )
@@ -1703,7 +1703,7 @@ RPAT:
 	DC32	.+5
  SECTION .text : CODE (2)
 	MOV	t, r
-	TPUSH
+	TPUSH_r0
 
 
 //	LEAVE LEAVE:	( -- )
@@ -1743,7 +1743,7 @@ RFROM:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POPr2t
-	TPUSH
+	TPUSH_r0
 
 
 //	R R:	( -- n )
@@ -1759,7 +1759,7 @@ R:
 	DC32	.+5
  SECTION .text : CODE (2)
 	LDR     t, [r]	// Get Index
-	TPUSH
+	TPUSH_r0
 
 //	>R TOR:	( n -- )
 //      Remove a number from the computation stack and place as the most
@@ -1805,7 +1805,7 @@ OVER:
 #else
 	POP2t		// n1
 #endif
-	PUSHt		// -- n1 )
+	PUSHt_r0		// -- n1 )
 	DPUSH		//  --  LSW MSW )
 
 
@@ -1877,7 +1877,7 @@ DUP:
 // OPT by picking pops
 	LDR     t, [p]  //t_r0 p_r7
 //#endif
-	TPUSH   //// push t to p, pre decrement p
+	TPUSH_r0        //// push t to p, pre decrement p
 
 //=============================== WORDCAT ====================================//
 //NOEXEC HEADERFORWORDCATEGORIES
@@ -2111,7 +2111,7 @@ AT:
 //#else AT:
 	POP2n
 	LDR     t, [n]
-	TPUSH
+	TPUSH_r0
 //#endif
 
 //	C@ CAT:	( addr -- b )
@@ -2130,7 +2130,7 @@ CAT:
  SECTION .text : CODE (2)
 	POP2n
 	LDRB    t, [n]
-	TPUSH
+	TPUSH_r0
 
 
 //	! STORE:	( n addr -- )
@@ -3298,7 +3298,7 @@ TWOSTAR:
  SECTION .text : CODE (2)
 	POP2t
 	LSLS	t, t, #1	//
-	TPUSH
+	TPUSH_r0
 
 
 //	2/ TWOSLASH:	( n -- n/1 ) ASR 1 (FLOORED)
@@ -3315,7 +3315,7 @@ TWOSLASH:
  SECTION .text : CODE (2)
 	POP2t
 	ASRS	t, t, #1	//
-	TPUSH
+	TPUSH_r0
 
 
 //	1- ONEM:	( n -- n-1 )
@@ -3332,7 +3332,7 @@ ONEM:
  SECTION .text : CODE (2)
 	POP2t
 	SUBS	t, t, #1	//
-	TPUSH
+	TPUSH_r0
 
 
 //	1+ ONEP:	( n -- n+1 )
@@ -3349,7 +3349,7 @@ ONEP:
  SECTION .text : CODE (2)
 	POP2t
 	ADDS	t, t, #1	//
-	TPUSH
+	TPUSH_r0
 
 
 //	2+ TWOP:	( n -- n+2 )
@@ -3366,7 +3366,7 @@ TWOP:
  SECTION .text : CODE (2)
 	POP2t
 	ADDS	t, t, #2
-	TPUSH
+	TPUSH_r0
 
 
 //	4+ FOURP:	( n -- n+4 )
@@ -3383,7 +3383,7 @@ FOURP:
  SECTION .text : CODE (2)
 	POP2t
 	ADDS	t, t, #4
-	TPUSH
+	TPUSH_r0
 
 
 //	4- FOURM:	( n -- n-4 )
@@ -3400,7 +3400,7 @@ FOURM:
  SECTION .text : CODE (2)
 	POP2t
 	SUBS	t, t, #4
-	TPUSH
+	TPUSH_r0
 
 
 //	0 ZERO: ( -- 0 )
@@ -3645,7 +3645,7 @@ PLUS:
 	POP2t
 	POP2n
 	ADDS	t, t, n
-	TPUSH
+	TPUSH_r0
 
 
 //	- SUBB:	( n1 n2 -- n3 )
@@ -3665,7 +3665,7 @@ SUBB:
 	POP2t
 	POP2n
 	SUBS	t, n, t
-	TPUSH
+	TPUSH_r0
 
 
 //	= EQUAL:	(n1 n2 -- f )
@@ -3688,7 +3688,7 @@ EQUAL:
         SUBS    t, t, n
         BEQ     EQUAL_TRUE
         EORS    t, t
-        TPUSH
+        TPUSH_r0
 
 EQUAL_TRUE:
 #ifdef TRUE_EQU_NEG_ONE
@@ -3696,7 +3696,7 @@ EQUAL_TRUE:
 #else
         ADDS    t, #1   // 1
 #endif
-        TPUSH
+        TPUSH_r0
 /*
 	DC32	DOCOL
 	DC32	SUBB
@@ -3731,7 +3731,7 @@ LESSTHAN:
 
 	EORS	t, t    // zero t =< n
 LESS1:
-	TPUSH
+	TPUSH_r0
 
 
 //	U< ULESSTHAN:	( n1 n2 -- f )	UNSIGNED:
@@ -3806,7 +3806,7 @@ ZEQU:
 #endif
 
 ZEQU_ZERO:
-	TPUSH
+	TPUSH_r0
 
 
 //	0< ZLESS:	( n -- f )
@@ -3840,7 +3840,7 @@ ZLESS:
 
 	EORS	t, t	// FALSE
 ZLESS1:
-	TPUSH
+	TPUSH_r0
 
 
 //	BIN BIN:	( -- )
@@ -3908,7 +3908,7 @@ NEGATE:
 	POP2t			// MVN YES
 	MVNS     t, t         	// 1's compliment
 	ADDS     t, t, #1       // 2's compliment
-	TPUSH
+	TPUSH_r0
 
 
 //	ABS ABS:	( n -- ub )
@@ -3988,7 +3988,7 @@ ANDD:
 	POP2t
 	POP2n
 	ANDS     t, t, n
-	TPUSH
+	TPUSH_r0
 
 
 //	OR OR:	( n1 n2 -- n3 )
@@ -4007,7 +4007,7 @@ OR:
 	POP2t
 	POP2n
 	ORRS     t, t, n
-	TPUSH
+	TPUSH_r0
 
 
 //	NOT NOT: ( nl -- n2 )
@@ -4025,7 +4025,7 @@ NOT:
  SECTION .text : CODE (2)
 	POP2t
 	MVNS		t, t	// 1's compliment
-	TPUSH
+	TPUSH_r0
 
 
 //	XORR XOR:	( nl n2 -- n3 )
@@ -4044,7 +4044,7 @@ XORR:
 	POP2t
 	POP2n
 	EORS     t, t, n
-	TPUSH
+	TPUSH_r0
 
 //	SXTH SXTH:	( nl -- n3 )
 //	Sign extend HALFWORD on the stack
@@ -4061,7 +4061,7 @@ SXH:
  SECTION .text : CODE (2)
 	POP2t
 	SXTH     t, t
-	TPUSH
+	TPUSH_r0
 
 
 //	SXTB SXTB:	( nl -- n3 )
@@ -4079,7 +4079,7 @@ SXB:
  SECTION .text : CODE (2)
 	POP2t
 	SXTB     t, t
-	TPUSH
+	TPUSH_r0
 
 
 //	REVW REVW:	( n -- n )
@@ -4097,7 +4097,7 @@ REVW:
  SECTION .text : CODE (2)
 	POP2t
 	REV     t, t
-	TPUSH
+	TPUSH_r0
 
 
 //	ASR ASR:   ( sn count -- sn' )
@@ -4117,7 +4117,7 @@ ASR:
         POP2w           ; shift count
         POP2t           ; original data
         ASRS    t, t, w
-        TPUSH           ; shifted data
+        TPUSH_r0        ; shifted data
 
 
 //	LSR LSR:   ( n count -- n' )
@@ -4137,7 +4137,7 @@ LSR:
         POP2w           ; shift count
         POP2t           ; original data
         LSRS    t, t, w
-        TPUSH           ; shifted data
+        TPUSH_r0        ; shifted data
 
 
 //	LSL LSL:   ( n count -- n' )
@@ -4157,7 +4157,7 @@ LSL:
         POP2w           ; shift count
         POP2t           ; original data
         LSLS    t, t, w
-        TPUSH           ; shifted data---
+        TPUSH_r0        ; shifted data---
 
 
 //	.R DOTR:	( sn1 n2 -- ) SIGNED:
@@ -4394,7 +4394,7 @@ UART3_LSR:
  SECTION .text : CODE (2)
 	LDR	n, = USART3_SR
 	LDRB	t, [n]
-	TPUSH
+	TPUSH_r0
  LTORG
 
 
@@ -4719,7 +4719,7 @@ rxRDY?:
         BCC     rxRDY?         // sets carry flag to fall thru
 
         LDR     t, [w]         // t_r0 w_r2 should be uart data register
-        TPUSH
+        TPUSH_r0
 #else
 	DC32	DOCOL, LIT, 0X0D, SEMIS		// cr executes NULL
 #endif	// IO2TP
@@ -4761,7 +4761,7 @@ QKEY:
 #endif
 #endif  // DEFAULT TO NO KEY IF IO2TP
 NO_KEY:
-        TPUSH
+        TPUSH_r0
  LTORG
 
 
@@ -5245,7 +5245,7 @@ SYSCLK:
  SECTION .text : CODE (2)
 	LDR	n, = SYSCLOCK	// SystemCoreClock
 	LDR	t, [n]
-	TPUSH	// Push -- t
+	TPUSH_r0        // Push -- t_r0
  LTORG	 //Always outside of code, else data in words
 
 

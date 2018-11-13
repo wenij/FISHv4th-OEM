@@ -126,7 +126,7 @@ TOFA:
 	LDR	w, = FPA
 	LDR	w, [w]          // Get Flash save start address
 	ADDS	t, t, w         // add offset
-	TPUSH
+	TPUSH_r0
  LTORG	 //Always outside of code, else data in words
 
 

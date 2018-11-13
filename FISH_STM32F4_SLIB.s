@@ -634,7 +634,7 @@ atk:	; ( x1 -- x1, x2 )
 //	DUP
 	ILK	t
 	ldr	t, [t]
-	TPUSH
+	TPUSH_r0
 
 //:NONAME ork:    ( x -- x' ) Get inline konstant to OR with TOS.
  SECTION .text : CONST (2)
@@ -646,7 +646,7 @@ ork:
 	ILK	w
 	POP2t
 	orrs	t,w
-	TPUSH
+	TPUSH_r0
 
 //:NONAME andk:   ( x -- x' ) Get inline konstant to AND with TOS.
  SECTION .text : CONST (2)
@@ -657,7 +657,7 @@ andk:
 	ILK	w
 	POP2t
 	ands	t,w
-	TPUSH
+	TPUSH_r0
 
 //:NONAME strk:   ( n -- ) Get inline konstant and store it to TOS addr.
  SECTION .text : CONST (2)
@@ -827,14 +827,14 @@ SEMIS:
  ALIGNROM 2,0xFFFFFFFF
 DOVAR:
 	LDM	w!, {t}
-	TPUSH
+	TPUSH_r0
 
 //:NONAME DOCON   ( -- ) COMPILED VERSION OF CON
  SECTION .text : CODE (2)
  ALIGNROM 2,0xFFFFFFFF
 DOCON:
 	LDM	w!, {t}
-	TPUSH
+	TPUSH_r0
 
 //:NONAME LIT:        ( -- n ) The primitive that pushes a number in a definition.
 //      Within a colon-definition, LIT is automatically compiled before each
@@ -849,7 +849,7 @@ LIT:
  SECTION .text : CODE (2)
 	LIT2t 	// LDM i!, {t}, means
 		// fetch memory i points to into {t}, inc i after
-	TPUSH
+	TPUSH_r0
 
 //:NONAME RLIT:	( -- n ) LIT primitive that can have it's value relocated.
 //	SEE LIT. ALLOWS RELOCATION OF THIS type OF LIT
@@ -860,7 +860,7 @@ RLIT:
  SECTION .text : CODE (2)
 	LIT2t 		// LDM		i!, {t}
 			// fetch memory i points to into {t}, inc i after
-	TPUSH
+	TPUSH_r0
 
 //:NONAME GOTO:   ( cfa -- ) Redirect execution to cfa in another hi-level word.
 //	CAUTION!!!!!!! A SYSTEM WORD EXPOSED FOR THE BOLD AND BRAVE!!!!!!!
@@ -895,7 +895,7 @@ CREATE_DOES_GOTO:
         LDR     i, [t, #4]      // GET GOTO ADDRESS
 // THIS PUSHES PFA TO t
         ADDS    t, t, #8        // COMPUTE REAL PFA
-        PUSHt
+        PUSHt_r0
 	NEXT
 
 //:NONAME DICTSPACE:  ( -- n ) Calculate and push dictionary space available
@@ -908,7 +908,7 @@ DICTSPACE:
 	LDR	n, = DP
 	LDR	n, [n]
 	SUBS	t, t, n
-	TPUSH
+	TPUSH_r0
 // LTORG
 
 //:NONAME VARSPACE:    ( -- n ) Calculate and push VAR space available
@@ -921,7 +921,7 @@ VARSPACE:
 	LDR	n, = UP	// UP IS ALLOCATION POINTER FOR VARS AND VARALLOT
 	LDR	n, [n]
 	SUBS	t, t, n
-	TPUSH
+	TPUSH_r0
  LTORG
 
 // Rewrite for TOSCT interop?
@@ -1027,7 +1027,7 @@ PFIND_NEXT_NFA:
 
 WORDNOTFOUND:             	// PFIND: DONE ( NO MATCH FOUND )
 	MOVS     t, #0
-	TPUSH
+	TPUSH_r0
  LTORG
 
 //:NONAME BRAN:	( -- ) Branch in definitions primitive
@@ -1155,7 +1155,7 @@ CATLT7F:
         LDRB    t, [t]
         LDR     n, =7Fh
         ANDS    t, t, n
-        TPUSH
+        TPUSH_r0
 
 //:NONAME TIB_CHAR_SCAN   ( c -- f ) Scan TIB for c or until null found.
 // Scan TIB, a null terminated string at TIB+IN for 'c' or null termination.
@@ -1187,7 +1187,7 @@ TCS_FOUND:
         MOV     y, ra           // TIB
         SUBS    w, w, y         // TIB+Char offset
         STRB    w, [x]          // Set IN
-        TPUSH                   // t is null or char
+        TPUSH_r0                // t is null or char
 
 //:NONAME TOGGLE:	( addr b -- ) Complement BYTE at addr by the bit pattern b.
 //      Byte operator for NFA count byte
@@ -1223,7 +1223,7 @@ IF_EOL_SEND_XOFF:
 SUB_CR_4_NL:
 	POP2t
 	LDR     t, = 0Dh        // ^M
-	PUSHt
+	PUSHt_r0
 	B       EOL_SEND_XOFF
 
 CR_CHECK:
