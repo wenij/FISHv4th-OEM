@@ -642,7 +642,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>FISH_STM32F407vg_Discovery_Board_168mhz_v1.8-OEM.hex</state>
+                    <state>FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.hex</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -685,7 +685,7 @@
                 <debug>1</debug>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>FISH_STM32F205RC_STM_118mhz_v1.8-OEM.out</state>
+                    <state>FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.out</state>
                 </option>
                 <option>
                     <name>IlinkLibIOConfig</name>
@@ -2684,7 +2684,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>FISH_STM32F205RC_STM_118mhz_v1.8-OEM.hex</state>
+                    <state>FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.hex</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -2727,7 +2727,7 @@
                 <debug>1</debug>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.7.out</state>
+                    <state>FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.out</state>
                 </option>
                 <option>
                     <name>IlinkLibIOConfig</name>

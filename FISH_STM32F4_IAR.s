@@ -101,7 +101,6 @@ NOOP:
  SECTION .text : CODE (2)
 	NEXT
 
-
 //	EXECUTE EXEC:	( cfa -- ) RENAMED: EXECUTE to EXEC
 //	Execute a single word whose cfa is on the stack
 
@@ -145,10 +144,10 @@ txRDY?:
 #ifdef XON_XOFF
  SECTION .text : CODE (2)
 XOFF_SUBR:
-	MOV	w, lr           // Allow for interrupts to use LR
-	LDR	n,= USART3_DR
-	LDR	y,  = XOFF_CHAR
-	STRB	y, [n]
+	MOV	w_r2, lr           // Allow for interrupts to use LR
+	LDR	n_r1,= USART3_DR
+	LDR	y_r4,  = XOFF_CHAR
+	STRB	y_r4, [n_r1]
         BX      w               // lr  - SUBR RETURN
 #endif // XON_XOFF
 
