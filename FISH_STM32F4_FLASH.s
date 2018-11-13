@@ -120,7 +120,7 @@ FPVAR:
 TOFA:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	LDR	w, = 0x0FFFFF   // 08100000 FLASH ADDR lIMIT
 	ANDS	t, t, w         // Strip RAM address
 	LDR	w, = FPA
@@ -435,8 +435,8 @@ FLASH_TCODE_COPY:
 	DC32 .+5
  SECTION .text : CODE (2)
  ALIGNROM 2,0xFFFFFFFF
-        POP2t   // LDR     t, =FLASH_TCODE_START
-        POP2n   // LDR     n, =FLASH_TCODE_END
+        POP2t_r0        // LDR     t, =FLASH_TCODE_START
+        POP2n           // LDR     n, =FLASH_TCODE_END
         LDR     w, =FLASH_CODE_SRAM2_START
 FLASH_COPY_LOOP:
         LDR     y, [t], #4

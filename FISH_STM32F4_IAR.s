@@ -148,17 +148,17 @@ XOFF_SUBR:
 	LDR	n_r1,= USART3_DR
 	LDR	y_r4,  = XOFF_CHAR
 	STRB	y_r4, [n_r1]
-        BX      w               // lr  - SUBR RETURN
+        BX      w_r2               // lr  - SUBR RETURN
 #endif // XON_XOFF
 
 // XON_SUBR:
 #ifdef XON_XOFF
  SECTION .text : CODE (2)
 XON_SUBR:
-        MOV     w, lr           // Allow for interrupts to use LR
-	LDR	n,= USART3_DR
-	LDR	y, = XON_CHAR   // preserve TOS 11 24 01 49
-	STRB	y, [n]
+        MOV     w_r2, lr           // Allow for interrupts to use LR
+	LDR	n_r1,= USART3_DR
+	LDR	y_r4, = XON_CHAR   // preserve TOS 11 24 01 49
+	STRB	y_r4, [n_r1]
         BX      w       //lr              // SUBR RETURN
 #endif // XON_XOFF
 #endif // IO2TP
@@ -182,7 +182,6 @@ BLANK:
 // _SV IS cfa label of WORD's that return their address.
 // MODIFIED ALL to be label based vs. offset based.
 
-
 //	UP UP_SV:	( -- addr of UP ) Value stored here is ALIGNED
 //	A system variable, the RAM VAR pointer, which contains
 //      the address of the next free memory above in the USERRAMSPACE.
@@ -197,7 +196,6 @@ UP_NFA:
 	DC32	BLANK_NFA
 UP_SV:
         DC32    DOCON, UP
-
 
 //	FENCE FENCE_SV:	( -- addr of FENCE )
 //	A system variable containing an address below which FORGET ting is
@@ -214,7 +212,6 @@ FENCE_NFA:
 FENCE_SV:
         DC32    DOCON, FENCE
 
-
 //	DP DP_SV:	( -- addr of DP ) Value stored here is ALIGNED
 //	A system variable, the dictionary pointer, which contains the address
 //	of the next free memory above the dictionary. The value may be read
@@ -230,7 +227,6 @@ DP_NFA:
 DP_SV:
         DC32    DOCON, DP
 
-
 //	BASE BASE_SV:	( -- addr of NBASE )
 //      A system variable containing the current number base used for input
 //      and output conversion.
@@ -244,7 +240,6 @@ BASE_NFA:
 	DC32	DP_NFA
 BASE_SV:
         DC32    DOCON, NBASE
-
 
 //	CURRENT CURRENT_SV:	( -- addr of CURRENT )
 //	CURRENT searched everytime. CONTEXT is not used
@@ -404,10 +399,10 @@ ALIGNED_NFA:
 ALIGNED:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
-	ADDS    t, t, #3
-	LDR	n, =-4
-	ANDS	t, t, n
+	POP2t_r0
+	ADDS    t_r0, t_r0, #3
+	LDR	n_r1, =-4
+	ANDS	t_r0, t_r0, n
 	TPUSH_r0
  LTORG
 
@@ -573,7 +568,7 @@ LFA_NFA:
 LFA:
 	DC32    .+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	SUBS     t, t, #8
 	TPUSH_r0
 
@@ -592,7 +587,7 @@ CFA_NFA:
 CFA:
 	DC32    .+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	SUBS     t, t, #4
 	TPUSH_r0
 
@@ -724,7 +719,7 @@ DIGIT:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2w         		// Number base
-	POP2t			// ASCII DIGIT
+	POP2t_r0		// ASCII DIGIT
 	SUBS   t, t, #'0'
 	BMI   DIGI2             // Number error
 
@@ -774,7 +769,7 @@ ENCL_NFA:
 ENCL:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t			// TERMINATOR CHAR
+	POP2t_r0		// TERMINATOR CHAR
 	LDR     n, [p]		// get text address but leave on stack
 	MOVS    w, #0
 	SUBS	w, w, #1        // CHAR  COUNTER
@@ -1642,7 +1637,7 @@ ROT:
 #ifdef TOSCT
         LDR     t, [p]    // get new TOS
 #endif
-	POP2t
+	POP2t_r0
 	PUSHn
 	DPUSH			//  --  LSW MSW )
 
@@ -1800,9 +1795,9 @@ OVER:
 #ifdef TOSCT
 // Get new t - This could become REFRESHt
 	LDR	t, [p]		// t invalid so get it
-        POP2t                   // do the increment
+        POP2t_r0                // do the increment
 #else
-	POP2t		// n1
+	POP2t_r0		// n1
 #endif
 	PUSHt_r0		// -- n1 )
 	DPUSH		//  --  LSW MSW )
@@ -1822,11 +1817,11 @@ DROP:
 	DC32	.+5
  SECTION .text : CODE (2)
 #ifdef TOSCT
-//        POP2t           // this one just adds 4 to p
+//        POP2t_r0              // this one just adds 4 to p
         ADDS	p, p, #4
-        LDR     t, [p]  // REFRESH t
+        LDR     t, [p]          // REFRESH t
 #else // DROP:
-//        POP2t		// Opt to just do p
+//        POP2t_r0              // Opt to just do p
         ADDS	p, p, #4
 
 #endif
@@ -1852,7 +1847,7 @@ SWAP:
         ADDS    p, p, #8
 #else // SWAP:
 	POP2w		// n2
-	POP2t		// n1
+	POP2t_r0	// n1
 #endif
 	DPUSH		//  --  LSW MSW )
 
@@ -2012,7 +2007,7 @@ FILL_NFA:
 FILL:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t			// Fill CHAR
+	POP2t_r0		// Fill CHAR
 	POP2n			// Fill COUNT
 	POP2w			// Beginning ADDR
 	CMP     n, #0
@@ -2082,7 +2077,7 @@ PSTORE:
 #ifdef TOSCT
         LDR     t, [p]          // REFRESH t
 #endif
-	POP2t			// INCREMENT
+	POP2t_r0		// INCREMENT
 	LDR     w, [n]
 	ADDS    t, t, w
 	STR     t, [n]
@@ -2144,7 +2139,7 @@ STORE_NFA:
 STORE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t		// ADDR t_r0
+	POP2t_r0	// ADDR t_r0
 	POP2n		// DATA n_r1
 	STR	n, [t]
 	NEXT
@@ -2163,7 +2158,7 @@ CSTORE_NFA:
 CSTORE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	POP2n
 	STRB    n, [t]
 	NEXT
@@ -3164,7 +3159,7 @@ DNEGATE_NFA:
 DNEGATE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t			// MSW   //POP	BX
+	POP2t_r0		// MSW   //POP	BX
 	POP2w			// LSW   //POP	CX
 	MVNS    t, t            // negate MSW
 	MVNS    w, w            // negate LSW
@@ -3250,10 +3245,10 @@ DPLUS_NFA:
 DPLUS:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t	//    ldr     t, [p],#4       // MS
-	POP2n	//    ldr     n, [p],#4       // LS
-	POP2x	//    ldr     x, [p],#4       // MS
-	POP2w	//    ldr     w, [p],#4       // LS
+	POP2t_r0        //    ldr     t, [p],#4       // MS
+	POP2n	        //    ldr     n, [p],#4       // LS
+	POP2x	        //    ldr     x, [p],#4       // MS
+	POP2w	        //    ldr     w, [p],#4       // LS
 	ADDS	w, w, n         // LS sum, set status flags
 	ADCS    t, t, x         // MS sum + carry
 	DPUSH			//  --  LSW MSW )
@@ -3295,7 +3290,7 @@ TWOSTAR_NFA:
 TWOSTAR:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	LSLS	t, t, #1	//
 	TPUSH_r0
 
@@ -3312,7 +3307,7 @@ TWOSLASH_NFA:
 TWOSLASH:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	ASRS	t, t, #1	//
 	TPUSH_r0
 
@@ -3329,7 +3324,7 @@ ONEM_NFA:
 ONEM:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	SUBS	t, t, #1	//
 	TPUSH_r0
 
@@ -3346,7 +3341,7 @@ ONEP_NFA:
 ONEP:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	ADDS	t, t, #1	//
 	TPUSH_r0
 
@@ -3363,7 +3358,7 @@ TWOP_NFA:
 TWOP:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	ADDS	t, t, #2
 	TPUSH_r0
 
@@ -3380,7 +3375,7 @@ FOURP_NFA:
 FOURP:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	ADDS	t, t, #4
 	TPUSH_r0
 
@@ -3397,7 +3392,7 @@ FOURM_NFA:
 FOURM:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	SUBS	t, t, #4
 	TPUSH_r0
 
@@ -3641,7 +3636,7 @@ PLUS_NFA:
 PLUS:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	POP2n
 	ADDS	t, t, n
 	TPUSH_r0
@@ -3661,7 +3656,7 @@ SUB_NFA:
 SUBB:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	POP2n
 	SUBS	t, n, t
 	TPUSH_r0
@@ -3682,7 +3677,7 @@ EQUAL:
 #ifdef TRUE_EQU_NEG_ONE
         EORS    t, t
 #endif
-        POP2t
+        POP2t_r0
         POP2n
         SUBS    t, t, n
         BEQ     EQUAL_TRUE
@@ -3823,7 +3818,7 @@ ZLESS:
 	DC32	.+5
  SECTION .text : CODE (2)
 #ifdef TOSCT    // REPLACING t SO THIS IS FASTER THAN POP2n
-        POP2t
+        POP2t_r0
         MOV     n, t
 #else
 	POP2n
@@ -3904,7 +3899,7 @@ NEGATE_NFA:
 NEGATE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t			// MVN YES
+	POP2t_r0		// MVN YES
 	MVNS     t, t         	// 1's compliment
 	ADDS     t, t, #1       // 2's compliment
 	TPUSH_r0
@@ -3984,7 +3979,7 @@ ANDD_NFA:
 ANDD:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	POP2n
 	ANDS     t, t, n
 	TPUSH_r0
@@ -4003,7 +3998,7 @@ OR_NFA:
 OR:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	POP2n
 	ORRS     t, t, n
 	TPUSH_r0
@@ -4022,7 +4017,7 @@ NOT_NFA:
 NOT:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	MVNS		t, t	// 1's compliment
 	TPUSH_r0
 
@@ -4040,7 +4035,7 @@ XORR_NFA:
 XORR:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	POP2n
 	EORS     t, t, n
 	TPUSH_r0
@@ -4058,7 +4053,7 @@ SXTH_NFA:
 SXH:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	SXTH     t, t
 	TPUSH_r0
 
@@ -4076,7 +4071,7 @@ SXTB_NFA:
 SXB:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	SXTB     t, t
 	TPUSH_r0
 
@@ -4094,7 +4089,7 @@ REVW_NFA:
 REVW:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	REV     t, t
 	TPUSH_r0
 
@@ -4114,7 +4109,7 @@ ASR:
         DC32    .+5
  SECTION .text : CODE (2)
         POP2w           ; shift count
-        POP2t           ; original data
+        POP2t_r0        ; original data
         ASRS    t, t, w
         TPUSH_r0        ; shifted data
 
@@ -4134,7 +4129,7 @@ LSR:
         DC32    .+5
  SECTION .text : CODE (2)
         POP2w           ; shift count
-        POP2t           ; original data
+        POP2t_r0        ; original data
         LSRS    t, t, w
         TPUSH_r0        ; shifted data
 
@@ -4154,7 +4149,7 @@ LSL:
         DC32    .+5
  SECTION .text : CODE (2)
         POP2w           ; shift count
-        POP2t           ; original data
+        POP2t_r0        ; original data
         LSLS    t, t, w
         TPUSH_r0        ; shifted data---
 
@@ -4653,7 +4648,7 @@ EMIT:
 // NOT IO2TP SECTION:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t		        // GET CHAR
+	POP2t_r0        // GET CHAR
         BL      TXRDY_SUBR
         LDR     n, = USART3_DR //
 // BSOUT handles negative out issue
@@ -4667,7 +4662,7 @@ EMIT:
 // SECTION .text : CONST (2)
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t		        // Get CHAR
+	POP2t_r0	        // Get CHAR
 	LDR   	w, = OUT        // Update OUT
 	LDR   	x, [w]		// LDRB would limit pad to >255
 	LDR   	n, = PAD
@@ -5273,8 +5268,8 @@ DELAY_NFA:
 DELAY:
 	DC32	.+5
  SECTION .text : CODE (2)
-        POP2n   // Reload value in n
-        POP2t   // loop count in t
+        POP2n           // Reload value in n
+        POP2t_r0        // loop count in t
 // SET STCTR TO NEGATIVE LOOP COUNT TO END AT ZERO
         LDR     y, = STICKER
 	MVNS    t, t            // 1's compliment
