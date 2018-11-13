@@ -57,7 +57,7 @@ PUSHt_r0        MACRO
 //	STR	t, [p]
 	ENDM
 
-POP2t	MACRO
+POP2t_r0	MACRO
 	LDR	t, [p],#4       // Post-increment
 //#ifndef TOSCT
 //	LDR	t, [p]		// pop tos to t, post increment p

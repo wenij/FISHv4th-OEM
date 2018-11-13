@@ -644,7 +644,7 @@ ork:
 	DC32	.+5
  SECTION .text : CODE (2)
 	ILK	w
-	POP2t
+	POP2t_r0
 	orrs	t,w
 	TPUSH_r0
 
@@ -655,7 +655,7 @@ andk:
 	DC32	.+5
  SECTION .text : CODE (2)
 	ILK	w
-	POP2t
+	POP2t_r0
 	ands	t,w
 	TPUSH_r0
 
@@ -666,7 +666,7 @@ strk:	; ( x -- )
 	DC32	.+5
  SECTION .text : CODE (2)
 	ILK	x
-	POP2t
+	POP2t_r0
 	str	t, [x]
 //	DROP
 	NEXT
@@ -681,7 +681,7 @@ RMWAMD:
  SECTION .text : CODE (2)
 	POP2x   // addr_ilk1
 	POP2n
-	POP2t
+	POP2t_r0
 	ldr	w, [x]
 	bic	w, w, n
 	and	t, t, n
@@ -718,7 +718,7 @@ begin:	; r:( -- addr )
 until:	; ( x -- )
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	cmp	t, #0
 //	DROP
 	ite	eq
@@ -1055,7 +1055,7 @@ BRAN1:
 ZBRAN:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	CMP	t, #0		// ZERO?
 #ifdef TOSCT                    // CMP CONSUMES t
         LDR     t, [p]          // REFRESH t
@@ -1075,7 +1075,7 @@ ZBRAN:
 TBRAN:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	CMP	t, #0		// ZERO?
 #ifdef TOSCT                    // CMP CONSUMES t
         LDR     t, [p]          // REFRESH t
@@ -1136,7 +1136,7 @@ XPLOOP:
 XDO:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t			// INITIAL INDEX VALUE = ADDR
+	POP2t_r0		// INITIAL INDEX VALUE = ADDR
 	POP2w			// LIMIT VALUE = ADDR+CNT
 	PUSHw2r
 	PUSHt2r			// i expects index TOP of RSTACK
@@ -1151,7 +1151,7 @@ XDO:
 CATLT7F:
 	DC32	.+5
  SECTION .text : CODE (2)
-        POP2t
+        POP2t_r0
         LDRB    t, [t]
         LDR     n, =7Fh
         ANDS    t, t, n
@@ -1221,7 +1221,7 @@ IF_EOL_SEND_XOFF:
 	BNE     CR_CHECK
 
 SUB_CR_4_NL:
-	POP2t
+	POP2t_r0
 	LDR     t, = 0Dh        // ^M
 	PUSHt_r0
 	B       EOL_SEND_XOFF
@@ -1315,7 +1315,7 @@ CLRSUFFIX:
 USTAR:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t
+	POP2t_r0
 	POP2n
 // IMPORT c_32by32to64mul	// LSW in t (r0), MSW in n (r1)
 //	BL	c_32by32to64mul
@@ -1337,7 +1337,7 @@ USLASH:
 	DC32	.+5
  SECTION .text : CODE (2)
 //	U/  USLASH: ( uLSW uMSW u32 --- u32REMAINDER u32QUOTIENT )
-	POP2t			// U32  divisor
+	POP2t_r0		// U32  divisor
 	POP2x     		// UMSW  dividendHI
 	POP2w			// ULSW dividendLO
 	CMP     t, #0           // divide by zero is divisor = 0
