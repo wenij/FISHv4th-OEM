@@ -128,17 +128,17 @@ EXEC_ACTION:
 // TXRDY_SUBR:
  SECTION .text : CODE (2)
 TXRDY_SUBR:
-        MOV     w_r2, lr						// Allow for interrupts to use LR
-        LDR     y_r4, = USART3_SR		// Line Status Register
+        MOV     w_r2, lr                // Allow for interrupts to use LR
+        LDR     y_r4, = USART3_SR	// Line Status Register
 txRDY?:
-        LDR     n_r1, [y]						// Get Line Status
+        LDR     n_r1, [y_r4]		// Get Line Status
 
 // THIS IS TXE TEST AND FAILS IN TEXT DOWNLOAD
 //        LSRS    n, n, #7      // 80h Bit 7 TXE: Transmit data register empty
 // THIS IS ___ AND WORKS IN TEXT DOWNLOAD
         LSRS    n_r1, n_r1, #8	// 100h Bit 8 ORIG
         BCC     txRDY?          // Ready
-        BX      w_r2						// lr  - SUBR RETURN
+        BX      w_r2		// lr  - SUBR RETURN
 
 // XOFF_SUBR:
 #ifdef XON_XOFF
@@ -159,7 +159,7 @@ XON_SUBR:
 	LDR	n_r1,= USART3_DR
 	LDR	y_r4, = XON_CHAR   // preserve TOS 11 24 01 49
 	STRB	y_r4, [n_r1]
-        BX      w       //lr              // SUBR RETURN
+        BX      w_r2               // SUBR RETURN
 #endif // XON_XOFF
 #endif // IO2TP
  LTORG
@@ -402,7 +402,7 @@ ALIGNED:
 	POP2t_r0
 	ADDS    t_r0, t_r0, #3
 	LDR	n_r1, =-4
-	ANDS	t_r0, t_r0, n
+	ANDS	t_r0, t_r0, n_r1
 	TPUSH_r0
  LTORG
 
@@ -718,7 +718,7 @@ DIGIT_NFA:
 DIGIT:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2w         		// Number base
+	POP2w_r2         	// Number base
 	POP2t_r0		// ASCII DIGIT
 	SUBS   t_r0, t_r0, #'0'
 	BMI   DIGI2             // Number error
@@ -1632,7 +1632,7 @@ ROT_NFA:
 ROT:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2w
+	POP2w_r2
 	POP2n
 #ifdef TOSCT
         LDR     t_r0, [p]    // get new TOS
@@ -1717,8 +1717,8 @@ LEAVE_NFA:
 LEAVE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	LDR     w_r2, [r]       // GET Index
-	STR     w_r2, [r, #4]   // Store it at Limit
+	LDR     w_r2, [r_r6]       // GET Index
+	STR     w_r2, [r_r6, #4]   // Store it at Limit
 	NEXT
 
 
@@ -1791,7 +1791,7 @@ OVER_NFA:
 OVER:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2w		// n2
+	POP2w_r2	// n2
 #ifdef TOSCT
 // Get new t - This could become REFRESHt
 	LDR	t_r0, [p_r7]    // t invalid so get it
@@ -1846,7 +1846,7 @@ SWAP:
         LDR     t_r0, [p, #4]
         ADDS    p, p, #8
 #else // SWAP:
-	POP2w		// n2
+	POP2w_r2	// n2
 	POP2t_r0	// n1
 #endif
 	DPUSH		//  --  LSW MSW )
@@ -1968,7 +1968,7 @@ CMOVE:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2n //    ldr	n, [p],#4       //COUNT
-	POP2w //    ldr	w_r2, [p],#4    //DEST
+	POP2w_r2 //    ldr	w_r2, [p],#4    //DEST
 	POP2x //    ldr	x, [p],#4       //SOURCE
 	CMP     n, #0
 	BEQ     CM2
@@ -2009,7 +2009,7 @@ FILL:
  SECTION .text : CODE (2)
 	POP2t_r0		// Fill CHAR
 	POP2n			// Fill COUNT
-	POP2w			// Beginning ADDR
+	POP2w_r2		// Beginning ADDR
 	CMP     n, #0
 	BEQ     FEND            // Count is zero
 	ADDS	x, n, w
@@ -3160,7 +3160,7 @@ DNEGATE:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0		// MSW   //POP	BX
-	POP2w			// LSW   //POP	CX
+	POP2w_r2		// LSW   //POP	CX
 	MVNS    t_r0, t_r0      // negate MSW
 	MVNS    w_r2, w_r2      // negate LSW
 	ADDS	w_r2, w_r2, #1  // add 1 to LSW
@@ -3248,7 +3248,7 @@ DPLUS:
 	POP2t_r0        //    ldr     t_r0, [p_r7],#4      // MS
 	POP2n	        //    ldr     n_r1, [p_r7],#4      // LS
 	POP2x	        //    ldr     x_r3, [p_r7],#4      // MS
-	POP2w	        //    ldr     w_r2, [p_r7],#4      // LS
+	POP2w_r2        //    ldr     w_r2, [p_r7],#4      // LS
 	ADDS	w_r2, w_r2, n_r1        // LS sum, set status flags
 	ADCS    t_r0, t_r0, x_r3        // MS sum + carry
 	DPUSH			        //  --  LSW MSW )
@@ -3268,7 +3268,7 @@ STOD_NFA:
 STOD:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2w                           // POP LSW
+	POP2w_r2                        // POP LSW
 	EORS	t_r0, t_r0              // Zero MSW
 	ORRS    w_r2, w_r2, w_r2        // OR LSW
 	BPL     STOD1                   // LSW is POS
@@ -3719,7 +3719,7 @@ LESSTHAN:
         MOVS    t_r0, #1
 #endif
 	POP2n		// n2
-	POP2w		// n1
+	POP2w_r2	// n1
 	CMP     n, w    // n1 < n2
 	BGT	LESS1
 
@@ -4108,9 +4108,9 @@ ASR_NFA:
 ASR:
         DC32    .+5
  SECTION .text : CODE (2)
-        POP2w           ; shift count
+        POP2w_r2        ; shift count
         POP2t_r0        ; original data
-        ASRS    t_r0, t_r0, w
+        ASRS    t_r0, t_r0, w_r2
         TPUSH_r0        ; shifted data
 
 
@@ -4128,7 +4128,7 @@ LSR_NFA:
 LSR:
         DC32    .+5
  SECTION .text : CODE (2)
-        POP2w           ; shift count
+        POP2w_r2        ; shift count
         POP2t_r0        ; original data
         LSRS    t_r0, t_r0, w
         TPUSH_r0        ; shifted data
@@ -4148,7 +4148,7 @@ LSL_NFA:
 LSL:
         DC32    .+5
  SECTION .text : CODE (2)
-        POP2w           ; shift count
+        POP2w_r2        ; shift count
         POP2t_r0        ; original data
         LSLS    t_r0, t_r0, w
         TPUSH_r0        ; shifted data---
@@ -5651,101 +5651,101 @@ flogRAM:
 	DC32	.+5
  SECTION .text : CODE (2)
 	mov	r8, t_r0
-	mov	r9, n
-	mov	r10, i		//  SAVE IP !!!
+	mov	r9, n_r1
+	mov	ra_r10, i       	//  SAVE IP !!!
 	ldr	t_r0, = RAM_START	// RAM_START
-	ldr	y, = RAM_END	// (RAM_END +1)		//  limit
+	ldr	y_r4, = RAM_END	        // (RAM_END +1)		//  limit
 _flogRAM:
-	ldr	x, [t_r0]	//  save original contents
+	ldr	x_r3, [t_r0]	//  save original contents
 
-	movs	n, #0	//  all zeros
-	str	n, [t_r0]
+	movs	n_r1, #0	//  all zeros
+	str	n_r1, [t_r0]
 	ldr	w_r2, [t_r0]
-	eors	w_r2, w_r2, n
+	eors	w_r2, w_r2, n_r1
 	bne	_trap
 
-	ldr	n, =-1	//  all ones
-	str	n, [t_r0]
+	ldr	n_r1, =-1	//  all ones
+	str	n_r1, [t_r0]
 	ldr	w_r2, [t_r0]
-	eors	w_r2, w_r2, n
+	eors	w_r2, w_r2, n_r1
 	bne	_trap
 
-	movs	n, t_r0	//  it's own address
-	str	n, [t_r0]
+	movs	n_r1, t_r0	//  it's own address
+	str	n_r1, [t_r0]
 	ldr	w_r2, [t_r0]
-	eors	w_r2, w_r2, n
+	eors	w_r2, w_r2, n_r1
 	bne	_trap
 
-	mvns	n, t_r0	//  complement of it's own address
-	str	n, [t_r0]
+	mvns	n_r1, t_r0	//  complement of it's own address
+	str	n_r1, [t_r0]
 	ldr	w_r2, [t_r0]
-	eors	w_r2, w_r2, n
+	eors	w_r2, w_r2, n_r1
 	bne	_trap
 
 
-	ldr	n, = 0xFFFFFFFE
-	movs	i, #32
+	ldr	n_r1, = 0xFFFFFFFE
+	movs	i_r5, #32
 _walkzeros:
-	str	n, [t_r0]
+	str	n_r1, [t_r0]
 	ldr	w_r2, [t_r0]
-	eors	w_r2, w_r2, n
+	eors	w_r2, w_r2, n_r1
 	bne	_trap
 
-	lsls	n, n, #1
-	adds	n, n, #1
-	subs	i, i, #1
+	lsls	n_r1, n_r1, #1
+	adds	n_r1, n_r1, #1
+	subs	i_r5, i_r5, #1
 	bne	_walkzeros
 
 
-	movs	n, #1
-	movs	i, #32
+	movs	n_r1, #1
+	movs	i_r5, #32
 _walkones:
-	str	n, [t_r0]
+	str	n_r1, [t_r0]
 	ldr	w_r2, [t_r0]
-	eors	w_r2, w_r2, n
+	eors	w_r2, w_r2, n_r1
 	bne	_trap
 
-	lsls	n, n, #1
-	subs	i, i, #1
+	lsls	n_r1, n_r1, #1
+	subs	i_r5, i_r5, #1
 	bne	_walkones
 
 
-	ldr	n, = 0xFFFFFFFE
-	movs	i, #32
+	ldr	n_r1, = 0xFFFFFFFE
+	movs	i_r5, #32
 _slidezeros:
-	str	n, [t_r0]
+	str	n_r1, [t_r0]
 	ldr	w_r2, [t_r0]
-	eors	w_r2, n
+	eors	w_r2, n_r1
 	bne	_trap
 
-	lsls	n, n, #1
-	subs	i, i, #1
+	lsls	n_r1, n_r1, #1
+	subs	i_r5, i_r5, #1
 	bne	_slidezeros
 
 
-	movs	n, #1
-	movs	i, #32
+	movs	n_r1, #1
+	movs	i_r5, #32
 _slideones:
-	str	n, [t_r0]
+	str	n_r1, [t_r0]
 	ldr	w_r2, [t_r0]
-	eors	w_r2, n
+	eors	w_r2, n_r1
 	bne	_trap
 
-	lsls	n, n, #1
-	adds	n, n, #1
-	subs	i, i, #1
+	lsls	n_r1, n_r1, #1
+	adds	n_r1, n_r1, #1
+	subs	i_r5, i_r5, #1
 	bne	_slideones
 
 
-	str	x, [t_r0]	//  restore original contents
+	str	x_r3, [t_r0]	//  restore original contents
 	adds	t_r0, t_r0, #4
-	cmp	t_r0, y
+	cmp	t_r0, y_r4
 	blo	_flogRAM
 
 _notrap:
-	mov	t_r0, r8
-	mov	n, r9
-	mov	i, r10	//  RESTORE IP !!!
+	mov	t_r0, r8        // R8 = lINK REGISTER
+	mov	n_r1, r9
+	mov	i_r5, r10	//  RESTORE IP !!!
 	NEXT
 _trap:	b	.
  LTORG

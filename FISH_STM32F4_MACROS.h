@@ -87,7 +87,7 @@ PUSHw	MACRO
 //	STR	w, [p]
 	ENDM
 
-POP2w	MACRO
+POP2w_r2	MACRO
 	LDR	w, [p],#4
 //	LDR	w, [p]
 //	ADDS	p, p, #4
