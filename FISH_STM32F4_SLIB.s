@@ -942,7 +942,7 @@ PFIND:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2x   // R3 = Dict Name NFA
-	POP2w	// R2 = String Addr usually at here
+	POP2w_r2	// R2 = String Addr usually at here
 	MOV     rb, w   	// Save TXT String ADDR
 
 //	SEARCH LOOP
@@ -1137,7 +1137,7 @@ XDO:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0		// INITIAL INDEX VALUE = ADDR
-	POP2w			// LIMIT VALUE = ADDR+CNT
+	POP2w_r2		// LIMIT VALUE = ADDR+CNT
 	PUSHw2r
 	PUSHt2r			// i expects index TOP of RSTACK
 #ifdef TOSCT
@@ -1199,7 +1199,7 @@ TOGGLE:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2n 		// Bit PATTERN
-	POP2w		// ADDR
+	POP2w_r2	// ADDR
 	LDRB	t, [w]
 	EORS   	t, t, n
 	STRB    t, [w]
@@ -1339,7 +1339,7 @@ USLASH:
 //	U/  USLASH: ( uLSW uMSW u32 --- u32REMAINDER u32QUOTIENT )
 	POP2t_r0		// U32  divisor
 	POP2x     		// UMSW  dividendHI
-	POP2w			// ULSW dividendLO
+	POP2w_r2		// ULSW dividendLO
 	CMP     t, #0           // divide by zero is divisor = 0
 	BEQ     DZERO           // J Not Below
 	TEQ     x, #0           ; fIG BEHAVIOR
