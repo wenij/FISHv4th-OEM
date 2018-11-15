@@ -436,12 +436,12 @@ FLASH_TCODE_COPY:
  SECTION .text : CODE (2)
  ALIGNROM 2,0xFFFFFFFF
         POP2t_r0        // LDR     t, =FLASH_TCODE_START
-        POP2n           // LDR     n, =FLASH_TCODE_END
+        POP2n_r1        // LDR     n, =FLASH_TCODE_END
         LDR     w, =FLASH_CODE_SRAM2_START
 FLASH_COPY_LOOP:
-        LDR     y, [t], #4
-        STR     y, [w], #4
-        cmp     t, n
+        LDR     y_r4, [t_r0], #4
+        STR     y_r4, [w_r2], #4
+        cmp     t_r0, n_r1
         BNE     FLASH_COPY_LOOP
         NEXT
 

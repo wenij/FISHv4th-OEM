@@ -680,7 +680,7 @@ RMWAMD:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2x   // addr_ilk1
-	POP2n
+	POP2n_r1
 	POP2t_r0
 	ldr	w, [x]
 	bic	w, w, n
@@ -992,7 +992,7 @@ thispfa:
 	PUSHx			// PUSH pfa
 	MOVS    t, #1           // TRUE VALUE
 	MOV     w, k		// RETURN Header Byte LENGTH
-	DPUSH
+	DPUSH_t_r0_1rst_then_n_r1
 
 //	NO NAME MATCH - TRY ANOTHER
 //      Set NEXT LINK FIELD ADDR (lfa) to x
@@ -1168,7 +1168,7 @@ TIB_CHAR_SCAN:
 	DC32	.+5
  SECTION .text : CODE (2)
 // t is char matched from TIB as flag to return
-	POP2n   		// Char were lookin for
+	POP2n_r1   		// Char were lookin for
         LDR     w, = TIB
         MOV     ra, w           // Save for IN calculation.
         LDR     x, = IN
@@ -1198,11 +1198,11 @@ TCS_FOUND:
 TOGGLE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2n 		// Bit PATTERN
-	POP2w_r2	// ADDR
-	LDRB	t, [w]
-	EORS   	t, t, n
-	STRB    t, [w]
+	POP2n_r1        	// Bit PATTERN
+	POP2w_r2	        // ADDR
+	LDRB	t_r0, [w_r2]
+	EORS   	t_r0, t_r0, n_r1
+	STRB    t_r0, [w_r2]
 	NEXT
 
 #ifdef XON_XOFF
@@ -1316,14 +1316,14 @@ USTAR:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0
-	POP2n
+	POP2n_r1
 // IMPORT c_32by32to64mul	// LSW in t (r0), MSW in n (r1)
 //	BL	c_32by32to64mul
 //	MOV	w, t	// LSW
 //	MOV	t, n	// MSW
-// UMULL ilegal register R0 is not allowed here
-	UMULL   w, t, t, n	; rdLO rdHi rn * rs
-	DPUSH		//  --  LSW MSW )
+// UMULL ilLegal register R0 is not allowed here
+	UMULL   w_r2, t_r0, t_r0, n_r1  // rdLO rdHi rn * rs
+	DPUSH_t_r0_1rst_then_n_r1       //  --  LSW MSW )
 
 //:NONAME	USLASH:	( d n --- u32REM u32QUO ) USED INTERNALLY - NOT UNSIGNED
 //      Leave the unsigned remainder u2 and unsigned quotient u3 from the
@@ -1340,9 +1340,9 @@ USLASH:
 	POP2t_r0		// U32  divisor
 	POP2x     		// UMSW  dividendHI
 	POP2w_r2		// ULSW dividendLO
-	CMP     t, #0           // divide by zero is divisor = 0
+	CMP     t_r0, #0           // divide by zero is divisor = 0
 	BEQ     DZERO           // J Not Below
-	TEQ     x, #0           ; fIG BEHAVIOR
+	TEQ     x_r3, #0           ; fIG BEHAVIOR
 	BNE     DZERO           ; TREAT DIVIDEN HI N=0 AS ERR
 
 // IMPORT c_64by32div		// LSW of quo in t (r0), rem in w (r2)
@@ -1358,14 +1358,14 @@ USLASH:
         ;MLS RD = ( ARG1 * ARG2 ) - ARG3
         ;MLS    w, t, QUO  n, DIVOR  W DIVIDEND  I.E MLS RD = W - ( T * N ))
 // Error[438]: This instruction is not available in the selected cpu/core
-	MLS     w, t,      n,        w
-	DPUSH			//  --  LSW MSW )
+	MLS     w_r2, t_r0, n_r1, w_r2
+	DPUSH_t_r0_1rst_then_n_r1	//  --  LSW MSW )
 
 DZERO:
-	EORS	t, t, t		// zero
-	SUBS	t, t, #1        //
-	MOV     w, t            //
-	DPUSH			//  --  LSW MSW )
+	EORS	t_r0, t_r0, t_r0        // zero
+	SUBS	t_r0, t_r0, #1          //
+	MOV     w_r2, t_r0              //
+	DPUSH_t_r0_1rst_then_n_r1       //  --  LSW MSW )
 
 //:NONAME SPSTO:	( -- ) Initialize the stack pointer from INITSO.
  SECTION .text : CONST (2)

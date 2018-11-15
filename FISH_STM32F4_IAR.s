@@ -737,7 +737,7 @@ DIGI1:
 
 	MOV	w_r2, t_r0            // NEW BINARY Number
 	MOVS	t_r0, #1           // TRUE FLAG
-	DPUSH
+	DPUSH_t_r0_1rst_then_n_r1
 
 	// Number error
 DIGI2:
@@ -778,40 +778,40 @@ ENCL:
 //  SCAN TO FIRST NON-TERMINATOR CHARACTER
 //	and PUSH count to stack leaving last 2 params to compute
 ENCL1:
-	ADDS    n, n, #1	// ADDR+1
-	ADDS    w_r2, w_r2, #1        // COUNT+1
-	LDRB    x, [n]
-	CMP     t_r0, x         //CMP	AL,[BX]
+	ADDS    n_r1, n_r1, #1	// ADDR+1
+	ADDS    w_r2, w_r2, #1  // COUNT+1
+	LDRB    x_r3, [n_r1]
+	CMP     t_r0, x_r3      //CMP	AL,[BX]
 	BEQ     ENCL1           //JZ	ENCL1	// WAIT FOR NON-TERMINATOR
 	PUSHw			//offset to the first non-delimiter character
 				//EXiT is now only DPUSH
-	CMP     x, #0           //CMP	AH,[BX]	// null CHAR?
+	CMP     x_r3, #0        //CMP	AH,[BX]	// null CHAR?
 	BNE     ENCL2           //JNZ	ENCL2	// NO
 
 // FOUND null BEFORE 1ST NON-TERM CHAR
 // RETURN ok args = NULL EX//
 // ( TIB   32 -- ADDR-B4-NULL 0 1 1 ) So DFIND CAN FIND IT!
 //
-	MOV	t_r0, x
+	MOV	t_r0, x_r3
 	ADDS    w_r2, w_r2, #1	// w = offset to the delimiter after the text
-	DPUSH
+	DPUSH_t_r0_1rst_then_n_r1
 
 //   FOUND FIRST TEXT CHAR - COUNT THE CHARS
 ENCL2:
-	ADDS    n, n, #1        // ADDR+1
+	ADDS    n_r1, n_r1, #1  // ADDR+1
 	ADDS    w_r2, w_r2, #1  //COUNT+1
-	LDRB    x, [n]
-	CMP    	t_r0, x         //TERMINATOR CHAR?
+	LDRB    x_r3, [n_r1]
+	CMP    	t_r0, x_r3      //TERMINATOR CHAR?
 	BEQ     ENCL4           //YES
 
-	CMP     x, #0           //null CHAR?
+	CMP     x_r3, #0        //null CHAR?
 	BNE     ENCL2           //NO, LOOP AGAIN
 
 ENCL3:	//   FOUND null AT END OF TEXT
 ENCL4:	//   FOUND TERMINATOR CHARACTER
-	MOV     t_r0, w         // COUNT+1 =
+	MOV     t_r0, w_r2      // COUNT+1 =
 	ADDS    t_r0, t_r0, #1  // offset to the first character not included
-	DPUSH
+	DPUSH_t_r0_1rst_then_n_r1
 
 
 //	0 NULL:	( -- ) IMMEDIATE
@@ -1592,7 +1592,7 @@ TDUP:
 // TDUP: OPT by picking pops
 	LDR     t_r0, [p]
 	LDR     w_r2, [p, #4]
-	DPUSH
+	DPUSH_t_r0_1rst_then_n_r1
 
 
 //	-DUP ZNDUP:	( n1 -- n1 (if zero)
@@ -1633,13 +1633,13 @@ ROT:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2w_r2
-	POP2n
+	POP2n_r1
 #ifdef TOSCT
-        LDR     t_r0, [p]    // get new TOS
+        LDR     t_r0, [p]               // get new TOS
 #endif
 	POP2t_r0
 	PUSHn
-	DPUSH			//  --  LSW MSW )
+	DPUSH_t_r0_1rst_then_n_r1	//  --  LSW MSW )
 
 
 //	I I:	( -- n )
@@ -1770,7 +1770,7 @@ TOR_NFA:
 TOR:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2n   // preserve TOS
+	POP2n_r1   // preserve TOS
 	PUSHn2r
 #ifdef TOSCT
         LDR     t_r0, [p]
@@ -1794,13 +1794,13 @@ OVER:
 	POP2w_r2	// n2
 #ifdef TOSCT
 // Get new t - This could become REFRESHt
-	LDR	t_r0, [p_r7]    // t invalid so get it
-        POP2t_r0                // do the increment
+	LDR	t_r0, [p_r7]            // t invalid so get it
+        POP2t_r0                        // do the increment
 #else
-	POP2t_r0		// n1
+	POP2t_r0		        // n1
 #endif
-	PUSHt_r0		// -- n1 )
-	DPUSH		        // --  LSW MSW )
+	PUSHt_r0		        // -- n1 )
+	DPUSH_t_r0_1rst_then_n_r1       // --  LSW MSW )
 
 
 //	DROP DROP:	( n1 -- )
@@ -1846,10 +1846,10 @@ SWAP:
         LDR     t_r0, [p, #4]
         ADDS    p, p, #8
 #else // SWAP:
-	POP2w_r2	// n2
-	POP2t_r0	// n1
+	POP2w_r2	                // n2
+	POP2t_r0	                // n1
 #endif
-	DPUSH		//  --  LSW MSW )
+	DPUSH_t_r0_1rst_then_n_r1	//  --  LSW MSW )
 
 
 //	DUP DUP:	( n1 -- n1 n1 )
@@ -1899,8 +1899,8 @@ ANDBITS_NFA:
 ANDBITS:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POPp2w 		// val
-	POP2n 		// addr
+	POPp2w 	        	// val
+	POP2n_r1 		// addr
 	LDR     t_r0, [n]	// read [val]
 	ANDS	t_r0, t_r0, w	// modify val
 	STR	t_r0, [n]	// Write val
@@ -1921,8 +1921,8 @@ SETBITS_NFA:
 SETBITS:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POPp2w 		// val w_r2
-	POP2n 		// addr n_r1
+	POPp2w 	        	// val w_r2
+	POP2n_r1		// addr n_r1
 	LDR     t_r0, [n]	// read[val]t_r0
 	ORRS	t_r0, t_r0, w	// modify val
 	STR	t_r0, [n]	// Write val
@@ -1943,11 +1943,11 @@ CLRBITS_NFA:
 CLRBITS:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POPp2w          	// val
-	POP2n 		        // addr
-	LDR	t_r0, [n]	        // read [val]
-        BICS    t_r0, t_r0, w         // modify val  - AND-NOT
-	STR	t_r0, [n]		// write val
+	POPp2w                          // val
+	POP2n_r1 		        // addr
+	LDR	t_r0, [n_r1]	        // read [val]
+        BICS    t_r0, t_r0, w_r2        // modify val  - AND-NOT
+	STR	t_r0, [n_r1]		// write val
 	NEXT
 
 
@@ -1967,10 +1967,10 @@ CMOVE_NFA:
 CMOVE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2n //    ldr	n, [p],#4       //COUNT
-	POP2w_r2 //    ldr	w_r2, [p],#4    //DEST
-	POP2x //    ldr	x, [p],#4       //SOURCE
-	CMP     n, #0
+	POP2n_r1        //    ldr	n, [p],#4       //COUNT
+	POP2w_r2        //    ldr	w_r2, [p],#4    //DEST
+	POP2x           //    ldr	x, [p],#4       //SOURCE
+	CMP     n_r1, #0
 	BEQ     CM2
 CM1:
 //not for THUMB
@@ -1980,12 +1980,12 @@ CM1:
 //        BNE strcpy
 	LDRB    t_r0, [x]
 	STRB    t_r0, [w]
-	SUBS    n, n, #1
-	CMP     n, #0
+	SUBS    n_r1, n_r1, #1
+	CMP     n_r1, #0
 	BEQ     CM2
 
 	ADDS	w_r2, w_r2, #1
-	ADDS	x, x, #1
+	ADDS	x_r3, x_r3, #1
 	BNE     CM1
 CM2:
 #ifdef TOSCT
@@ -2008,7 +2008,7 @@ FILL:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0		// Fill CHAR
-	POP2n			// Fill COUNT
+	POP2n_r1		// Fill COUNT
 	POP2w_r2		// Beginning ADDR
 	CMP     n, #0
 	BEQ     FEND            // Count is zero
@@ -2073,14 +2073,14 @@ PSTORE_NFA:
 PSTORE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2n			// ADDRESS
+	POP2n_r1		// ADDRESS
 #ifdef TOSCT
-        LDR     t_r0, [p        // REFRESH t
+        LDR     t_r0, [p]       // REFRESH t
 #endif
 	POP2t_r0		// INCREMENT
-	LDR     w_r2, [n]
+	LDR     w_r2, [n_r1]
 	ADDS    t_r0, t_r0, w_r2
-	STR     t_r0, [n]
+	STR     t_r0, [n_r1]
 	NEXT
 
 
@@ -2103,8 +2103,8 @@ AT:
 //        STR     t_r0, [p]
 //        NEXT
 //#else AT:
-	POP2n
-	LDR     t_r0, [n]
+	POP2n_r1
+	LDR     t_r0, [n_r1]
 	TPUSH_r0
 //#endif
 
@@ -2122,7 +2122,7 @@ CAT_NFA:
 CAT:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2n
+	POP2n_r1
 	LDRB    t_r0, [n]
 	TPUSH_r0
 
@@ -2140,8 +2140,8 @@ STORE:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0	// ADDR t_r0
-	POP2n		// DATA n_r1
-	STR	n, [t_r0]
+	POP2n_r1	// DATA n_r1
+	STR	n_r1, [t_r0]
 	NEXT
 
 
@@ -2159,8 +2159,8 @@ CSTORE:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0
-	POP2n
-	STRB    n, [t_r0]
+	POP2n_r1
+	STRB    n_r1, [t_r0]
 	NEXT
 
 
@@ -3159,12 +3159,12 @@ DNEGATE_NFA:
 DNEGATE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t_r0		// MSW   //POP	BX
-	POP2w_r2		// LSW   //POP	CX
-	MVNS    t_r0, t_r0      // negate MSW
-	MVNS    w_r2, w_r2      // negate LSW
-	ADDS	w_r2, w_r2, #1  // add 1 to LSW
-	DPUSH           	//  --  LSW MSW )
+	POP2t_r0		        // MSW   //POP	BX
+	POP2w_r2		        // LSW   //POP	CX
+	MVNS    t_r0, t_r0              // negate MSW
+	MVNS    w_r2, w_r2              // negate LSW
+	ADDS	w_r2, w_r2, #1          // add 1 to LSW
+	DPUSH_t_r0_1rst_then_n_r1       //  --  LSW MSW )
 
 
 //	DPL_SV:	( -- addr of NDPL ) Contains # of digits after . in double number
@@ -3246,12 +3246,12 @@ DPLUS:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0        //    ldr     t_r0, [p_r7],#4      // MS
-	POP2n	        //    ldr     n_r1, [p_r7],#4      // LS
+	POP2n_r1        //    ldr     n_r1, [p_r7],#4      // LS
 	POP2x	        //    ldr     x_r3, [p_r7],#4      // MS
 	POP2w_r2        //    ldr     w_r2, [p_r7],#4      // LS
 	ADDS	w_r2, w_r2, n_r1        // LS sum, set status flags
 	ADCS    t_r0, t_r0, x_r3        // MS sum + carry
-	DPUSH			        //  --  LSW MSW )
+	DPUSH_t_r0_1rst_then_n_r1       //  --  LSW MSW )
 
 
 //	S->D STOD:	( n -- d=<LSW MSW> ) SIGNED:
@@ -3275,7 +3275,7 @@ STOD:
 
 	SUBS     t_r0, t_r0, #1         // LSW is NEG
 STOD1:
-	DPUSH                           //  --  LSW MSW )
+	DPUSH_t_r0_1rst_then_n_r1       //  --  LSW MSW )
 
 
 //	2* TWOSTAR:	( n -- n*2 ) LSL 1
@@ -3637,7 +3637,7 @@ PLUS:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0
-	POP2n
+	POP2n_r1
 	ADDS	t_r0, t_r0, n
 	TPUSH_r0
 
@@ -3657,7 +3657,7 @@ SUBB:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0
-	POP2n
+	POP2n_r1
 	SUBS	t_r0, n, t_r0
 	TPUSH_r0
 
@@ -3678,7 +3678,7 @@ EQUAL:
         EORS    t_r0, t_r0
 #endif
         POP2t_r0
-        POP2n
+        POP2n_r1
         SUBS    t_r0, t_r0, n
         BEQ     EQUAL_TRUE
         EORS    t_r0, t_r0
@@ -3718,7 +3718,7 @@ LESSTHAN:
 #else
         MOVS    t_r0, #1
 #endif
-	POP2n		// n2
+	POP2n_r1	// n2
 	POP2w_r2	// n1
 	CMP     n, w    // n1 < n2
 	BGT	LESS1
@@ -3789,7 +3789,7 @@ ZEQU:
 	DC32	.+5
  SECTION .text : CODE (2)
         EORS    t_r0, t_r0
-	POP2n
+	POP2n_r1
 	CMP	n, #0
 	BNE	ZEQU_ZERO
 
@@ -3821,7 +3821,7 @@ ZLESS:
         POP2t_r0
         MOV     n, t_r0
 #else
-	POP2n
+	POP2n_r1
 #endif
 #ifdef TRUE_EQU_NEG_ONE
         EORS    t_r0, t_r0
@@ -3980,8 +3980,8 @@ ANDD:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0
-	POP2n
-	ANDS     t_r0, t_r0, n
+	POP2n_r1
+	ANDS     t_r0, t_r0, n_r1
 	TPUSH_r0
 
 
@@ -3999,8 +3999,8 @@ OR:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0
-	POP2n
-	ORRS     t_r0, t_r0, n
+	POP2n_r1
+	ORRS     t_r0, t_r0, n_r1
 	TPUSH_r0
 
 
@@ -4036,8 +4036,8 @@ XORR:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0
-	POP2n
-	EORS     t_r0, t_r0, n
+	POP2n_r1
+	EORS     t_r0, t_r0, n_r1
 	TPUSH_r0
 
 //	SXTH SXTH:	( nl -- n3 )
@@ -5268,20 +5268,20 @@ DELAY_NFA:
 DELAY:
 	DC32	.+5
  SECTION .text : CODE (2)
-        POP2n           // Reload value in n
+        POP2n_r1           // Reload value in n
         POP2t_r0        // loop count in t
 // SET STCTR TO NEGATIVE LOOP COUNT TO END AT ZERO
-        LDR     y, = STICKER
+        LDR     y_r4, = STICKER
 	MVNS    t_r0, t_r0      // 1's compliment
 	ADDS    t_r0, t_r0, #1  // 2's compliment
-        STR     t_r0, [y]
+        STR     t_r0, [y_r4]
 // Load SYST_RVR with countdown value
         LDR     w_r2, = SYST_RVR
-        STR     n, [w]
+        STR     n_r1, [w_r2]
 // and reset SYST_CVR to start countdown.
        LDR     w_r2, = SYST_CVR
 // Writing it clears the System Tick counter and the COUNTFLAG bit in STCTRL.
-        STR     n, [w]
+        STR     n_r1, [w]
 // If n=0 in t user is just setting reload value
         CMP     t_r0, #0           // LOOP OF ZERO
         BEQ     DELAY_DONE
@@ -5290,15 +5290,15 @@ DELAY:
 // Save and restore user interrupt setting
 // y = STICKER
         LDR     w_r2, = SYST_CSR
-        LDR     t_r0, [w]          // Save user SYSTICK interrupt setting
-        MOVS    n, #7
-        STR     n, [w]          // Turn SYSTICK interrupt on in case it's off
+        LDR     t_r0, [w_r2]          // Save user SYSTICK interrupt setting
+        MOVS    n_r1, #7
+        STR     n_r1, [w_r2]          // Turn SYSTICK interrupt on in case it's off
 DELAY_LOOP:
-        LDR     n, [y]
-        CMP     n, #0
+        LDR     n_r1, [y_r4]
+        CMP     n_r1, #0
         BNE     DELAY_LOOP
 DELAY_DONE:
-        STR     t_r0, [w]  // Restore user SYSTICK interrupt setting
+        STR     t_r0, [w_r2]  // Restore user SYSTICK interrupt setting
 	NEXT
  LTORG
 
