@@ -38,7 +38,7 @@ TPUSH_r0        MACRO
 	NEXT
 	ENDM
 
-DPUSH	MACRO	
+DPUSH_t_r0_1rst_then_n_r1	MACRO	
 	PUSHw	// push w to p, post decrement p
 	TPUSH_r0
 	ENDM
@@ -75,7 +75,7 @@ PUSHn	MACRO
 //	STR	n, [p]
 	ENDM
 
-POP2n	MACRO
+POP2n_r1	MACRO
 	LDR	n, [p],#4
 //	LDR	n, [p]
 //	ADDS	p, p, #4
