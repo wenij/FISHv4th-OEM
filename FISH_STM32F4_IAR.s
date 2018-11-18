@@ -737,7 +737,7 @@ DIGI1:
 
 	MOV	w_r2, t_r0            // NEW BINARY Number
 	MOVS	t_r0, #1           // TRUE FLAG
-	DPUSH_t_r0_1rst_then_n_r1
+	DPUSH_r0_then_r1
 
 	// Number error
 DIGI2:
@@ -794,7 +794,7 @@ ENCL1:
 //
 	MOV	t_r0, x_r3
 	ADDS    w_r2, w_r2, #1	// w = offset to the delimiter after the text
-	DPUSH_t_r0_1rst_then_n_r1
+	DPUSH_r0_then_r1
 
 //   FOUND FIRST TEXT CHAR - COUNT THE CHARS
 ENCL2:
@@ -811,7 +811,7 @@ ENCL3:	//   FOUND null AT END OF TEXT
 ENCL4:	//   FOUND TERMINATOR CHARACTER
 	MOV     t_r0, w_r2      // COUNT+1 =
 	ADDS    t_r0, t_r0, #1  // offset to the first character not included
-	DPUSH_t_r0_1rst_then_n_r1
+	DPUSH_r0_then_r1
 
 
 //	0 NULL:	( -- ) IMMEDIATE
@@ -1592,7 +1592,7 @@ TDUP:
 // TDUP: OPT by picking pops
 	LDR     t_r0, [p]
 	LDR     w_r2, [p, #4]
-	DPUSH_t_r0_1rst_then_n_r1
+	DPUSH_r0_then_r1
 
 
 //	-DUP ZNDUP:	( n1 -- n1 (if zero)
@@ -1639,7 +1639,7 @@ ROT:
 #endif
 	POP2t_r0
 	PUSHn
-	DPUSH_t_r0_1rst_then_n_r1	//  --  LSW MSW )
+	DPUSH_r0_then_r1        	//  --  LSW MSW )
 
 
 //	I I:	( -- n )
@@ -1794,13 +1794,13 @@ OVER:
 	POP2w_r2	// n2
 #ifdef TOSCT
 // Get new t - This could become REFRESHt
-	LDR	t_r0, [p_r7]            // t invalid so get it
-        POP2t_r0                        // do the increment
+	LDR	t_r0, [p_r7]    // t invalid so get it
+        POP2t_r0                // do the increment
 #else
-	POP2t_r0		        // n1
+	POP2t_r0                // n1
 #endif
-	PUSHt_r0		        // -- n1 )
-	DPUSH_t_r0_1rst_then_n_r1       // --  LSW MSW )
+	PUSHt_r0                // -- n1 )
+	DPUSH_r0_then_r1        // --  LSW MSW )
 
 
 //	DROP DROP:	( n1 -- )
@@ -1849,7 +1849,7 @@ SWAP:
 	POP2w_r2	                // n2
 	POP2t_r0	                // n1
 #endif
-	DPUSH_t_r0_1rst_then_n_r1	//  --  LSW MSW )
+	DPUSH_r0_then_r1        	//  --  LSW MSW )
 
 
 //	DUP DUP:	( n1 -- n1 n1 )
@@ -3164,7 +3164,7 @@ DNEGATE:
 	MVNS    t_r0, t_r0              // negate MSW
 	MVNS    w_r2, w_r2              // negate LSW
 	ADDS	w_r2, w_r2, #1          // add 1 to LSW
-	DPUSH_t_r0_1rst_then_n_r1       //  --  LSW MSW )
+	DPUSH_r0_then_r1               //  --  LSW MSW )
 
 
 //	DPL_SV:	( -- addr of NDPL ) Contains # of digits after . in double number
@@ -3251,7 +3251,7 @@ DPLUS:
 	POP2w_r2        //    ldr     w_r2, [p_r7],#4      // LS
 	ADDS	w_r2, w_r2, n_r1        // LS sum, set status flags
 	ADCS    t_r0, t_r0, x_r3        // MS sum + carry
-	DPUSH_t_r0_1rst_then_n_r1       //  --  LSW MSW )
+	DPUSH_r0_then_r1               //  --  LSW MSW )
 
 
 //	S->D STOD:	( n -- d=<LSW MSW> ) SIGNED:
@@ -3275,7 +3275,7 @@ STOD:
 
 	SUBS     t_r0, t_r0, #1         // LSW is NEG
 STOD1:
-	DPUSH_t_r0_1rst_then_n_r1       //  --  LSW MSW )
+	DPUSH_r0_then_r1               //  --  LSW MSW )
 
 
 //	2* TWOSTAR:	( n -- n*2 ) LSL 1
@@ -5650,9 +5650,9 @@ FISH_return2c:
 flogRAM:
 	DC32	.+5
  SECTION .text : CODE (2)
-	mov	r8, t_r0
-	mov	r9, n_r1
-	mov	ra_r10, i       	//  SAVE IP !!!
+	mov	lr, t_r0
+	mov	pc, n_r1
+	mov	ra_r10, i_r5       	//  SAVE IP !!!
 	ldr	t_r0, = RAM_START	// RAM_START
 	ldr	y_r4, = RAM_END	        // (RAM_END +1)		//  limit
 _flogRAM:

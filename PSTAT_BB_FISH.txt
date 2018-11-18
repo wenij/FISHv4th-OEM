@@ -1,0 +1,36 @@
+\\ BITBANG PSTAT PB3-5
+\ The gpio registers involved.
+040020414h	CONSTANT	GPIOB-ODR
+040020441h	CONSTANT	GPIOA-IDR
+040020400h      CONSTANT        GPIOB-MODER     \ NEEDED TO BIT BANG TEST
+
+: SETBIT ( 0-based-bit# adrr -- )
+	>R              \ STORE @ADDR VALUE
+	1h SWAP LSL
+	R  @ XOR        \ WHAT IS IT? IT'S NOT AND!
+	R>
+\	CR .SH
+	!
+;
+
+: CLRBIT ( 0-based-bit# addr -- )
+	>R              \ STORE @ADDR VALUE
+	1h SWAP LSL
+	R  @ XOR        \ WHAT IS IT? IT'S NOT AND!
+	R>
+\	CR .SH
+	!
+;
+
+EHON
+\ Bit bang requires 
+\ INIT FOR BIT BANG TEST, MODER is 2 bits wide per pin.
+\ PB3 OUT       CLK
+\ PB4 IN        MISO
+\ PB5 OUT       MOSI
+
+: .PB3 ." CLK ON PB3 IN BB IS " 3 GPIOB-ODR SEEBIT@	;
+
+.PB3
+
+PON

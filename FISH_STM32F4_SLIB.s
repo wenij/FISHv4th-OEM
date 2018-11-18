@@ -992,7 +992,7 @@ thispfa:
 	PUSHx			// PUSH pfa
 	MOVS    t, #1           // TRUE VALUE
 	MOV     w, k		// RETURN Header Byte LENGTH
-	DPUSH_t_r0_1rst_then_n_r1
+	DPUSH_r0_then_r1
 
 //	NO NAME MATCH - TRY ANOTHER
 //      Set NEXT LINK FIELD ADDR (lfa) to x
@@ -1323,7 +1323,7 @@ USTAR:
 //	MOV	t, n	// MSW
 // UMULL ilLegal register R0 is not allowed here
 	UMULL   w_r2, t_r0, t_r0, n_r1  // rdLO rdHi rn * rs
-	DPUSH_t_r0_1rst_then_n_r1       //  --  LSW MSW )
+	DPUSH_r0_then_r1                //  --  LSW MSW )
 
 //:NONAME	USLASH:	( d n --- u32REM u32QUO ) USED INTERNALLY - NOT UNSIGNED
 //      Leave the unsigned remainder u2 and unsigned quotient u3 from the
@@ -1359,13 +1359,13 @@ USLASH:
         ;MLS    w, t, QUO  n, DIVOR  W DIVIDEND  I.E MLS RD = W - ( T * N ))
 // Error[438]: This instruction is not available in the selected cpu/core
 	MLS     w_r2, t_r0, n_r1, w_r2
-	DPUSH_t_r0_1rst_then_n_r1	//  --  LSW MSW )
+	DPUSH_r0_then_r1        	//  --  LSW MSW )
 
 DZERO:
 	EORS	t_r0, t_r0, t_r0        // zero
 	SUBS	t_r0, t_r0, #1          //
 	MOV     w_r2, t_r0              //
-	DPUSH_t_r0_1rst_then_n_r1       //  --  LSW MSW )
+	DPUSH_r0_then_r1                //  --  LSW MSW )
 
 //:NONAME SPSTO:	( -- ) Initialize the stack pointer from INITSO.
  SECTION .text : CONST (2)
