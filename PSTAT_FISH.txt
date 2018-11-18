@@ -58,6 +58,7 @@ SPI1-CR1 @ 037Dh = IF ." IN BIDIRECTIONAL  MODE " THEN
 \ The gpio registers involved.
 040020414h	CONSTANT	GPIOB-ODR
 040020441h	CONSTANT	GPIOA-IDR
+040020400h      CONSTANT        GPIOB-MODER     \ NEEDED TO BIT BANG TEST
 
 \ The gpio registers involved.
 040020814h	CONSTANT	GPIOC-ODR
@@ -157,11 +158,13 @@ RXNE: Receive buffer not empty
 	CR	.DAC-CS
 ;
 
+.CS
+
 \ TWO THINGS DONE - C! AND ...
 : DW ( N3 n2 n1=MSB -- )
 \ this may have to read back false values, because the spi engine always reads back something.
  	13d GPIOB-ODR CLRBIT \ DAC PB13 CS (LEDRED) low=ON
-	~TXE	( N2 )	3Fh AND SPI1-DR C!
+	~TXE	( n1 )	3Fh AND SPI1-DR C!
 	~TXE	( n2 )  SPI1-DR C!
 	~TXE	( n3 ) 	SPI1-DR C!
 	GPIOB-ODR 1 13d LSL SETBITS \ DAC PB13 CS (LEDRED) high=OFF
@@ -185,12 +188,12 @@ RXNE: Receive buffer not empty
 
 : DAC-SCOPE-TEST BEGIN TS ?KEY UNTIL ;
 
-\ loopback test WORDS here:
+\ SPI1 loopback test WORDS here:
 : DAC-LB	( N1 N2 N3 -- )\
-	." DAC-CS LOOPBACK TEST"
-	13d GPIOB-ODR CLRBIT \ DAC PB13 CS (LEDRED) low=ON
+	CR ." DAC-CS LOOPBACK TEST"
+	13d GPIOB-ODR CLRBIT            \ DAC PB13 CS (LEDRED) low=ON
 	.DAC-CS
-	DUP 3Fh AND CR ." 1RST BYTE WRITTEN = " .H
+	DUP CR ." 1RST BYTE WRITTEN = " .H
 	~TXE	3Fh AND SPI1-DR C!
 	~RXNE	SPI1-DR C@
 	CR ." 1RST BYTE READ BACK = " .H
@@ -204,7 +207,8 @@ RXNE: Receive buffer not empty
 	~TXE	SPI1-DR C!
 	~RXNE	SPI1-DR C@
 	CR ." 3RD BYTE READ BACK = " .H
-	GPIOB-ODR 1 13d LSL SETBITS \ DAC PB13 CS (LEDRED) high=OFF
+\	GPIOB-ODR 1 13d LSL SETBITS     \ DAC PB13 CS (LEDRED) high=OFF
+	12d GPIOB-ODR SETBIT            \ DAC PB13 CS (LEDRED) high=OFF
 	.DAC-CS
 CR ." CHECKed, no OVERRUN~! " CR
 ;
@@ -236,7 +240,7 @@ CR ." CHECKed, no OVERRUN~! " CR
 
 : ADC-LB	( N1 N2 N3 -- )\
 	." ADC-CS LOOPBACK TEST"
-	12d GPIOB-ODR CLRBIT \ ADC PB12 CS (LEDBLUE) low=ON
+	12d GPIOB-ODR CLRBIT            \ ADC PB12 CS (LEDBLUE) low=ON
 	.ADC-CS
 	DUP 3Fh AND CR ." 1RST BYTE WRITTEN = " .H
 	~TXE	3Fh AND SPI1-DR C!
@@ -252,27 +256,36 @@ CR ." CHECKed, no OVERRUN~! " CR
 	~TXE	SPI1-DR C!
 	~RXNE	SPI1-DR C@
 	CR ." 3RD BYTE READ BACK = " .H
-	GPIOB-ODR 1 12d LSL SETBITS \ ADC PB12 CS (LEDBLUE) high=OFF
+\	GPIOB-ODR 1 12d LSL SETBITS     \ ADC PB12 CS (LEDBLUE) high=OFF
+	12d GPIOB-ODR SETBIT            \ ADC PB12 CS (LEDBLUE) high=OFF
 	.ADC-CS
 CR ." CHECKed, no OVERRUN~! " CR
 ;
-
 
 : SEEBIT@ ( 1-based-bit# addr -- )
 	SWAP \ MAKES STACK ARGS SAME AS SETBIT/CLRBIT
 	1 SWAP LSL >R @ R AND R> AND IF ." ON" ELSE ." OFF" THEN ;
 
 : READ-SPI1-CR1 SPI1-CR1 @ DUP .B ;
-READ-SPI1-CR1 CR
 
 : READ-SPI1-CR2 SPI1-CR2 @ DUP .B ;
-READ-SPI1-CR2 CR
 
 : READ-SPI1-DR SPI1-DR @ DUP .B ;
-READ-SPI1-DR CR
 
 : READ-SPI1-SR SPI1-SR @ DUP .B ;
-READ-SPI1-SR CR
+
+: .SPI-REGISTERS
+  \ TEXT PREFIX
+  READ-SPI1-CR1
+  \ TEXT PREFIX
+  READ-SPI1-CR2
+  \ TEXT PREFIX
+  READ-SPI1-DR
+  \ TEXT PREFIX
+  READ-SPI1-SR
+;
+
+.SPI-REGISTERS
 
 : .SW1 ." SW1 (PC6) IS " 9 GPIOC-ODR SEEBIT@	;
 
@@ -284,7 +297,7 @@ READ-SPI1-SR CR
 
 : .SW CR .SW1 CR .SW2 CR .SW3 CR .SW4 CR ;
 
-\ DURING dac writes THE RXNE IS SET? DAC DOESN'T TALK BACK.
+.SW
 
 \ BUT lsb ORDER IS disordered is WHAT SCOPE SEEs~!
 \ Yet register LSBFIRST bit is zero~!
@@ -305,22 +318,22 @@ typedef enum gpio_af {
 \ Enable PB12-15, and PB0-1 as Outputs for SPI BT, ADC and DAC BT CS AND RST
 \ PROGRAM SPI1 AF ON PB3, PB4 AND PB5, TAKING OVER THE JTAG PINS
 \ PORTB - Do std GPIO and level set init. Then do alternate function config.
-PB15  BT-RST	        is active high.	0x1
-PB14  BT-CSn	        is active low. 	0x1
-PB13  DAC-CSn        	is active low. 	0x1
-PB12  ADC-CSn		is active low. 	0x1
-PB11  SDA2		I2C START NOT USED
+PB15  BT-RST            is active high.	0x1
+PB14  BT-CSn            is active low. 	0x1
+PB13  DAC-CSn           is active low. 	0x1
+PB12  ADC-CSn           is active low. 	0x1
+PB11  SDA2              I2C START NOT USED
 PB10  SCL2		
 PB9   NC
 PB8   NC
 PB7   SDA1
-PB6   SCL1		I2C END NOT USED
-PB5   SPI1-MOSI		is AF, SPI1_MOSI 0x2
-PB4   SPI1-MISO		is AF, SPI1_MISO 0x2
-PB3   JTDO/SPI1-SCLK	is AF, SPI1_SCLK 0x2
-PB2   BOOT0		Do not program	 0x0
-PB1   ADC-PDN	        is active low. 	 0x1
-PB0   ADC-RSTn		is active high.	 0x1
+PB6   SCL1              I2C END NOT USED
+PB5   SPI1-MOSI         is AF, SPI1_MOSI 0x2
+PB4   SPI1-MISO         is AF, SPI1_MISO 0x2
+PB3   JTDO/SPI1-SCLK    is AF, SPI1_SCLK 0x2
+PB2   BOOT0             Do not program	 0x0
+PB1   ADC-PDN           is active low. 	 0x1
+PB0   ADC-RSTn          is active high.	 0x1
 )
 
 (
@@ -353,11 +366,21 @@ PC0     GAIN_SWITCH0    is active low.
 \ BIT and BITS SET AND SEE WORDS FOR MEMORY AND REGISTER
 \ update GLOSSARY WITH BETTER EXAMPLES/EXPLNATIONS
 
+\ SPI1 BIT BANG WORDS
+\ GPIOB- MODER 000000010100b 14h
+
+: SET-BB 
+  .SPI-REGISTERS
+    GPIOB-ODR 14h SETBITS
+  .SPI-REGISTERS
+;
+
 EHOFF
 
 \ STACK SANITY CHECK
 .S
 
+: .SPI1-DUMP
 \ SPI DIRECTION
 .SPI1-DIRECTION?
 
@@ -367,24 +390,33 @@ EHOFF
 .SPI1
 
 .CS
+\ FIX
+\ FFh 7Fh A0h DAC-LB
 
-FFh 7Fh A0h DAC-LB
-
-\ SANITY SHOWS A LOCKED UP MISO.
-.CS
-
-FFh 7Fh A1h SPI1-ONLY-LB
+\ .CS
+\ FIX
+\ FFh 7Fh A1h SPI1-ONLY-LB
 
 \ SANITY CHECK WORDS
-.CS
+\ .CS
+\ FFh 7Fh A0h ADC-LB
+;
 
-FFh 7Fh A0h DAC-LB
+.SPI1-DUMP
 
-FFh 7Fh A0h ADC-LB
-
-\ EHON WORKING ONCE? DOES IT NEEDS A FIXIN?
 \ WDR RDR ARE ATOMIC WORDS FOR THE LOOPBACK ISSUE.
+EHON
+\ Bit bang requires 
+\ INIT FOR BIT BANG TEST, MODER is 2 bits wide per pin.
+\ PB3 OUT       CLK
+\ PB4 IN        MISO
+\ PB5 OUT       MOSI
+
+: .PB3 ." CLK ON PB3 IN BB IS " 2 GPIOB-ODR SEEBIT@	;
+
+.PB3
+
 PON
 
-3Dh WDR
+\ 3Dh WDR
 

@@ -8,6 +8,9 @@
 //#define USE_CMAIN     // Affects cstartup_M.c FM0_COLD and RET2c
 
 // System:
+//#define PSTAT_SPI1_TEST
+#define PSTAT_BB_NOINIT_TEST    // This is for the Bit Bang where SCLK 1 sets MOSI
+//#define PSTAT_BB_TEST
 #define TRUE_EQU_NEG_ONE
 #define XON_XOFF        // Use XON_XOFF Flow Control
 #define ABORT_STOP_TILL_CO
