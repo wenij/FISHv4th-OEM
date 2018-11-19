@@ -1,0 +1,64 @@
+EHON
+POFF
+\ BITBANG PSTAT PB3-5
+\ The gpio registers involved.
+040020414h	CONSTANT	GPIOB-ODR
+040020441h	CONSTANT	GPIOA-IDR
+040020400h      CONSTANT        GPIOB-MODER     \ NEEDED FOR BIT BANG TEST
+
+: SETBIT ( 0-based-bit# adrr -- )
+	>R              \ STORE @ADDR VALUE
+	1h SWAP LSL
+	R  @ XOR        \ WHAT IS IT? IT'S NOT AND!
+	R>
+\	CR .SH
+	!
+;
+
+: CLRBIT ( 0-based-bit# addr -- )
+	>R              \ STORE @ADDR VALUE
+	1h SWAP LSL
+	R  @ XOR        \ WHAT IS IT? IT'S NOT AND!
+	R>
+\	CR .SH
+	!
+;
+
+\ Bit bang requires 
+\ INIT FOR BIT BANG TEST, MODER is 2 bits wide per pin.
+\ PB3 OUT       CLK
+\ PB4 IN        MISO
+\ PB5 OUT       MOSI
+
+: SEEBIT@ ( 1-based-bit# addr -- )
+	SWAP \ MAKES STACK ARGS SAME AS SETBIT/CLRBIT
+	1 SWAP LSL >R @ R AND R> AND IF ." ON" ELSE ." OFF" THEN ;
+
+: .PB3 CR ." CLK ON PB3 IN BB IS " 3 GPIOB-ODR SEEBIT@	;
+
+: .PB4 CR ." MISO ON PB4 IN BB IS " 4 GPIOB-ODR SEEBIT@	;
+
+: .PB5 CR ." MOSI ON PB5 IN BB IS " 5 GPIOB-ODR SEEBIT@	;
+
+: .SPI1-BB
+
+CR .PB3 .PB4 .PB5 CR ;
+
+: SET-CLK-HI
+  3 GPIOB-ODR SETBIT ;
+
+: SET-CLK-LO
+  3 GPIOB-ODR CLRBIT ;
+
+.SPI1-BB
+
+SET-CLK-HI .SPI1-BB
+
+SET-CLK-LO  .SPI1-BB
+
+\ set a MOSI
+
+\ THIS SHOWS THAT FISH IS NOT SETTING MISO HI WHERE CUBE DOES.
+
+PON     \ LEAVING EHON
+
