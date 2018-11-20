@@ -71,7 +71,7 @@ SPI1-CR1 @ 037Dh = IF ." IN BIDIRECTIONAL  MODE " THEN
 \ 3 2 LSL .B 1100b
 \ 1 9 LSL .SB TOS> 1000000000b
 
-: SETBIT ( 0-based-bit# adrr -- )
+: SETBIT ( 0-based-bit# addr -- )
 	>R              \ STORE @ADDR VALUE
 	1h SWAP LSL
 	R  @ XOR        \ WHAT IS IT? IT'S NOT AND!
@@ -88,6 +88,10 @@ SPI1-CR1 @ 037Dh = IF ." IN BIDIRECTIONAL  MODE " THEN
 \	CR .SH
 	!
 ;
+
+VAR TS 0 TS !
+TS ?
+1 TS SETBIT TS ?
 
 \ PSTAT SWITCH WORDS, ON THE DAC
 : SW1 ( ON | OFF -- )	\ BIT 9
