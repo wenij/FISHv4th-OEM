@@ -1886,71 +1886,6 @@ WC_STACK_NFA:
  ALIGNROM 2,0xFFFFFFFF
         DC32    DUP_NFA
 
-
-//	ANDBITS ANDBITS:	( addr val -- )
-
- SECTION .text : CONST (2)
-ANDBITS_NFA:
-	DC8	0x87
-	DC8	'ANDBIT'
-	DC8	'S'+0x80
- ALIGNROM 2,0xFFFFFFFF
-	DC32	WC_STACK_NFA
-ANDBITS:
-	DC32	.+5
- SECTION .text : CODE (2)
-	POPp2w 	        	// val
-	POP2n_r1 		// addr
-	LDR     t_r0, [n]	// read [val]
-	ANDS	t_r0, t_r0, w	// modify val
-	STR	t_r0, [n]	// Write val
-	NEXT
-
-
-//	SETBITS SETBITS:	( addr val -- )
-//	OR val bits into addr. See also CLRBITS.
-//	Preserves bits at addr - useful for ARM SoC initialization.
-
- SECTION .text : CONST (2)
-SETBITS_NFA:
-	DC8	0x87
-	DC8	'SETBIT'
-	DC8	'S'+0x80
- ALIGNROM 2,0xFFFFFFFF
-	DC32	ANDBITS_NFA
-SETBITS:
-	DC32	.+5
- SECTION .text : CODE (2)
-	POPp2w 	        	// val w_r2
-	POP2n_r1		// addr n_r1
-	LDR     t_r0, [n]	// read[val]t_r0
-	ORRS	t_r0, t_r0, w	// modify val
-	STR	t_r0, [n]	// Write val
-	NEXT
-
-
-//	CLRBITS CLRBITS:	( addr val -- )
-//	XOR val bits into addr. See also SETBITS.
-//	Preserves bits at addr - useful for ARM SoC initialization.
-
- SECTION .text : CONST (2)
-CLRBITS_NFA:
-	DC8	0x87
-	DC8	'CLRBIT'
-	DC8	'S'+0x80
- ALIGNROM 2,0xFFFFFFFF
-	DC32	SETBITS_NFA
-CLRBITS:
-	DC32	.+5
- SECTION .text : CODE (2)
-	POPp2w                          // val
-	POP2n_r1 		        // addr
-	LDR	t_r0, [n_r1]	        // read [val]
-        BICS    t_r0, t_r0, w_r2        // modify val  - AND-NOT
-	STR	t_r0, [n_r1]		// write val
-	NEXT
-
-
 //	CMOVE CMOVE:	( from to count -- )
 //      Move the specified quantity of bytes beginning at address from to
 //      address to. The contents of address from is moved first proceeding
@@ -1963,7 +1898,7 @@ CMOVE_NFA:
 	DC8	'CMOV'
 	DC8	'E'+0x80
  ALIGNROM 2,0xFFFFFFFF
-	DC32	CLRBITS_NFA
+	DC32	WC_STACK_NFA
 CMOVE:
 	DC32	.+5
  SECTION .text : CODE (2)
