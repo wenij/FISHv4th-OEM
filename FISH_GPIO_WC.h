@@ -15,6 +15,40 @@ $Wordcats_HowTo.c
 // https://www.st.com/en/development-tools/flasher-stm32.html
 */
 //=============================== GPIO WORDs =================================//
+/*
+: SEEBIT@ ( 1-based-bit# addr -- )
+	SWAP \ MAKES STACK ARGS SAME AS SETBIT/CLRBIT
+	1 SWAP LSL >R @ R AND R> AND IF ." ON" ELSE ." OFF" THEN ;
+
+*/
+//  SETBIT  ( 0-based-bit# adrr -- )
+ SECTION .text : CONST (2)
+SEEBIT_NFA:
+	DC8	0x80+6
+	DC8	'SEEBI'
+	DC8	'T'+0x80
+ ALIGNROM 2,0xFFFFFFFF
+  DC32	WC_FISH_PubRel_NFA
+SEEBIT:
+  DC32  DOCOL
+  DC32  SWAP, ONE, SWAP, LSL
+  DC32  TOR, AT, R, ANDD, RFROM
+  DC32  ZBRAN
+      DC32  .-BITOFF
+BITON:
+  DC32	PDOTQ
+	DC8	2
+	DC8	'O', 'N'
+ ALIGNROM 2,0xFFFFFFFF
+  DC32    SEMIS
+
+BITOFF:
+  DC32	PDOTQ
+	DC8	3
+	DC8	'O', 'F', 'F'
+ ALIGNROM 2,0xFFFFFFFF
+  DC32  SEMIS
+
 
 /* : SETBIT ( 0-based-bit# adrr -- )
 	>R              \ STORE @ADDR VALUE
@@ -41,7 +75,7 @@ SETBIT_NFA:
 	DC8	'SETBI'
 	DC8	'T'+0x80
  ALIGNROM 2,0xFFFFFFFF
-  DC32	WC_FISH_PubRel_NFA
+  DC32	SEEBIT_NFA
 SETBIT:
   DC32  DOCOL
   DC32  TOR, ONE, SWAP, LSL
@@ -121,7 +155,8 @@ CLRBITS:
 	POPp2w                          // val
 	POP2n_r1 		        // addr
 	LDR	t_r0, [n_r1]	        // read [val]
-        BICS    t_r0, t_r0, w_r2        // modify val  - AND-NOT
+  LSRS  n_r1, #1     	// modify val, AFFECT ALU FLAG ~ 
+  BICS    t_r0, t_r0, w_r2        // modify val  - AND-NOT
 	STR	t_r0, [n_r1]		// write val
 	NEXT
 
@@ -280,35 +315,13 @@ SW1_OFF:
     DC32    LIT, 6d, LIT, GPIOC_ODR, CLRBIT
     DC32    SEMIS
 
-//  PB12	GPIO_Output	ADC-CSn
-//	CS_ADC:	( -1 | 0 -- ) PB12 Chip select is -1 argument, TRUE
- SECTION .text : CONST (2)
-CS_ADC_NFA:
-	DC8	0x80+6
-	DC8	'CS-AD'
-	DC8	'C'+0x80
- ALIGNROM 2,0xFFFFFFFF
-	DC32	SW1_NFA
-CS_ADC: // BIT 1000h IN GPIOB_ODR - PB12 ADC-CSn
-// TURN OFF OTHER CHIP SELECTS WHEN YOU TURN THIS ONE ON~!
-//  CREATE BETTER CODE BY LEARNING HOW TO USE VIC'S RMW___ WORDS.
-//	PB14	BT_CSn  4000h
-//	PB13	DAC-CSn 2000h
-//	PB12	ADC-CSn 1000h
-        DC32    DOCOL
-// ZBRAN USES TOS
-    DC32  ZBRAN
-    DC32    CS_ADC_OFF-.
-CS_ADC_ON:
-    DC32    LIT, GPIOB_ODR, LIT, 04000h, SETBITS // SET BT-CSn TO 1
-    DC32    LIT, GPIOB_ODR, LIT, 02000h, SETBITS // SET DAC-CSn TO 1
-    DC32    LIT, GPIOB_ODR, LIT, 01000h, CLRBITS // SET ADC-CSn TO 0
-    DC32    SEMIS
-CS_ADC_OFF:
-    DC32    LIT, GPIOB_ODR, LIT, 01000h, SETBITS // SET ADC-CSn TO 1
-    DC32    SEMIS
+// .BT-CS	PB14	IS LEDGREEN
+// .DAC-CS	PB13	IS LEDRED
+// .ADC-CS	PB12	IS LEDBLUE
 
-//      PB13	GPIO_Output	BT_DAC
+
+//  PB13	GPIO_Output	BT_DAC
+// .DAC-CS	PB13	IS LEDRED
 //	CS_DAC:	( -1 | 0 -- ) Chip select is -1 argument, TRUE
  SECTION .text : CONST (2)
 CS_DAC_NFA:
@@ -316,7 +329,7 @@ CS_DAC_NFA:
 	DC8	'CS-DA'
 	DC8	'C'+0x80
  ALIGNROM 2,0xFFFFFFFF
-	DC32	CS_ADC_NFA
+	DC32	SW1_NFA
 CS_DAC: // BIT 2000h IN GPIOB_ODR PB13 DAC-CSn
 // TURN OFF OTHER CHIP SELECTS WHEN YOU TURN THIS ONE ON~!
 //  CREATE BETTER CODE BY LEARNING HOW TO USE VIC'S RMW___ WORDS.
@@ -338,6 +351,7 @@ CS_DAC_OFF:
     DC32    SEMIS
 
 //  PB14	GPIO_Output	BT_CSn
+// .BT-CS	PB14	IS LEDGREEN
 //	CS_BT:	( -1 | 0 -- ) Chip select ON is -1 argument.
  SECTION .text : CONST (2)
 CS_BT_NFA:
@@ -364,6 +378,34 @@ CS_BT_ON:
     DC32    SEMIS
 CS_BT_OFF:
     DC32    LIT, GPIOB_ODR, LIT, 04000h, SETBITS // SET BT-CSn TO 1
+    DC32    SEMIS
+//  PB12	GPIO_Output	ADC-CSn
+// .ADC-CS	PB12	IS LEDBLUE
+//	CS_ADC:	( -1 | 0 -- ) PB12 Chip select is -1 argument, TRUE
+ SECTION .text : CONST (2)
+CS_ADC_NFA:
+	DC8	0x80+6
+	DC8	'CS-AD'
+	DC8	'C'+0x80
+ ALIGNROM 2,0xFFFFFFFF
+	DC32	CS_BT_NFA
+CS_ADC: // BIT 1000h IN GPIOB_ODR - PB12 ADC-CSn
+// TURN OFF OTHER CHIP SELECTS WHEN YOU TURN THIS ONE ON~!
+//  CREATE BETTER CODE BY LEARNING HOW TO USE VIC'S RMW___ WORDS.
+//	PB14	BT_CSn  4000h
+//	PB13	DAC-CSn 2000h
+//	PB12	ADC-CSn 1000h
+        DC32    DOCOL
+// ZBRAN USES TOS
+    DC32  ZBRAN
+    DC32    CS_ADC_OFF-.
+CS_ADC_ON:
+    DC32    LIT, GPIOB_ODR, LIT, 04000h, SETBITS // SET BT-CSn TO 1
+    DC32    LIT, GPIOB_ODR, LIT, 02000h, SETBITS // SET DAC-CSn TO 1
+    DC32    LIT, GPIOB_ODR, LIT, 01000h, CLRBITS // SET ADC-CSn TO 0
+    DC32    SEMIS
+CS_ADC_OFF:
+    DC32    LIT, GPIOB_ODR, LIT, 01000h, SETBITS // SET ADC-CSn TO 1
     DC32    SEMIS
 
 /*
@@ -522,64 +564,36 @@ QA_YN_BEGIN:    // DROP KEY EVERY UNTIL LOOP OR EMIT WHEN DONE
     DC32    EMIT
     DC32    SEMIS
 */
-// SPI1-DAC-BB   ( -- )
+// SPI1-DAC-BB   ( n IS IN THE DACWORD ALLOCATION IN (MEMMAP) -- )
+// THIS PRIMITIVE WORD NEEDS "ON DAC-CS" PREAMBLE, AND 24 (OR22) CALLS...
  SECTION .text : CONST (2)
 SPI1_DAC_BB_NFA:
-    DC8	0x80 + 11d
-    DC8	'SPI1-DAC-B'
-    DC8	'B'+0x80
+  DC8	0x80 + 11d
+  DC8	'SPI1-DAC-B'
+	DC8	'B'+0x80
  ALIGNROM 2,0xFFFFFFFF
-    DC32    CS_BT_NFA
+	// DC32	CLRBIT_NFA
+  DC32  CS_ADC_NFA
 SPI1_DAC_BB:
-    DC32    DOCOL
-    DC32    LIT, 2000, MS
-SPI1_DAC_BB_BEGIN:
-//	PB14	BT_CSn  4000h
-//	PB13	DAC-CSn 2000h
-//	PB12	ADC-CSn 1000h
-//  The SPI1_DR is 16 bits wide
-/*
-    DC32    TRUE_NEG_1, CS_DAC
-    DC32    strkk, 0000h, SPI1_DR
-    DC32    ZERO, CS_DAC
-*/
-    DC32    TRUE_NEG_1, CS_BT
-    DC32    LIT, 3000, MS
-    DC32    ZERO, CS_BT
+	DC32	.+5
+ SECTION .text : CODE (2)
+// READ DACWORD
+// SHIFT AND PRESERVE BETWEEN CALLS
+// BY WRITING VALUE BACK TO DACWORD (MEMMAP)
+	LDR n_r1, = DACWORD	// read DACWORD [val]
+  LDR t_r0, [n]
+  LSRS  t_r0, t_r0, #1  // modify val, AFFECTS ASPR-CARRY FLAG
+STORE_BB_BIT:
+  STR t_r0, [n_r1]     	// modify val, AFFECT ALU FLAG ~ 
+  BCC OFF_BB_BIT        // FALL THRU IF CARRY SET
+// PRODUCE an 0d OR FFh on tos
+ON_BB_BIT:
+  SUBS	t_r0, #1	// TRUE -1
+	TPUSH_r0
 
-//	PB14	BT_CSn  4000h
-//	PB13	DAC-CSn 2000h
-//	PB12	ADC-CSn 1000h
-// The SPI1_DR is 16 bits wide
-/*
-    DC32    TRUE_NEG_1, CS_DAC
-    DC32    strkk, 00F0h, SPI1_DR // NOT SEEING IT.
-    DC32    LIT, 00F0h, LIT, SPI1_DR, STORE
-    DC32    ZERO, CS_DAC
-*/
-    DC32    TRUE_NEG_1, CS_DAC
-    DC32    LIT, 3000, MS
-    DC32    ZERO, CS_DAC
-
-//	PB14	BT_CSn   4000h
-//	PB13	DAC-CSn 2000h
-//	PB12	ADC-CSn 1000h
-// The SPI1_DR is 16 bits wide
-/*
-    DC32    TRUE_NEG_1, CS_DAC
-    DC32    strkk, 00FFh, SPI1_DR
-    DC32    ZERO, CS_DAC
-*/
-    DC32    TRUE_NEG_1, CS_ADC
-    DC32    LIT, 3000, MS
-    DC32    ZERO, CS_ADC
-
-    DC32    LIT, 1000, MS
-    DC32    CR
-    DC32    ZERO
-    DC32    ZBRAN
-      DC32    SPI1_DAC_BB_BEGIN-.
-    DC32    SEMIS
+OFF_BB_BIT:
+	EORS	t_r0, t_r0	// FALSE
+	TPUSH_r0
 
 //=============================== WORDCAT ====================================//
 //NOEXEC HEADERFORWORDCATEGORIES
