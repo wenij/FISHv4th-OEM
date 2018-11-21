@@ -3759,13 +3759,13 @@ ZLESS:
 	POP2n_r1
 #endif
 #ifdef TRUE_EQU_NEG_ONE
-        EORS    t_r0, t_r0
+  EORS    t_r0, t_r0
 	SUBS	t_r0, #1	// TRUE -1
 #else
 	MOVS	t_r0, #1	// TRUE
 #endif
 	ORRS	n, n, n	// SET FLAGS
-	BMI	ZLESS1	// JS	ZLESS1
+	BMI	ZLESS1	  // JS	ZLESS1
 
 	EORS	t_r0, t_r0	// FALSE
 ZLESS1:
@@ -3784,7 +3784,7 @@ BIN_NFA:
 	DC32	ZLESS_NFA
 BIN:
 	DC32	DOCOL
-        DC32    STRVA, 2, NBASE
+  DC32  STRVA, 2, NBASE
 	DC32	SEMIS
 
 
@@ -3800,7 +3800,7 @@ HEX_NFA:
 	DC32	BIN_NFA
 HEX:
 	DC32	DOCOL
-        DC32    STRVA, 16, NBASE
+  DC32  STRVA, 16, NBASE
 	DC32	SEMIS
 
 
@@ -3817,7 +3817,7 @@ DECIMAL_NFA:
 	DC32	HEX_NFA
 DECIMAL:
 	DC32	DOCOL
-        DC32    STRVA, 10, NBASE
+  DC32  STRVA, 10, NBASE
 	DC32	SEMIS
 
 
@@ -3835,8 +3835,8 @@ NEGATE:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0                // MVN YES
-	MVNS     t_r0, t_r0     // 1's compliment
-	ADDS     t_r0, t_r0, #1 // 2's compliment
+	MVNS  t_r0, t_r0     // 1's compliment
+	ADDS  t_r0, t_r0, #1 // 2's compliment
 	TPUSH_r0
 
 
@@ -4730,7 +4730,7 @@ CR:
         DC32	LIT, msg_cr, NULLSTRLEN, TYPE, SEMIS
 #else
         DC32	DOCOL
-        DC32    zero_OUT
+        DC32  zero_OUT
         DC32	PDOTQ
 	DC8	2
 	DC8	0x0D, 0x0A
