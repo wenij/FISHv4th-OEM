@@ -152,12 +152,12 @@ CLRBITS_NFA:
 CLRBITS:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POPp2w                          // val
-	POP2n_r1 		        // addr
+	POPp2w                    // val
+	POP2n_r1 		              // addr
 	LDR	t_r0, [n_r1]	        // read [val]
-  LSRS  n_r1, #1     	// modify val, AFFECT ALU FLAG ~ 
-  BICS    t_r0, t_r0, w_r2        // modify val  - AND-NOT
-	STR	t_r0, [n_r1]		// write val
+  LSRS  n_r1, n_r1, #1     	// modify val, AFFECT ALU FLAG ~ 
+  BICS    t_r0, t_r0, w_r2  // modify val  - AND-NOT
+	STR	t_r0, [n_r1]		      // write val
 	NEXT
 
 
@@ -564,6 +564,18 @@ QA_YN_BEGIN:    // DROP KEY EVERY UNTIL LOOP OR EMIT WHEN DONE
     DC32    EMIT
     DC32    SEMIS
 */
+
+//	PSTATDACDATA: ( -- addr ) VALUE BEING BIT BANGED TO SPI1 ON THE PSTAT BOARD
+ SECTION .text : CONST (2)
+PSTATDACDATA_NFA:
+	DC8	0x80 +07d
+	DC8	'DACWOR'
+	DC8	'D'+0x80
+ ALIGNROM 2,0xFFFFFFFF
+	DC32	CS_ADC_NFA
+PSTATDACDATA:
+  DC32    DOCON, PSTAT_DAC_DATA
+
 // SPI1-DAC-BB   ( n IS IN THE DACWORD ALLOCATION IN (MEMMAP) -- )
 // THIS PRIMITIVE WORD NEEDS "ON DAC-CS" PREAMBLE, AND 24 (OR22) CALLS...
  SECTION .text : CONST (2)
@@ -572,27 +584,27 @@ SPI1_DAC_BB_NFA:
   DC8	'SPI1-DAC-B'
 	DC8	'B'+0x80
  ALIGNROM 2,0xFFFFFFFF
-	// DC32	CLRBIT_NFA
-  DC32  CS_ADC_NFA
+  DC32  PSTATDACDATA_NFA
 SPI1_DAC_BB:
 	DC32	.+5
  SECTION .text : CODE (2)
-// READ DACWORD
+// READ DACWORD WHICH HAS MSB IN LSB ORDER
 // SHIFT AND PRESERVE BETWEEN CALLS
 // BY WRITING VALUE BACK TO DACWORD (MEMMAP)
-	LDR n_r1, = DACWORD	// read DACWORD [val]
+	LDR n_r1, = PSTAT_DAC_DATA	// read DACWORD [val]
   LDR t_r0, [n]
+// SHIFT OUT A BIT AT A TIME, MSB FIRST
   LSRS  t_r0, t_r0, #1  // modify val, AFFECTS ASPR-CARRY FLAG
 STORE_BB_BIT:
   STR t_r0, [n_r1]     	// modify val, AFFECT ALU FLAG ~ 
   BCC OFF_BB_BIT        // FALL THRU IF CARRY SET
 // PRODUCE an 0d OR FFh on tos
 ON_BB_BIT:
-  SUBS	t_r0, #1	// TRUE -1
+  MOVS	t_r0, #-1  // TRUE -1 ON
 	TPUSH_r0
 
 OFF_BB_BIT:
-	EORS	t_r0, t_r0	// FALSE
+	EORS	t_r0, t_r0	// OFF
 	TPUSH_r0
 
 //=============================== WORDCAT ====================================//
