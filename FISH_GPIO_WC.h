@@ -4,6 +4,7 @@
 
 // All spi1 chip selects are active low, INIT'D HIGH in SOC_INIT.
 //
+// DC32	WC_FISH_PubRel_NFA  // Links THIS CODE into THE BASE FISH WORDCAT.
 
 /* File include explains how to make a new WORDCAT:
 How to make it the current TOP of the Dictionary:
@@ -15,6 +16,22 @@ $Wordcats_HowTo.c
 // https://www.st.com/en/development-tools/flasher-stm32.html
 */
 //=============================== GPIO WORDs =================================//
+
+// IMPLEMENT THE PORT B AND PORTC CONSTANTS
+
+//	GPIOB_MODER: ( -- addr ) VALUE BEING BIT BANGED TO SPI1 ON THE PSTAT BOARD
+ SECTION .text : CONST (2)
+GPIOB_MODER_NFA:
+	DC8	0x80 +011d
+	DC8	'GPIOB-MODE'
+	DC8	'R'+0x80
+ ALIGNROM 2,0xFFFFFFFF
+	DC32	WC_FISH_PubRel_NFA
+RM_GPIOB_MODER:
+  DC32    DOCON, GPIOB_MODER
+
+
+
 /*
 : SEEBIT@ ( 1-based-bit# addr -- )
 	SWAP \ MAKES STACK ARGS SAME AS SETBIT/CLRBIT
@@ -28,7 +45,7 @@ SEEBIT_NFA:
 	DC8	'SEEBI'
 	DC8	'T'+0x80
  ALIGNROM 2,0xFFFFFFFF
-  DC32	WC_FISH_PubRel_NFA
+  DC32	GPIOB_MODER_NFA
 SEEBIT:
   DC32  DOCOL
   DC32  SWAP, ONE, SWAP, LSL
@@ -50,7 +67,8 @@ BITOFF:
   DC32  SEMIS
 
 
-/* : SETBIT ( 0-based-bit# adrr -- )
+/*  SETBIT ( 0-based-bit# adrr -- )
+: SB
 	>R              \ STORE @ADDR VALUE
 	1h SWAP LSL
 	R  @ XOR        \ WHAT IS IT? IT'S NOT AND!
@@ -59,7 +77,8 @@ BITOFF:
 	!
 ;
 
-: CLRBIT ( 0-based-bit# addr -- )
+ CLRBIT ( 0-based-bit# addr -- )
+: CB
 	>R              \ STORE @ADDR VALUE
 	1h SWAP LSL
 	R  @ XOR        \ WHAT IS IT? IT'S NOT AND!
@@ -78,8 +97,10 @@ SETBIT_NFA:
   DC32	SEEBIT_NFA
 SETBIT:
   DC32  DOCOL
-  DC32  TOR, ONE, SWAP, LSL
-  DC32  R, AT, XORR, RFROM, STORE
+  DC32  CR
+  DC32  DOTSHEX
+  DC32  TOR, ONE, SWAP, LSL, CR, DOTSHEX
+  DC32  R, AT, XORR, RFROM, CR, DOTSHEX, STORE
   DC32  SEMIS
 
 //  CLRBIT  ( 0-based-bit# adrr -- )
@@ -108,11 +129,11 @@ ANDBITS_NFA:
 ANDBITS:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POPp2w 	        	// val
+	POPp2w      // val
 	POP2n_r1 		// addr
-	LDR     t_r0, [n]	// read [val]
-	ANDS	t_r0, t_r0, w	// modify val
-	STR	t_r0, [n]	// Write val
+	LDR   t_r0, [n]	      // read [val]
+	ANDS	t_r0, t_r0, w	  // modify val
+	STR	  t_r0, [n]	      // Write val
 	NEXT
 
 
@@ -341,13 +362,13 @@ CS_DAC: // BIT 2000h IN GPIOB_ODR PB13 DAC-CSn
     DC32  ZBRAN
     DC32    CS_DAC_OFF-.
 CS_DAC_ON:
-    DC32    LIT, GPIOB_ODR, LIT, 04000h, SETBITS // AND BT-CSn TO 1
-    DC32    LIT, GPIOB_ODR, LIT, 02000h, CLRBITS // SET DAC-CSn TO 0
-    DC32    LIT, GPIOB_ODR, LIT, 01000h, SETBITS // SET ADC-CSn TO 1
+    DC32    LIT, 014h, LIT, GPIOB_ODR, SETBIT // AND BT-CSn TO 1
+    DC32    LIT, 013h, LIT, GPIOB_ODR, CLRBIT // SET DAC-CSn TO 0
+    DC32    LIT, 012h, LIT, GPIOB_ODR, SETBIT // SET ADC-CSn TO 1
     DC32    SEMIS
 
 CS_DAC_OFF:
-    DC32    LIT, GPIOB_ODR, LIT, 02000h, SETBITS // SET DAC-CSn TO 1
+    DC32    LIT, 013h, LIT, GPIOB_ODR, SETBIT // SET DAC-CSn TO 1
     DC32    SEMIS
 
 //  PB14	GPIO_Output	BT_CSn
@@ -599,6 +620,7 @@ SPI1_DAC_BB:
   LSLS  t_r0, t_r0, #1  // modify val, AFFECTS ASPR-CARRY FLAG
 STORE_BB_BIT:
   STR t_r0, [n_r1]     	// modify val, AFFECT ALU FLAG ~ 
+
   BCC OFF_BB_BIT        // FALL THRU IF CARRY SET
 // PRODUCE an 0d OR FFh on tos
 ON_BB_BIT:
@@ -609,6 +631,7 @@ OFF_BB_BIT:
 	EORS	t_r0, t_r0	// OFF
 	TPUSH_r0
 
+    
 //=============================== WORDCAT ====================================//
 //NOEXEC HEADERFORWORDCATEGORIES
 //	WC_FISH_SYS: = FISH System: CATEGORY
@@ -618,11 +641,10 @@ WC_FISH_GPIO_NFA:
 	DC8	0x80+4+5        // +4 is format chars constant
                                 // +n is Name lenght
         DC8     0x0D, 0x0A
-	DC8	'GPIO:'
+	DC8	'PSTAT GPIO:'
         DC8     0x0D, 0x0A+0x80
  ALIGNROM 2,0xFFFFFFFF
-	// DC32	WC_FISH_PubRel_NFA        // Where this wordcat links in.
-       DC32    SPI1_DAC_BB_NFA
+  DC32  SPI1_DAC_BB_NFA
 
 
 /*
