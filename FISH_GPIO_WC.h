@@ -19,14 +19,69 @@ $Wordcats_HowTo.c
 
 // IMPLEMENT THE PORT B AND PORTC CONSTANTS
 
-//	GPIOB_MODER: ( -- addr ) VALUE BEING BIT BANGED TO SPI1 ON THE PSTAT BOARD
+//	GPIOB_ODR: ( -- addr )
+ SECTION .text : CONST (2)
+GPIOC_ODR_NFA:
+	DC8	0x80 +09d
+	DC8	'GPIOC-OD'
+	DC8	'R'+0x80
+ ALIGNROM 2,0xFFFFFFFF
+	DC32	WC_FISH_PubRel_NFA
+RM_GPIOC_ODR:
+  DC32    DOCON, GPIOC_ODR
+
+//	GPIOB_IDR: ( -- addr )
+ SECTION .text : CONST (2)
+GPIOC_IDR_NFA:
+	DC8	0x80 +09d
+	DC8	'GPIOC-ID'
+	DC8	'R'+0x80
+ ALIGNROM 2,0xFFFFFFFF
+	DC32	GPIOC_ODR_NFA
+RM_GPIOC_IDR:
+  DC32    DOCON, GPIOC_IDR
+
+//	GPIOC_MODER: ( -- addr )
+ SECTION .text : CONST (2)
+GPIOC_MODER_NFA:
+	DC8	0x80 +011d
+	DC8	'GPIOC-MODE'
+	DC8	'R'+0x80
+ ALIGNROM 2,0xFFFFFFFF
+	DC32	GPIOC_IDR_NFA
+RM_GPIOC_MODER:
+  DC32    DOCON, GPIOC_MODER
+
+//	GPIOB_ODR: ( -- addr )
+ SECTION .text : CONST (2)
+GPIOB_ODR_NFA:
+	DC8	0x80 +09d
+	DC8	'GPIOB-OD'
+	DC8	'R'+0x80
+ ALIGNROM 2,0xFFFFFFFF
+	DC32	GPIOC_MODER_NFA
+RM_GPIOB_ODR:
+  DC32    DOCON, GPIOB_ODR
+
+//	GPIOB_IDR: ( -- addr )
+ SECTION .text : CONST (2)
+GPIOB_IDR_NFA:
+	DC8	0x80 +09d
+	DC8	'GPIOB-ID'
+	DC8	'R'+0x80
+ ALIGNROM 2,0xFFFFFFFF
+	DC32	GPIOB_ODR_NFA
+RM_GPIOB_IDR:
+  DC32    DOCON, GPIOB_IDR
+
+//	GPIOB_MODER: ( -- addr )
  SECTION .text : CONST (2)
 GPIOB_MODER_NFA:
 	DC8	0x80 +011d
 	DC8	'GPIOB-MODE'
 	DC8	'R'+0x80
  ALIGNROM 2,0xFFFFFFFF
-	DC32	WC_FISH_PubRel_NFA
+	DC32	GPIOB_IDR_NFA
 RM_GPIOB_MODER:
   DC32    DOCON, GPIOB_MODER
 
@@ -97,10 +152,9 @@ SETBIT_NFA:
   DC32	SEEBIT_NFA
 SETBIT:
   DC32  DOCOL
-  DC32  CR
-  DC32  DOTSHEX
-  DC32  TOR, ONE, SWAP, LSL, CR, DOTSHEX
-  DC32  R, AT, XORR, RFROM, CR, DOTSHEX, STORE
+//  DC32  CR DOTHEX
+  DC32  TOR, ONE, SWAP, LSL
+  DC32  R, AT, XORR, RFROM, STORE
   DC32  SEMIS
 
 //  CLRBIT  ( 0-based-bit# adrr -- )
@@ -151,11 +205,11 @@ SETBITS_NFA:
 SETBITS:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POPp2w 	        	// val w_r2
-	POP2n_r1		// addr n_r1
-	LDR     t_r0, [n]	// read[val]t_r0
+	POPp2w              // val w_r2
+	POP2n_r1        		// addr n_r1
+	LDR     t_r0, [n]	  // read[val]t_r0
 	ORRS	t_r0, t_r0, w	// modify val
-	STR	t_r0, [n]	// Write val
+	STR	t_r0, [n]	      // Write val
 	NEXT
 
 
@@ -638,7 +692,7 @@ OFF_BB_BIT:
 
  SECTION .text : CONST (2)
 WC_FISH_GPIO_NFA:
-	DC8	0x80+4+5        // +4 is format chars constant
+	DC8	0x80+4+11d        // +4 is format chars constant
                                 // +n is Name lenght
         DC8     0x0D, 0x0A
 	DC8	'PSTAT GPIO:'
