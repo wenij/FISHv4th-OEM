@@ -159,7 +159,7 @@ SETBIT:
 	POP2n_r1 		// addr
 	LDR   t_r0, [w_r2]      // read [val]
   MOV   x_r3, #1
-    LSLS   x_r3, n_r1
+  LSLS   x_r3, n_r1
 	ORRS	t_r0, t_r0, x_r3  // modify val
 	STR  t_r0, [w_r2]       // Write val
 	NEXT
@@ -279,10 +279,10 @@ GS0_ON:
     DC32    LIT, 0d, LIT, GPIOC_ODR, SETBIT
     DC32    SEMIS
 GS0_OFF:
-    DC32    LIT, 0d, LIT, GPIOC_ODR, SETBIT
+    DC32    LIT, 0d, LIT, GPIOC_ODR, CLRBIT
     DC32    SEMIS
 
-//  PC1	GPIO_Output	GS1
+//  PC1	GPIO_Output	GS1 POTC BOT 0
 //	GS1:	( -1 | 0 -- ) Use ON and OFF
  SECTION .text : CONST (2)
 GS1_NFA:
@@ -291,7 +291,7 @@ GS1_NFA:
 	DC8	'1'+0x80
  ALIGNROM 2,0xFFFFFFFF
 	DC32	GS0_NFA
-GS1: // BIT 01h IN GPIOC_ODR - PC0 GS0
+GS1: // BIT 0h IN GPIOC_ODR - PC0 GS0
 		DC32    DOCOL
 // ZBRAN USES TOS
     DC32  ZBRAN
@@ -322,7 +322,7 @@ GS2_ON:
     DC32    LIT, 2d, LIT, GPIOC_ODR, SETBIT
     DC32    SEMIS
 GS2_OFF:
-    DC32    LIT, 2d, LIT, GPIOC_ODR, SETBIT
+    DC32    LIT, 2d, LIT, GPIOC_ODR, CLRBIT
     DC32    SEMIS
 
 

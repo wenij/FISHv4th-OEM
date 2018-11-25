@@ -27,32 +27,39 @@ msg_dictspace:
 
 msg_paren_err:
 #ifdef EOL_NAK
-        DC8     ' COMMENT LINE CANNOT BE EMPTY '
-        DC8     0x15, 0
+  DC8     ' COMMENT LINE CANNOT BE EMPTY '
+  DC8     0x0d, 0x0a
+  DC8     0x15, 0
 #else
-        DC8     " COMMENT LINE CANNOT BE EMPTY "
+  DC8     " COMMENT LINE CANNOT BE EMPTY "
+  DC8     0x0d, 0x0a
 #endif
           
 msg_forget_fish:
 #ifdef EOL_NAK
-        DC8     ' CANT FORGET FISH IN FLASH '
-        DC8     0x15, 0
+  DC8     ' CANT FORGET FISH IN FLASH '
+  DC8     0x0d, 0x0a
+  DC8     0x15, 0
 #else
-        DC8     " CANT FORGET FISH IN FLASH "
+  DC8     " CANT FORGET FISH IN FLASH "
+  DC5     0x0d, 0x0a
 #endif
 
 msg_forget_saved:
 #ifdef EOL_NAK
-        DC8     ' IN FLASH - SEE FLASH_FORGET '
-        DC8     0x15, 0
+  DC8     ' IN FLASH - SEE FLASH_FORGET '
+  DC8     0x0d, 0x0a
+  DC8     0x15, 0
 #else
-        DC8     " IN FLASH - SEE FLASH_FORGET "
+  DC8     " IN FLASH - SEE FLASH_FORGET "
+  DC5     0x0d, 0x0a
 #endif
 
 msg_dictfull:
 #ifdef EOL_NAK
 	DC8     ' DICTIONARY FULL - SEE .DS '
-        DC8     0x15, 0
+  DC8     0x0d, 0x0a
+  DC8     0x15, 0
 #else
 	DC8     " DICTIONARY FULL - SEE .DS "
 #endif
@@ -60,7 +67,8 @@ msg_dictfull:
 msg_uvfull:
 #ifdef EOL_NAK
 	DC8     ' RAM VAR SPACE FULL - SEE .VS '
-        DC8     0x15, 0
+  DC8     0x0d, 0x0a
+  DC8     0x15, 0
 #else
 	DC8     " RAM VAR SPACE FULL - SEE .VS "
 #endif
@@ -68,56 +76,70 @@ msg_uvfull:
 msg_wordexists:
 #ifdef EOL_NAK
 	DC8     ' IS ALREADY DEFINED '
-        DC8     0x15, 0
+  DC8     0x0d, 0x0a
+  DC8     0x15, 0
 #else
 	DC8     " IS ALREADY DEFINED "
+  DC8     0x0d, 0x0a
 #endif
 
 msg_word_error:
 #ifdef EOL_NAK
-        DC8     ' ? NOT WORD '
-        DC8     0x15, 0
+  DC8     ' ? NOT WORD '
+  DC8     0x0d, 0x0a
+  DC8     0x15, 0
 #else
-        DC8     " ? NOT WORD "
+  DC8     " ? NOT WORD "
+  DC8     0x0d, 0x0a
 #endif
 
 msg_number_error:
 #ifdef EOL_NAK
 	DC8     ' ? NOT WORD OR NUMBER '
-        DC8     0x15, 0
+  DC8     0x0d, 0x0a
+  DC8     0x15, 0
 #else
 	DC8     " ? NOT WORD OR NUMBER "
+  DC8     0x0d, 0x0a
 #endif
 
 msg_qstack:
 #ifdef EOL_NAK
 	DC8     ' CAUSED A STACK ERROR '
-        DC8     0x15, 0
+  DC8     0x0d, 0x0a
+  DC8     0x15, 0
 #else
 	DC8     " CAUSED A STACK ERROR "
+  DC8     0x0d, 0x0a
 #endif
 
 msg_qpair:
 #ifdef EOL_NAK
 	DC8     ' STACK ERROR WHILE EXECUTING OR COMPILING '
-        DC8     0x15, 0
+  DC8     0x0d, 0x0a
+  DC8     0x15, 0
 #else
 	DC8     " STACK ERROR WHILE EXECUTING OR COMPILING "
+  DC8     0x0d, 0x0a
 #endif
 
 msg_qcomp:
 #ifdef EOL_NAK
 	DC8     ' ERROR - NOT COMPILING '
-        DC8     0x15, 0
+  DC8     0x0d, 0x0a
+  DC8     0x15, 0
 #else
 	DC8     " ERROR - NOT COMPILING "
+  DC8     0x0d, 0x0a
 #endif
 
 msg_qexec:
 #ifdef EOL_NAK
 	DC8     ' ERROR - EXECUTED WHILE COMPILING '
-        DC8     0x15, 0
+  DC8     0x0d, 0x0a
+  DC8     0x15, 0
 #else
 	DC8     " ERROR - EXECUTED WHILE COMPILING "
+  DC8     0x0d, 0x0a
 #endif
 
