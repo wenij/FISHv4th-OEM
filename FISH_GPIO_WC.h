@@ -103,10 +103,12 @@ SEEBIT_NFA:
   DC32	GPIOB_MODER_NFA
 SEEBIT:
   DC32  DOCOL
-  DC32  SWAP, ONE, SWAP, LSL
-  DC32  TOR, AT, R, ANDD, RFROM
+//  DC32  SWAP, ONE, SWAP, LSL
+//  DC32  TOR, AT, R, ANDD, RFROM
+  DC32  TOR, ONE, SWAP, LSL
+  DC32  RFROM, AT, ANDD
   DC32  ZBRAN
-      DC32  .-BITOFF
+      DC32  BITOFF-.
 BITON:
   DC32	PDOTQ
 	DC8	2
@@ -126,7 +128,7 @@ BITOFF:
 : SB
 	>R              \ STORE @ADDR VALUE
 	1h SWAP LSL
-	R  @ XOR        \ WHAT IS IT? IT'S NOT AND!
+	R  @ OR
 	R>
 \	CR .SH
 	!
@@ -136,7 +138,7 @@ BITOFF:
 : CB
 	>R              \ STORE @ADDR VALUE
 	1h SWAP LSL
-	R  @ XOR        \ WHAT IS IT? IT'S NOT AND!
+	R  @ NOT AND
 	R>
 \	CR .SH
 	!
@@ -151,12 +153,24 @@ SETBIT_NFA:
  ALIGNROM 2,0xFFFFFFFF
   DC32	SEEBIT_NFA
 SETBIT:
+	DC32	.+5
+ SECTION .text : CODE (2)
+	POPp2w      // val
+	POP2n_r1 		// addr
+	LDR   t_r0, [w_r2]      // read [val]
+  MOV   x_r3, #1
+    LSLS   x_r3, w_r2
+	ORRS	t_r0, t_r0, x_r3  // modify val
+	STR  t_r0, [w_r2]       // Write val
+	NEXT
+/*
   DC32  DOCOL
 //  DC32  CR DOTHEX
   DC32  TOR, ONE, SWAP, LSL
-  DC32  R, AT, XORR, RFROM, STORE
+  DC32  R, AT, OR, RFROM, STORE
   DC32  SEMIS
-
+*/
+  
 //  CLRBIT  ( 0-based-bit# adrr -- )
  SECTION .text : CONST (2)
 CLRBIT_NFA:
@@ -166,11 +180,23 @@ CLRBIT_NFA:
  ALIGNROM 2,0xFFFFFFFF
   DC32	SETBIT_NFA
 CLRBIT:
+	DC32	.+5
+ SECTION .text : CODE (2)
+	POPp2w                  // addr
+	POP2n_r1 		            // val	
+	LDR   t_r0, [w_r2]      // read [val]
+  MOV   x_r3, #1
+  LSLS   x_r3, n_r1
+	BIC	t_r0, t_r0, x_r3  // modify val
+	STR   t_r0, [w_r2]      // Write val
+	NEXT
+
+/*
   DC32  DOCOL
   DC32  TOR, ONE, SWAP, LSL
-  DC32  R, AT, XORR, RFROM, STORE
+  DC32  R, AT, XORR, RFROM, STORE // WAS NOT, ANDD,
   DC32  SEMIS
-
+*/
 //	ANDBITS ANDBITS:	( addr val -- )
 
  SECTION .text : CONST (2)
@@ -207,9 +233,9 @@ SETBITS:
  SECTION .text : CODE (2)
 	POPp2w              // val w_r2
 	POP2n_r1        		// addr n_r1
-	LDR     t_r0, [n]	  // read[val]t_r0
+	LDR   t_r0, [n]     // read[val]t_r0
 	ORRS	t_r0, t_r0, w	// modify val
-	STR	t_r0, [n]	      // Write val
+	STR	  t_r0, [n]	    // Write val
 	NEXT
 
 
@@ -229,10 +255,9 @@ CLRBITS:
  SECTION .text : CODE (2)
 	POPp2w                    // val
 	POP2n_r1 		              // addr
-	LDR	t_r0, [n_r1]	        // read [val]
-  LSRS  n_r1, n_r1, #1     	// modify val, AFFECT ALU FLAG ~ 
-  BICS    t_r0, t_r0, w_r2  // modify val  - AND-NOT
-	STR	t_r0, [n_r1]		      // write val
+	LDR	  t_r0, [n_r1]        // read [val]
+  BICS  t_r0, t_r0, w_r2    // modify val  - AND-NOT
+	STR	  t_r0, [n_r1]		    // write val
 	NEXT
 
 
@@ -416,13 +441,13 @@ CS_DAC: // BIT 2000h IN GPIOB_ODR PB13 DAC-CSn
     DC32  ZBRAN
     DC32    CS_DAC_OFF-.
 CS_DAC_ON:
-    DC32    LIT, 014h, LIT, GPIOB_ODR, SETBIT // AND BT-CSn TO 1
-    DC32    LIT, 013h, LIT, GPIOB_ODR, CLRBIT // SET DAC-CSn TO 0
-    DC32    LIT, 012h, LIT, GPIOB_ODR, SETBIT // SET ADC-CSn TO 1
+    DC32    LIT, GPIOB_ODR, LIT, 04000h, SETBITS // SET CS-BT TO 1
+    DC32    LIT, GPIOB_ODR, LIT, 02000h, CLRBITS // SET CS-DAC TO 0
+    DC32    LIT, GPIOB_ODR, LIT, 01000h, SETBITS // SET CS-ADC TO 1
     DC32    SEMIS
 
 CS_DAC_OFF:
-    DC32    LIT, 013h, LIT, GPIOB_ODR, SETBIT // SET DAC-CSn TO 1
+    DC32    LIT, GPIOB_ODR, LIT, 02000h, SETBITS // SET CS-DAC TO 1
     DC32    SEMIS
 
 //  PB14	GPIO_Output	BT_CSn
@@ -447,12 +472,12 @@ CS_BT:  // BIT 4000h IN GPIOB_ODR PB14 BT-CSn
     DC32    CS_BT_OFF-.
 // TRUE CS-BT WORKS
 CS_BT_ON:
-    DC32    LIT, GPIOB_ODR, LIT, 04000h, CLRBITS // AND BT-SC TO 0
-    DC32    LIT, GPIOB_ODR, LIT, 02000h, SETBITS // SET DAC-SCn TO 1
-    DC32    LIT, GPIOB_ODR, LIT, 01000h, SETBITS // SET ADC-CSn TO 1
+    DC32    LIT, GPIOB_ODR, LIT, 04000h, CLRBITS // SET CS-BT TO 0
+    DC32    LIT, GPIOB_ODR, LIT, 02000h, SETBITS // SET CS-DAC TO 1
+    DC32    LIT, GPIOB_ODR, LIT, 01000h, SETBITS // SET CS-ADC TO 1
     DC32    SEMIS
 CS_BT_OFF:
-    DC32    LIT, GPIOB_ODR, LIT, 04000h, SETBITS // SET BT-CSn TO 1
+    DC32    LIT, GPIOB_ODR, LIT, 04000h, SETBITS // SET CS-BT TO 1
     DC32    SEMIS
 //  PB12	GPIO_Output	ADC-CSn
 // .ADC-CS	PB12	IS LEDBLUE
@@ -475,12 +500,12 @@ CS_ADC: // BIT 1000h IN GPIOB_ODR - PB12 ADC-CSn
     DC32  ZBRAN
     DC32    CS_ADC_OFF-.
 CS_ADC_ON:
-    DC32    LIT, GPIOB_ODR, LIT, 04000h, SETBITS // SET BT-CSn TO 1
-    DC32    LIT, GPIOB_ODR, LIT, 02000h, SETBITS // SET DAC-CSn TO 1
-    DC32    LIT, GPIOB_ODR, LIT, 01000h, CLRBITS // SET ADC-CSn TO 0
+    DC32    LIT, GPIOB_ODR, LIT, 04000h, SETBITS // SET CS-BT TO 1
+    DC32    LIT, GPIOB_ODR, LIT, 02000h, SETBITS // SET CS-DAC TO 1
+    DC32    LIT, GPIOB_ODR, LIT, 01000h, CLRBITS // SET CS-ADC TO 0
     DC32    SEMIS
 CS_ADC_OFF:
-    DC32    LIT, GPIOB_ODR, LIT, 01000h, SETBITS // SET ADC-CSn TO 1
+    DC32    LIT, GPIOB_ODR, LIT, 01000h, SETBITS // SET CS-ADC TO 1
     DC32    SEMIS
 
 /*

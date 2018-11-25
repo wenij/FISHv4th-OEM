@@ -83,7 +83,7 @@ DOT_BASE_SUFFIX:
         DC32    SEMIS
 
 //:NONAME UDOT_BASE_SUFFIX: ( n -- ) UDOT with BASE suffix appended.
-// USED IN .B .H .SB AND .SH
+// USED IN .B .H .SB and .SH
 UDOT_BASE_SUFFIX:
 	DC32    DOCOL
         DC32	ZERO, ZERO      // No sign and no padding
