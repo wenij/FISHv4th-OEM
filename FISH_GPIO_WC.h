@@ -159,7 +159,7 @@ SETBIT:
 	POP2n_r1 		// addr
 	LDR   t_r0, [w_r2]      // read [val]
   MOV   x_r3, #1
-    LSLS   x_r3, w_r2
+    LSLS   x_r3, n_r1
 	ORRS	t_r0, t_r0, x_r3  // modify val
 	STR  t_r0, [w_r2]       // Write val
 	NEXT
