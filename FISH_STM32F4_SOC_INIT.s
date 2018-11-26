@@ -1,10 +1,10 @@
-//      FISH_STM32F4_SOC_INIT.s
-// Valid thru v1.8
+//  FISH_STM32F3/4_SOC_INIT.s
+//  FISHv4TH-OEM
 
 // This should only setup FISH I/O, RCC and Systick
 
 // Other initializations should be in their own files:
-// like FISH_STM32F4_GPIO_INIT.s , FISH_STM32F4_SPI_INIT.s etc
+// like FISH_GPIO_WC.h, FISH_SPI_WC.h etc
 
 // ART init stuff
 DCEN	EQU	00000400h
@@ -310,7 +310,7 @@ PB0     ADC-RSTn				is active high.	 0x1
 #ifdef PSTAT_SPI1_TEST
 //	1000000b 040h = ENABLE SPE
 	DC32	LIT, SPI1_CR1, LIT, 040h, SETBITS	// ENABLING SPI
-  DC32	lit, 4, LIT, SPI1_CR1, SETBIT
+  DC32	LIT, 4, LIT, SPI1_CR1, SETBIT
 #endif
 
 #ifdef PSTAT_BB_NOINIT_TEST

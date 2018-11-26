@@ -4784,11 +4784,11 @@ CMSIS_DISABLE_IRQS:
         BL      C_CMSIS_DISABLE_IRQS
         NEXT
 
-
-//	SYSTICK_IRQ_OFF SYSTICK_IRQ_OFF:	( -- )
-//      Turn SYSTICK interrupt off.
-//      STCTR only incremented when SYSTICK interrupt is on.
-//      STI_ON: 7 E000E010h !  STI_OFF: 5 E000E010h ! E000E010h @ .H
+//  SYSTICK_IRQ_OFF SYSTICK_IRQ_OFF:	( -- )
+//  http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0552a/Bhccjgga.html
+//  SYSTICK IRQ IS DIFFERENT? THAN REGULAR IRQ'S
+//  IN THAT SYST_CSR IS HOW YOU ENABLE AND MONITOR IT.
+//  STCTR only incremented when SYSTICK interrupt is on.
  SECTION .text : CONST (2)
 SYSTICK_IRQ_OFF_NFA:
 	DC8	0x8F
@@ -4799,17 +4799,17 @@ SYSTICK_IRQ_OFF_NFA:
 SYSTICK_IRQ_OFF:
 	DC32	.+5
  SECTION .text : CODE (2)
-	LDR	n, = SYST_CSR	// SYSTICK Control and Status Register
+	LDR	  n, = SYST_CSR	// SYSTICK Control and Status Register
 	MOVS	t_r0, #5
-        STR     t_r0, [n]
+  STR   t_r0, [n]
 	NEXT
 // LTORG	 //Always outside of code, else data in words
 
-
-//	SYSTICK_IRQ_ON SYSTICK_IRQ_ON:  ( -- )
-//      Turn SYSTICK interrupt on.
-//      STCTR only incremented when SYSTICK interrupt is on.
-//      STI_ON: 7 E000E010h !  STI_OFF: 5 E000E010h ! E000E010h @ .H
+//  SYSTICK_IRQ_ON SYSTICK_IRQ_ON:  ( -- )
+//  http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0552a/Bhccjgga.html
+//  SYSTICK IRQ IS DIFFERENT? THAN REGULAR IRQ'S
+//  IN THAT SYST_CSR IS HOW YOU ENABLE AND MONITOR IT.
+//  STCTR only incremented when SYSTICK interrupt is on.
  SECTION .text : CONST (2)
 SYSTICK_IRQ_ON_NFA:
 	DC8	0x8E
@@ -4820,9 +4820,9 @@ SYSTICK_IRQ_ON_NFA:
 SYSTICK_IRQ_ON:
 	DC32	.+5
  SECTION .text : CODE (2)
-	LDR	n, = SYST_CSR	// SYSTICK Control and Status Register
+	LDR	  n, = SYST_CSR	// SYSTICK Control and Status Register
 	MOVS	t_r0, #7
-        STR     t_r0, [n]
+  STR   t_r0, [n]
 	NEXT
  LTORG	 //Always outside of code, else data in words
 
@@ -5203,37 +5203,37 @@ DELAY_NFA:
 DELAY:
 	DC32	.+5
  SECTION .text : CODE (2)
-        POP2n_r1           // Reload value in n
-        POP2t_r0        // loop count in t
+  POP2n_r1                // Reload value in n
+  POP2t_r0                // loop count in t
 // SET STCTR TO NEGATIVE LOOP COUNT TO END AT ZERO
-        LDR     y_r4, = STICKER
+  LDR     y_r4, = STICKER
 	MVNS    t_r0, t_r0      // 1's compliment
 	ADDS    t_r0, t_r0, #1  // 2's compliment
-        STR     t_r0, [y_r4]
+  STR     t_r0, [y_r4]
 // Load SYST_RVR with countdown value
-        LDR     w_r2, = SYST_RVR
-        STR     n_r1, [w_r2]
+  LDR     w_r2, = SYST_RVR
+  STR     n_r1, [w_r2]
 // and reset SYST_CVR to start countdown.
-       LDR     w_r2, = SYST_CVR
-// Writing it clears the System Tick counter and the COUNTFLAG bit in STCTRL.
-        STR     n_r1, [w]
+  LDR     w_r2, = SYST_CVR
+// Writing it clears the System Tick counter and the COUNTFLAG bit in SYST_CSR.
+  STR     n_r1, [w]
 // If n=0 in t user is just setting reload value
-        CMP     t_r0, #0           // LOOP OF ZERO
-        BEQ     DELAY_DONE
+  CMP     t_r0, #0        // LOOP OF ZERO
+  BEQ     DELAY_DONE
 // INTERRUPT VERSION: negate n to STCTR and leave when STCTR = 0
-// STI_ON: 7 E000E010h !  STI_OFF: 5 E000E010h ! E000E010h @ .H
+// SYSTICK_IRQ_ON: 7 E000E010h !  SYSTICK_IRQ_OFF: 5 E000E010h ! E000E010h @ .H
 // Save and restore user interrupt setting
 // y = STICKER
-        LDR     w_r2, = SYST_CSR
-        LDR     t_r0, [w_r2]          // Save user SYSTICK interrupt setting
-        MOVS    n_r1, #7
-        STR     n_r1, [w_r2]          // Turn SYSTICK interrupt on in case it's off
+  LDR     w_r2, = SYST_CSR
+  LDR     t_r0, [w_r2]    // Save user SYSTICK interrupt setting
+  MOVS    n_r1, #7
+  STR     n_r1, [w_r2]    // Turn SYSTICK interrupt on in case it's off
 DELAY_LOOP:
-        LDR     n_r1, [y_r4]
-        CMP     n_r1, #0
-        BNE     DELAY_LOOP
+  LDR     n_r1, [y_r4]
+  CMP     n_r1, #0
+  BNE     DELAY_LOOP
 DELAY_DONE:
-        STR     t_r0, [w_r2]  // Restore user SYSTICK interrupt setting
+  STR     t_r0, [w_r2]    // Restore user SYSTICK interrupt setting
 	NEXT
  LTORG
 
@@ -5249,19 +5249,18 @@ MS_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	DELAY_NFA
 MS:
-        DC32    DOCOL
+  DC32    DOCOL
 #ifdef STM32F4_IRC16_48MHZ
-        DC32    LIT, 47999d     // BB7F 1ms @ 48mhz RELOAD COUNTER VALUE
+  DC32    LIT, 47999d     // BB7F 1ms @ 48mhz RELOAD COUNTER VALUE
 #endif
 #ifdef STM32F205RC_XRC10_118MHZ // VERIFY THIS!
-        DC32    LIT, 117999d    // 1CCEFh 1ms @ 118mhz RELOAD COUNTER VALUE
+  DC32    LIT, 117999d    // 1CCEFh 1ms @ 118mhz RELOAD COUNTER VALUE
 #endif
 #ifdef STM32F4_XRC08_168MHZ
-        DC32    LIT, 167999d    // 2903Fh 1ms @ 168mhz RELOAD COUNTER VALUE
+  DC32    LIT, 167999d    // 2903Fh 1ms @ 168mhz RELOAD COUNTER VALUE
 #endif
-        DC32    DELAY
-        DC32    SEMIS
-
+  DC32    DELAY
+  DC32    SEMIS
 
 //	WORDCAT WORDCAT: ( -- )
 //	Creates a Word Category NFA and LFA that cannot be searched for,
@@ -5276,27 +5275,27 @@ WORDCAT_NFA:
 	DC8	'WORDCA'
 	DC8	'T'+0x80
  ALIGNROM 2,0xFFFFFFFF
-        DC32    MS_NFA
+  DC32    MS_NFA
 WORDCAT:
 	DC32	DOCOL
-        DC32    HERE, TOR
-        DC32    ZERO, CCOMMA    // Count byte place holder
-        DC32    LIT, 0Dh, CCOMMA
-        DC32    HERE
-        DC32    LIT, 0Dh, WORD
-        DC32    DUP, CAT
-        DC32    LIT, 0Ah, ROT, CSTORE
-        DC32    DUP, ONEP, ALLOT
-        DC32    LIT, 084h        // Count before system text
-        DC32    PLUS, R, CSTORE
-        DC32    LIT, 0Dh, CCOMMA
-        DC32    LIT, 08Ah, CCOMMA
-        DC32    ALIGN32_DP_FF_PAD
-        DC32    LATEST, COMMA
-        DC32    RFROM
-        DC32    LIT, CURRENT
-        DC32    STORE
-	DC32	SEMIS
+  DC32  HERE, TOR
+  DC32  ZERO, CCOMMA    // Count byte place holder
+  DC32  LIT, 0Dh, CCOMMA
+  DC32  HERE
+  DC32  LIT, 0Dh, WORD
+  DC32  DUP, CAT
+  DC32  LIT, 0Ah, ROT, CSTORE
+  DC32  DUP, ONEP, ALLOT
+  DC32  LIT, 084h        // Count before system text
+  DC32  PLUS, R, CSTORE
+  DC32  LIT, 0Dh, CCOMMA
+  DC32  LIT, 08Ah, CCOMMA
+  DC32  ALIGN32_DP_FF_PAD
+  DC32  LATEST, COMMA
+  DC32  RFROM
+  DC32  LIT, CURRENT
+  DC32  STORE
+	DC32  SEMIS
 
 
 //	WORDS WORDS:	( -- ) RENAMED: VLIST to WORDS
@@ -5314,35 +5313,34 @@ WORDS_NFA:
 	DC32	WORDCAT_NFA
 WORDS:
 	DC32	DOCOL
-        DC32    THREE, SPACES
+  DC32  THREE, SPACES
 	DC32	LATEST
 #ifdef XON_XOFF
-        DC32    XOFF    // TEMP TEST THRE
+  DC32  XOFF    // TEMP TEST THRE
 #endif
 WORDS1:  // ADD nfa length to current out_uv & verify it doesn't violate csll.
+  DC32  ZERO, OVER      // -- nfa zero nfa
+  DC32  ONEP, CAT       // If wc_ header skip
+  DC32  LIT, 0x0D       // -- nfa zero (c@) 0x0D
+  DC32  EQUAL, ZEQU     // -- nfa zerro flag
+  DC32  ZBRAN           // -- nfa zero
+  DC32  WORDS2-.       // wc_ goto
 
-        DC32    ZERO, OVER      // -- nfa zero nfa
-        DC32    ONEP, CAT       // If wc_ header skip
-        DC32    LIT, 0x0D       // -- nfa zero (c@) 0x0D
-        DC32    EQUAL, ZEQU     // -- nfa zerro flag
-        DC32    ZBRAN           // -- nfa zero
-        DC32     WORDS2-.       // wc_ goto
-
-        DC32    DROP            // -- nfa
-        DC32    DUP, PFA, LFA   // -- nfa lfa
-        DC32    OVER, SUBB      // -- nfa (lfa - nfa)
+  DC32  DROP            // -- nfa
+  DC32  DUP, PFA, LFA   // -- nfa lfa
+  DC32  OVER, SUBB      // -- nfa (lfa - nfa)
 
 WORDS2: // -- nfa n
 
 	DC32	OUT_SV, AT      // Use OUT to regulate line length.
-        DC32    PLUS
+  DC32  PLUS
 	DC32	LIT, 74         // was :NONAME CSLL - WORDS line length constant.
 	DC32	GREATERTHAN
 	DC32	ZBRAN	        // If not at end of line
-	DC32	 WORD21-.        // skip cr and out reset
+	DC32  WORD21-.        // skip cr and out reset
 
 	DC32	CR              // Start another line
-        DC32    THREE, SPACES
+  DC32  THREE, SPACES
 
 WORD21:
 #ifdef  IO2TP
@@ -5350,40 +5348,40 @@ WORDS_BP1:
  DC32 NOOP
 #endif
 // For MYWORDS test FENCE and stop if less
-        DC32    DUP             // nfa
-        DC32    FENCE_SV, AT
-        DC32    LESSTHAN
-        DC32    ZBRAN
-        DC32     WORDSCONT-.
+  DC32    DUP             // nfa
+  DC32    FENCE_SV, AT
+  DC32    LESSTHAN
+  DC32    ZBRAN
+  DC32     WORDSCONT-.
 
-        DC32    BRAN
-        DC32     WORDSDONE-.
+  DC32    BRAN
+  DC32     WORDSDONE-.
 
 WORDSCONT:
 	DC32	DUP	        // nfa
 	DC32	IDDOT
 	DC32	TWO, SPACES
 
-        DC32    DUP, ONEP, CAT  // Take nfa and look for WORDCAT signature
-        DC32    LIT, 0x0D       // which is cr
-        DC32    EQUAL
-        DC32    ZBRAN           // If not wordcat
-        DC32     NOT_WC-.       // skip
+  DC32    DUP, ONEP, CAT  // Take nfa and look for WORDCAT signature
+  DC32    LIT, 0x0D       // which is cr
+  DC32    EQUAL
+  DC32    ZBRAN           // If not wordcat
+  DC32     NOT_WC-.       // skip
 
-        DC32    zero_OUT
+  DC32    zero_OUT
 
 NOT_WC:
 	DC32	PFA		// \ nfa -- pfa
 	DC32	LFA		// \ pfa -- lfa
-	DC32	AT              // Is next lfa
+	DC32	AT    // Is next lfa
 	DC32	DUP
-	DC32	ZEQU            // Zero = end of dictionary
+	DC32	ZEQU  // Zero = end of dictionary
 
 // REMOVED SO WORDS AND MYWORDS CAN BE USED IN DOWNLOAD FILES
 //	DC32	QKEY           // Zero or break key \ ^C = 0x03
 //	DC32	OR
 
-	DC32	ZBRAN	        // Until break key or end of dictionary
+	DC32  ZBRAN	        // Until break key or end of dictionary
 	DC32	 WORDS1-.
 
 #ifdef  IO2TP
@@ -5407,10 +5405,10 @@ MYWORDS_NFA:
 	DC32	WORDS_NFA
 MYWORDS:
 	DC32	DOCOL
-        DC32    strva , FLASH_SPAGE, FENCE
-        DC32    WORDS                   // now print words in ram
-        DC32    strva, 0 , FENCE
-        DC32    SEMIS
+  DC32  strva , FLASH_SPAGE, FENCE
+  DC32  WORDS                   // now print words in ram
+  DC32  strva, 0 , FENCE
+  DC32  SEMIS
 
 
 //	FISH_ONLY FISH_ONLY	( -- ) MODIFIED:
@@ -5448,19 +5446,19 @@ In IAR FISH_ONLY:
 // https://www.st.com/en/development-tools/flasher-stm32.html
 
 */
-        LDR     n, = WC_FISH_GPIO_NFA
+  LDR     n, = WC_FISH_GPIO_NFA
 
-	LDR	y, = CURRENT 	        // CURRENT SETTING
+	LDR	y, = CURRENT 	              // CURRENT SETTING
 	STR	n, [y]
-        LDR     y, = FPC                // FLASH CURRENT
-        STR     n, [y]
+  LDR     y, = FPC                // FLASH CURRENT
+  STR     n, [y]
 	LDR	n, = RAMVARSPACE_START
-	LDR	y, = UP			// UP SETTING
+	LDR	y, = UP			                // UP SETTING
 	STR	n, [y]
-        LDR     y, = FPSV                // FLASH USER VARS
-        STR     n, [y]
+  LDR     y, = FPSV         // FLASH USER VARS
+  STR     n, [y]
 	LDR	n, = ORIG
-	LDR	y, = DP			// DP SETTING
+	LDR	y, = DP                     // DP SETTING
 	STR	n, [y]
 	NEXT
  LTORG
@@ -5478,7 +5476,7 @@ FISH_NFA:
 	DC32	FISH_ONLY_NFA
 FISH:
 	DC32	DOCOL
-  DC32    FLASH_SCAN
+  DC32  FLASH_SCAN
 	DC32	SIGNON
 	DC32	SEMIS
 
@@ -5489,11 +5487,11 @@ FISH:
 WC_FISH_PubRel_NFA:
 	DC8	0x80+4+21        // +4 is format chars constant
                                 // +n is Name lenght
-        DC8     0x0D, 0x0A
+  DC8 0x0D, 0x0A
 	DC8	'FISH Reference Model:'
-        DC8     0x0D, 0x0A+0x80
+  DC8 0x0D, 0x0A+0x80
  ALIGNROM 2,0xFFFFFFFF
-        DC32    FISH_NFA
+  DC32    FISH_NFA
 
 ;**** FIRST WORD LISTED IS A WORDCAT~!****
 
