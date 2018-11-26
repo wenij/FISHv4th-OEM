@@ -2,7 +2,7 @@
 //Valid thru v1.8
 //----------------------------------------------------------------------
 #ifdef USE_CMAIN
- PUBLIC RET2c
+ PUBLIC FISH_return2c
 #endif
 
  SECTION .text : CODE (2)
@@ -12,7 +12,7 @@
 __iar_program_start
 // MAIN() entry point defined by #Defines in FISH_STM32F4_CONFIG_DEFINES.h
 // means you can have c main() call FISH or not~!
-// #define USE_CMAIN     // Affects cstartup_M.c STM32Fx_COLD_FISH and RET2c
+// #define USE_CMAIN     // Affects cstartup_M.c STM32Fx_COLD_FISH and FISH_return2c
 // :NONAME FM0_COLD ( -- ) Reset Vector entry point. Setup FISH Virtual Machine.
 STM32Fx_COLD_FISH:
 // Initialize DICT RAM segment
@@ -28,10 +28,11 @@ _fillRAM:
 	blo	_fillRAM
         
 #ifdef USE_CMAIN
+// cmainfix
 //	PUSH lr to sp for BYE
-//	SUB	sp, sp, #4
-//	MOV	t, lr
-//	STR	t, [sp]
+	SUB	sp, sp, #4
+	MOV	t, lr
+	STR	t, [sp]
 #endif
 
 	LDR  	p, =PINIT	// my parameters
@@ -54,30 +55,30 @@ FM4_WARM:
 #ifdef TESTRAM
         DC32    flogRAM
 #endif
-        DC32	FWARM		        // FISH Init for WTEST code
-        DC32	SoCinit		        // SYSCLK, systick, MS
-        DC32    UART3_INIT
+  DC32	FWARM		        // FISH Init for WTEST code
+  DC32	SoCinit		        // SYSCLK, systick, MS
+  DC32  UART3_INIT
 
-// TEST CODE GOES HERE - Pre FISH Execution Environment
+//  TEST CODE GOES HERE - Pre FISH Execution Environment
 WTEST:
 
-// COPIES CODE TO RAM - CHECK FISH CODE FOR THIS KIND OF RELOCATION!
-// RELEATIVELY LINKED PRIOR DEFNITIONS!
-//        DC32    FLASH_TEST_CODE_IN_RAM
-// FLASH OPS CAN BE PERFORMED FROM FLASH WITH POTENTIAL WAIT STATES
-//        DC32    FLASH_TEST_CODE_IN_FLASH      // EXECUTES IN FLASH
+//  COPIES CODE TO RAM - CHECK FISH CODE FOR THIS KIND OF RELOCATION!
+//  RELEATIVELY LINKED PRIOR DEFNITIONS!
+//  DC32    FLASH_TEST_CODE_IN_RAM
+//  FLASH OPS CAN BE PERFORMED FROM FLASH WITH POTENTIAL WAIT STATES
+//  DC32    FLASH_TEST_CODE_IN_FLASH      // EXECUTES IN FLASH
 
 // TEST CODE END
 FWARM_STARTING_UP:
-//        DC32    DOTS            // SHOW ANY STACK ARTIFACTS HERE
-        DC32	CR
+//  DC32    DOTS            // SHOW ANY STACK ARTIFACTS HERE
+  DC32	CR
 	DC32	LIT, 0xFB, EMIT // ANSI ASCII CheckMark
 	DC32	LIT, 0xF7, EMIT // ANSI ASCII 2 wavy's
 	DC32	CR
 	DC32	COLD	        // WARM ABORT THEN QUIT
 
 #ifdef USE_CMAIN
-	DC32	RET2c	// shouldnt get here, return to c main and restart
+	DC32	FISH_return2c	// shouldnt get here, return to c main and restart
 #endif
 //------------------------ for meta-single-stepping ----------------------------
 //:NONAME ssNEXT ( -- ) System Internal hi level breakpoint.
