@@ -1,4 +1,4 @@
-// FISH STM32F4 DISCO
+// FISH STM32F3-4
 
 // for stm32f4xx.h usage
 #define STM32F40XX
