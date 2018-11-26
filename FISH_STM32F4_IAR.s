@@ -53,39 +53,39 @@ $FISH_STM32F4_MAIN_INCLUDES.h
 msg_FISH:
 // DC8 "?" IS A NULL TERMINATED STRING
 // DC8 '?' IS NOT
-	DC8     'FISH '
-        DC8     'RM V4th OEM ~ '
-	DC8     'ARM '
+	DC8 'FISH '
+  DC8 'RM V4th OEM ~ '
+	DC8 'ARM '
 #ifdef FISH_Debug_WORDSET
-	DC8     'DebugSrc '
+	DC8 'DebugSrc '
 #endif
 #ifdef FISH_Debug_WORDSET
-        DC8     ' 1010,1100 - EHON/EHOFF '
-        DC8     '-1 True Flag '
+  DC8 ' 1010,1100 - EHON/EHOFF '
+  DC8 '-1 True Flag '
 #endif
 #if VTOR_PATCH & STM32F205RC
-//        DC8     'VTOR_PATCH FOR MS '
+//  DC8 'VTOR_PATCH FOR MS '
 #endif
 #ifdef  STM32F4_XRC08_168MHZ
-        DC8     'STM32F407VG DISCO @168Mhz '
+  DC8 'STM32F407VG DISCO @168Mhz '
 #endif
 #ifdef STM32F205RC_XRC10_118MHZ
-        DC8     'STM32F205RC PSTAT or STP RPM Board @118Mhz '
+  DC8 'STM32F205RC PSTAT or STP RPM Board @118Mhz '
 #endif
 #ifdef FISH_GPIO_WORDCAT
-	DC8     'GPIO '
+	DC8 'GPIO '
 #endif
-        DC8     '(C)2014-2018 A-TEAM FORTH : '
-        DC8     __DATE__        // Null string
+  DC8 '(C)2014-2018 A-TEAM FORTH : '
+  DC8 __DATE__        // Null string
 msg_FISH_TIMESTAMP:
-        DC8     ' at '
-        DC8     __TIME__        // Null string
+  DC8 ' at '
+  DC8 __TIME__        // Null string
 #ifdef EOL_NAK
 msg_SIGNON_DLE:
-        DC8     0x15, 0
+  DC8 0x15, 0
 #endif
 msg_MY_OK:
-        DC8     " ok, go fish in BASE "
+  DC8 " ok, go fish in BASE "
 //---START OF DICTIONARY = Last word in search--------------------
 //
 //	NOOP NOOP:	( -- )
@@ -116,8 +116,8 @@ EXEC:
  SECTION .text : CODE (2)
 #ifndef IO2TP
 #ifdef XON_XOFF
-        BL      TXRDY_SUBR
-        BL      XOFF_SUBR
+  BL  TXRDY_SUBR
+  BL  XOFF_SUBR
 #endif
 #endif
 EXEC_ACTION:
@@ -128,38 +128,38 @@ EXEC_ACTION:
 // TXRDY_SUBR:
  SECTION .text : CODE (2)
 TXRDY_SUBR:
-        MOV     w_r2, lr                // Allow for interrupts to use LR
-        LDR     y_r4, = USART3_SR	// Line Status Register
+  MOV w_r2, lr          // Allow for interrupts to use LR
+  LDR y_r4, = USART3_SR	// Line Status Register
 txRDY?:
-        LDR     n_r1, [y_r4]		// Get Line Status
+  LDR n_r1, [y_r4]		  // Get Line Status
 
 // THIS IS TXE TEST AND FAILS IN TEXT DOWNLOAD
-//        LSRS    n, n, #7      // 80h Bit 7 TXE: Transmit data register empty
+//  LSRS  n, n, #7      // 80h Bit 7 TXE: Transmit data register empty
 // THIS IS ___ AND WORKS IN TEXT DOWNLOAD
-        LSRS    n_r1, n_r1, #8	// 100h Bit 8 ORIG
-        BCC     txRDY?          // Ready
-        BX      w_r2		// lr  - SUBR RETURN
+  LSRS  n_r1, n_r1, #8	// 100h Bit 8 ORIG
+  BCC txRDY?          // Ready
+  BX  w_r2		// lr  - SUBR RETURN
 
 // XOFF_SUBR:
 #ifdef XON_XOFF
  SECTION .text : CODE (2)
 XOFF_SUBR:
-	MOV	w_r2, lr           // Allow for interrupts to use LR
-	LDR	n_r1,= USART3_DR
-	LDR	y_r4,  = XOFF_CHAR
+	MOV	  w_r2, lr           // Allow for interrupts to use LR
+	LDR	  n_r1,= USART3_DR
+	LDR	  y_r4,  = XOFF_CHAR
 	STRB	y_r4, [n_r1]
-        BX      w_r2               // lr  - SUBR RETURN
+  BX    w_r2               // lr  - SUBR RETURN
 #endif // XON_XOFF
 
 // XON_SUBR:
 #ifdef XON_XOFF
  SECTION .text : CODE (2)
 XON_SUBR:
-        MOV     w_r2, lr           // Allow for interrupts to use LR
-	LDR	n_r1,= USART3_DR
-	LDR	y_r4, = XON_CHAR   // preserve TOS 11 24 01 49
+  MOV   w_r2, lr           // Allow for interrupts to use LR
+	LDR	  n_r1,= USART3_DR
+	LDR	  y_r4, = XON_CHAR   // preserve TOS 11 24 01 49
 	STRB	y_r4, [n_r1]
-        BX      w_r2               // SUBR RETURN
+  BX    w_r2               // SUBR RETURN
 #endif // XON_XOFF
 #endif // IO2TP
  LTORG
@@ -195,7 +195,7 @@ UP_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	BLANK_NFA
 UP_SV:
-        DC32    DOCON, UP
+  DC32  DOCON, UP
 
 //	FENCE FENCE_SV:	( -- addr of FENCE )
 //	A system variable containing an address below which FORGET ting is
@@ -210,7 +210,7 @@ FENCE_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	UP_NFA
 FENCE_SV:
-        DC32    DOCON, FENCE
+  DC32  DOCON, FENCE
 
 //	DP DP_SV:	( -- addr of DP ) Value stored here is ALIGNED
 //	A system variable, the dictionary pointer, which contains the address
@@ -225,7 +225,7 @@ DP_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	FENCE_NFA
 DP_SV:
-        DC32    DOCON, DP
+  DC32  DOCON, DP
 
 //	BASE BASE_SV:	( -- addr of NBASE )
 //      A system variable containing the current number base used for input
@@ -239,7 +239,7 @@ BASE_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	DP_NFA
 BASE_SV:
-        DC32    DOCON, NBASE
+  DC32  DOCON, NBASE
 
 //	CURRENT CURRENT_SV:	( -- addr of CURRENT )
 //	CURRENT searched everytime. CONTEXT is not used
@@ -255,7 +255,7 @@ CURRENT_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	BASE_NFA
 CURRENT_SV:
-        DC32    DOCON, CURRENT	// LATEST = CURRENT_SV -> MOST RECENT DEF NFA
+  DC32  DOCON, CURRENT	// LATEST = CURRENT_SV -> MOST RECENT DEF NFA
 
 
 //	STATE STATE_SV:	( -- addr of CSTATE )
@@ -271,7 +271,7 @@ STATE_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	CURRENT_NFA
 STATE_SV:
-        DC32    DOCON, CSTATE       //Compile STATE
+  DC32  DOCON, CSTATE       //Compile STATE
 
 
 //	OUT OUT_SV:	( -- addr of OUT )
@@ -286,7 +286,7 @@ OUT_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	STATE_NFA
 OUT_SV:
-        DC32    DOCON, OUT
+  DC32  DOCON, OUT
 
 
 //	IN IN_SV:	( -- addr of IN )
@@ -303,7 +303,7 @@ IN_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	OUT_NFA
 IN_SV:
-         DC32   DOCON, IN
+  DC32  DOCON, IN
 
 
 //	PAD PAD_SV:	( -- addr of PAD )
@@ -318,7 +318,7 @@ PAD_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	IN_NFA
 PAD_SV:
-        DC32    DOCON, PAD
+  DC32  DOCON, PAD
 
 
 //	TIB TIB_SV:	( -- addr of INITTIB )
@@ -333,7 +333,7 @@ TIB_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	PAD_NFA
 TIB_SV:
-        DC32    DOCON, TIB
+  DC32  DOCON, TIB
 
 
 //======================== END SYSTEM VARIABLES ==============================//
@@ -374,7 +374,7 @@ ALLOT_NFA:
 ALLOT:
 	DC32	DOCOL
 	DC32	DICTSPACE	// \ -- n
-        DC32    OVER, SUBB
+  DC32  OVER, SUBB
 	DC32	ZLESS
 	DC32	ZBRAN
 	DC32	ALLOTOK-.
@@ -400,8 +400,8 @@ ALIGNED:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0
-	ADDS    t_r0, t_r0, #3
-	LDR	n_r1, =-4
+	ADDS  t_r0, t_r0, #3
+	LDR   n_r1, =-4
 	ANDS	t_r0, t_r0, n_r1
 	TPUSH_r0
  LTORG
@@ -523,17 +523,17 @@ VARALLOT:
 #ifdef IO2TP
 //VARALLOT_BP1:
 // DC32 NOOP
-        DC32    CLRPAD  // Resets OUT
+  DC32  CLRPAD  // Resets OUT
 #endif
 	DC32	ABORT
 
 VALLOT_OK:
-	DC32    UP_SV, AT       // Address of this allotment
-	DC32    SWAP            // n
-	DC32    FOUR, STAR      // n = 4 bytes
-	DC32    UP_SV
-	DC32    PSTORE          // Address of next var available
-	DC32    SEMIS
+	DC32  UP_SV, AT       // Address of this allotment
+	DC32  SWAP            // n
+	DC32  FOUR, STAR      // n = 4 bytes
+	DC32  UP_SV
+	DC32  PSTORE          // Address of next var available
+	DC32  SEMIS
 
 
 //	LATEST LATEST: ( -- nfa )
@@ -569,7 +569,7 @@ LFA:
 	DC32    .+5
  SECTION .text : CODE (2)
 	POP2t_r0
-	SUBS     t_r0, t_r0, #8
+	SUBS  t_r0, t_r0, #8
 	TPUSH_r0
 
 
@@ -585,10 +585,10 @@ CFA_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	LFA_NFA
 CFA:
-	DC32    .+5
+	DC32  .+5
  SECTION .text : CODE (2)
 	POP2t_r0
-	SUBS     t_r0, t_r0, #4
+	SUBS  t_r0, t_r0, #4
 	TPUSH_r0
 
 
@@ -604,19 +604,19 @@ NFA_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	CFA_NFA
 NFA:
-	DC32    DOCOL
-	DC32    EIGHT, SUBB     // Addr OF lfa, DUPED TO TRAVERSE Padding
+	DC32  DOCOL
+	DC32  EIGHT, SUBB     // Addr OF lfa, DUPED TO TRAVERSE Padding
 
 NFA_ALIGN_BEGIN:
-	DC32    ONEM            // ADDR 1 BEFORE lfa, eliminate padding
-	DC32    DUP, CAT        // ALIGNROM FF padded?
-	DC32    LIT, 0xFF, SUBB
-	DC32    ZBRAN           // UNTIL
-	DC32    NFA_ALIGN_BEGIN-.
+	DC32  ONEM            // ADDR 1 BEFORE lfa, eliminate padding
+	DC32  DUP, CAT        // ALIGNROM FF padded?
+	DC32  LIT, 0xFF, SUBB
+	DC32  ZBRAN           // UNTIL
+	DC32  NFA_ALIGN_BEGIN-.
 
-	DC32    LIT,-1          // DIRECTION FOR TRAVERSE = Toward nfa
-	DC32    TRAVERSE		// \ -- addr2
-	DC32    SEMIS
+	DC32  LIT,-1          // DIRECTION FOR TRAVERSE = Toward nfa
+	DC32  TRAVERSE		// \ -- addr2
+	DC32  SEMIS
 
 
 //	PFA PFA:	( nfa -- pfa )
@@ -636,11 +636,11 @@ PFA:
 	DC32	TRAVERSE        // \ NFA 1 -- addr2
 
 PFA_ALIGN_BEGIN:
-	DC32    ONEP            // ADDR 1 BEFORE lfa, eliminate padding
-	DC32    DUP, CAT        // ALIGNROM FF padded?
-	DC32    LIT, 0xFF, SUBB
-	DC32    ZBRAN           // UNTIL
-	DC32    PFA_ALIGN_BEGIN-.
+	DC32  ONEP            // ADDR 1 BEFORE lfa, eliminate padding
+	DC32  DUP, CAT        // ALIGNROM FF padded?
+	DC32  LIT, 0xFF, SUBB
+	DC32  ZBRAN           // UNTIL
+	DC32  PFA_ALIGN_BEGIN-.
 
 	DC32	EIGHT
 	DC32	PLUS
@@ -687,11 +687,11 @@ QERROR:
 	DC32	DOCOL
 	DC32	SWAP
 	DC32	ZBRAN	//IF no err leave
-	DC32	 QERROR_FINISH-.
+    DC32  QERROR_FINISH-.
 
 	DC32	ERROR // ( nullstr-addr --- ) ABORT's
 	DC32	BRAN	//ELSE
-	DC32	 QERROR_DONE-.
+    DC32  QERROR_DONE-.
 
 QERROR_FINISH:
 	DC32	DROP	//endif
@@ -720,28 +720,28 @@ DIGIT:
  SECTION .text : CODE (2)
 	POP2w_r2         	// Number base
 	POP2t_r0		// ASCII DIGIT
-	SUBS   t_r0, t_r0, #'0'
-	BMI   DIGI2             // Number error
+	SUBS  t_r0, t_r0, #'0'
+	BMI DIGI2             // Number error
 
-	CMP   t_r0, #9
-	BLE   DIGI1             // Number = 0 THRU 9
+	CMP t_r0, #9
+	BLE DIGI1             // Number = 0 THRU 9
 
 	// Combine?
-	SUBS    t_r0, t_r0, #7
-	CMP     t_r0, #10            // Number 'A' THRU 'Z'?
-	BLT     DIGI2             // NO
+	SUBS  t_r0, t_r0, #7
+	CMP t_r0, #10            // Number 'A' THRU 'Z'?
+	BLT DIGI2             // NO
 
 DIGI1:
-	CMP     t_r0, w            // COMPARE Number TO base
-	BGE     DIGI2
+	CMP t_r0, w            // COMPARE Number TO base
+	BGE DIGI2
 
-	MOV	w_r2, t_r0            // NEW BINARY Number
-	MOVS	t_r0, #1           // TRUE FLAG
+	MOV   w_r2, t_r0            // NEW BINARY Number
+	MOVS  t_r0, #1           // TRUE FLAG
 	DPUSH_r0_then_r1
 
 	// Number error
 DIGI2:
-	MOVS   t_r0, #0		// FALSE FLAG
+	MOVS  t_r0, #0		// FALSE FLAG
 	TPUSH_r0
 
 
@@ -749,15 +749,15 @@ DIGI2:
 //	A text scanning iterative primitive used only in WORD.
 //	IN is used before and after callS for the iteration
 //	Typically TIB + IN = addr1
-//      noop EX: \ TIB   32 -- TIB   0 4 5
-//      NULL EX: \ TIB   32 -- ADDR-B4-NULL 0 1 1 So DFIND CAN FIND IT!
-//      NULL EX: \ WORD/ENCL -> TIB 1, 0, 20'S
-//      From the text address addr1 and an ascii delimiting character c,
-//      is determined the byte offset to the first non-delimiter character n1,
-//      the offset to the first delimiter after the text n2,
-//      and the offset to the first character not included.
-//      This procedure will not process past an ASCII 'null', treating it
-//      as an unconditional delimiter. NULL termination by EXPECT in QUERY.
+//  noop EX: \ TIB   32 -- TIB   0 4 5
+//  NULL EX: \ TIB   32 -- ADDR-B4-NULL 0 1 1 So DFIND CAN FIND IT!
+//  NULL EX: \ WORD/ENCL -> TIB 1, 0, 20'S
+//  From the text address addr1 and an ascii delimiting character c,
+//  is determined the byte offset to the first non-delimiter character n1,
+//  the offset to the first delimiter after the text n2,
+//  and the offset to the first character not included.
+//  This procedure will not process past an ASCII 'null', treating it
+//  as an unconditional delimiter. NULL termination by EXPECT in QUERY.
 
  SECTION .text : CONST (2)
 ENCL_NFA:
@@ -769,55 +769,54 @@ ENCL_NFA:
 ENCL:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t_r0		// TERMINATOR CHAR
-	LDR     n, [p]		// get text address but leave on stack
-	MOVS    w_r2, #0
-	SUBS	w_r2, w_r2, #1        // CHAR  COUNTER
-	SUBS    n, n, #1        // ADDR -1
+	POP2t_r0		          // TERMINATOR CHAR
+	LDR   n, [p]		      // get text address but leave on stack
+	MOVS  w_r2, #0
+	SUBS	w_r2, w_r2, #1  // CHAR  COUNTER
+	SUBS  n, n, #1        // ADDR -1
 
 //  SCAN TO FIRST NON-TERMINATOR CHARACTER
 //	and PUSH count to stack leaving last 2 params to compute
 ENCL1:
-	ADDS    n_r1, n_r1, #1	// ADDR+1
-	ADDS    w_r2, w_r2, #1  // COUNT+1
-	LDRB    x_r3, [n_r1]
-	CMP     t_r0, x_r3      //CMP	AL,[BX]
-	BEQ     ENCL1           //JZ	ENCL1	// WAIT FOR NON-TERMINATOR
-	PUSHw			//offset to the first non-delimiter character
+	ADDS  n_r1, n_r1, #1	// ADDR+1
+	ADDS  w_r2, w_r2, #1  // COUNT+1
+	LDRB  x_r3, [n_r1]
+	CMP t_r0, x_r3      //CMP	AL,[BX]
+	BEQ ENCL1           //JZ	ENCL1	// WAIT FOR NON-TERMINATOR
+	PUSHw                   //offset to the first non-delimiter character
 				//EXiT is now only DPUSH
-	CMP     x_r3, #0        //CMP	AH,[BX]	// null CHAR?
-	BNE     ENCL2           //JNZ	ENCL2	// NO
+	CMP x_r3, #0        //CMP	AH,[BX]	// null CHAR?
+	BNE ENCL2           //JNZ	ENCL2	// NO
 
 // FOUND null BEFORE 1ST NON-TERM CHAR
 // RETURN ok args = NULL EX//
 // ( TIB   32 -- ADDR-B4-NULL 0 1 1 ) So DFIND CAN FIND IT!
 //
 	MOV	t_r0, x_r3
-	ADDS    w_r2, w_r2, #1	// w = offset to the delimiter after the text
+	ADDS  w_r2, w_r2, #1	// w = offset to the delimiter after the text
 	DPUSH_r0_then_r1
 
 //   FOUND FIRST TEXT CHAR - COUNT THE CHARS
 ENCL2:
-	ADDS    n_r1, n_r1, #1  // ADDR+1
-	ADDS    w_r2, w_r2, #1  //COUNT+1
-	LDRB    x_r3, [n_r1]
-	CMP    	t_r0, x_r3      //TERMINATOR CHAR?
-	BEQ     ENCL4           //YES
+	ADDS  n_r1, n_r1, #1  // ADDR+1
+	ADDS  w_r2, w_r2, #1  //COUNT+1
+	LDRB  x_r3, [n_r1]
+	CMP t_r0, x_r3      //TERMINATOR CHAR?
+	BEQ ENCL4           //YES
 
-	CMP     x_r3, #0        //null CHAR?
-	BNE     ENCL2           //NO, LOOP AGAIN
+	CMP x_r3, #0        //null CHAR?
+	BNE ENCL2           //NO, LOOP AGAIN
 
 ENCL3:	//   FOUND null AT END OF TEXT
 ENCL4:	//   FOUND TERMINATOR CHARACTER
-	MOV     t_r0, w_r2      // COUNT+1 =
-	ADDS    t_r0, t_r0, #1  // offset to the first character not included
+	MOV t_r0, w_r2        // COUNT+1 =
+	ADDS  t_r0, t_r0, #1  // offset to the first character not included
 	DPUSH_r0_then_r1
 
 
 //	0 NULL:	( -- ) IMMEDIATE
 //	Don't return to Interpret, return to Quit at end of a line of input.
 //      Executed at end of TIB when QUERY lenght or CR entered.
-
  SECTION .text : CONST (2)
 NULL_NFA:
 	DC8	0x0C1			// A BINARY ZER
@@ -826,7 +825,7 @@ NULL_NFA:
 	DC32	ENCL_NFA
 NULL:
 //	DC32	SEMIS			// Actual Semis code below
-	DC32	.+5
+	DC32  .+5
  SECTION .text : CODE (2)
 	POPr2i	// pop docol saved IP from Rstack
 	NEXT
@@ -857,7 +856,7 @@ WORD2:
 	DC32	IN_SV
 	DC32	AT
 	DC32	PLUS
-        DC32	SWAP	// ( TIB+IN CH-DELIM -- )
+  DC32	SWAP	// ( TIB+IN CH-DELIM -- )
 	DC32	ENCL    // ( TIB+IN 32 -- TIB+IN   0 4 5 )
 WENCL:
 	DC32	IN_SV	// encl TOS = end of word offset to be added to IN
@@ -873,28 +872,25 @@ WENCL:
 	DC32	ONEP
 //	DC32	RFROM
 // MOVE word TO DICT FOR finding ENDING WITH NULLS
-        DC32    R
+  DC32    R
 	DC32	CMOVE   // ( from to count -- )
 // add null to end of token - NUMBER adjusted
-        DC32    ZERO, HERE, ONEP, RFROM, PLUS, CSTORE
+  DC32    ZERO, HERE, ONEP, RFROM, PLUS, CSTORE
 #ifdef  IOBUFS_DEBUG
-        DC32    HERE, ONE, DUMP
+  DC32    HERE, ONE, DUMP
 #endif
 	DC32	SEMIS
 
-
 //	NUMBER NUMBER:	( addr -- sd )
 //	If error print message and ABORT.
-//      Convert a character string left at addr with a preceeding count,
-//      and a terminating null, to a signed number, in the current numeric base.
-//      If a decimal point is encountered in the text, its position will be
-//      given in DPL, but no other effect occurs. If numeric conversion is
-//      not possible, an error message will be given.
+//  Convert a character string left at addr with a preceeding count,
+//  and a terminating null, to a signed number, in the current numeric base.
+//  If a decimal point is encountered in the text, its position will be
+//  given in DPL, but no other effect occurs. If numeric conversion is
+//  not possible, an error message will be given.
 
-//      Added support for , as a single number formatter.
-
+//  Added support for , as a single number formatter.
 #define comma_test
-
  SECTION .text : CONST (2)
 NUMBER_NFA:
 	DC8	0x86
@@ -904,8 +900,8 @@ NUMBER_NFA:
 	DC32	WORD_NFA
 NUMBER:
 	DC32	DOCOL
-        DC32    BASE_TO_R12     // Save current BASE.
-        DC32    NUMBERSUFFIX    // (addr -- sddr) Change BASE if suffix used.
+  DC32  BASE_TO_R12     // Save current BASE.
+  DC32  NUMBERSUFFIX    // (addr -- sddr) Change BASE if suffix used.
 
 // SETUP: stack arguments for PNUMBER.
 	DC32	ZERO, ZERO
@@ -916,11 +912,11 @@ NUMBER:
 // START: Handle minus sign by saving status on Return Stack.
 // and incrementing to addr after it.
 	DC32	DUP, ONEP	// ( 0 0 addr addr+1 -- )
-	DC32	CAT		// ( 0 0 addr 1rstchar -- )
+	DC32	CAT		    // ( 0 0 addr 1rstchar -- )
 	DC32	LIT, '-'	// ( 0 0 addr 1rstchar 0x2D --- )
-	DC32	EQUAL		// ( 0 0 addr f -- )
-#ifdef TRUE_EQU_NEG_ONE         // EQUAL returns -1 NEED 0 or 1 here!
-        DC32    ONE, ANDD       // ( 0 0 addr f -- ) MAKE FLAG ONE OR ZERO!
+	DC32	EQUAL		  // ( 0 0 addr f -- )
+#ifdef TRUE_EQU_NEG_ONE // EQUAL returns -1 NEED 0 or 1 here!
+  DC32  ONE, ANDD       // ( 0 0 addr f -- ) MAKE FLAG ONE OR ZERO!
 #endif
 	DC32	DUP, TOR	// ( 0 0 addr f -- ) copy of f >R
 // END: Handle - by saving status on Return Stack.
@@ -932,7 +928,7 @@ NUMBER:
 // So could be at 1rst OR 2nd character in string here!
 
 // ENTER LOOP WITH -1 DPL = single number and sign flag on return stack.
-	DC32    LIT, -1
+	DC32  LIT, -1
 // PNUMBER is used in loop to convert string segment until non-mumeric chracter.
 // A period in the string manipulates DPL to create a double number.
 // A comma in the string resets DPL to create a single number.
@@ -942,70 +938,68 @@ NUMB1:      			// Begin
 
 // PNUMBER converts one or more characters until first unconvertable digit.
 // ud and addr in string is maintained while in loop.
-        DC32	PNUMBER   	// ( 0 0 addr -- ud=(LSW MSW) ADDR=PAST#)
+  DC32	PNUMBER   	// ( 0 0 addr -- ud=(LSW MSW) ADDR=PAST#)
 // Perform check for period, comma and null.
 // Any other character here invalidates this number conversion.
 
 // Null Test: = end of string.
-        DC32    DUP, CAT
-        DC32    ZERO            // End of string used to be BLANK, is now Null.
+  DC32    DUP, CAT
+  DC32    ZERO            // End of string used to be BLANK, is now Null.
 	DC32	SUBB
 	DC32	ZBRAN   	// IF emd of number string conversion is
-	DC32      NUMB2-. 	// DONE UNLESS IT NEEDS TO BE NEGATED.
+    DC32  NUMB2-. 	// DONE UNLESS IT NEEDS TO BE NEGATED.
 
 // Period Test: = increment DPL.
 	DC32	DUP, CAT
 	DC32	LIT, '.'        // 2Eh = period.
 	DC32	SUBB
-        DC32    ZBRAN
-        DC32      DPL_ZERO_INCR-.
+  DC32  ZBRAN
+  DC32  DPL_ZERO_INCR-.
 
 #ifdef  comma_test
 // Comma Test: = reset DPL.
-        DC32    DUP, CAT
+  DC32  DUP, CAT
 	DC32	LIT, ','        // 2CH comma
-        DC32    EQUAL
-        DC32    ZBRAN
-        DC32      BASE_RESET_THEN_ERROR-.
+  DC32  EQUAL
+  DC32  ZBRAN
+    DC32  BASE_RESET_THEN_ERROR-.
 
 // Fall thru if comma so reset DPL to create a single number.
 DPL_RESET:
-  DC32    TRUE_NEG_1
+  DC32  TRUE_NEG_1
 	DC32	BRAN
-	DC32      NUMB1-.
+	DC32  NUMB1-.
 #endif
 
 BASE_RESET_THEN_ERROR:
 // GOING TO ERROR SO RESTORE BASE!
-        DC32    BASE_FROM_R12   // Restore BASE
+  DC32  BASE_FROM_R12   // Restore BASE
 //NO_BASE_RESTORE:
-        DC32    ONE     // provide non zero flag for error
+  DC32  ONE     // provide non zero flag for error
 	DC32	LIT, msg_number_error
 	DC32	QERROR // ( f nullstr-addr -- ) IF f TRUE EXECUTE ERROR!
 
 DPL_ZERO_INCR:      // set DPL to zero
 	DC32	ZERO
 	DC32	BRAN
-	DC32      NUMB1-.
+    DC32  NUMB1-.
 
 NUMB2:
 	DC32	DROP
 	DC32	RFROM           // FLAG OF "-" TEST
 	    			// IF
 	DC32	ZBRAN
-	DC32      NUMB3-.
+    DC32  NUMB3-.
 
 	DC32	DNEGATE
 
 NUMB3:        		        // endif
-        DC32    BASE_FROM_R12   // Restore BASE
-        DC32    SEMIS
-
+  DC32  BASE_FROM_R12   // Restore BASE
+  DC32  SEMIS
 
 //	ERROR ERROR:	( nullstr --- )
 //	Execute error notification and restart of system.
 //  IN_SV is saved to assist in determining the location of the error.
-
  SECTION .text : CONST (2)
 ERROR_NFA:
 	DC8	0x85
@@ -1021,36 +1015,36 @@ ERROR:
 #ifdef IO2TP
 ERROR_BP1:
 // DC32 NOOP   // View error message
-   DC32 CLRPAD  // Resets OUT
+  DC32 CLRPAD  // Resets OUT
 #endif
 #ifdef XON_XOFF
-        DC32    XOFF    // TEMP TEST THRE
+  DC32    XOFF    // TEMP TEST THRE
 #endif
 
 //      DO THIS WHERE STATE IS SET BACK TO ZERO
-        DC32    STATE_SV, AT
-        DC32    ZBRAN
-        DC32     CREATED_OK-.
+  DC32  STATE_SV, AT
+  DC32  ZBRAN
+    DC32  CREATED_OK-.
 
 //      NON-ZERO CSDP = RESTORE DP TO forget DAMAGED WORDS
-        DC32    CSDP_SV, AT   // Create saves dp here for if word exists err
-        DC32    ZBRAN
-        DC32     CREATED_OK-.
+  DC32  CSDP_SV, AT   // Create saves dp here for if word exists err
+  DC32  ZBRAN
+    DC32  CREATED_OK-.
 
 // assume ITS A CREATE'd WORD!!!!
 ERROR_FIXUP:     // CSDP_SV contains NFA of definition that has error.
-        DC32    CSDP_SV, AT     // SHOULD BE AT NFA!!
-        DC32    PFA     // \ nfa -- pfa
-        DC32    LFA, AT // \ pfa --- lfa
-        DC32    CURRENT_SV, STORE       // Has to be NFA of last good word
+  DC32  CSDP_SV, AT     // SHOULD BE AT NFA!!
+  DC32  PFA     // \ nfa -- pfa
+  DC32  LFA, AT // \ pfa --- lfa
+  DC32  CURRENT_SV, STORE       // Has to be NFA of last good word
 // RESET DP!
-        DC32    CSDP_SV, AT
-        DC32    DP_SV, STORE
+  DC32  CSDP_SV, AT
+  DC32  DP_SV, STORE
 
 CREATED_OK:
-        DC32    SEMIC_CREATE            // RESET CSDP FOR AUTO FORGET
+  DC32  SEMIC_CREATE            // RESET CSDP FOR AUTO FORGET
 #ifdef ABORT_STOP_TILL_CO
-        DC32    ABORT
+  DC32  ABORT
 #else
 	DC32	QUIT	// FROM Error
 #endif
@@ -1088,12 +1082,12 @@ TICK:
 //	Transfer characters from the terminal to the buffer starting at addr+1,
 //	until a "return" or the count of characters have been received.
 //	One or two nulls are added at the end creating a null-terminated string.
-//      A count byte is placed at addr, the count being derived by $LEN
+//  A count byte is placed at addr, the count being derived by $LEN
 //	Use COUNT with TYPE for strings saved this way.
-//      Strings longer that 255 will have an invalid count byte. Use $LEN:
-//      $LEN and TYPE can be used when the argument to $LEN is addr+1.
+//  Strings longer that 255 will have an invalid count byte. Use $LEN:
+//  $LEN and TYPE can be used when the argument to $LEN is addr+1.
 
-//      Comments below use TIB input (QUERY in INTERPRET) as an example.
+//  Comments below use TIB input (QUERY in INTERPRET) as an example.
 
  SECTION .text : CONST (2)
 EXPECT_NFA:
@@ -1104,12 +1098,12 @@ EXPECT_NFA:
         DC32    TICK_NFA
 EXPECT:			// ( NOS TOS -- NOS TOS )
 	DC32	DOCOL	// ( TIB LEN -- )
-        DC32    zero_OUT, zero_IN
-        DC32    ONEP    // ( TIB LEN+1 -- ) (Index and Limit)+1 for count byte
+  DC32  zero_OUT, zero_IN
+  DC32  ONEP  // ( TIB LEN+1 -- ) (Index and Limit)+1 for count byte
 	DC32	OVER	// ( TIB LEN+1 TIB -- )
 	DC32	PLUS	// ( TIB TIB+LEN+1 -- )
 	DC32	OVER	// ( TIB TIB+LEN+1 TIB -- )
-        DC32    ONEP    // ( TIB TIB+LEN+1 TIB+1 -- ) SKIP COUNT BYTE
+  DC32  ONEP  // ( TIB TIB+LEN+1 TIB+1 -- ) SKIP COUNT BYTE
 
 ///* FISH System compiled KEY does not issue XON - user version does!
 #ifdef XON_XOFF
@@ -1121,37 +1115,37 @@ EXPECT:			// ( NOS TOS -- NOS TOS )
 EXPE1:
 	DC32	KEY	// CAN BREAKPOINT OR CHANGE TO BE 0x0D ONLY
 #ifdef XON_XOFF
-        DC32    IF_EOL_SEND_XOFF	// IF CR QUICK XOFF!
+  DC32  IF_EOL_SEND_XOFF	// IF CR QUICK XOFF!
 #endif
 // goto main branch (EL1:)if not tab
 	DC32	DUP, LIT, 9, EQUAL	// ? TAB
-        DC32    ZBRAN                   // Not tab
-        DC32     EL1-.                  // Goto MAIN LOOP
+  DC32  ZBRAN               // Not tab
+    DC32  EL1-.             // Goto MAIN LOOP
 
-// REPLACE TAB WITH SPACE               // -- ch f
-        DC32    DROP, BLANK             // Convert tab to space
+// REPLACE TAB WITH SPACE       // -- ch f
+  DC32  DROP, BLANK             // Convert tab to space
 EL1:
 // MAIN LOOP ENTERED WITH CHAR ON TOS
 	DC32	DUP		// ( TIB key key -- )
 // FALL THRU IF BACKSPACE OR DELETE KEY
 	DC32	BACKSPACE_CHAR
-        DC32    EQUAL
-        DC32    OVER
-        DC32    LIT, 07Fh       // DEL KEY
-        DC32    EQUAL
-        DC32    OR
+  DC32  EQUAL
+  DC32  OVER
+  DC32  LIT, 07Fh       // DEL KEY
+  DC32  EQUAL
+  DC32  OR
 // BRANCH IF NOT BACKSPACE OR DELETE KEY
-	DC32	ZBRAN           // If not backspace
-	DC32	 EXPE2-.        // go here
+	DC32	ZBRAN     // If not backspace
+    DC32  EXPE2-. // go here
 
 // CASE OF BACKSPACE/DELETE KEY
-	DC32	DROP	        // ( TOS> 8 TIB -- TIB ) Drop Backspace on stack
-	DC32	DUP	        // ( TOS> TIB -- TOS> TIB TIB )  Current TIB addr
-	DC32	I               // ( TOS> TIB TIB -- I=TIB+? TIB TIB )
+	DC32	DROP  // ( TOS> 8 TIB -- TIB ) Drop Backspace on stack
+	DC32	DUP   // ( TOS> TIB -- TOS> TIB TIB )  Current TIB addr
+	DC32	I     // ( TOS> TIB TIB -- I=TIB+? TIB TIB )
 // COMPENSATE FOR COUNT BYTE - BUMP ADDR+1 (NEXT CHAR LOCATION) BACK TO CURRENT
-        DC32    ONEM
-	DC32	EQUAL           // ( TOS> I=TIB+? TIB TIB -- f TIB )
-	DC32	DUP             // ( TOS> f TIB -- f f TIB )
+  DC32  ONEM
+	DC32	EQUAL // ( TOS> I=TIB+? TIB TIB -- f TIB )
+	DC32	DUP   // ( TOS> f TIB -- f f TIB )
 // I AND RFROM STARTS AT TIB+1
 // REMOVE INDEX FROM LOOP TO REPLACE IT WITH BACKSPACE CORRECTED ADDRESS
 	DC32	RFROM           // ( TOS> f f TIB -- TIB+1 f f TIB )
@@ -1162,36 +1156,36 @@ EL1:
 // ADD FLAG
 	DC32	PLUS
 	DC32	TOR
-	DC32	ZBRAN           // If not at beginning of line
-	DC32	 EXPE6-.        // Goto bsout
+	DC32	ZBRAN     // If not at beginning of line
+	DC32	 EXPE6-.  // Goto bsout
 
-	DC32	BELL	        // At beginning of TIB issue bell
-	DC32	BRAN	        // Goto end of loop
+	DC32	BELL      // At beginning of TIB issue bell
+	DC32	BRAN      // Goto end of loop
 	DC32	 EXPE33-.
 
 EXPE6:
 	DC32	BSOUT	        // endif
 EXPE7:	// LABEL NOT USED BECAUSE BELL AND BSOUT Emit THEMSELVES
 	DC32	BRAN	        // Goto end of loop
-	DC32	 EXPE33-.
+    DC32	 EXPE33-.
 
 EXPE2:
 	DC32	DUP
 	DC32	LIT, 0x0D	// cr
 	DC32	EQUAL
-	DC32	ZBRAN           // If not cr
-	DC32	 EXPE4-.        // Goto save this char and loop again
+	DC32	ZBRAN       // If not cr
+    DC32  EXPE4-.   // Goto save this char and loop again
 
-	DC32	LEAVE           // ( TOS> ODh TIB --  )
+	DC32	LEAVE       // ( TOS> ODh TIB --  )
 #ifdef  IOBUFS_DEBUG
-        DC32    DOTSHEX
+  DC32  DOTSHEX
 #endif
         // CR DROPPED HERE I USED AT END FOR CASE OF EXPECT COUNT REACHED
 	DC32	DROP            // ( TOS> TIB -- )
 	DC32	BLANK           // ( TOS> 20h TIB -- ) space IS FOR EMIT!
 	DC32	ZERO            // ( TOS> 0 20h TIB -- ) null
 	DC32	BRAN	        // Goto store these at end of loop
-	DC32	 EXPE5-.
+    DC32	 EXPE5-.
 
 EXPE4:
 	DC32	DUP	        // Regular char
@@ -1210,7 +1204,7 @@ EXPE3:
 	DC32	EMIT
 EXPE33:
 	DC32	XLOOP
-	DC32	 EXPE1-.        // Loop is LEAVE'd
+    DC32	 EXPE1-.        // Loop is LEAVE'd
 
 #ifdef XON_XOFF
 	DC32	XOFF	        // Count reached or cr = 2nd XOFF
@@ -1218,22 +1212,22 @@ EXPE33:
 // Creat count byte
         // ( ORIGINAL ADDR -- )
         // ORIGINAL ADDR (TIB) ON STACK HERE SO CORRECT FOR $LEN
-        DC32    ONEP            // PAST COUNT BYTE FOR CORRECT COUNT
-        // NULLSTRLEN:          // ( addr -- addr len )
-        DC32    NULLSTRLEN      // ( TOS> LEN TIB+1 -- )
-        DC32    SWAP, ONEM      // BACK UP TO COUNT BYTE
-        DC32    CSTORE
+  DC32  ONEP        // PAST COUNT BYTE FOR CORRECT COUNT
+  // NULLSTRLEN:    // ( addr -- addr len )
+  DC32  NULLSTRLEN  // ( TOS> LEN TIB+1 -- )
+  DC32  SWAP, ONEM  // BACK UP TO COUNT BYTE
+  DC32  CSTORE
 	DC32	SEMIS
 
 
 //	COUNT COUNT:	( addr1 --- addr2 n )
 //	Leave the byte address addr2 and byte count n of a count byte string,
-//      beginning at address addr1. It is presumed that the first byte at
-//      addr1 contains the text byte count and the actual text starts with
-//      the second byte. NFA's may report SMUDGE'd byte counts, handled only
-//      by ID. User Strings may be up to 255 characters.
-//      Typically COUNT is followed by TYPE.
-//      See TYPE $LEN and EXPECT
+//  beginning at address addr1. It is presumed that the first byte at
+//  addr1 contains the text byte count and the actual text starts with
+//  the second byte. NFA's may report SMUDGE'd byte counts, handled only
+//  by ID. User Strings may be up to 255 characters.
+//  Typically COUNT is followed by TYPE.
+//  See TYPE $LEN and EXPECT
 
  SECTION .text : CONST (2)
 COUNT_NFA:
@@ -1247,15 +1241,15 @@ COUNT:
 	DC32	DUP
 	DC32	ONEP
 	DC32	SWAP
-//        DC32    CATLT7F
+//  DC32    CATLT7F
 	DC32	CAT     // n could be SMUDGE'd count from NFA's
 	DC32	SEMIS   // Only internal usage of smudged count is ID.
 
 
-//      $LEN NULLSTRLEN:	( addr --- addr len )
-//      Count length of null terminated string like 'c' does,
-//      and return the string len after addr.
-//      TYPE can be used after this word.
+//  $LEN NULLSTRLEN:	( addr --- addr len )
+//  Count length of null terminated string like 'c' does,
+//  and return the string len after addr.
+//  TYPE can be used after this word.
 
  SECTION .text : CONST (2)
 NULLSTRLEN_NFA:
@@ -1268,19 +1262,18 @@ NULLSTRLEN:
 	DC32	.+5
  SECTION .text : CODE (2)
 	NDPOP2w                 // Put addr in w_R2 yet leave addr on stack
-                                // Usually TIB.
-	EORS	t_r0, t_r0, t_r0		// zero count
+                          // Usually TIB.
+	EORS	t_r0, t_r0, t_r0  // zero count
 
 NSLEN_LOOP:
-	LDRB	        n, [w_r2, t_r0]
-	ORRS		n, n, n
-	BEQ		NSLEN_DONE
-	ADDS		t_r0, t_r0, #1
-	B		NSLEN_LOOP
+	LDRB  n, [w_r2, t_r0]
+	ORRS  n, n, n
+	BEQ NSLEN_DONE
+	ADDS  t_r0, t_r0, #1
+	B NSLEN_LOOP
 
 NSLEN_DONE:
 	TPUSH_r0
-
 
 //	FORGET FORGET:	( -- )
 //	PRINTS NEW HERE IF SUCCESSFUL. FIXED FIG VERSION MEMORY LEAK.
@@ -1291,7 +1284,6 @@ NSLEN_DONE:
 //	if the CURRENT and CONTEXT vocabularies are not currently the same.
 //	MODIFIED: To update Current along with context and reset DP,
 //	and execute .DS and .VS
-
  SECTION .text : CONST (2)
 FORGET_NFA:
 	DC8	0x86
@@ -1303,40 +1295,40 @@ FORGET:
 	DC32	DOCOL
 	DC32	TICK		        // \ -- pfa ELSE error message
 	DC32	DUP
-        DC32    LIT, FLASH_SPAGE        // DONT FORGET FISH WORDS SAVED IN FLASH
+  DC32  LIT, FLASH_SPAGE        // DONT FORGET FISH WORDS SAVED IN FLASH
 	DC32	LESSTHAN
 	DC32	LIT, msg_forget_fish
 	DC32	QERROR                  // \ f nullstr-addr --
-        DC32	DUP
-        DC32    LIT, FLASH_PPAGE        // DONT FORGET USER WORDS IN FLASH
+  DC32	DUP
+  DC32  LIT, FLASH_PPAGE        // DONT FORGET USER WORDS IN FLASH
 	DC32	LESSTHAN
 	DC32	LIT, msg_forget_saved
 	DC32	QERROR                  // \ f nullstr-addr --
 //	MOVE NFA update of the DP to after Currrent and Context
 	DC32	DUP		        // PFA PFA --
-	DC32	LFA                     // PFA LFA --
+	DC32	LFA           // PFA LFA --
 
 // VAR space reclamation starts here:
 // PFA LFA --
-        DC32    TOR                     // LFA_BOT
+  DC32  TOR           // LFA_BOT
 
 VS_RECVR_LOOP:
-        DC32    LATEST, PFA, LFA        // LFA_TOP
-        DC32    DUP, AT                 // LFA NEXT_LFA
-        DC32    CURRENT_SV, STORE       // SET NEXT WORD TO CHECK
-        DC32    DUP, FOURP, AT          // GET CFA
-        DC32    LIT, DOVAR, EQUAL       // IS IT A DOVAR
-        DC32    ZBRAN
-        DC32     VS_RECVR_NEXT-.
+  DC32  LATEST, PFA, LFA        // LFA_TOP
+  DC32  DUP, AT                 // LFA NEXT_LFA
+  DC32  CURRENT_SV, STORE       // SET NEXT WORD TO CHECK
+  DC32  DUP, FOURP, AT          // GET CFA
+  DC32  LIT, DOVAR, EQUAL       // IS IT A DOVAR
+  DC32  ZBRAN
+    DC32  VS_RECVR_NEXT-.
 
-        DC32    LIT, -4, UP_SV, PSTORE  // DECREMENT UP
+  DC32  LIT, -4, UP_SV, PSTORE  // DECREMENT UP
 
 VS_RECVR_NEXT:
-        DC32    R, EQUAL
-        DC32    ZBRAN
-        DC32     VS_RECVR_LOOP-.
+  DC32  R, EQUAL
+  DC32  ZBRAN
+    DC32  VS_RECVR_LOOP-.
 
-        DC32    RFROM
+  DC32  RFROM
 // VAR SPACE RECLAMATION DONE
 
 // PFA LFA --
@@ -1362,16 +1354,14 @@ BYE_NFA:
 BYE:
 	DC32 	.+5
  SECTION .text : CODE (2)
-//        B       FM3_COLD      // __iar_program_start
-        B       STM32Fx_COLD_FISH
+//  B FM3_COLD      // __iar_program_start
+  B STM32Fx_COLD_FISH
  LTORG
-
 
 //	ABORT ABORT:	( -- )
 //	Clear the stacks, zero's out, and execute RUN or QUIT
 //	DOES NOT RESET DICTIONAIRY. SEE COLD.
 // When QUIT is run you have to type a CR to see PROMPT_SV
-
  SECTION .text : CONST (2)
 ABORT_NFA:
 	DC8	0x85
@@ -1394,43 +1384,43 @@ ABORT:
 //	DC32	QSTACK	// IF STACK error abort using QERROR->ERROR
 
 // LOOK UP RUN AND EXEC IT
-	DC32    LIT, msg_RUN
-	DC32    LATEST
+	DC32  LIT, msg_RUN
+	DC32  LATEST
 //ABORT_BP1_B4_PFIND_RUN:
 // DC32 NOOP
-	DC32    PFIND   // 0 OR pfa len 1
-	DC32    ZBRAN
-	DC32      ABORT_QUIT-.
+	DC32  PFIND   // 0 OR pfa len 1
+	DC32  ZBRAN
+    DC32  ABORT_QUIT-.
 
-	DC32    DROP    // LEN
-	DC32    CFA, EXEC
+	DC32  DROP    // LEN
+	DC32  CFA, EXEC
 ABORT_QUIT:
-//	DC32    SEMIC_CREATE // Use ERROR if need to recover from bad definition
+//	DC32  SEMIC_CREATE // Use ERROR if need to recover from bad definition
 #ifdef ABORT_STOP_TILL_CO
-	DC32    LIT, ERROR_HALT, AT
-	DC32    ZBRAN
-	DC32      CO_END-.
+	DC32  LIT, ERROR_HALT, AT
+	DC32  ZBRAN
+    DC32  CO_END-.
 // halt on all errors until "CO" entered
 // BEGIN
 	DC32    LIT, msg_CO, NULLSTRLEN, TYPE
 NOT_CO:
-	DC32    QKEY
-	DC32    ZBRAN
-	DC32      NOT_CO-.
+	DC32  QKEY
+	DC32  ZBRAN
+	DC32  NOT_CO-.
 // IF KEY = "C'
-	DC32    KEY, LIT, 43h, EQUAL
-	DC32    ZBRAN
-	DC32      NOT_CO-.
+	DC32  KEY, LIT, 43h, EQUAL
+	DC32  ZBRAN
+	DC32  NOT_CO-.
 // NEXT KEY "0"
-	DC32    KEY, LIT, 4Fh, EQUAL
-	DC32    ZBRAN
-	DC32      NOT_CO-.
+	DC32  KEY, LIT, 4Fh, EQUAL
+	DC32  ZBRAN
+    DC32  NOT_CO-.
 // NEXT KEY "Enter"
-	DC32    KEY, LIT, 0Dh, EQUAL
-	DC32    ZBRAN
-	DC32      NOT_CO-.
+	DC32  KEY, LIT, 0Dh, EQUAL
+	DC32  ZBRAN
+	DC32  NOT_CO-.
 // UNTIL
-	DC32    CR
+	DC32  CR
 CO_END:
 #endif
 	DC32	QUIT	// OI
@@ -1452,10 +1442,10 @@ COLD_NFA:
 COLD:
 	DC32	DOCOL
 	DC32	WARM		// RAMVARSPACE Init
-        DC32    CLS
+  DC32  CLS
 	DC32	SIGNON
 #ifdef ABORT_STOP_TILL_CO
-        DC32    QUIT
+  DC32  QUIT
 #else
 	DC32	ABORT
 #endif
@@ -1468,11 +1458,11 @@ COLD:
 WC_FISH_SYS_NFA:
 	DC8	0x80+4+12        // +4 is format chars constant
                        // +n is Name lenght
-        DC8     0x0D, 0x0A
+  DC8 0x0D, 0x0A
 	DC8	'FISH System:'
-        DC8     0x0D, 0x0A+0x80
+  DC8 0x0D, 0x0A+0x80
  ALIGNROM 2,0xFFFFFFFF
-        DC32    COLD_NFA
+  DC32  COLD_NFA
 
 
 //----------------------------- DOTSTACK SECTION -------------------------------
@@ -1490,7 +1480,7 @@ DOTSHEX_NFA:
 	DC32	WC_FISH_SYS_NFA
 DOTSHEX:
 	DC32	DOCOL
-        DC32    LIT, 16, DOTSBASE
+  DC32  LIT, 16, DOTSBASE
 	DC32	SEMIS
 
 
@@ -1507,7 +1497,7 @@ DOTSDEC_NFA:
 	DC32	DOTSHEX_NFA
 DOTSDEC:
 	DC32	DOCOL
-        DC32    LIT, 10, DOTSBASE
+  DC32  LIT, 10, DOTSBASE
 	DC32	SEMIS
 
 
@@ -1556,29 +1546,27 @@ DOTS:
 DOTSLOOP:
 	DC32	I, AT
 	DC32	BASE_SV, AT
-        DC32    LIT, 10, EQUAL                  //
-        DC32    ZBRAN                           // NOT = DECIMAL
-        DC32    DBSUSEDUDOT-.
-        DC32    DOT_BASE_SUFFIX
-        DC32    BRAN
-        DC32    DBSUSEDOT-.
+  DC32  LIT, 10, EQUAL                  //
+  DC32  ZBRAN                           // NOT = DECIMAL
+    DC32  DBSUSEDUDOT-.
+  DC32  DOT_BASE_SUFFIX
+  DC32  BRAN
+    DC32  DBSUSEDOT-.
 
 DBSUSEDUDOT:
-        DC32    UDOT_BASE_SUFFIX
+  DC32  UDOT_BASE_SUFFIX
 
 DBSUSEDOT:
-        DC32    SPACE
+  DC32  SPACE
 	DC32	FOUR, XPLOOP
 	DC32	DOTSLOOP-.
 
 DOTSEND:
 	DC32	SEMIS
 
-
 //	2DUP TDUP:	( n2 n1 -- n2 n1 n2 n1 )
 //	Duplicate top two stack items. The prefix 2 convention means
 //      an operation on the top two stack items.
-
  SECTION .text : CONST (2)
 TDUP_NFA:
 	DC8	0x84
@@ -1590,17 +1578,15 @@ TDUP:
 	DC32 	.+5
  SECTION .text : CODE (2)
 // TDUP: OPT by picking pops
-	LDR     t_r0, [p]
-	LDR     w_r2, [p, #4]
+	LDR t_r0, [p]
+	LDR w_r2, [p, #4]
 	DPUSH_r0_then_r1
 
-
 //	-DUP ZNDUP:	( n1 -- n1 (if zero)
-//                      ( n1 -- n1 n1 (non-zero)
+//  ( n1 -- n1 n1 (non-zero)
 //	Reproduce n1 only if it is non-zero. Used in type andSPACES.
-//      This is usually used to copy a value just before IF, to eliminate
-//      the need for an ELSE part to drop it.
-
+//  This is usually used to copy a value just before IF, to eliminate
+//  the need for an ELSE part to drop it.
  SECTION .text : CONST (2)
 DDUP_NFA:
 	DC8	0x84
@@ -1612,16 +1598,14 @@ ZNDUP:
 	DC32	DOCOL
 	DC32	DUP
 	DC32	ZBRAN	// IF
-	DC32	DDUP1-.
+    DC32	DDUP1-.
 
 	DC32	DUP	//endif
 DDUP1:
 	DC32	SEMIS
 
-
 //	ROT ROT: ( nl n2 n3 --- n2 n3 nl )
 //	Rotate the top three values on the stack, bringing the third to the top.
-
  SECTION .text : CONST (2)
 ROT_NFA:
 	DC8	0x83
@@ -1635,18 +1619,16 @@ ROT:
 	POP2w_r2
 	POP2n_r1
 #ifdef TOSCT
-        LDR     t_r0, [p]               // get new TOS
+  LDR t_r0, [p]               // get new TOS
 #endif
 	POP2t_r0
 	PUSHn
 	DPUSH_r0_then_r1        	//  --  LSW MSW )
 
-
 //	I I:	( -- n )
 //      Used within a DO-LOOP to copy the loop index to the stack. Other use
 //      is implementation dependent.
 //      See R.
-
  SECTION .text : CONST (2)
 I_NFA:
 	DC8	0x81
@@ -1656,16 +1638,14 @@ I_NFA:
 I:
 	DC32	.+5
  SECTION .text : CODE (2)
-	LDR     t_r0, [r]	// GET INDEX VALUE
+	LDR t_r0, [r]	// GET INDEX VALUE
 	TPUSH_r0
-
 
 //	SP@ SPAT:	( -- addr )
 //	\ -- addr = Current TOP of the parameter stack (p) )
-//      Place the address of the TOP of the parameter stack (p)
+//  Place the address of the TOP of the parameter stack (p)
 //	on the parameter stack (p) as it was before RP@ was executed.
-//      e.g.  1  2  SP@  @  .   .   .     would type 2  2  1
-
+//  e.g.  1  2  SP@  @  .   .   .     would type 2  2  1
  SECTION .text : CONST (2)
 SPAT_NFA:
 	DC8	0x83
@@ -1679,13 +1659,11 @@ SPAT:
 	MOV	t_r0, p
 	TPUSH_r0
 
-
 //	RP@ RPAT:	( -- addr )
 //	\ -- addr = Current TOP of the Return Stack (r) )
 //      Place the address of the TOP of the return stack (r)
 //	on the parameter stack (p) as it was before RP@ was executed.
 //      e.g.  1 >R  2 >R  RP@  @  .   .   . would type 2  2  1
-
  SECTION .text : CONST (2)
 RPAT_NFA:
 	DC8	0x83
@@ -1699,13 +1677,11 @@ RPAT:
 	MOV	t_r0, r
 	TPUSH_r0
 
-
 //	LEAVE LEAVE:	( -- )
 //      Force termination of a DO-LOOP at the next opportunity by setting
 //      the loop limit equal to the current value of the index. The index
 //      itself remains unchanged, and execution proceeds until LOOP
 //      or +LOOP is encountered.
-
  SECTION .text : CONST (2)
 LEAVE_NFA:
 	DC8	0x85
@@ -1717,15 +1693,13 @@ LEAVE_NFA:
 LEAVE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	LDR     w_r2, [r_r6]       // GET Index
-	STR     w_r2, [r_r6, #4]   // Store it at Limit
+	LDR w_r2, [r_r6]       // GET Index
+	STR w_r2, [r_r6, #4]   // Store it at Limit
 	NEXT
-
 
 //	R> RFROM:	( -- n )
 //      Remove the top value from the return stack and leave it on the
 //      computation stack. See >R and R.
-
  SECTION .text : CONST (2)
 RFROM_NFA:
 	DC8	0x82
@@ -1739,10 +1713,8 @@ RFROM:
 	POPr2t
 	TPUSH_r0
 
-
 //	R R:	( -- n )
 //	Copy the top of the return stack to the computation stack.
-
  SECTION .text : CONST (2)
 R_NFA:
 	DC8	0x81
@@ -1752,14 +1724,13 @@ R_NFA:
 R:
 	DC32	.+5
  SECTION .text : CODE (2)
-	LDR     t_r0, [r]	// Get Index
+	LDR t_r0, [r]	// Get Index
 	TPUSH_r0
 
 //	>R TOR:	( n -- )
 //      Remove a number from the computation stack and place as the most
 //      accessable on the return stack. Use should be balanced with R> in
 //      the same definition.
-
  SECTION .text : CONST (2)
 TOR_NFA:
 	DC8	0x82
@@ -1773,14 +1744,12 @@ TOR:
 	POP2n_r1   // preserve TOS
 	PUSHn2r
 #ifdef TOSCT
-        LDR     t_r0, [p]
+  LDR t_r0, [p]
 #endif
 	NEXT
 
-
 //	OVER OVER:	( nl n2 -- nl n2 n1 )
 //	Copy the second stack value, placing it as the new top.
-
  SECTION .text : CONST (2)
 OVER_NFA:
 	DC8	0x84
@@ -1794,18 +1763,16 @@ OVER:
 	POP2w_r2	// n2
 #ifdef TOSCT
 // Get new t - This could become REFRESHt
-	LDR	t_r0, [p_r7]    // t invalid so get it
-        POP2t_r0                // do the increment
+	LDR	t_r0, [p_r7]  // t invalid so get it
+  POP2t_r0          // do the increment
 #else
-	POP2t_r0                // n1
+	POP2t_r0          // n1
 #endif
-	PUSHt_r0                // -- n1 )
-	DPUSH_r0_then_r1        // --  LSW MSW )
-
+	PUSHt_r0          // -- n1 )
+	DPUSH_r0_then_r1  // --  LSW MSW )
 
 //	DROP DROP:	( n1 -- )
 //	Drop n1 from the stack.
-
  SECTION .text : CONST (2)
 DROP_NFA:
 	DC8	0x84
@@ -1817,20 +1784,17 @@ DROP:
 	DC32	.+5
  SECTION .text : CODE (2)
 #ifdef TOSCT
-//        POP2t_r0              // this one just adds 4 to p
-        ADDS	p, p, #4
-        LDR     t_r0, [p]          // REFRESH t
+//  POP2t_r0              // this one just adds 4 to p
+  ADDS	p, p, #4
+  LDR     t_r0, [p]          // REFRESH t
 #else // DROP:
-//        POP2t_r0              // Opt to just do p
-        ADDS	p, p, #4
-
+//  POP2t_r0              // Opt to just do p
+  ADDS	p, p, #4
 #endif
-        NEXT
-
+  NEXT
 
 //	SWAP SWAP:	( nl n2 -- n2 n1 )
 //	Exchange the top two values On the stack.
-
  SECTION .text : CONST (2)
 SWAP_NFA:
 	DC8	0x84
@@ -1842,19 +1806,17 @@ SWAP:
 	DC32	.+5
  SECTION .text : CODE (2)
 #ifdef TOSCT
-        MOV     w_r2, t_r0
-        LDR     t_r0, [p, #4]
-        ADDS    p, p, #8
+  MOV w_r2, t_r0
+  LDR t_r0, [p, #4]
+  ADDS  p, p, #8
 #else // SWAP:
 	POP2w_r2	                // n2
 	POP2t_r0	                // n1
 #endif
 	DPUSH_r0_then_r1        	//  --  LSW MSW )
 
-
 //	DUP DUP:	( n1 -- n1 n1 )
 //	Duplicate the value n1 on the stack.
-
  SECTION .text : CONST (2)
 DUP_NFA:
 	DC8	0x83
@@ -1869,9 +1831,9 @@ DUP:
 // NO NEED TO REFRESH t ?
 //#else DUP:
 // OPT by picking pops
-	LDR     t_r0, [p]       //t_r0 p_r7
+	LDR t_r0, [p] //t_r0 p_r7
 //#endif
-	TPUSH_r0                // push t to p, pre decrement p
+	TPUSH_r0      // push t to p, pre decrement p
 
 //=============================== WORDCAT ====================================//
 //NOEXEC HEADERFORWORDCATEGORIES
@@ -1880,18 +1842,17 @@ DUP:
  SECTION .text : CONST (2)
 WC_STACK_NFA:
 	DC8	0x80+4+12
-        DC8     0x0D, 0x0A
+  DC8 0x0D, 0x0A
 	DC8	'Stack Stuff:'
-        DC8     0x0D, 0x0A+0x80
+  DC8 0x0D, 0x0A+0x80
  ALIGNROM 2,0xFFFFFFFF
-        DC32    DUP_NFA
+  DC32  DUP_NFA
 
 //	CMOVE CMOVE:	( from to count -- )
 //      Move the specified quantity of bytes beginning at address from to
 //      address to. The contents of address from is moved first proceeding
 //      toward high memory. Further specification is necessary on word
 //      addressing computers.
-
  SECTION .text : CONST (2)
 CMOVE_NFA:
 	DC8	0x85
@@ -1905,33 +1866,31 @@ CMOVE:
 	POP2n_r1        //    ldr	n, [p],#4       //COUNT
 	POP2w_r2        //    ldr	w_r2, [p],#4    //DEST
 	POP2x           //    ldr	x, [p],#4       //SOURCE
-	CMP     n_r1, #0
-	BEQ     CM2
+	CMP n_r1, #0
+	BEQ CM2
 CM1:
 //not for THUMB
 //strcpy  LDRB R2, [R1], #1
-//        STRB R2, [R0], #1
-//        TST R2, R2      // repeat if R2 is nonzero
-//        BNE strcpy
-	LDRB    t_r0, [x]
-	STRB    t_r0, [w]
-	SUBS    n_r1, n_r1, #1
-	CMP     n_r1, #0
-	BEQ     CM2
+//  STRB R2, [R0], #1
+//  TST R2, R2      // repeat if R2 is nonzero
+//  BNE strcpy
+	LDRB  t_r0, [x]
+	STRB  t_r0, [w]
+	SUBS  n_r1, n_r1, #1
+	CMP n_r1, #0
+	BEQ CM2
 
 	ADDS	w_r2, w_r2, #1
 	ADDS	x_r3, x_r3, #1
-	BNE     CM1
+	BNE CM1
 CM2:
 #ifdef TOSCT
-        LDR     t_r0, [p]  // REFRESH t
+  LDR t_r0, [p]  // REFRESH t
 #endif
 	NEXT
 
-
 //	FILL FILL:	( addr quan b -- )
 //      Fill memory at the address with the specified quantity of bytes b.
-
  SECTION .text : CONST (2)
 FILL_NFA:
 	DC8	0x84
@@ -1945,24 +1904,22 @@ FILL:
 	POP2t_r0		// Fill CHAR
 	POP2n_r1		// Fill COUNT
 	POP2w_r2		// Beginning ADDR
-	CMP     n, #0
-	BEQ     FEND            // Count is zero
-	ADDS	x, n, w
+	CMP   n_r1, #0
+	BEQ   FEND            // Count is zero
+	ADDS  x, n, w
 FLOOP:
 	STRB	t_r0, [w]
 	ADDS	w_r2, w_r2, #1
-	CMP	w_r2, x
-	BNE	FLOOP
+	CMP   w_r2, x
+	BNE   FLOOP
 FEND:
 #ifdef TOSCT
-        LDR     t_r0, [p]  // REFRESH t
+  LDR t_r0, [p]  // REFRESH t
 #endif
 	NEXT
 
-
 //	ERASE ERASE:	( addr n -- )
 //      Clear a region of memory to zero from addr over n addresses.
-
  SECTION .text : CONST (2)
 ERASE_NFA:
 	DC8	0x85
@@ -1976,10 +1933,8 @@ ERASE:
 	DC32	FILL
 	DC32	SEMIS
 
-
 //	BLANKS BLANKS:	( addr count -- )
 //      Fill an area of memory beginning at addr with blanks (0x20).
-
  SECTION .text : CONST (2)
 BLANKS_NFA:
 	DC8	0x86
@@ -1993,11 +1948,9 @@ BLANKS:
 	DC32	FILL
 	DC32	SEMIS
 
-
 //	+! PSTORE:	( n addr -- )
 //	Add n to the value at the address.
 //	Pronounced Plus Store
-
  SECTION .text : CONST (2)
 PSTORE_NFA:
 	DC8	0x82
@@ -2008,21 +1961,19 @@ PSTORE_NFA:
 PSTORE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2n_r1		// ADDRESS
+	POP2n_r1		              // ADDRESS
 #ifdef TOSCT
-        LDR     t_r0, [p]       // REFRESH t
+  LDR t_r0, [p]             // REFRESH t
 #endif
-	POP2t_r0		// INCREMENT
-	LDR     w_r2, [n_r1]
-	ADDS    t_r0, t_r0, w_r2
-	STR     t_r0, [n_r1]
+	POP2t_r0	              	// INCREMENT
+	LDR   w_r2, [n_r1]
+	ADDS  t_r0, t_r0, w_r2
+	STR   t_r0, [n_r1]
 	NEXT
-
 
 //	@ AT:	( addr -- n )
 //	Read 32 bit contents of address to TOS.
 //	Pronounced Fetch, as in Fetch word at addr.
-
  SECTION .text : CONST (2)
 AT_NFA:
 	DC8	0x81
@@ -5531,8 +5482,8 @@ TASK_NFA:
 //	DC32	NOOP_NFA	// Patch here to shorten test of PFIND
 //	DC32	CAT_NFA		// C@ before @
 //	DC32	LESS_NFA	// < before =
-//       DC32	SoCinit_NFA	//XON_NFA		// FULL DICT SEARCH
-        DC32    MS_NFA
+//  DC32	SoCinit_NFA	//XON_NFA		// FULL DICT SEARCH
+  DC32    MS_NFA
 TASK:
 	DC32	DOCOL
 	DC32	SEMIS
@@ -5547,10 +5498,10 @@ TASK:
  SECTION .text : CONST (2)
 // ALIGNROM 2,0xFFFFFFFF
 CLRPAD:
-        DC32    DOCOL, PAD_SV, LIT, IOBUFSIZE
-        DC32    BLANK,  FILL
-        DC32    zero_OUT
-        DC32    SEMIS
+  DC32    DOCOL, PAD_SV, LIT, IOBUFSIZE
+  DC32    BLANK,  FILL
+  DC32    zero_OUT
+  DC32    SEMIS
 #endif
 
 #ifdef IO2TP
@@ -5559,9 +5510,9 @@ CLRPAD:
 // ALIGNROM 2,0xFFFFFFFF
 CLRTIB:
 	DC32    DOCOL, TIB_SV, LIT, IOBUFSIZE
-        DC32    ERASE
-        DC32    STRVA, 1, IN
-        DC32    SEMIS
+  DC32    ERASE
+  DC32    STRVA, 1, IN
+  DC32    SEMIS
 #endif
 
 #ifdef USE_CMAIN
