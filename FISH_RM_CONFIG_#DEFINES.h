@@ -5,7 +5,7 @@
 //#define FISH_Debug_WORDSET    // Affecs Prompt only
 
 // this define must keep RESET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//#define USE_CMAIN     // Affects cstartup_M.c FM0_COLD and RET2c
+#define USE_CMAIN     // Affects cstartup_M.c FM0_COLD and FISH_return2c
 
 // System:
 #define PSTAT_SPI1_TEST
