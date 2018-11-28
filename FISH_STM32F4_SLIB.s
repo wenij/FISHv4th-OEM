@@ -826,14 +826,14 @@ SEMIS:
  SECTION .text : CODE (2)
  ALIGNROM 2,0xFFFFFFFF
 DOVAR:
-	LDM	w!, {t}
+	LDM	w!, {t_r0}
 	TPUSH_r0
 
 //:NONAME DOCON   ( -- ) COMPILED VERSION OF CON
  SECTION .text : CODE (2)
  ALIGNROM 2,0xFFFFFFFF
 DOCON:
-	LDM	w!, {t}
+	LDM	w!, {t_r0}
 	TPUSH_r0
 
 //:NONAME LIT:        ( -- n ) The primitive that pushes a number in a definition.
