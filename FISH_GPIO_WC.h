@@ -28,7 +28,7 @@ GPIOC_ODR_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	WC_FISH_PubRel_NFA
 RM_GPIOC_ODR:
-  DC32    DOCON, GPIOC_ODR
+  DC32  DOCON, GPIOC_ODR
 
 //	GPIOB_IDR: ( -- addr )
  SECTION .text : CONST (2)
@@ -39,7 +39,7 @@ GPIOC_IDR_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	GPIOC_ODR_NFA
 RM_GPIOC_IDR:
-  DC32    DOCON, GPIOC_IDR
+  DC32  DOCON, GPIOC_IDR
 
 //	GPIOC_MODER: ( -- addr )
  SECTION .text : CONST (2)
@@ -50,7 +50,7 @@ GPIOC_MODER_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	GPIOC_IDR_NFA
 RM_GPIOC_MODER:
-  DC32    DOCON, GPIOC_MODER
+  DC32  DOCON, GPIOC_MODER
 
 //	GPIOB_ODR: ( -- addr )
  SECTION .text : CONST (2)
@@ -61,7 +61,7 @@ GPIOB_ODR_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	GPIOC_MODER_NFA
 RM_GPIOB_ODR:
-  DC32    DOCON, GPIOB_ODR
+  DC32  DOCON, GPIOB_ODR
 
 //	GPIOB_IDR: ( -- addr )
  SECTION .text : CONST (2)
@@ -72,7 +72,7 @@ GPIOB_IDR_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	GPIOB_ODR_NFA
 RM_GPIOB_IDR:
-  DC32    DOCON, GPIOB_IDR
+  DC32  DOCON, GPIOB_IDR
 
 //	GPIOB_MODER: ( -- addr )
  SECTION .text : CONST (2)
@@ -83,17 +83,15 @@ GPIOB_MODER_NFA:
  ALIGNROM 2,0xFFFFFFFF
 	DC32	GPIOB_IDR_NFA
 RM_GPIOB_MODER:
-  DC32    DOCON, GPIOB_MODER
+  DC32  DOCON, GPIOB_MODER
 
-
-
+//  SEEBIT  ( 0-based-bit# adrr -- )
 /*
 : SEEBIT@ ( 1-based-bit# addr -- )
 	SWAP \ MAKES STACK ARGS SAME AS SETBIT/CLRBIT
 	1 SWAP LSL >R @ R AND R> AND IF ." ON" ELSE ." OFF" THEN ;
 
 */
-//  SETBIT  ( 0-based-bit# adrr -- )
  SECTION .text : CONST (2)
 SEEBIT_NFA:
 	DC8	0x80+6
@@ -103,8 +101,6 @@ SEEBIT_NFA:
   DC32	GPIOB_MODER_NFA
 SEEBIT:
   DC32  DOCOL
-//  DC32  SWAP, ONE, SWAP, LSL
-//  DC32  TOR, AT, R, ANDD, RFROM
   DC32  TOR, ONE, SWAP, LSL
   DC32  RFROM, AT, ANDD
   DC32  ZBRAN
@@ -133,16 +129,6 @@ BITOFF:
 \	CR .SH
 	!
 ;
-
- CLRBIT ( 0-based-bit# addr -- )
-: CB
-	>R              \ STORE @ADDR VALUE
-	1h SWAP LSL
-	R  @ NOT AND
-	R>
-\	CR .SH
-	!
-;
 */
 //  SETBIT  ( 0-based-bit# adrr -- )
  SECTION .text : CONST (2)
@@ -163,14 +149,19 @@ SETBIT:
 	ORRS	t_r0, t_r0, x_r3  // modify val
 	STR  t_r0, [w_r2]       // Write val
 	NEXT
+
 /*
-  DC32  DOCOL
-//  DC32  CR DOTHEX
-  DC32  TOR, ONE, SWAP, LSL
-  DC32  R, AT, OR, RFROM, STORE
-  DC32  SEMIS
+ CLRBIT ( 0-based-bit# addr -- )
+: CB
+	>R              \ STORE @ADDR VALUE
+	1h SWAP LSL
+	R  @ NOT AND
+	R>
+\	CR .SH
+	!
+;
 */
-  
+
 //  CLRBIT  ( 0-based-bit# adrr -- )
  SECTION .text : CONST (2)
 CLRBIT_NFA:
@@ -187,16 +178,10 @@ CLRBIT:
 	LDR   t_r0, [w_r2]      // read [val]
   MOV   x_r3, #1
   LSLS   x_r3, n_r1
-	BIC	t_r0, t_r0, x_r3  // modify val
+	BIC	t_r0, t_r0, x_r3    // modify val
 	STR   t_r0, [w_r2]      // Write val
 	NEXT
 
-/*
-  DC32  DOCOL
-  DC32  TOR, ONE, SWAP, LSL
-  DC32  R, AT, XORR, RFROM, STORE // WAS NOT, ANDD,
-  DC32  SEMIS
-*/
 //	ANDBITS ANDBITS:	( addr val -- )
 
  SECTION .text : CONST (2)
@@ -215,7 +200,6 @@ ANDBITS:
 	ANDS	t_r0, t_r0, w	  // modify val
 	STR	  t_r0, [n]	      // Write val
 	NEXT
-
 
 //	SETBITS SETBITS:	( addr val -- )
 //	OR val bits into addr. See also CLRBITS.

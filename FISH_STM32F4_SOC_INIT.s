@@ -21,14 +21,14 @@ copyintvecs:
 	DC32	.+5
  SECTION .text : CODE (2)
 // Note sure why x_r3 style seems to cause problems.
-	mov32	y, RAM_INTVECS
-	mov	x, #0    // BOOT REMAP IN MAIN FLASH ALIASED AT 0
+	mov32	y_r4, RAM_INTVECS
+	mov	  x_r3, #0    // BOOT REMAP IN MAIN FLASH ALIASED AT 0
 //      mov32   x, = FLASH_START
-	mov	k, #128
+	mov	k_r12, #128
 _copyintvecs
-	ldr	w, [x], #4
-	str	w, [y], #4
-	subs	k, k, #1
+	ldr   w_r2, [x_r3], #4
+	str   w_r2, [y_r4], #4
+	subs	k_r12, k_r12, #1
 	bne	_copyintvecs
 	NEXT
  LTORG

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Valid thru v1.8
+// Valid thru FISHv4th-OEM
 //$PROJ_DIR$\stm32F205RC.icf
 // This include begins the .sym file
 

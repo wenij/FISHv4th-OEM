@@ -188,6 +188,7 @@ AFT_INTVEC:
 Reset_Handler
 
         B      STM32Fx_COLD_FISH
+// fix        B      main
 
         PUBWEAK NMI_Handler
         SECTION .text:CODE:REORDER(1)
