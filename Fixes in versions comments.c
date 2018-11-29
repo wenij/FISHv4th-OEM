@@ -1,4 +1,6 @@
 /*
+Should an error processed by EHON, ater its has gotten CO do a EHOFF?
+
 Fixes in versions comments:
 I have redone a clone of the FISHv4th-OEM branch v1.8x,
 which has none of the PSTAT work.

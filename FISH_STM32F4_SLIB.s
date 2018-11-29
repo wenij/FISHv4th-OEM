@@ -877,9 +877,9 @@ GOTO:
 	NEXT
 
 //:NONAME CREATE_DOES_GOTO:   ( -- )
-//      PUSH ADDRESS OF CREATED WORDS PFA THEN
-//      Redirect execution to cfa of the CREATE DOES> word.
-//      THIS IS LIKE A DOCON IE NO DOCOL!!!!
+//  PUSH ADDRESS OF CREATED WORDS PFA THEN
+//  Redirect execution to cfa of the CREATE DOES> word.
+//  THIS IS LIKE A DOCON IE NO DOCOL!!!!
 //	CAUTION!!!!!!! A SYSTEM WORD EXPOSED FOR THE BOLD AND BRAVE!!!!!!!
 //	Stack IN CURRENT WORD MUST BE CLEANED UP!
 //	AND STACK MUSTE BE SET UP as expected where you GOTO.
@@ -892,10 +892,10 @@ CREATE_DOES_GOTO:
 // PUSH ADDR AFTER EXEC IN INTERPRET TO r:
 	PUSHi2r		// save IP to Rstack
 // AND THIS LOADS GOTO ADDR
-        LDR     i, [t, #4]      // GET GOTO ADDRESS
+  LDR     i_r5, [t_r0, #4]      // GET GOTO ADDRESS
 // THIS PUSHES PFA TO t
-        ADDS    t, t, #8        // COMPUTE REAL PFA
-        PUSHt_r0
+  ADDS    t_r0, t_r0, #8        // COMPUTE REAL PFA
+  PUSHt_r0
 	NEXT
 
 //:NONAME DICTSPACE:  ( -- n ) Calculate and push dictionary space available
@@ -904,10 +904,10 @@ CREATE_DOES_GOTO:
 DICTSPACE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	LDR	t, = DICTSPACE_END
-	LDR	n, = DP
-	LDR	n, [n]
-	SUBS	t, t, n
+	LDR	  t_r0, = DICTSPACE_END
+	LDR	  n_r1, = DP
+	LDR	  n, [n]
+	SUBS  t, t, n
 	TPUSH_r0
 // LTORG
 
@@ -917,9 +917,9 @@ DICTSPACE:
 VARSPACE:
 	DC32	.+5
  SECTION .text : CODE (2)
-	LDR	t, = END_RAMVARSPACE_SV_START
-	LDR	n, = UP	// UP IS ALLOCATION POINTER FOR VARS AND VARALLOT
-	LDR	n, [n]
+	LDR	  t_r0, = END_RAMVARSPACE_SV_START
+	LDR	  n_r1, = UP	// UP IS ALLOCATION POINTER FOR VARS AND VARALLOT
+	LDR	  n, [n]
 	SUBS	t, t, n
 	TPUSH_r0
  LTORG
@@ -927,12 +927,12 @@ VARSPACE:
 // Rewrite for TOSCT interop?
 //:NONAME PFIND:	( addr1 addr2 -- pfa b tf ) (ok)
 //                      ( addr1 addr2 -- ff ) (bad)
-//      LEN HAS TO BE smudged header byte for INTERPRET.
+//  LEN HAS TO BE smudged header byte for INTERPRET.
 //	Header LEN BYTE REQUIRED by Interpret for immediate word execution
 //	Searches the dictionary starting at the name field address addr2,
-//      matching to the text at addr1. Returns parameter field address,
-//      length byte of name field and boolean true for a good match. If no
-//      match is found, only a boolean false is left.
+//  matching to the text at addr1. Returns parameter field address,
+//  length byte of name field and boolean true for a good match. If no
+//  match is found, only a boolean false is left.
 //
 //	To step thru to a word set bp at :NONAME
 //	and watch r3 for match of word addr from symbol file
@@ -941,98 +941,98 @@ VARSPACE:
 PFIND:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2x   // R3 = Dict Name NFA
-	POP2w_r2	// R2 = String Addr usually at here
-	MOV     rb, w   	// Save TXT String ADDR
+	POP2x             // R3 = Dict Name NFA
+	POP2w_r2	        // R2 = String Addr usually at here
+	MOV rb_r11, w_r2  // Save TXT String ADDR
 
 //	SEARCH LOOP
 //	nfa length test
-//      x must = Dict nfa
-PFIN1:              	        // ADDR-->char counted strings
-	MOV	w, rb		// restore txt str addr
-	LDRB    t, [x]  	// GET nfa LENGTH
-//      LEN HAS TO BE smudged header byte for DFIND -> INTERPRET.
-//      ELSE DO THIS HERE TO MAKE IT ACTUAL & REMOVE SECTION BELOW
+//  x must = Dict nfa
+PFIN1:                // ADDR-->char counted strings
+	MOV	  w_r2, rb_r11  // restore txt str addr
+  LDRB  t_r0, [x]     // GET nfa LENGTH
+//  LEN HAS TO BE smudged header byte for DFIND -> INTERPRET.
+//  ELSE DO THIS HERE TO MAKE IT ACTUAL & REMOVE SECTION BELOW
 //	MOVS	y, #0x3F
 //	ANDS	t, y
-	MOV	k, t		// Save search word length
-	LDRB    n, [w]  	// TXT WORD LEN
+	MOV   k_r12, t_r0   // Save search word length
+	LDRB  n_r1, [w_r2]  // TXT WORD LEN
 	EORS	t, t, n
-	MOVS	y, #0x3F
-	ANDS	t, t, y
-	BNE	PFIN5   // Len mismatch, GET NEXT LINK FIELD ADDR (lfa)
+	MOVS	y_r4, #0x3F
+	ANDS	t, t, y_r4
+	BNE	PFIN5           // Len mismatch, GET NEXT LINK FIELD ADDR (lfa)
 
 //	LENGTHS MATCH - CHECK EACH CHARACTER IN NAME
 // 	TEST FIRST CHAR AND DETERMINE IF LAST
 PFIN2:
-	ADDS    w, w, #1        // str
-	ADDS    x, x, #1        // nfa
-	LDRB    t, [x]          // GET nfa 1RST CHAR
-	LDRB    n, [w]          // GET TXT 1RST CHAR
-	CMP	t, n	        // eor was working but this make 0x80 subb
-	BEQ	PFIN2           // matched try next char
+	ADDS  w_r2, w_r2, #1  // str
+	ADDS  x_r3, x_r3, #1  // nfa
+	LDRB  t_r0, [x_r3]    // GET nfa 1RST CHAR
+	LDRB  n_r1, [w_r2]    // GET TXT 1RST CHAR
+	CMP   t_r0, n_r1      // eor was working but this make 0x80 subb
+	BEQ	PFIN2             // matched try next char
 
-	MOVS	y, #0x80
-	SUBS	t, t, y		// ascii only in t and n
-	cmp	t, n
-	BNE	PFIN51          // goto  WORD MISMATCH
+	MOVS	y_r4, #0x80
+	SUBS	t_r0, t_r0, y_r4		// ascii only in t and n
+	cmp   t_r0, n_r1
+	BNE	PFIN51                // goto  WORD MISMATCH
 
 //      FOUND END OF NAME (BIT 8 SET) - A MATCH
 //      GET to pfa of found word
 PFIN21:
 
-	ADDS    x, x, #1	// Dict addr
-	LDRB    t, [x]
-	CMP     t, #0xFF
-	BEQ     PFIN21
+	ADDS  x_r3, x_r3, #1	// Dict addr
+	LDRB  t_r0, [x_r3]
+	CMP   t_r0, #0xFF
+	BEQ   PFIN21
 
 thispfa:
 
-	ADDS    x, x, #8        // at cfa -> pfa
-	PUSHx			// PUSH pfa
-	MOVS    t, #1           // TRUE VALUE
-	MOV     w, k		// RETURN Header Byte LENGTH
+	ADDS    x_r3, x, #8     // at cfa -> pfa
+	PUSHx                   // PUSH pfa
+	MOVS    t_r0, #1        // TRUE VALUE
+	MOV     w_r2, k_r12     // RETURN Header Byte LENGTH
 	DPUSH_r0_then_r1
 
 //	NO NAME MATCH - TRY ANOTHER
-//      Set NEXT LINK FIELD ADDR (lfa) to x
-//      ( ZERO = FIRST WORD OF DICTIONARY )
-//      GET TO END OF NAME BEFORE Padding IF ANY
-//      ENTER HERE FROM LEN!= (RB->CNT)
+//  Set NEXT LINK FIELD ADDR (lfa) to x
+//  ( ZERO = FIRST WORD OF DICTIONARY )
+//  GET TO END OF NAME BEFORE Padding IF ANY
+//  ENTER HERE FROM LEN!= (RB->CNT)
 PFIN5:
-	ADDS     x, x, #1       // inc char in name addr
+	ADDS  x_r3, x, #1       // inc char in name addr
 
-//      ENTER HERE FROM WORD MISMATCH
+//  ENTER HERE FROM WORD MISMATCH
 PFIN51:
-	LDRB    t, [x]		// get Dict Word char
-	MOVS	y, #0x80
-	TST     t, y	        // is last char in word bit set
-	BEQ     PFIN5
+	LDRB  t_r0, [x_r3]  // get Dict Word char
+	MOVS	y_r4, #0x80
+	TST   t, y	        // is last char in word bit set
+	BEQ   PFIN5
 
 //      UNMATCHED NAME - POINTING AT LAST CHAR BEFORE Padding IF ANY
 //      GET PAST FF Padding AND GET lfa
 PFIN7:
 // Code for ALIGNED
 //	ADDS		x, x, #3
-	ADDS		x, x, #4        // add 1 for entry
-	LDR		t, =-4
-	ANDS		x, x, t
-	LDR     x, [x]          // GET lfa to next word
-	CMP     x, #0    	// START OF DICT ( 0 ) ?
+	ADDS  x_r3, x, #4   // add 1 for entry
+	LDR		t_r0, =-4
+	ANDS  x, x, t
+	LDR   x, [x]        // GET lfa to next word
+	CMP   x, #0         // START OF DICT ( 0 ) ?
 	BEQ		WORDNOTFOUND
 
 // NOT A BRAN TARGET - This one used for breakpoint
 PFIND_NEXT_NFA:
-	B	PFIN1           // Search next word x must = Dict nfa
+	B	PFIN1   // Search next word x must = Dict nfa
 
-WORDNOTFOUND:             	// PFIND: DONE ( NO MATCH FOUND )
-	MOVS     t, #0
+WORDNOTFOUND:       // PFIND: DONE ( NO MATCH FOUND )
+	MOVS     t_r0, #0
 	TPUSH_r0
  LTORG
 
 //:NONAME BRAN:	( -- ) Branch in definitions primitive
-//      In IAR branch target MUST BE ON Next LINE!!!<<<<<<<<<<<<<<<<<<<<<<<<
-//      The run-time proceedure to unconditionally branch. An in-line offset
+//  In IAR branch target MUST BE ON Next LINE!!!<<<<<<<<<<<<<<<<<<<<<<<<
+//  The run-time proceedure to unconditionally branch. An in-line offset
 //	is added to the interpretive pointer IP to branch ahead or back.
 //	BRANCH is compiled by ELSE, AGAIN, REPEAT.
  SECTION .text : CONST (2)
@@ -1041,12 +1041,12 @@ BRAN:
 	DC32	.+5
  SECTION .text : CODE (2)
 BRAN1:
-	LDR	x, [i]		// Get branck target
-	ADDS	i, i, x         // use as offset
+	LDR	  x_r3, [i]		// Get branck target
+	ADDS	i_r5, i, x  // use as offset
 	NEXT
 
 //:NONAME ZBRAN:	( f -- ) Branch if zero definition primitive.
-//      In IAR branch target MUST BE ON Next LINE!!!<<<<<<<<<<<<<<<<<<<<<<<<
+//  In IAR branch target MUST BE ON Next LINE!!!<<<<<<<<<<<<<<<<<<<<<<<<
 //	The run-time proceedure to conditionally branch. If f is false
 //	(zero), the following in-line parameter is added to the interpretive
 //	pointer to branch ahead or back. Compiled by IF, UNTIL, and WHILE.
@@ -1056,17 +1056,17 @@ ZBRAN:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0
-	CMP	t, #0		// ZERO?
+	CMP	t, #0         // ZERO?
 #ifdef TOSCT                    // CMP CONSUMES t
-        LDR     t, [p]          // REFRESH t
+  LDR t_r0, [p]     // REFRESH t
 #endif
-	beq	BRAN1		// YES, BRANCH
+	beq	BRAN1         // YES, BRANCH
 
-	ADDS	i, i, #4	// NO - CONTINUE...
+	ADDS	i_r5, i, #4	// NO - CONTINUE...
 	NEXT
 
 //:NONAME TBRAN:	( f -- ) Branch if ANY TRUE, NOT JUST TRUE_NEG_1.
-//      In IAR branch target MUST BE ON Next LINE!!!<<<<<<<<<<<<<<<<<<<<<<<<
+//  In IAR branch target MUST BE ON Next LINE!!!<<<<<<<<<<<<<<<<<<<<<<<<
 //	The run-time proceedure to conditionally branch. If f is false
 //	(zero), the following in-line parameter is added to the interpretive
 //	pointer to branch ahead or back. Compiled by IF, UNTIL, and WHILE.
@@ -1076,32 +1076,32 @@ TBRAN:
 	DC32	.+5
  SECTION .text : CODE (2)
 	POP2t_r0
-	CMP	t, #0		// ZERO?
-#ifdef TOSCT                    // CMP CONSUMES t
-        LDR     t, [p]          // REFRESH t
+	CMP	t_r0, #0      // ZERO?
+#ifdef TOSCT        // CMP CONSUMES t
+  LDR t, [p_r7]     // REFRESH t
 #endif
-	bne	BRAN1		// YES, BRANCH
+	bne	BRAN1         // YES, BRANCH
 
-	ADDS	i, i, #4	// NO - CONTINUE...
+	ADDS	i_r5, i, #4	// NO - CONTINUE...
 	NEXT
  LTORG
 
-//:NONAME XLOOP:	( -- ) Loop primitive in a definition.
-//      The run-time proceedure compiled by LOOP which increments
+//  :NONAME XLOOP:	( -- ) Loop primitive in a definition.
+//  The run-time proceedure compiled by LOOP which increments
 //	the loop index by one and tests for loop completion.
-//      See LOOP.
+//  See LOOP.
  SECTION .text : CONST (2)
  ALIGNROM 2,0xFFFFFFFF
 XLOOP:
 	DC32	.+5
  SECTION .text : CODE (2)
-	MOVS		x, #1
+	MOVS  x_R3, #1
 XLOO1:
 	// Get Limit and Index from r w/o popping them
-	LDR     y, [r, #4]      // Limit
-	LDR     w, [r]          // Index
-	CMP	y, w            // If equal
-	BEQ     XLOO2		// done
+	LDR y_R4, [r_r6, #4]  // Limit
+	LDR w_r2, [r_r6]      // Index
+	CMP	y, w              // If equal
+	BEQ     XLOO2         // done
 
 	adds    w, w, x         // INDEX = INDEX + INCR
 	str     w, [r]		// Put it back by overwrite for I
