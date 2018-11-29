@@ -1095,18 +1095,18 @@ TBRAN:
 XLOOP:
 	DC32	.+5
  SECTION .text : CODE (2)
-	MOVS  x_R3, #1
+	MOVS  x_r3, #1
 XLOO1:
 	// Get Limit and Index from r w/o popping them
-	LDR y_R4, [r_r6, #4]  // Limit
+	LDR y_r4, [r_r6, #4]  // Limit
 	LDR w_r2, [r_r6]      // Index
 	CMP	y, w              // If equal
-	BEQ     XLOO2         // done
+	BEQ XLOO2             // done
 
-	adds    w, w, x         // INDEX = INDEX + INCR
+	adds    w, w, x   // INDEX = INDEX + INCR
 	str     w, [r]		// Put it back by overwrite for I
 	SUBS    y, y, w
-	BNE     BRAN1		// End of `DO' LOOP
+	BNE     BRAN1     // End of `DO' LOOP
 XLOO2:
 	// Drop Limit and Index, increment i
 	ADDS	r, r, #8
@@ -1121,27 +1121,27 @@ XLOO2:
 XPLOOP:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2x			// GET LOOP VALUE
+	POP2x             // GET LOOP VALUE
 #ifdef TOSCT
-        LDR     t, [p]
+  LDR t_R0, [p_r7]
 #endif
-	b       XLOO1   	// see XLOO1 for why it's put in x
+	b   XLOO1         // see XLOO1 for why it's put in x
 
 //:NONAME XDO:	( Limit Index -- ) The DO primitive in definitions.
 //	( Limit = addr+cnt Index = addr  -- ) as in ( TIB+LEN TIB -- )
-//      The run-time proceedure compiled by DO which moves the loop control
-//      parameters to the return stack. See DO.
+//  The run-time proceedure compiled by DO which moves the loop control
+//  parameters to the return stack. See DO.
  SECTION .text : CONST (2)
  ALIGNROM 2,0xFFFFFFFF
 XDO:
 	DC32	.+5
  SECTION .text : CODE (2)
-	POP2t_r0		// INITIAL INDEX VALUE = ADDR
-	POP2w_r2		// LIMIT VALUE = ADDR+CNT
+	POP2t_r0          // INITIAL INDEX VALUE = ADDR
+	POP2w_r2          // LIMIT VALUE = ADDR+CNT
 	PUSHw2r
-	PUSHt2r			// i expects index TOP of RSTACK
+	PUSHt2r           // i expects index TOP of RSTACK
 #ifdef TOSCT
-        LDR     t, [p]  // REFRESH t
+  LDR t_R0, [p_r7]  // REFRESH t
 #endif
 	NEXT
 
@@ -1151,11 +1151,11 @@ XDO:
 CATLT7F:
 	DC32	.+5
  SECTION .text : CODE (2)
-        POP2t_r0
-        LDRB    t, [t]
-        LDR     n, =7Fh
-        ANDS    t, t, n
-        TPUSH_r0
+  POP2t_r0
+  LDRB  t_r0, [t]
+  LDR   n_r1, =7Fh
+  ANDS  t, t, n
+  TPUSH_r0
 
 //:NONAME TIB_CHAR_SCAN   ( c -- f ) Scan TIB for c or until null found.
 // Scan TIB, a null terminated string at TIB+IN for 'c' or null termination.
