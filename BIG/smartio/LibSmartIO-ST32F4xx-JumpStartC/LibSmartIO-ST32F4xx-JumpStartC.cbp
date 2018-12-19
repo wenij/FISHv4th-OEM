@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="SmartIO-ST32F4xx-JumpStartC" />
+		<Option pch_mode="2" />
+		<Option compiler="icccortex" />
+		<Build>
+			<Target title="default">
+				<Option output="./libSmartIO-ST32F4xx-JumpStartC.a" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="./.objs" />
+				<Option type="2" />
+				<Option compiler="icccortex" />
+				<Option projectCompilerOptionsRelation="1" />
+				<Option projectLinkerOptionsRelation="1" />
+				<Option projectIncludeDirsRelation="1" />
+				<Option projectResourceIncludeDirsRelation="1" />
+				<Option projectLibDirsRelation="1" />
+				<Compiler>
+					<Add option="-e" />
+					<Add option="-D__ICC_VERSION=82101" />
+					<Add option="-DST" />
+					<Add option="-DSTM32F411RE" />
+					<Add option="-l" />
+					<Add option="-A" />
+					<Add option="-g" />
+					<Add option="-MM4" />
+					<Add option="-D__BUILD=6" />
+					<Add directory=".." />
+					<Add directory="$(TARGET_COMPILER_DIR)/include/jsapi/STM32F4" />
+					<Add directory="$(TARGET_COMPILER_DIR)/include/jsapi/ST.com-Files/CMSIS/Device/ST/STM32F4xx/Include" />
+					<Add directory="$(TARGET_COMPILER_DIR)/include/jsapi/ST.com-Files/StdPeriph_Lib/stm32f4xx/inc" />
+				</Compiler>
+				<Linker>
+					<Add option="-mSTM32F411RE" />
+					<Add option="-g" />
+					<Add option="-bvectors:0x8000000.0x8000200" />
+					<Add option="-btext:0x8000200.0x8080000" />
+					<Add option="-bdata:0x20000000.0x20020000" />
+					<Add option="-dinit_sp:0x20020000" />
+					<Add option="-fintelhex" />
+					<Add option="-nb:6" />
+					<Add library="jsapi-stm32f4" />
+					<Add library="ccortex" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-e" />
+			<Add option="-D__ICC_VERSION=82101" />
+			<Add option="-DST" />
+			<Add option="-DSTM32F411RE" />
+			<Add option="-l" />
+			<Add option="-A" />
+			<Add option="-g" />
+			<Add option="-MM4" />
+			<Add option="-D__BUILD=6" />
+			<Add directory=".." />
+			<Add directory="$(TARGET_COMPILER_DIR)/include/jsapi/STM32F4" />
+			<Add directory="$(TARGET_COMPILER_DIR)/include/jsapi/ST.com-Files/CMSIS/Device/ST/STM32F4xx/Include" />
+			<Add directory="$(TARGET_COMPILER_DIR)/include/jsapi/ST.com-Files/StdPeriph_Lib/stm32f4xx/inc" />
+		</Compiler>
+		<Linker>
+			<Add option="-mSTM32F411RE" />
+			<Add option="-g" />
+			<Add option="-bvectors:0x8000000.0x8000200" />
+			<Add option="-btext:0x8000200.0x8080000" />
+			<Add option="-bdata:0x20000000.0x20020000" />
+			<Add option="-dinit_sp:0x20020000" />
+			<Add option="-fintelhex" />
+			<Add option="-nb:6" />
+			<Add library="jsapi-stm32f4" />
+			<Add library="ccortex" />
+		</Linker>
+		<Unit filename="../smartio_api.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../smartio_api.h" />
+		<Unit filename="../smartio_hardware_interface.h" />
+		<Unit filename="../smartio_interface.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../smartio_interface.h" />
+		<Unit filename="handlers.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="smartio_hardware_interface.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

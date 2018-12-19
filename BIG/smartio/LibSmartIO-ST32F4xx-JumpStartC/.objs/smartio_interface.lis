@@ -1,0 +1,581 @@
+                        .module smartio_interface.c
+                        .area text
+ 000000                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\smartio_interface.c
+                        .area text
+ 000000                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\smartio_interface.c
+ 000000                 .dbfunc e SmartIO_Init _SmartIO_Init#FvPFvvEPFvvE fV 30 -103022869
+ 000000         ; disconnect_callback -> R6
+ 000000         ; connect_callback -> R7
+ 000000         _SmartIO_Init#FvPFvvEPFvvE::
+ 000000                 .dbprevlr 20
+ 000000 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 000004 EB46            mov R11,R13
+ 000006 0746            mov R7,R0
+ 000008 0E46            mov R6,R1
+ 00000A                 .dbblock 31
+ 00000A                 .dbline 32
+ 00000A 094C            ldr R4,LIT_SmartIO_Init+12
+ 00000C 2760            str R7,[R4,#0]
+ 00000E                 .dbline 33
+ 00000E 074C            ldr R4,LIT_SmartIO_Init+8
+ 000010 2660            str R6,[R4,#0]
+ 000012                 .dbline 34
+ 000012 0548            ldr R0,LIT_SmartIO_Init+4
+ 000014 00F000F8        bl _SmartIO_HardwareInit#FvPFvvE
+ 000018                 .dbline 35
+ 000018 0124            movs R4,#1
+ 00001A 024D            ldr R5,LIT_SmartIO_Init+0
+ 00001C 2C70            strb R4,[R5,#0]
+ 00001E                 .dbblkend 36
+ 00001E         L5:
+ 00001E BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 000022                 .dbfuncend
+                        .align4
+ 000024                 .LITERAL
+ 000024         LIT_SmartIO_Init:
+ 000024 2C030000        .long _SPI_State#h
+ 000028 35000000        .paddr _SmartIO_ISR#Fvv
+ 00002C 00000000        .long _SmartIO_Disconnect_Callback#PFvvE
+ 000030 04000000        .long _SmartIO_Connect_Callback#PFvvE
+ 000034         	.ENDLITERAL
+ 000034                 .dbsym r disconnect_callback 6 pfV p1
+ 000034                 .dbsym r connect_callback 7 pfV p0
+ 000034                 .dbstacksize 0
+ 000034                 .dbfunc e SmartIO_ISR _SmartIO_ISR#Fvv fV 40 3274572
+ 000034         _SmartIO_ISR#Fvv::
+ 000034                 .dbprevlr -1
+ 000034                 .dbblock 41
+ 000034                 .dbline 42
+ 000034 0948            ldr R0,LIT_SmartIO_ISR+0
+ 000036 0078            ldrb R0,[R0,#0]
+ 000038                 .dbline 43
+ 000038 70B1            cbz R0,L6
+ 00003A         L7:
+ 00003A                 .dbline 45
+ 00003A 0848            ldr R0,LIT_SmartIO_ISR+0
+ 00003C 0078            ldrb R0,[R0,#0]
+ 00003E 0228            cmp R0,#2
+ 000040 03D1            bne L9
+ 000042                 .dbline 46
+ 000042 0320            movs R0,#3
+ 000044 0549            ldr R1,LIT_SmartIO_ISR+0
+ 000046 0870            strb R0,[R1,#0]
+ 000048 06E0            b L10
+ 00004A         L9:
+ 00004A                 .dbline 47
+ 00004A 0448            ldr R0,LIT_SmartIO_ISR+0
+ 00004C 0078            ldrb R0,[R0,#0]
+ 00004E 0128            cmp R0,#1
+ 000050 02D1            bne L11
+ 000052                 .dbline 48
+ 000052 0420            movs R0,#4
+ 000054 0149            ldr R1,LIT_SmartIO_ISR+0
+ 000056 0870            strb R0,[R1,#0]
+ 000058         L11:
+ 000058         L10:
+ 000058                 .dbblkend 49
+ 000058         L6:
+ 000058 7047            bx R14
+ 00005A                 .dbfuncend
+                        .align4
+ 00005C                 .LITERAL
+ 00005C         LIT_SmartIO_ISR:
+ 00005C 2C030000        .long _SPI_State#h
+ 000060         	.ENDLITERAL
+ 000060                 .dbstacksize 0
+ 000060                 .dbfunc e SmartIO__SendBytes _SmartIO__SendBytes#FjPhi fi 51 3274572
+ 000060         ;        handle2 -> R7
+ 000060         ;         handle -> R6
+ 000060         ;       replylen -> R8
+ 000060         ;       replybuf -> R7
+ 000060         ;             op -> R9
+ 000060         ;     is_syscall -> R10
+ 000060         ;        sendlen -> R6
+ 000060         ;        sendbuf -> R7
+ 000060         _SmartIO__SendBytes#FjPhi::
+ 000060                 .dbprevlr 32
+ 000060 2DE9F04F        push {R4,R5,R6,R7,R8,R9,R10,R11,LR}
+ 000064 EB46            mov R11,R13
+ 000066 0746            mov R7,R0
+ 000068 0E46            mov R6,R1
+ 00006A                 .dbblock 52
+ 00006A                 .dbline 53
+ 00006A 3C78            ldrb R4,[R7,#0]
+ 00006C 7D78            ldrb R5,[R7,#+1]
+ 00006E 2D02            lsls R5,R5,#8
+ 000070 45EA0404        orr R4,R5,R4
+ 000074 A146            mov R9,R4
+ 000076                 .dbline 54
+ 000076 7C78            ldrb R4,[R7,#+1]
+ 000078 FF2C            cmp R4,#255
+ 00007A 0CBF            ite eq
+ 00007C 4FF00108        moveq R8,#1
+ 000080 4FF00008        movne R8,#0
+ 000084         L16:
+ 000084 C246            mov R10,R8
+ 000086                 .dbline 55
+ 000086 0224            movs R4,#2
+ 000088 2B4D            ldr R5,LIT_SmartIO__SendBytes+0
+ 00008A 2C70            strb R4,[R5,#0]
+ 00008C                 .dbline 57
+ 00008C 3846            mov R0,R7
+ 00008E 3146            mov R1,R6
+ 000090 00F000F8        bl _SmartIO_SPI_SendBytes#FvPhi
+ 000094         L17:
+ 000094         L18:
+ 000094                 .dbline 59
+ 000094 284C            ldr R4,LIT_SmartIO__SendBytes+0
+ 000096 2478            ldrb R4,[R4,#0]
+ 000098 032C            cmp R4,#3
+ 00009A FBD1            bne L17
+ 00009C                 .dbblock 62
+ 00009C                 .dbline 62
+ 00009C 274C            ldr R4,LIT_SmartIO__SendBytes+4
+ 00009E 2768            ldr R7,[R4,#0]
+ 0000A0                 .dbline 63
+ 0000A0 3846            mov R0,R7
+ 0000A2 4FF48071        mov R1,#256
+ 0000A6 00F000F8        bl _SmartIO_SPI_ReadBytes#FiPhi
+ 0000AA 8046            mov R8,R0
+ 0000AC                 .dbline 65
+ 0000AC B8F1000F        cmp R8,#0
+ 0000B0 04DA            bge L20
+ 0000B2                 .dbline 67
+ 0000B2 0620            movs R0,#6
+ 0000B4 00F000F8        bl _SmartIO_Error#Fviz
+ 0000B8                 .dbline 68
+ 0000B8 0020            movs R0,#0
+ 0000BA 3AE0            b L13
+ 0000BC         L20:
+ 0000BC                 .dbblock 71
+ 0000BC                 .dbline 71
+ 0000BC 3C78            ldrb R4,[R7,#0]
+ 0000BE 7D78            ldrb R5,[R7,#+1]
+ 0000C0 2D02            lsls R5,R5,#8
+ 0000C2 45EA0406        orr R6,R5,R4
+ 0000C6                 .dbline 73
+ 0000C6 BAF1000F        cmp R10,#0
+ 0000CA 12D0            beq L22
+ 0000CC                 .dbline 75
+ 0000CC 4FF68074        mov R4,#65408
+ 0000D0 1FFA89F5        uxth R5,R9
+ 0000D4 A542            cmp R5,R4
+ 0000D6 01DB            blt L24
+ 0000D8                 .dbline 76
+ 0000D8 3E46            mov R6,R7
+ 0000DA 24E0            b L23
+ 0000DC         L24:
+ 0000DC                 .dbline 77
+ 0000DC B8F1040F        cmp R8,#4
+ 0000E0 21D1            bne L23
+ 0000E2                 .dbline 78
+ 0000E2 BC78            ldrb R4,[R7,#+2]
+ 0000E4 FD78            ldrb R5,[R7,#+3]
+ 0000E6 2D02            lsls R5,R5,#8
+ 0000E8 45EA0404        orr R4,R5,R4
+ 0000EC 46EA0446        orr R6,R6,R4,lsl #16
+ 0000F0                 .dbline 79
+ 0000F0 19E0            b L23
+ 0000F2         L22:
+ 0000F2                 .dbline 80
+ 0000F2 B8F1020F        cmp R8,#2
+ 0000F6 06D0            beq L28
+ 0000F8 B8F1040F        cmp R8,#4
+ 0000FC 03D0            beq L28
+ 0000FE                 .dbline 81
+ 0000FE 0220            movs R0,#2
+ 000100 00F000F8        bl _SmartIO_Error#Fviz
+ 000104 0FE0            b L29
+ 000106         L28:
+ 000106                 .dbline 82
+ 000106 B8F1040F        cmp R8,#4
+ 00010A 0CD1            bne L30
+ 00010C                 .dbline 84
+ 00010C BC78            ldrb R4,[R7,#+2]
+ 00010E FD78            ldrb R5,[R7,#+3]
+ 000110 2D02            lsls R5,R5,#8
+ 000112 45EA0404        orr R4,R5,R4
+ 000116 2746            mov R7,R4
+ 000118                 .dbline 86
+ 000118 741C            adds R4,R6,#1
+ 00011A BDB2            uxth R5,R7
+ 00011C A542            cmp R5,R4
+ 00011E 02D0            beq L32
+ 000120                 .dbline 87
+ 000120 0720            movs R0,#7
+ 000122 00F000F8        bl _SmartIO_Error#Fviz
+ 000126         L32:
+ 000126         L30:
+ 000126         L29:
+ 000126         L23:
+ 000126                 .dbline 96
+ 000126 0124            movs R4,#1
+ 000128 034D            ldr R5,LIT_SmartIO__SendBytes+0
+ 00012A 2C70            strb R4,[R5,#0]
+ 00012C                 .dbline 97
+ 00012C 00F000F8        bl _SmartIO_SPI_FinishRead#Fvv
+ 000130                 .dbline 99
+ 000130 3046            mov R0,R6
+ 000132                 .dbblkend 100
+ 000132                 .dbblkend 100
+ 000132                 .dbblkend 100
+ 000132         L13:
+ 000132 BDE8F08F        pop {R4,R5,R6,R7,R8,R9,R10,R11,PC}
+ 000136                 .dbfuncend
+                        .align4
+ 000138                 .LITERAL
+ 000138         LIT_SmartIO__SendBytes:
+ 000138 2C030000        .long _SPI_State#h
+ 00013C 00000000        .long _host_sram_block#Ph
+ 000140         	.ENDLITERAL
+ 000140                 .dbsym r handle2 7 s
+ 000140                 .dbsym r handle 6 i
+ 000140                 .dbsym r replylen 8 I
+ 000140                 .dbsym r replybuf 7 pc
+ 000140                 .dbsym r op 9 s
+ 000140                 .dbsym r is_syscall 10 I
+ 000140                 .dbsym r sendlen 6 I p1
+ 000140                 .dbsym r sendbuf 7 pc p0
+ 000140                 .dbstacksize 0
+ 000140                 .dbfunc e SmartIO__RegisterCallback _SmartIO__RegisterCallback#FvtPFvEi fV 102 3274572
+ 000140                 .dbstruct 0 8 callback
+ 000140                 .dbfield 0 argtype c
+ 000140                 .dbfield 2 handle s
+ 000140                 .dbfield 4 func pfV
+ 000140                 .dbend
+ 000140         ;              p -> R7
+ 000140         ;        argtype -> R8
+ 000140         ;           func -> R9
+ 000140         ;         handle -> R10
+ 000140         _SmartIO__RegisterCallback#FvtPFvEi::
+ 000140                 .dbprevlr 32
+ 000140 2DE9F04F        push {R4,R5,R6,R7,R8,R9,R10,R11,LR}
+ 000144 EB46            mov R11,R13
+ 000146 8246            mov R10,R0
+ 000148 8946            mov R9,R1
+ 00014A 9046            mov R8,R2
+ 00014C                 .dbblock 103
+ 00014C                 .dbline 104
+ 00014C 5046            mov R0,R10
+ 00014E 00F01DF8        bl _FindCallbackEntry#FPus8_callbackt
+ 000152 0746            mov R7,R0
+ 000154                 .dbline 106
+ 000154 77B9            cbnz R7,L35
+ 000156                 .dbline 108
+ 000156 0C4C            ldr R4,LIT_SmartIO__RegisterCallback+4
+ 000158 2468            ldr R4,[R4,#0]
+ 00015A 642C            cmp R4,#100
+ 00015C 03D1            bne L37
+ 00015E                 .dbline 110
+ 00015E 0420            movs R0,#4
+ 000160 00F000F8        bl _SmartIO_Error#Fviz
+ 000164                 .dbline 111
+ 000164 0CE0            b L34
+ 000166         L37:
+ 000166                 .dbline 114
+ 000166 084C            ldr R4,LIT_SmartIO__RegisterCallback+4
+ 000168 2568            ldr R5,[R4,#0]
+ 00016A 6E1C            adds R6,R5,#1
+ 00016C 2660            str R6,[R4,#0]
+ 00016E 054C            ldr R4,LIT_SmartIO__RegisterCallback+0
+ 000170 ED00            lsls R5,R5,#3
+ 000172 2F19            adds R7,R5,R4
+ 000174         L35:
+ 000174                 .dbline 116
+ 000174 A7F802A0        strh R10,[R7,#+2]
+ 000178                 .dbline 117
+ 000178 C7F80490        str R9,[R7,#+4]
+ 00017C                 .dbline 118
+ 00017C 4446            mov R4,R8
+ 00017E 3C70            strb R4,[R7,#0]
+ 000180                 .dbblkend 119
+ 000180         L34:
+ 000180 BDE8F08F        pop {R4,R5,R6,R7,R8,R9,R10,R11,PC}
+ 000184                 .dbfuncend
+                        .align4
+ 000184                 .LITERAL
+ 000184         LIT_SmartIO__RegisterCallback:
+ 000184 0C000000        .long _callback_table#A100_us8_callback
+ 000188 08000000        .long _callback_table_index#i
+ 00018C         	.ENDLITERAL
+ 00018C                 .dbsym r p 7 pS[callback]
+ 00018C                 .dbsym r argtype 8 I p2
+ 00018C                 .dbsym r func 9 pfV p1
+ 00018C                 .dbsym r handle 10 s p0
+ 00018C                 .dbstacksize 0
+ 00018C                 .dbfunc s FindCallbackEntry _FindCallbackEntry#FPus8_callbackt fpS[callback] 121 3274572
+ 00018C         ;              i -> R5
+ 00018C         ;              p -> R4
+ 00018C         ;         handle -> R0
+ 00018C         _FindCallbackEntry#FPus8_callbackt:
+ 00018C                 .dbprevlr -1
+ 00018C 30B5            push {R4,R5,LR}
+ 00018E                 .dbblock 122
+ 00018E                 .dbline 123
+ 00018E 0A4C            ldr R4,LIT_FindCallbackEntry$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_interface+8
+ 000190                 .dbline 125
+ 000190 0025            movs R5,#0
+ 000192 07E0            b L43
+ 000194         L40:
+ 000194                 .dbline 127
+ 000194 81B2            uxth R1,R0
+ 000196 6288            ldrh R2,[R4,#+2]
+ 000198 8A42            cmp R2,R1
+ 00019A 01D1            bne L44
+ 00019C                 .dbline 128
+ 00019C 2046            mov R0,R4
+ 00019E 06E0            b L39
+ 0001A0         L44:
+ 0001A0                 .dbline 129
+ 0001A0 0834            adds R4,R4,#8
+ 0001A2         L41:
+ 0001A2                 .dbline 125
+ 0001A2 6D1C            adds R5,R5,#1
+ 0001A4         L43:
+ 0001A4                 .dbline 125
+ 0001A4 0349            ldr R1,LIT_FindCallbackEntry$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_interface+4
+ 0001A6 0968            ldr R1,[R1,#0]
+ 0001A8 8D42            cmp R5,R1
+ 0001AA F3DB            blt L40
+ 0001AC                 .dbline 131
+ 0001AC 0048            ldr R0,LIT_FindCallbackEntry$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_interface+0
+ 0001AE                 .dbblkend 132
+ 0001AE         L39:
+ 0001AE 30BD            pop {R4,R5,PC}
+ 0001B0                 .dbfuncend
+                        .align4
+ 0001B0                 .LITERAL
+ 0001B0         LIT_FindCallbackEntry$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_interface:
+ 0001B0 00000000        .long 0x0
+ 0001B4 08000000        .long _callback_table_index#i
+ 0001B8 0C000000        .long _callback_table#A100_us8_callback
+ 0001BC         	.ENDLITERAL
+ 0001BC                 .dbsym r i 5 I
+ 0001BC                 .dbsym r p 4 pS[callback]
+ 0001BC                 .dbsym r handle 0 s p0
+ 0001BC                 .dbstacksize 0
+ 0001BC                 .dbfunc e SmartIO_ProcessUserInput _SmartIO_ProcessUserInput#Fvv fV 134 3274572
+                        .area lit
+                        .align4
+ 000000         _73#A6_Pv:
+ 000000 70020000        .long L67
+ 000004 86020000        .long L69
+ 000008 90020000        .long L70
+ 00000C A0020000        .long L71
+ 000010 B4020000        .long L72
+ 000014 E0020000        .long L48
+ 000018 76020000        .long L68
+                        .area text
+                ;              p -> R7
+                ;            opc -> R7
+                ;         handle -> R9
+                ;       replybuf -> R8
+                ;       replylen -> R6
+ 0001BC         _SmartIO_ProcessUserInput#Fvv::
+ 0001BC                 .dbprevlr 28
+ 0001BC 2DE9F04B        push {R4,R5,R6,R7,R8,R9,R11,LR}
+ 0001C0 EB46            mov R11,R13
+ 0001C2                 .dbblock 135
+ 0001C2                 .dbline 136
+ 0001C2 4C4C            ldr R4,LIT_SmartIO_ProcessUserInput+16
+ 0001C4 D4F80080        ldr R8,[R4,#0]
+ 0001C8                 .dbline 137
+ 0001C8 4A4C            ldr R4,LIT_SmartIO_ProcessUserInput+16
+ 0001CA 2068            ldr R0,[R4,#0]
+ 0001CC 4FF48071        mov R1,#256
+ 0001D0 00F000F8        bl _SmartIO_SPI_ReadBytes#FiPhi
+ 0001D4 0646            mov R6,R0
+ 0001D6                 .dbline 138
+ 0001D6 00F000F8        bl _SmartIO_SPI_FinishRead#Fvv
+ 0001DA                 .dbline 139
+ 0001DA 0124            movs R4,#1
+ 0001DC 444D            ldr R5,LIT_SmartIO_ProcessUserInput+12
+ 0001DE 2C70            strb R4,[R5,#0]
+ 0001E0                 .dbline 141
+ 0001E0 002E            cmp R6,#0
+ 0001E2 73DD            ble L47
+ 0001E4                 .dbline 143
+ 0001E4 98F80040        ldrb R4,[R8,#0]
+ 0001E8 98F80150        ldrb R5,[R8,#+1]
+ 0001EC 2D02            lsls R5,R5,#8
+ 0001EE 45EA0404        orr R4,R5,R4
+ 0001F2 A146            mov R9,R4
+ 0001F4                 .dbline 145
+ 0001F4 1FFA89F4        uxth R4,R9
+ 0001F8 002C            cmp R4,#0
+ 0001FA 21D1            bne L49
+ 0001FC                 .dbline 147
+ 0001FC 042E            cmp R6,#4
+ 0001FE 6FDB            blt L46
+ 000200                 .dbline 149
+ 000200 98F80240        ldrb R4,[R8,#+2]
+ 000204 98F80350        ldrb R5,[R8,#+3]
+ 000208 2D02            lsls R5,R5,#8
+ 00020A 45EA0404        orr R4,R5,R4
+ 00020E 2746            mov R7,R4
+ 000210                 .dbline 151
+ 000210 BFB2            uxth R7,R7
+ 000212 B7F5807F        cmp R7,#256
+ 000216 0BD0            beq L59
+ 000218 40F20114        mov R4,#257
+ 00021C A742            cmp R7,R4
+ 00021E 5FD1            bne L46
+ 000220         L56:
+ 000220                 .dbline 154
+ 000220 324C            ldr R4,LIT_SmartIO_ProcessUserInput+8
+ 000222 2468            ldr R4,[R4,#0]
+ 000224 002C            cmp R4,#0
+ 000226 5BD0            beq L46
+ 000228                 .dbline 155
+ 000228 304C            ldr R4,LIT_SmartIO_ProcessUserInput+8
+ 00022A 2468            ldr R4,[R4,#0]
+ 00022C A047            blx R4
+ 00022E                 .dbline 156
+ 00022E 57E0            b L46
+ 000230         L59:
+ 000230                 .dbline 158
+ 000230 2D4C            ldr R4,LIT_SmartIO_ProcessUserInput+4
+ 000232 2468            ldr R4,[R4,#0]
+ 000234 002C            cmp R4,#0
+ 000236 53D0            beq L46
+ 000238                 .dbline 159
+ 000238 2B4C            ldr R4,LIT_SmartIO_ProcessUserInput+4
+ 00023A 2468            ldr R4,[R4,#0]
+ 00023C A047            blx R4
+ 00023E                 .dbline 163
+ 00023E 4FE0            b L46
+ 000240         L49:
+ 000240                 .dbline 165
+ 000240 4846            mov R0,R9
+ 000242 FFF7A3FF        bl _FindCallbackEntry#FPus8_callbackt
+ 000246 0746            mov R7,R0
+ 000248                 .dbline 166
+ 000248 2FB9            cbnz R7,L62
+ 00024A                 .dbline 167
+ 00024A 0520            movs R0,#5
+ 00024C 1FFA89F1        uxth R1,R9
+ 000250 00F000F8        bl _SmartIO_Error#Fviz
+ 000254 44E0            b L48
+ 000256         L62:
+ 000256                 .dbline 170
+ 000256 97F80090        ldrb R9,[R7,#0]
+ 00025A B9F1000F        cmp R9,#0
+ 00025E 3FDB            blt L48
+ 000260 B9F1060F        cmp R9,#6
+ 000264 3CDC            bgt L48
+ 000266 1F4C            ldr R4,LIT_SmartIO_ProcessUserInput+0
+ 000268 4FEA8905        lsl R5,R9,#2
+ 00026C 2C59            ldr R4,[R5,R4]
+ 00026E A746            mov R15,R4
+ 000270         X0:
+ 000270                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\smartio_interface.c
+ 000270         L67:
+ 000270                 .dbline 173
+ 000270 7C68            ldr R4,[R7,#+4]
+ 000272 A047            blx R4
+ 000274                 .dbline 174
+ 000274 34E0            b L48
+ 000276         L68:
+ 000276                 .dbline 176
+ 000276 0024            movs R4,#0
+ 000278 06F80840        strb R4,[R6,R8]
+ 00027C                 .dbline 177
+ 00027C 08F10200        add R0,R8,#2
+ 000280 7C68            ldr R4,[R7,#+4]
+ 000282 A047            blx R4
+ 000284                 .dbline 178
+ 000284 2CE0            b L48
+ 000286         L69:
+ 000286                 .dbline 180
+ 000286 B8F80200        ldrh R0,[R8,#+2]
+ 00028A 7C68            ldr R4,[R7,#+4]
+ 00028C A047            blx R4
+ 00028E                 .dbline 181
+ 00028E 27E0            b L48
+ 000290         L70:
+ 000290                 .dbline 183
+ 000290 B8F80200        ldrh R0,[R8,#+2]
+ 000294 0424            movs R4,#4
+ 000296 38F80410        ldrh R1,[R8,R4]
+ 00029A 3C59            ldr R4,[R7,R4]
+ 00029C A047            blx R4
+ 00029E                 .dbline 184
+ 00029E 1FE0            b L48
+ 0002A0         L71:
+ 0002A0                 .dbline 186
+ 0002A0 B8F80200        ldrh R0,[R8,#+2]
+ 0002A4 0424            movs R4,#4
+ 0002A6 38F80410        ldrh R1,[R8,R4]
+ 0002AA B8F80620        ldrh R2,[R8,#+6]
+ 0002AE 3C59            ldr R4,[R7,R4]
+ 0002B0 A047            blx R4
+ 0002B2                 .dbline 187
+ 0002B2 15E0            b L48
+ 0002B4         L72:
+ 0002B4                 .dbline 189
+ 0002B4 B8F80200        ldrh R0,[R8,#+2]
+ 0002B8 0424            movs R4,#4
+ 0002BA 38F80410        ldrh R1,[R8,R4]
+ 0002BE B8F80620        ldrh R2,[R8,#+6]
+ 0002C2 B8F80830        ldrh R3,[R8,#+8]
+ 0002C6 3C59            ldr R4,[R7,R4]
+ 0002C8 A047            blx R4
+ 0002CA                 .dbline 192
+ 0002CA 09E0            b L48
+ 0002CC         L47:
+ 0002CC                 .dbline 193
+ 0002CC 1EB9            cbnz R6,L74
+ 0002CE                 .dbline 194
+ 0002CE 0320            movs R0,#3
+ 0002D0 00F000F8        bl _SmartIO_Error#Fviz
+ 0002D4 04E0            b L75
+ 0002D6         L74:
+ 0002D6                 .dbline 195
+ 0002D6 002E            cmp R6,#0
+ 0002D8 02DA            bge L76
+ 0002DA                 .dbline 196
+ 0002DA 0620            movs R0,#6
+ 0002DC 00F000F8        bl _SmartIO_Error#Fviz
+ 0002E0         L76:
+ 0002E0         L75:
+ 0002E0         L48:
+ 0002E0                 .dbblkend 197
+ 0002E0         L46:
+ 0002E0 BDE8F08B        pop {R4,R5,R6,R7,R8,R9,R11,PC}
+ 0002E4                 .dbfuncend
+                        .align4
+ 0002E4                 .LITERAL
+ 0002E4         LIT_SmartIO_ProcessUserInput:
+ 0002E4 00000000        .long _73#A6_Pv
+ 0002E8 00000000        .long _SmartIO_Disconnect_Callback#PFvvE
+ 0002EC 04000000        .long _SmartIO_Connect_Callback#PFvvE
+ 0002F0 2C030000        .long _SPI_State#h
+ 0002F4 00000000        .long _host_sram_block#Ph
+ 0002F8         	.ENDLITERAL
+ 0002F8                 .dbsym r p 7 pS[callback]
+ 0002F8                 .dbsym r opc 7 s
+ 0002F8                 .dbsym r handle 9 s
+ 0002F8                 .dbsym r replybuf 8 pc
+ 0002F8                 .dbsym r replylen 6 I
+ 0002F8                 .dbstacksize 0
+                        .area bss
+ 000000                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\smartio_interface.c
+                        .align4
+ 000000         _SmartIO_Disconnect_Callback#PFvvE::
+ 000000                 .blkb 4
+ 000004                 .dbsym e SmartIO_Disconnect_Callback _SmartIO_Disconnect_Callback#PFvvE pfV
+                        .align4
+ 000004         _SmartIO_Connect_Callback#PFvvE::
+ 000004                 .blkb 4
+ 000008                 .dbsym e SmartIO_Connect_Callback _SmartIO_Connect_Callback#PFvvE pfV
+                        .align4
+ 000008         _callback_table_index#i::
+ 000008                 .blkb 4
+ 00000C                 .dbsym e callback_table_index _callback_table_index#i I
+                        .align4
+ 00000C         _callback_table#A100_us8_callback::
+ 00000C                 .blkb 800
+ 00032C                 .dbsym e callback_table _callback_table#A100_us8_callback A[800:100]S[callback]
+ 00032C         _SPI_State#h::
+ 00032C                 .blkb 1
+ 00032D                 .dbsym e SPI_State _SPI_State#h c
