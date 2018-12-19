@@ -1,0 +1,286 @@
+                        .module handlers.c
+                        .area text
+ 000000                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\LibSmartIO-ST32F4xx-JumpStartC\handlers.c
+                        .area text
+ 000000                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\LibSmartIO-ST32F4xx-JumpStartC\handlers.c
+ 000000                 .dbfile C:\iccv8cortex\include\CMSIS\core_cm4.h
+ 000000                 .dbfunc s NVIC_SetPriority _NVIC_SetPriority#Fvaj fV 1634 -97268789
+ 000000         ;       priority -> R1
+ 000000         ;           IRQn -> R0
+ 000000         _NVIC_SetPriority#Fvaj:
+ 000000                 .dbprevlr -1
+ 000000 40B5            push {R6,LR}
+ 000002                 .dbblock 1635
+ 000002                 .dbline 1636
+ 000002 42B2            sxtb R2,R0
+ 000004 002A            cmp R2,#0
+ 000006 09DA            bge L48
+ 000008                 .dbline 1637
+ 000008 42B2            sxtb R2,R0
+ 00000A 02F00F02        and R2,R2,#15
+ 00000E 121F            subs R2,R2,#4
+ 000010 074B            ldr R3,LIT_NVIC_SetPriority$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_LibSmartIO_ST32F4xx_JumpStartC_handlers+4
+ 000012 0E01            lsls R6,R1,#4
+ 000014 06F0FF06        and R6,R6,#255
+ 000018 D654            strb R6,[R2,R3]
+ 00001A                 .dbline 1638
+ 00001A 05E0            b L49
+ 00001C         L48:
+ 00001C                 .dbline 1640
+ 00001C 42B2            sxtb R2,R0
+ 00001E 034B            ldr R3,LIT_NVIC_SetPriority$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_LibSmartIO_ST32F4xx_JumpStartC_handlers+0
+ 000020 0E01            lsls R6,R1,#4
+ 000022 06F0FF06        and R6,R6,#255
+ 000026 D654            strb R6,[R2,R3]
+ 000028         L49:
+ 000028                 .dbblkend 1642
+ 000028         L47:
+ 000028 40BD            pop {R6,PC}
+ 00002A                 .dbfuncend
+                        .align4
+ 00002C                 .LITERAL
+ 00002C         LIT_NVIC_SetPriority$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_LibSmartIO_ST32F4xx_JumpStartC_handlers:
+ 00002C 00E400E0        .long 0xe000e400
+ 000030 18ED00E0        .long 0xe000ed18
+ 000034         	.ENDLITERAL
+ 000034                 .dbsym r priority 1 i p1
+ 000034                 .dbsym r IRQn 0 C p0
+ 000034                 .dbstacksize 0
+ 000034                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\LibSmartIO-ST32F4xx-JumpStartC\handlers.c
+ 000034                 .dbfunc e SVC_Handler _SVC_Handler#Fvv fV 17 4193976
+ 000034         _SVC_Handler#Fvv::
+ 000034                 .dbprevlr 0
+ 000034 00B5            push {LR}
+ 000036                 .dbblock 17
+ 000036                 .dbline 17
+ 000036 0448            ldr R0,LIT_SVC_Handler+4
+ 000038 0249            ldr R1,LIT_SVC_Handler+0
+ 00003A 00F000F8        bl _printf#Fi
+ 00003E         L141:
+ 00003E         L142:
+ 00003E                 .dbline 17
+ 00003E FEE7            b L141
+ 000040         X0:
+ 000040                 .dbblkend 17
+ 000040         L138:
+ 000040 00BD            pop {PC}
+ 000042                 .dbfuncend
+                        .align4
+ 000044                 .LITERAL
+ 000044         LIT_SVC_Handler:
+ 000044 62000000        .long _140#A4_c
+ 000048 66000000        .long _139#A4_c
+ 00004C         	.ENDLITERAL
+ 00004C                 .dbstacksize 0
+ 00004C                 .dbfunc e NMI_Handler _NMI_Handler#Fvv fV 18 4193976
+ 00004C         _NMI_Handler#Fvv::
+ 00004C                 .dbprevlr 0
+ 00004C 00B5            push {LR}
+ 00004E                 .dbblock 18
+ 00004E                 .dbline 18
+ 00004E 0448            ldr R0,LIT_NMI_Handler+4
+ 000050 0249            ldr R1,LIT_NMI_Handler+0
+ 000052 00F000F8        bl _printf#Fi
+ 000056         L146:
+ 000056         L147:
+ 000056                 .dbline 18
+ 000056 FEE7            b L146
+ 000058         X1:
+ 000058                 .dbblkend 18
+ 000058         L144:
+ 000058 00BD            pop {PC}
+ 00005A                 .dbfuncend
+                        .align4
+ 00005C                 .LITERAL
+ 00005C         LIT_NMI_Handler:
+ 00005C 5E000000        .long _145#A4_c
+ 000060 66000000        .long _139#A4_c
+ 000064         	.ENDLITERAL
+ 000064                 .dbstacksize 0
+ 000064                 .dbfunc e MemManage_Handler _MemManage_Handler#Fvv fV 19 4193976
+ 000064         _MemManage_Handler#Fvv::
+ 000064                 .dbprevlr 0
+ 000064 00B5            push {LR}
+ 000066                 .dbblock 19
+ 000066                 .dbline 19
+ 000066 0448            ldr R0,LIT_MemManage_Handler+4
+ 000068 0249            ldr R1,LIT_MemManage_Handler+0
+ 00006A 00F000F8        bl _printf#Fi
+ 00006E         L151:
+ 00006E         L152:
+ 00006E                 .dbline 19
+ 00006E FEE7            b L151
+ 000070         X2:
+ 000070                 .dbblkend 19
+ 000070         L149:
+ 000070 00BD            pop {PC}
+ 000072                 .dbfuncend
+                        .align4
+ 000074                 .LITERAL
+ 000074         LIT_MemManage_Handler:
+ 000074 54000000        .long _150#A10_c
+ 000078 66000000        .long _139#A4_c
+ 00007C         	.ENDLITERAL
+ 00007C                 .dbstacksize 0
+ 00007C                 .dbfunc e BusFault_Handler _BusFault_Handler#Fvv fV 20 4193976
+ 00007C         _BusFault_Handler#Fvv::
+ 00007C                 .dbprevlr 0
+ 00007C 00B5            push {LR}
+ 00007E                 .dbblock 20
+ 00007E                 .dbline 20
+ 00007E 0448            ldr R0,LIT_BusFault_Handler+4
+ 000080 0249            ldr R1,LIT_BusFault_Handler+0
+ 000082 00F000F8        bl _printf#Fi
+ 000086         L156:
+ 000086         L157:
+ 000086                 .dbline 20
+ 000086 FEE7            b L156
+ 000088         X3:
+ 000088                 .dbblkend 20
+ 000088         L154:
+ 000088 00BD            pop {PC}
+ 00008A                 .dbfuncend
+                        .align4
+ 00008C                 .LITERAL
+ 00008C         LIT_BusFault_Handler:
+ 00008C 4B000000        .long _155#A9_c
+ 000090 66000000        .long _139#A4_c
+ 000094         	.ENDLITERAL
+ 000094                 .dbstacksize 0
+ 000094                 .dbfunc e UsageFault_Handler _UsageFault_Handler#Fvv fV 21 4193976
+ 000094         _UsageFault_Handler#Fvv::
+ 000094                 .dbprevlr 0
+ 000094 00B5            push {LR}
+ 000096                 .dbblock 21
+ 000096                 .dbline 21
+ 000096 0448            ldr R0,LIT_UsageFault_Handler+4
+ 000098 0249            ldr R1,LIT_UsageFault_Handler+0
+ 00009A 00F000F8        bl _printf#Fi
+ 00009E         L161:
+ 00009E         L162:
+ 00009E                 .dbline 21
+ 00009E FEE7            b L161
+ 0000A0         X4:
+ 0000A0                 .dbblkend 21
+ 0000A0         L159:
+ 0000A0 00BD            pop {PC}
+ 0000A2                 .dbfuncend
+                        .align4
+ 0000A4                 .LITERAL
+ 0000A4         LIT_UsageFault_Handler:
+ 0000A4 40000000        .long _160#A11_c
+ 0000A8 66000000        .long _139#A4_c
+ 0000AC         	.ENDLITERAL
+ 0000AC                 .dbstacksize 0
+ 0000AC                 .dbfunc e DebugMon_Handler _DebugMon_Handler#Fvv fV 22 4193976
+ 0000AC         _DebugMon_Handler#Fvv::
+ 0000AC                 .dbprevlr 0
+ 0000AC 00B5            push {LR}
+ 0000AE                 .dbblock 22
+ 0000AE                 .dbline 22
+ 0000AE 0448            ldr R0,LIT_DebugMon_Handler+4
+ 0000B0 0249            ldr R1,LIT_DebugMon_Handler+0
+ 0000B2 00F000F8        bl _printf#Fi
+ 0000B6         L166:
+ 0000B6         L167:
+ 0000B6                 .dbline 22
+ 0000B6 FEE7            b L166
+ 0000B8         X5:
+ 0000B8                 .dbblkend 22
+ 0000B8         L164:
+ 0000B8 00BD            pop {PC}
+ 0000BA                 .dbfuncend
+                        .align4
+ 0000BC                 .LITERAL
+ 0000BC         LIT_DebugMon_Handler:
+ 0000BC 37000000        .long _165#A9_c
+ 0000C0 66000000        .long _139#A4_c
+ 0000C4         	.ENDLITERAL
+ 0000C4                 .dbstacksize 0
+ 0000C4                 .dbfunc e PendSV_Handler _PendSV_Handler#Fvv fV 23 4193976
+ 0000C4         _PendSV_Handler#Fvv::
+ 0000C4                 .dbprevlr 0
+ 0000C4 00B5            push {LR}
+ 0000C6                 .dbblock 23
+ 0000C6                 .dbline 23
+ 0000C6 0448            ldr R0,LIT_PendSV_Handler+4
+ 0000C8 0249            ldr R1,LIT_PendSV_Handler+0
+ 0000CA 00F000F8        bl _printf#Fi
+ 0000CE         L171:
+ 0000CE         L172:
+ 0000CE                 .dbline 23
+ 0000CE FEE7            b L171
+ 0000D0         X6:
+ 0000D0                 .dbblkend 23
+ 0000D0         L169:
+ 0000D0 00BD            pop {PC}
+ 0000D2                 .dbfuncend
+                        .align4
+ 0000D4                 .LITERAL
+ 0000D4         LIT_PendSV_Handler:
+ 0000D4 30000000        .long _170#A7_c
+ 0000D8 66000000        .long _139#A4_c
+ 0000DC         	.ENDLITERAL
+ 0000DC                 .dbstacksize 0
+ 0000DC                 .dbfunc e yHardFault_Handler _yHardFault_Handler#Fvjij fV 27 4193976
+ 0000DC         ;            PSR -> R5
+ 0000DC         ;            arg -> R6
+ 0000DC         ;             PC -> R7
+ 0000DC         _yHardFault_Handler#Fvjij::
+ 0000DC                 .dbprevlr 20
+ 0000DC 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 0000E0 EB46            mov R11,R13
+ 0000E2 82B0            sub R13,R13,#8
+ 0000E4 0746            mov R7,R0
+ 0000E6 0E46            mov R6,R1
+ 0000E8 1546            mov R5,R2
+ 0000EA                 .dbblock 28
+ 0000EA                 .dbline 29
+ 0000EA 0948            ldr R0,LIT_yHardFault_Handler+8
+ 0000EC 3946            mov R1,R7
+ 0000EE 3246            mov R2,R6
+ 0000F0 2B46            mov R3,R5
+ 0000F2 064C            ldr R4,LIT_yHardFault_Handler+4
+ 0000F4 2468            ldr R4,[R4,#0]
+ 0000F6 0094            str R4,[R13,#0]
+ 0000F8 034C            ldr R4,LIT_yHardFault_Handler+0
+ 0000FA 2468            ldr R4,[R4,#0]
+ 0000FC 0194            str R4,[R13,#+4]
+ 0000FE 00F000F8        bl _printf#Fi
+ 000102                 .dbblkend 30
+ 000102         L174:
+ 000102 02B0            add R13,R13,#8
+ 000104 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 000108                 .dbfuncend
+                        .align4
+ 000108                 .LITERAL
+ 000108         LIT_yHardFault_Handler:
+ 000108 28ED00E0        .long 0xe000ed28
+ 00010C 2CED00E0        .long 0xe000ed2c
+ 000110 00000000        .long _175#A48_c
+ 000114         	.ENDLITERAL
+ 000114                 .dbsym r PSR 5 i p2
+ 000114                 .dbsym r arg 6 I p1
+ 000114                 .dbsym r PC 7 i p0
+ 000114                 .dbstacksize 8
+                        .area lit
+ 000000         _175#A48_c:
+ 000000 48617264204661756C74205043202578        .byte 'H,'a,'r,'d,32,'F,'a,'u,'l,'t,32,'P,'C,32,37,'x
+ 000010 20617267202564205053522025782048        .byte 32,'a,'r,'g,32,37,'d,32,'P,'S,'R,32,37,'x,32,'H
+ 000020 46535220257820434653522025780A00        .byte 'F,'S,'R,32,37,'x,32,'C,'F,'S,'R,32,37,'x,10,0
+ 000030         _170#A7_c:
+ 000030 50656E64535600  .byte 'P,'e,'n,'d,'S,'V,0
+ 000037         _165#A9_c:
+ 000037 44656275674D6F6E00      .byte 'D,'e,'b,'u,'g,'M,'o,'n,0
+ 000040         _160#A11_c:
+ 000040 55736167654661756C7400  .byte 'U,'s,'a,'g,'e,'F,'a,'u,'l,'t,0
+ 00004B         _155#A9_c:
+ 00004B 4275734661756C7400      .byte 'B,'u,'s,'F,'a,'u,'l,'t,0
+ 000054         _150#A10_c:
+ 000054 4D656D4D616E61676500    .byte 'M,'e,'m,'M,'a,'n,'a,'g,'e,0
+ 00005E         _145#A4_c:
+ 00005E 4E4D4900        .byte 'N,'M,'I,0
+ 000062         _140#A4_c:
+ 000062 53564300        .byte 'S,'V,'C,0
+ 000066         _139#A4_c:
+ 000066 25730A00        .byte 37,'s,10,0

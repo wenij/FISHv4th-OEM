@@ -1,0 +1,3444 @@
+                        .module smartio_api.c
+                        .area text
+ 000000                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\smartio_api.c
+                        .area data
+ 000000                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\smartio_api.c
+                        .align4
+ 000000         _host_sram_block#Ph::
+ 000000                 .blkw 2
+                        .area idata(rom)
+                        .align4
+ 000000 08000000        .long _host_sram_aligned_block#A64_j
+                        .area data
+ 000004                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\smartio_api.c
+ 000004                 .dbsym e host_sram_block _host_sram_block#Ph pc
+                        .align4
+ 000004         _Command#Pt:
+ 000004                 .blkw 2
+                        .area idata(rom)
+                        .align4
+ 000004 08000000        .long _host_sram_aligned_block#A64_j
+                        .area data
+ 000008                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\smartio_api.c
+ 000008                 .dbsym s Command _Command#Pt ps
+                        .area bss
+ 000000                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\smartio_api.c
+                        .align4
+ 000000         L161:
+ 000000                 .blkb 8
+                        .area text
+ 000000                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\smartio_api.c
+ 000000                 .dbfunc e SmartIO_GetVersion _SmartIO_GetVersion#FPcv fpc 37 -107562968
+ 000000         _SmartIO_GetVersion#FPcv::
+ 000000                 .dbprevlr -1
+ 000000                 .dbblock 38
+ 000000                 .dbline 39
+ 000000 0048            ldr R0,LIT_SmartIO_GetVersion+0
+ 000002                 .dbblkend 40
+ 000002         L5:
+ 000002 7047            bx R14
+ 000004                 .dbfuncend
+                        .align4
+ 000004                 .LITERAL
+ 000004         LIT_SmartIO_GetVersion:
+ 000004 00000000        .long _6#A5_c
+ 000008         	.ENDLITERAL
+ 000008                 .dbstacksize 0
+ 000008                 .dbfunc e SmartIO_LoadCache _SmartIO_LoadCache#Fsjt fS 42 4126716
+ 000008         ;       build_id -> R5
+ 000008         ;     product_id -> R6
+ 000008         _SmartIO_LoadCache#Fsjt::
+ 000008                 .dbprevlr 16
+ 000008 2DE97048        push {R4,R5,R6,R11,LR}
+ 00000C EB46            mov R11,R13
+ 00000E 81B0            sub R13,R13,#4
+ 000010 0646            mov R6,R0
+ 000012 0D46            mov R5,R1
+ 000014                 .dbblock 43
+ 000014                 .dbline 44
+ 000014 5520            movs R0,#85
+ 000016 4721            movs R1,#71
+ 000018 4FF6FF74        mov R4,#65535
+ 00001C 06EA0402        and R2,R6,R4
+ 000020 330C            lsrs R3,R6,#16
+ 000022 ACB2            uxth R4,R5
+ 000024 0094            str R4,[R13,#0]
+ 000026 00F0D7FF        bl _APICall#Fjjz
+ 00002A 0446            mov R4,R0
+ 00002C 20B2            sxth R0,R4
+ 00002E                 .dbblkend 45
+ 00002E         L7:
+ 00002E 01B0            add R13,R13,#4
+ 000030 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000034                 .dbfuncend
+ 000034                 .dbsym r build_id 5 s p1
+ 000034                 .dbsym r product_id 6 i p0
+ 000034                 .dbstacksize 4
+ 000034                 .dbfunc e SmartIO_SaveCache _SmartIO_SaveCache#Fsv fS 47 4126716
+ 000034         _SmartIO_SaveCache#Fsv::
+ 000034                 .dbprevlr 8
+ 000034 2DE91048        push {R4,R11,LR}
+ 000038 EB46            mov R11,R13
+ 00003A                 .dbblock 48
+ 00003A                 .dbline 49
+ 00003A 0120            movs R0,#1
+ 00003C 4621            movs R1,#70
+ 00003E 00F0CBFF        bl _APICall#Fjjz
+ 000042 0446            mov R4,R0
+ 000044 20B2            sxth R0,R4
+ 000046                 .dbblkend 50
+ 000046         L8:
+ 000046 BDE81088        pop {R4,R11,PC}
+ 00004A                 .dbfuncend
+ 00004A                 .dbstacksize 0
+ 00004A                 .dbfunc e SmartIO_AppTitle _SmartIO_AppTitle#FsPc fS 52 4126716
+ 00004A         ;          title -> R5
+ 00004A         _SmartIO_AppTitle#FsPc::
+ 00004A                 .dbprevlr 12
+ 00004A 2DE93048        push {R4,R5,R11,LR}
+ 00004E EB46            mov R11,R13
+ 000050 0546            mov R5,R0
+ 000052                 .dbblock 53
+ 000052                 .dbline 54
+ 000052 0920            movs R0,#9
+ 000054 0121            movs R1,#1
+ 000056 2A46            mov R2,R5
+ 000058 00F0BEFF        bl _APICall#Fjjz
+ 00005C 0446            mov R4,R0
+ 00005E 20B2            sxth R0,R4
+ 000060                 .dbblkend 55
+ 000060         L9:
+ 000060 BDE83088        pop {R4,R5,R11,PC}
+ 000064                 .dbfuncend
+ 000064                 .dbsym r title 5 pc p0
+ 000064                 .dbstacksize 0
+ 000064                 .dbfunc e SmartIO_AddMenu _SmartIO_AddMenu#FtPcPFvtE fs 57 4126716
+ 000064         ;              h -> R4
+ 000064         ;       callback -> R5
+ 000064         ;           item -> R4
+ 000064         _SmartIO_AddMenu#FtPcPFvtE::
+ 000064                 .dbprevlr 12
+ 000064 2DE93048        push {R4,R5,R11,LR}
+ 000068 EB46            mov R11,R13
+ 00006A 0446            mov R4,R0
+ 00006C 0D46            mov R5,R1
+ 00006E                 .dbblock 58
+ 00006E                 .dbline 59
+ 00006E 0920            movs R0,#9
+ 000070 0221            movs R1,#2
+ 000072 2246            mov R2,R4
+ 000074 00F0B0FF        bl _APICall#Fjjz
+ 000078 0446            mov R4,R0
+ 00007A                 .dbline 60
+ 00007A 1DB1            cbz R5,L11
+ 00007C                 .dbline 60
+ 00007C 2946            mov R1,R5
+ 00007E 0122            movs R2,#1
+ 000080 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 000084         L11:
+ 000084                 .dbline 61
+ 000084 A0B2            uxth R0,R4
+ 000086                 .dbblkend 62
+ 000086         L10:
+ 000086 BDE83088        pop {R4,R5,R11,PC}
+ 00008A                 .dbfuncend
+ 00008A                 .dbsym r h 4 s
+ 00008A                 .dbsym r callback 5 pfV p1
+ 00008A                 .dbsym r item 4 pc p0
+ 00008A                 .dbstacksize 0
+ 00008A                 .dbfunc e SmartIO_Reset _SmartIO_Reset#Fsv fS 64 4126716
+ 00008A         _SmartIO_Reset#Fsv::
+ 00008A                 .dbprevlr 8
+ 00008A 2DE91048        push {R4,R11,LR}
+ 00008E EB46            mov R11,R13
+ 000090                 .dbblock 65
+ 000090                 .dbline 66
+ 000090 0120            movs R0,#1
+ 000092 0521            movs R1,#5
+ 000094 00F0A0FF        bl _APICall#Fjjz
+ 000098 0446            mov R4,R0
+ 00009A 20B2            sxth R0,R4
+ 00009C                 .dbblkend 67
+ 00009C         L13:
+ 00009C BDE81088        pop {R4,R11,PC}
+ 0000A0                 .dbfuncend
+ 0000A0                 .dbstacksize 0
+ 0000A0                 .dbfunc e SmartIO_MakePage _SmartIO_MakePage#Ftv fs 69 4126716
+ 0000A0         _SmartIO_MakePage#Ftv::
+ 0000A0                 .dbprevlr 8
+ 0000A0 2DE91048        push {R4,R11,LR}
+ 0000A4 EB46            mov R11,R13
+ 0000A6                 .dbblock 70
+ 0000A6                 .dbline 71
+ 0000A6 0120            movs R0,#1
+ 0000A8 3221            movs R1,#50
+ 0000AA 00F095FF        bl _APICall#Fjjz
+ 0000AE 0446            mov R4,R0
+ 0000B0 A0B2            uxth R0,R4
+ 0000B2                 .dbblkend 72
+ 0000B2         L14:
+ 0000B2 BDE81088        pop {R4,R11,PC}
+ 0000B6                 .dbfuncend
+ 0000B6                 .dbstacksize 0
+ 0000B6                 .dbfunc e SmartIO_SetCurrentPage _SmartIO_SetCurrentPage#Fst fS 74 4126716
+ 0000B6         ;        page_id -> R5
+ 0000B6         _SmartIO_SetCurrentPage#Fst::
+ 0000B6                 .dbprevlr 12
+ 0000B6 2DE93048        push {R4,R5,R11,LR}
+ 0000BA EB46            mov R11,R13
+ 0000BC 0546            mov R5,R0
+ 0000BE                 .dbblock 75
+ 0000BE                 .dbline 76
+ 0000BE 0520            movs R0,#5
+ 0000C0 3321            movs R1,#51
+ 0000C2 AAB2            uxth R2,R5
+ 0000C4 00F088FF        bl _APICall#Fjjz
+ 0000C8 0446            mov R4,R0
+ 0000CA 20B2            sxth R0,R4
+ 0000CC                 .dbblkend 77
+ 0000CC         L15:
+ 0000CC BDE83088        pop {R4,R5,R11,PC}
+ 0000D0                 .dbfuncend
+ 0000D0                 .dbsym r page_id 5 s p0
+ 0000D0                 .dbstacksize 0
+ 0000D0                 .dbfunc e SmartIO_LockPage _SmartIO_LockPage#Fst fS 79 4126716
+ 0000D0         ;         handle -> R5
+ 0000D0         _SmartIO_LockPage#Fst::
+ 0000D0                 .dbprevlr 12
+ 0000D0 2DE93048        push {R4,R5,R11,LR}
+ 0000D4 EB46            mov R11,R13
+ 0000D6 0546            mov R5,R0
+ 0000D8                 .dbblock 80
+ 0000D8                 .dbline 81
+ 0000D8 0520            movs R0,#5
+ 0000DA 3521            movs R1,#53
+ 0000DC AAB2            uxth R2,R5
+ 0000DE 00F07BFF        bl _APICall#Fjjz
+ 0000E2 0446            mov R4,R0
+ 0000E4 20B2            sxth R0,R4
+ 0000E6                 .dbblkend 82
+ 0000E6         L16:
+ 0000E6 BDE83088        pop {R4,R5,R11,PC}
+ 0000EA                 .dbfuncend
+ 0000EA                 .dbsym r handle 5 s p0
+ 0000EA                 .dbstacksize 0
+ 0000EA                 .dbfunc e SmartIO_UnlockPage _SmartIO_UnlockPage#Fsv fS 84 4126716
+ 0000EA         _SmartIO_UnlockPage#Fsv::
+ 0000EA                 .dbprevlr 8
+ 0000EA 2DE91048        push {R4,R11,LR}
+ 0000EE EB46            mov R11,R13
+ 0000F0                 .dbblock 85
+ 0000F0                 .dbline 86
+ 0000F0 0120            movs R0,#1
+ 0000F2 3621            movs R1,#54
+ 0000F4 00F070FF        bl _APICall#Fjjz
+ 0000F8 0446            mov R4,R0
+ 0000FA 20B2            sxth R0,R4
+ 0000FC                 .dbblkend 87
+ 0000FC         L17:
+ 0000FC BDE81088        pop {R4,R11,PC}
+ 000100                 .dbfuncend
+ 000100                 .dbstacksize 0
+ 000100                 .dbfunc e SmartIO_PageTitle _SmartIO_PageTitle#FstPc fS 89 4126716
+ 000100         ;          title -> R5
+ 000100         ;        page_id -> R6
+ 000100         _SmartIO_PageTitle#FstPc::
+ 000100                 .dbprevlr 16
+ 000100 2DE97048        push {R4,R5,R6,R11,LR}
+ 000104 EB46            mov R11,R13
+ 000106 0646            mov R6,R0
+ 000108 0D46            mov R5,R1
+ 00010A                 .dbblock 90
+ 00010A                 .dbline 91
+ 00010A 2520            movs R0,#37
+ 00010C 3421            movs R1,#52
+ 00010E B2B2            uxth R2,R6
+ 000110 2B46            mov R3,R5
+ 000112 00F061FF        bl _APICall#Fjjz
+ 000116 0446            mov R4,R0
+ 000118 20B2            sxth R0,R4
+ 00011A                 .dbblkend 92
+ 00011A         L18:
+ 00011A BDE87088        pop {R4,R5,R6,R11,PC}
+ 00011E                 .dbfuncend
+ 00011E                 .dbsym r title 5 pc p1
+ 00011E                 .dbsym r page_id 6 s p0
+ 00011E                 .dbstacksize 0
+ 00011E                 .dbfunc e SmartIO_PopupAlert _SmartIO_PopupAlert#Fst fS 94 4126716
+ 00011E         ;      variation -> R5
+ 00011E         _SmartIO_PopupAlert#Fst::
+ 00011E                 .dbprevlr 12
+ 00011E 2DE93048        push {R4,R5,R11,LR}
+ 000122 EB46            mov R11,R13
+ 000124 0546            mov R5,R0
+ 000126                 .dbblock 95
+ 000126                 .dbline 96
+ 000126 0520            movs R0,#5
+ 000128 1821            movs R1,#24
+ 00012A AAB2            uxth R2,R5
+ 00012C 00F054FF        bl _APICall#Fjjz
+ 000130 0446            mov R4,R0
+ 000132 20B2            sxth R0,R4
+ 000134                 .dbblkend 97
+ 000134         L19:
+ 000134 BDE83088        pop {R4,R5,R11,PC}
+ 000138                 .dbfuncend
+ 000138                 .dbsym r variation 5 s p0
+ 000138                 .dbstacksize 0
+ 000138                 .dbfunc e SmartIO_GroupObjects _SmartIO_GroupObjects#Fsttz fS 99 4126716
+ 000138         ;         status -> <dead>
+ 000138         ;          index -> R7
+ 000138         ;           args -> R6
+ 000138         ;              h -> R8
+ 000138         ;             h1 -> R11,32
+ 000138         ;         option -> R11,28
+ 000138         _SmartIO_GroupObjects#Fsttz::
+ 000138                 .dbprevlr 24
+ 000138 0FB4            push {r0-r3}
+ 00013A 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 00013E EB46            mov R11,R13
+ 000140                 .dbblock 100
+ 000140                 .dbline 105
+ 000140 0BF12406        add R6,R11,#0x24
+ 000144                 .dbline 107
+ 000144 2024            movs R4,#32
+ 000146 134D            ldr R5,LIT_SmartIO_GroupObjects+0
+ 000148 2D68            ldr R5,[R5,#0]
+ 00014A 2C80            strh R4,[R5,#0]
+ 00014C                 .dbline 108
+ 00014C BBF81C40        ldrh R4,[R11,#+28]
+ 000150 104D            ldr R5,LIT_SmartIO_GroupObjects+0
+ 000152 2D68            ldr R5,[R5,#0]
+ 000154 6C80            strh R4,[R5,#+2]
+ 000156                 .dbline 109
+ 000156 0227            movs R7,#2
+ 000158                 .dbline 110
+ 000158 BBF82080        ldrh R8,[R11,#+32]
+ 00015C         L22:
+ 00015C                 .dbline 113
+ 00015C 3C46            mov R4,R7
+ 00015E 0125            movs R5,#1
+ 000160 671C            adds R7,R4,#1
+ 000162 AC40            lsls R4,R4,R5
+ 000164 0B4D            ldr R5,LIT_SmartIO_GroupObjects+0
+ 000166 2D68            ldr R5,[R5,#0]
+ 000168 24F80580        strh R8,[R4,R5]
+ 00016C                 .dbline 114
+ 00016C 361D            adds R6,R6,#4
+ 00016E 7FF00304        mvns R4,#3
+ 000172 3459            ldr R4,[R6,R4]
+ 000174 A046            mov R8,R4
+ 000176         L23:
+ 000176                 .dbline 115
+ 000176 1FFA88F4        uxth R4,R8
+ 00017A 002C            cmp R4,#0
+ 00017C EED1            bne L22
+ 00017E                 .dbline 117
+ 00017E 054C            ldr R4,LIT_SmartIO_GroupObjects+0
+ 000180 2068            ldr R0,[R4,#0]
+ 000182 7900            lsls R1,R7,#1
+ 000184 00F000F8        bl _SmartIO__SendBytes#FjPhi
+ 000188 0446            mov R4,R0
+ 00018A 20B2            sxth R0,R4
+ 00018C                 .dbblkend 118
+ 00018C         L20:
+ 00018C BDE8F019        pop {R4,R5,R6,R7,R8,R11,R12}
+ 000190 04B0            add R13,R13,#16
+ 000192 6047            bx R12
+ 000194                 .dbfuncend
+                        .align4
+ 000194                 .LITERAL
+ 000194         LIT_SmartIO_GroupObjects:
+ 000194 04000000        .long _Command#Pt
+ 000198         	.ENDLITERAL
+ 000198                 .dbsym l status -1 S
+ 000198                 .dbsym r index 7 I
+ 000198                 .dbsym r args 6 pc
+ 000198                 .dbsym r h 8 s
+ 000198                 .dbsym l h1 32 s p1v
+ 000198                 .dbsym l option 28 s p0
+ 000198                 .dbstacksize 0
+ 000198                 .dbfunc e SmartIO_EnableIf _SmartIO_EnableIf#Fsttz fS 121 4126716
+ 000198         ;         status -> <dead>
+ 000198         ;          index -> R7
+ 000198         ;           args -> R6
+ 000198         ;              h -> R8
+ 000198         ;             h1 -> R11,32
+ 000198         ;        control -> R11,28
+ 000198         _SmartIO_EnableIf#Fsttz::
+ 000198                 .dbprevlr 24
+ 000198 0FB4            push {r0-r3}
+ 00019A 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 00019E EB46            mov R11,R13
+ 0001A0                 .dbblock 122
+ 0001A0                 .dbline 127
+ 0001A0 0BF12406        add R6,R11,#0x24
+ 0001A4                 .dbline 129
+ 0001A4 2C24            movs R4,#44
+ 0001A6 134D            ldr R5,LIT_SmartIO_EnableIf+0
+ 0001A8 2D68            ldr R5,[R5,#0]
+ 0001AA 2C80            strh R4,[R5,#0]
+ 0001AC                 .dbline 130
+ 0001AC BBF81C40        ldrh R4,[R11,#+28]
+ 0001B0 104D            ldr R5,LIT_SmartIO_EnableIf+0
+ 0001B2 2D68            ldr R5,[R5,#0]
+ 0001B4 6C80            strh R4,[R5,#+2]
+ 0001B6                 .dbline 131
+ 0001B6 0227            movs R7,#2
+ 0001B8                 .dbline 132
+ 0001B8 BBF82080        ldrh R8,[R11,#+32]
+ 0001BC         L27:
+ 0001BC                 .dbline 135
+ 0001BC 3C46            mov R4,R7
+ 0001BE 0125            movs R5,#1
+ 0001C0 671C            adds R7,R4,#1
+ 0001C2 AC40            lsls R4,R4,R5
+ 0001C4 0B4D            ldr R5,LIT_SmartIO_EnableIf+0
+ 0001C6 2D68            ldr R5,[R5,#0]
+ 0001C8 24F80580        strh R8,[R4,R5]
+ 0001CC                 .dbline 136
+ 0001CC 361D            adds R6,R6,#4
+ 0001CE 7FF00304        mvns R4,#3
+ 0001D2 3459            ldr R4,[R6,R4]
+ 0001D4 A046            mov R8,R4
+ 0001D6         L28:
+ 0001D6                 .dbline 137
+ 0001D6 1FFA88F4        uxth R4,R8
+ 0001DA 002C            cmp R4,#0
+ 0001DC EED1            bne L27
+ 0001DE                 .dbline 139
+ 0001DE 054C            ldr R4,LIT_SmartIO_EnableIf+0
+ 0001E0 2068            ldr R0,[R4,#0]
+ 0001E2 7900            lsls R1,R7,#1
+ 0001E4 00F000F8        bl _SmartIO__SendBytes#FjPhi
+ 0001E8 0446            mov R4,R0
+ 0001EA 20B2            sxth R0,R4
+ 0001EC                 .dbblkend 140
+ 0001EC         L25:
+ 0001EC BDE8F019        pop {R4,R5,R6,R7,R8,R11,R12}
+ 0001F0 04B0            add R13,R13,#16
+ 0001F2 6047            bx R12
+ 0001F4                 .dbfuncend
+                        .align4
+ 0001F4                 .LITERAL
+ 0001F4         LIT_SmartIO_EnableIf:
+ 0001F4 04000000        .long _Command#Pt
+ 0001F8         	.ENDLITERAL
+ 0001F8                 .dbsym l status -1 S
+ 0001F8                 .dbsym r index 7 I
+ 0001F8                 .dbsym r args 6 pc
+ 0001F8                 .dbsym r h 8 s
+ 0001F8                 .dbsym l h1 32 s p1v
+ 0001F8                 .dbsym l control 28 s p0
+ 0001F8                 .dbstacksize 0
+ 0001F8                 .dbfunc e SmartIO_StopResume _SmartIO_StopResume#Fsv fS 142 4126716
+ 0001F8         _SmartIO_StopResume#Fsv::
+ 0001F8                 .dbprevlr 8
+ 0001F8 2DE91048        push {R4,R11,LR}
+ 0001FC EB46            mov R11,R13
+ 0001FE                 .dbblock 143
+ 0001FE                 .dbline 144
+ 0001FE 0120            movs R0,#1
+ 000200 2D21            movs R1,#45
+ 000202 00F0E9FE        bl _APICall#Fjjz
+ 000206 0446            mov R4,R0
+ 000208 20B2            sxth R0,R4
+ 00020A                 .dbblkend 145
+ 00020A         L30:
+ 00020A BDE81088        pop {R4,R11,PC}
+ 00020E                 .dbfuncend
+ 00020E                 .dbstacksize 0
+ 00020E                 .dbfunc e SmartIO_MakeOnOffButton _SmartIO_MakeOnOffButton#FttttPFvtE fs 147 4126716
+ 00020E         ;              h -> R6
+ 00020E         ;       callback -> R7
+ 00020E         ;  initial_value -> R6
+ 00020E         ;      variation -> R8
+ 00020E         ;      alignment -> R9
+ 00020E         _SmartIO_MakeOnOffButton#FttttPFvtE::
+ 00020E                 .dbprevlr 28
+ 00020E 2DE9F04B        push {R4,R5,R6,R7,R8,R9,R11,LR}
+ 000212 EB46            mov R11,R13
+ 000214 82B0            sub R13,R13,#8
+ 000216 8146            mov R9,R0
+ 000218 8846            mov R8,R1
+ 00021A 1646            mov R6,R2
+ 00021C 1F46            mov R7,R3
+ 00021E                 .dbblock 148
+ 00021E                 .dbline 149
+ 00021E 40F25510        mov R0,#341
+ 000222 0A21            movs R1,#10
+ 000224 1FFA89F2        uxth R2,R9
+ 000228 C823            movs R3,#200
+ 00022A 1FFA88F4        uxth R4,R8
+ 00022E 0094            str R4,[R13,#0]
+ 000230 B4B2            uxth R4,R6
+ 000232 0194            str R4,[R13,#+4]
+ 000234 00F0D0FE        bl _APICall#Fjjz
+ 000238 0646            mov R6,R0
+ 00023A                 .dbline 150
+ 00023A 3FB1            cbz R7,L32
+ 00023C                 .dbline 150
+ 00023C 0124            movs R4,#1
+ 00023E B5B2            uxth R5,R6
+ 000240 6D1C            adds R5,R5,#1
+ 000242 2846            mov R0,R5
+ 000244 3946            mov R1,R7
+ 000246 2246            mov R2,R4
+ 000248 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 00024C         L32:
+ 00024C                 .dbline 151
+ 00024C B0B2            uxth R0,R6
+ 00024E                 .dbblkend 152
+ 00024E         L31:
+ 00024E 02B0            add R13,R13,#8
+ 000250 BDE8F08B        pop {R4,R5,R6,R7,R8,R9,R11,PC}
+ 000254                 .dbfuncend
+ 000254                 .dbsym r h 6 s
+ 000254                 .dbsym r callback 7 pfV p3
+ 000254                 .dbsym r initial_value 6 s p2
+ 000254                 .dbsym r variation 8 s p1
+ 000254                 .dbsym r alignment 9 s p0
+ 000254                 .dbstacksize 8
+ 000254                 .dbfunc e SmartIO_Make3PosButton _SmartIO_Make3PosButton#FttttPFvtE fs 154 4126716
+ 000254         ;              h -> R6
+ 000254         ;       callback -> R7
+ 000254         ;  initial_value -> R6
+ 000254         ;      variation -> R8
+ 000254         ;      alignment -> R9
+ 000254         _SmartIO_Make3PosButton#FttttPFvtE::
+ 000254                 .dbprevlr 28
+ 000254 2DE9F04B        push {R4,R5,R6,R7,R8,R9,R11,LR}
+ 000258 EB46            mov R11,R13
+ 00025A 82B0            sub R13,R13,#8
+ 00025C 8146            mov R9,R0
+ 00025E 8846            mov R8,R1
+ 000260 1646            mov R6,R2
+ 000262 1F46            mov R7,R3
+ 000264                 .dbblock 155
+ 000264                 .dbline 156
+ 000264 40F25510        mov R0,#341
+ 000268 0A21            movs R1,#10
+ 00026A 1FFA89F2        uxth R2,R9
+ 00026E C923            movs R3,#201
+ 000270 1FFA88F4        uxth R4,R8
+ 000274 0094            str R4,[R13,#0]
+ 000276 B4B2            uxth R4,R6
+ 000278 0194            str R4,[R13,#+4]
+ 00027A 00F0ADFE        bl _APICall#Fjjz
+ 00027E 0646            mov R6,R0
+ 000280                 .dbline 157
+ 000280 3FB1            cbz R7,L35
+ 000282                 .dbline 157
+ 000282 0124            movs R4,#1
+ 000284 B5B2            uxth R5,R6
+ 000286 6D1C            adds R5,R5,#1
+ 000288 2846            mov R0,R5
+ 00028A 3946            mov R1,R7
+ 00028C 2246            mov R2,R4
+ 00028E 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 000292         L35:
+ 000292                 .dbline 158
+ 000292 B0B2            uxth R0,R6
+ 000294                 .dbblkend 159
+ 000294         L34:
+ 000294 02B0            add R13,R13,#8
+ 000296 BDE8F08B        pop {R4,R5,R6,R7,R8,R9,R11,PC}
+ 00029A                 .dbfuncend
+ 00029A                 .dbsym r h 6 s
+ 00029A                 .dbsym r callback 7 pfV p3
+ 00029A                 .dbsym r initial_value 6 s p2
+ 00029A                 .dbsym r variation 8 s p1
+ 00029A                 .dbsym r alignment 9 s p0
+ 00029A                 .dbstacksize 8
+ 00029A                 .dbfunc e SmartIO_MakeIncrementer _SmartIO_MakeIncrementer#FttttPFvtE fs 161 4126716
+ 00029A         ;              h -> R6
+ 00029A         ;       callback -> R7
+ 00029A         ;  initial_value -> R6
+ 00029A         ;      variation -> R8
+ 00029A         ;      alignment -> R9
+ 00029A         _SmartIO_MakeIncrementer#FttttPFvtE::
+ 00029A                 .dbprevlr 28
+ 00029A 2DE9F04B        push {R4,R5,R6,R7,R8,R9,R11,LR}
+ 00029E EB46            mov R11,R13
+ 0002A0 82B0            sub R13,R13,#8
+ 0002A2 8146            mov R9,R0
+ 0002A4 8846            mov R8,R1
+ 0002A6 1646            mov R6,R2
+ 0002A8 1F46            mov R7,R3
+ 0002AA                 .dbblock 162
+ 0002AA                 .dbline 163
+ 0002AA 40F25510        mov R0,#341
+ 0002AE 0A21            movs R1,#10
+ 0002B0 1FFA89F2        uxth R2,R9
+ 0002B4 CA23            movs R3,#202
+ 0002B6 1FFA88F4        uxth R4,R8
+ 0002BA 0094            str R4,[R13,#0]
+ 0002BC B4B2            uxth R4,R6
+ 0002BE 0194            str R4,[R13,#+4]
+ 0002C0 00F08AFE        bl _APICall#Fjjz
+ 0002C4 0646            mov R6,R0
+ 0002C6                 .dbline 164
+ 0002C6 3FB1            cbz R7,L38
+ 0002C8                 .dbline 164
+ 0002C8 0124            movs R4,#1
+ 0002CA B5B2            uxth R5,R6
+ 0002CC 6D1C            adds R5,R5,#1
+ 0002CE 2846            mov R0,R5
+ 0002D0 3946            mov R1,R7
+ 0002D2 2246            mov R2,R4
+ 0002D4 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 0002D8         L38:
+ 0002D8                 .dbline 165
+ 0002D8 B0B2            uxth R0,R6
+ 0002DA                 .dbblkend 166
+ 0002DA         L37:
+ 0002DA 02B0            add R13,R13,#8
+ 0002DC BDE8F08B        pop {R4,R5,R6,R7,R8,R9,R11,PC}
+ 0002E0                 .dbfuncend
+ 0002E0                 .dbsym r h 6 s
+ 0002E0                 .dbsym r callback 7 pfV p3
+ 0002E0                 .dbsym r initial_value 6 s p2
+ 0002E0                 .dbsym r variation 8 s p1
+ 0002E0                 .dbsym r alignment 9 s p0
+ 0002E0                 .dbstacksize 8
+ 0002E0                 .dbfunc e SmartIO_MakeSlider _SmartIO_MakeSlider#FttttPFvtE fs 168 4126716
+ 0002E0         ;              h -> R6
+ 0002E0         ;       callback -> R7
+ 0002E0         ;  initial_value -> R6
+ 0002E0         ;      variation -> R8
+ 0002E0         ;      alignment -> R9
+ 0002E0         _SmartIO_MakeSlider#FttttPFvtE::
+ 0002E0                 .dbprevlr 28
+ 0002E0 2DE9F04B        push {R4,R5,R6,R7,R8,R9,R11,LR}
+ 0002E4 EB46            mov R11,R13
+ 0002E6 82B0            sub R13,R13,#8
+ 0002E8 8146            mov R9,R0
+ 0002EA 8846            mov R8,R1
+ 0002EC 1646            mov R6,R2
+ 0002EE 1F46            mov R7,R3
+ 0002F0                 .dbblock 169
+ 0002F0                 .dbline 170
+ 0002F0 40F25510        mov R0,#341
+ 0002F4 0A21            movs R1,#10
+ 0002F6 1FFA89F2        uxth R2,R9
+ 0002FA CB23            movs R3,#203
+ 0002FC 1FFA88F4        uxth R4,R8
+ 000300 0094            str R4,[R13,#0]
+ 000302 B4B2            uxth R4,R6
+ 000304 0194            str R4,[R13,#+4]
+ 000306 00F067FE        bl _APICall#Fjjz
+ 00030A 0646            mov R6,R0
+ 00030C                 .dbline 171
+ 00030C 3FB1            cbz R7,L41
+ 00030E                 .dbline 171
+ 00030E 0124            movs R4,#1
+ 000310 B5B2            uxth R5,R6
+ 000312 6D1C            adds R5,R5,#1
+ 000314 2846            mov R0,R5
+ 000316 3946            mov R1,R7
+ 000318 2246            mov R2,R4
+ 00031A 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 00031E         L41:
+ 00031E                 .dbline 172
+ 00031E B0B2            uxth R0,R6
+ 000320                 .dbblkend 173
+ 000320         L40:
+ 000320 02B0            add R13,R13,#8
+ 000322 BDE8F08B        pop {R4,R5,R6,R7,R8,R9,R11,PC}
+ 000326                 .dbfuncend
+ 000326                 .dbsym r h 6 s
+ 000326                 .dbsym r callback 7 pfV p3
+ 000326                 .dbsym r initial_value 6 s p2
+ 000326                 .dbsym r variation 8 s p1
+ 000326                 .dbsym r alignment 9 s p0
+ 000326                 .dbstacksize 8
+ 000326                 .dbfunc e SmartIO_MakeExpandableList _SmartIO_MakeExpandableList#FtttPFvtE fs 175 4126716
+ 000326         ;              h -> R6
+ 000326         ;       callback -> R7
+ 000326         ;       nentries -> R6
+ 000326         ;      alignment -> R8
+ 000326         _SmartIO_MakeExpandableList#FtttPFvtE::
+ 000326                 .dbprevlr 24
+ 000326 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 00032A EB46            mov R11,R13
+ 00032C 81B0            sub R13,R13,#4
+ 00032E 8046            mov R8,R0
+ 000330 0E46            mov R6,R1
+ 000332 1746            mov R7,R2
+ 000334                 .dbblock 176
+ 000334                 .dbline 177
+ 000334 5520            movs R0,#85
+ 000336 0A21            movs R1,#10
+ 000338 1FFA88F2        uxth R2,R8
+ 00033C CC23            movs R3,#204
+ 00033E B4B2            uxth R4,R6
+ 000340 0094            str R4,[R13,#0]
+ 000342 00F049FE        bl _APICall#Fjjz
+ 000346 0646            mov R6,R0
+ 000348                 .dbline 178
+ 000348 3FB1            cbz R7,L44
+ 00034A                 .dbline 178
+ 00034A 0124            movs R4,#1
+ 00034C B5B2            uxth R5,R6
+ 00034E 6D1C            adds R5,R5,#1
+ 000350 2846            mov R0,R5
+ 000352 3946            mov R1,R7
+ 000354 2246            mov R2,R4
+ 000356 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 00035A         L44:
+ 00035A                 .dbline 179
+ 00035A B0B2            uxth R0,R6
+ 00035C                 .dbblkend 180
+ 00035C         L43:
+ 00035C 01B0            add R13,R13,#4
+ 00035E BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 000362                 .dbfuncend
+ 000362                 .dbsym r h 6 s
+ 000362                 .dbsym r callback 7 pfV p2
+ 000362                 .dbsym r nentries 6 s p1
+ 000362                 .dbsym r alignment 8 s p0
+ 000362                 .dbstacksize 4
+ 000362                 .dbfunc e SmartIO_MakePicker _SmartIO_MakePicker#FtttPFvtE fs 182 4126716
+ 000362         ;              h -> R6
+ 000362         ;       callback -> R7
+ 000362         ;       nentries -> R6
+ 000362         ;      alignment -> R8
+ 000362         _SmartIO_MakePicker#FtttPFvtE::
+ 000362                 .dbprevlr 24
+ 000362 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 000366 EB46            mov R11,R13
+ 000368 81B0            sub R13,R13,#4
+ 00036A 8046            mov R8,R0
+ 00036C 0E46            mov R6,R1
+ 00036E 1746            mov R7,R2
+ 000370                 .dbblock 183
+ 000370                 .dbline 184
+ 000370 5520            movs R0,#85
+ 000372 0A21            movs R1,#10
+ 000374 1FFA88F2        uxth R2,R8
+ 000378 CD23            movs R3,#205
+ 00037A B4B2            uxth R4,R6
+ 00037C 0094            str R4,[R13,#0]
+ 00037E 00F02BFE        bl _APICall#Fjjz
+ 000382 0646            mov R6,R0
+ 000384                 .dbline 185
+ 000384 3FB1            cbz R7,L47
+ 000386                 .dbline 185
+ 000386 0124            movs R4,#1
+ 000388 B5B2            uxth R5,R6
+ 00038A 6D1C            adds R5,R5,#1
+ 00038C 2846            mov R0,R5
+ 00038E 3946            mov R1,R7
+ 000390 2246            mov R2,R4
+ 000392 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 000396         L47:
+ 000396                 .dbline 186
+ 000396 B0B2            uxth R0,R6
+ 000398                 .dbblkend 187
+ 000398         L46:
+ 000398 01B0            add R13,R13,#4
+ 00039A BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 00039E                 .dbfuncend
+ 00039E                 .dbsym r h 6 s
+ 00039E                 .dbsym r callback 7 pfV p2
+ 00039E                 .dbsym r nentries 6 s p1
+ 00039E                 .dbsym r alignment 8 s p0
+ 00039E                 .dbstacksize 4
+ 00039E                 .dbfunc e SmartIO_MakeMultiSelector _SmartIO_MakeMultiSelector#FttttPFvtE fs 189 4126716
+ 00039E         ;              h -> R6
+ 00039E         ;       callback -> R7
+ 00039E         ; isSingleSelectOnly -> R6
+ 00039E         ;       nentries -> R8
+ 00039E         ;      alignment -> R9
+ 00039E         _SmartIO_MakeMultiSelector#FttttPFvtE::
+ 00039E                 .dbprevlr 28
+ 00039E 2DE9F04B        push {R4,R5,R6,R7,R8,R9,R11,LR}
+ 0003A2 EB46            mov R11,R13
+ 0003A4 82B0            sub R13,R13,#8
+ 0003A6 8146            mov R9,R0
+ 0003A8 8846            mov R8,R1
+ 0003AA 1646            mov R6,R2
+ 0003AC 1F46            mov R7,R3
+ 0003AE                 .dbblock 190
+ 0003AE                 .dbline 191
+ 0003AE 40F25510        mov R0,#341
+ 0003B2 0A21            movs R1,#10
+ 0003B4 1FFA89F2        uxth R2,R9
+ 0003B8 DC23            movs R3,#220
+ 0003BA 1FFA88F4        uxth R4,R8
+ 0003BE 0094            str R4,[R13,#0]
+ 0003C0 B4B2            uxth R4,R6
+ 0003C2 0194            str R4,[R13,#+4]
+ 0003C4 00F008FE        bl _APICall#Fjjz
+ 0003C8 0646            mov R6,R0
+ 0003CA                 .dbline 192
+ 0003CA 3FB1            cbz R7,L50
+ 0003CC                 .dbline 192
+ 0003CC 0124            movs R4,#1
+ 0003CE B5B2            uxth R5,R6
+ 0003D0 6D1C            adds R5,R5,#1
+ 0003D2 2846            mov R0,R5
+ 0003D4 3946            mov R1,R7
+ 0003D6 2246            mov R2,R4
+ 0003D8 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 0003DC         L50:
+ 0003DC                 .dbline 193
+ 0003DC B0B2            uxth R0,R6
+ 0003DE                 .dbblkend 194
+ 0003DE         L49:
+ 0003DE 02B0            add R13,R13,#8
+ 0003E0 BDE8F08B        pop {R4,R5,R6,R7,R8,R9,R11,PC}
+ 0003E4                 .dbfuncend
+ 0003E4                 .dbsym r h 6 s
+ 0003E4                 .dbsym r callback 7 pfV p3
+ 0003E4                 .dbsym r isSingleSelectOnly 6 s p2
+ 0003E4                 .dbsym r nentries 8 s p1
+ 0003E4                 .dbsym r alignment 9 s p0
+ 0003E4                 .dbstacksize 8
+ 0003E4                 .dbfunc e SmartIO_MakeNumberSelector _SmartIO_MakeNumberSelector#FtttttPFvjE fs 196 4126716
+ 0003E4         ;              h -> R5
+ 0003E4         ;       callback -> R11,28
+ 0003E4         ;           high -> R5
+ 0003E4         ;            low -> R6
+ 0003E4         ;    default_val -> R7
+ 0003E4         ;      alignment -> R8
+ 0003E4         _SmartIO_MakeNumberSelector#FtttttPFvjE::
+ 0003E4                 .dbprevlr 24
+ 0003E4 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 0003E8 EB46            mov R11,R13
+ 0003EA 83B0            sub R13,R13,#12
+ 0003EC 8046            mov R8,R0
+ 0003EE 0F46            mov R7,R1
+ 0003F0 1646            mov R6,R2
+ 0003F2 1D46            mov R5,R3
+ 0003F4                 .dbblock 197
+ 0003F4                 .dbline 198
+ 0003F4 40F25550        mov R0,#1365
+ 0003F8 0A21            movs R1,#10
+ 0003FA 1FFA88F2        uxth R2,R8
+ 0003FE CE23            movs R3,#206
+ 000400 BCB2            uxth R4,R7
+ 000402 0094            str R4,[R13,#0]
+ 000404 B4B2            uxth R4,R6
+ 000406 0194            str R4,[R13,#+4]
+ 000408 ACB2            uxth R4,R5
+ 00040A 0294            str R4,[R13,#+8]
+ 00040C 00F0E4FD        bl _APICall#Fjjz
+ 000410 0546            mov R5,R0
+ 000412                 .dbline 199
+ 000412 DBF81CC0        ldr R12,[R11,#+28]
+ 000416 BCF1000F        cmp R12,#0
+ 00041A 07D0            beq L53
+ 00041C                 .dbline 199
+ 00041C ACB2            uxth R4,R5
+ 00041E 641C            adds R4,R4,#1
+ 000420 2046            mov R0,R4
+ 000422 DBF81C10        ldr R1,[R11,#+28]
+ 000426 0522            movs R2,#5
+ 000428 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 00042C         L53:
+ 00042C                 .dbline 200
+ 00042C A8B2            uxth R0,R5
+ 00042E                 .dbblkend 201
+ 00042E         L52:
+ 00042E 03B0            add R13,R13,#12
+ 000430 BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 000434                 .dbfuncend
+ 000434                 .dbsym r h 5 s
+ 000434                 .dbsym l callback 28 pfV p4
+ 000434                 .dbsym r high 5 s p3
+ 000434                 .dbsym r low 6 s p2
+ 000434                 .dbsym r default_val 7 s p1
+ 000434                 .dbsym r alignment 8 s p0
+ 000434                 .dbstacksize 12
+ 000434                 .dbfunc e SmartIO_MakeTimeSelector _SmartIO_MakeTimeSelector#FtttPcPFvttE fs 203 4126716
+ 000434         ;              h -> R5
+ 000434         ;       callback -> R6
+ 000434         ;  initial_value -> R5
+ 000434         ;    display_24h -> R7
+ 000434         ;      alignment -> R8
+ 000434         _SmartIO_MakeTimeSelector#FtttPcPFvttE::
+ 000434                 .dbprevlr 24
+ 000434 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 000438 EB46            mov R11,R13
+ 00043A 82B0            sub R13,R13,#8
+ 00043C 8046            mov R8,R0
+ 00043E 0F46            mov R7,R1
+ 000440 1546            mov R5,R2
+ 000442 1E46            mov R6,R3
+ 000444                 .dbblock 204
+ 000444                 .dbline 205
+ 000444 40F25520        mov R0,#597
+ 000448 0A21            movs R1,#10
+ 00044A 1FFA88F2        uxth R2,R8
+ 00044E CF23            movs R3,#207
+ 000450 BCB2            uxth R4,R7
+ 000452 0094            str R4,[R13,#0]
+ 000454 0195            str R5,[R13,#+4]
+ 000456 00F0BFFD        bl _APICall#Fjjz
+ 00045A 0546            mov R5,R0
+ 00045C                 .dbline 206
+ 00045C 36B1            cbz R6,L56
+ 00045E                 .dbline 206
+ 00045E ACB2            uxth R4,R5
+ 000460 641C            adds R4,R4,#1
+ 000462 2046            mov R0,R4
+ 000464 3146            mov R1,R6
+ 000466 0222            movs R2,#2
+ 000468 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 00046C         L56:
+ 00046C                 .dbline 207
+ 00046C A8B2            uxth R0,R5
+ 00046E                 .dbblkend 208
+ 00046E         L55:
+ 00046E 02B0            add R13,R13,#8
+ 000470 BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 000474                 .dbfuncend
+ 000474                 .dbsym r h 5 s
+ 000474                 .dbsym r callback 6 pfV p3
+ 000474                 .dbsym r initial_value 5 pc p2
+ 000474                 .dbsym r display_24h 7 s p1
+ 000474                 .dbsym r alignment 8 s p0
+ 000474                 .dbstacksize 8
+ 000474                 .dbfunc e SmartIO_MakeAnalogTimeSelector _SmartIO_MakeAnalogTimeSelector#FtttPcPFvttE fs 210 4126716
+ 000474         ;              h -> R5
+ 000474         ;       callback -> R6
+ 000474         ;  initial_value -> R5
+ 000474         ;    display_24h -> R7
+ 000474         ;      alignment -> R8
+ 000474         _SmartIO_MakeAnalogTimeSelector#FtttPcPFvttE::
+ 000474                 .dbprevlr 24
+ 000474 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 000478 EB46            mov R11,R13
+ 00047A 82B0            sub R13,R13,#8
+ 00047C 8046            mov R8,R0
+ 00047E 0F46            mov R7,R1
+ 000480 1546            mov R5,R2
+ 000482 1E46            mov R6,R3
+ 000484                 .dbblock 211
+ 000484                 .dbline 212
+ 000484 40F25520        mov R0,#597
+ 000488 0A21            movs R1,#10
+ 00048A 1FFA88F2        uxth R2,R8
+ 00048E D223            movs R3,#210
+ 000490 BCB2            uxth R4,R7
+ 000492 0094            str R4,[R13,#0]
+ 000494 0195            str R5,[R13,#+4]
+ 000496 00F09FFD        bl _APICall#Fjjz
+ 00049A 0546            mov R5,R0
+ 00049C                 .dbline 213
+ 00049C 36B1            cbz R6,L59
+ 00049E                 .dbline 213
+ 00049E ACB2            uxth R4,R5
+ 0004A0 641C            adds R4,R4,#1
+ 0004A2 2046            mov R0,R4
+ 0004A4 3146            mov R1,R6
+ 0004A6 0222            movs R2,#2
+ 0004A8 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 0004AC         L59:
+ 0004AC                 .dbline 214
+ 0004AC A8B2            uxth R0,R5
+ 0004AE                 .dbblkend 215
+ 0004AE         L58:
+ 0004AE 02B0            add R13,R13,#8
+ 0004B0 BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 0004B4                 .dbfuncend
+ 0004B4                 .dbsym r h 5 s
+ 0004B4                 .dbsym r callback 6 pfV p3
+ 0004B4                 .dbsym r initial_value 5 pc p2
+ 0004B4                 .dbsym r display_24h 7 s p1
+ 0004B4                 .dbsym r alignment 8 s p0
+ 0004B4                 .dbstacksize 8
+ 0004B4                 .dbfunc e SmartIO_MakeCalendarSelector _SmartIO_MakeCalendarSelector#FttPcPFvPcE fs 217 4126716
+ 0004B4         ;              h -> R5
+ 0004B4         ;       callback -> R6
+ 0004B4         ;  initial_value -> R5
+ 0004B4         ;      alignment -> R7
+ 0004B4         _SmartIO_MakeCalendarSelector#FttPcPFvPcE::
+ 0004B4                 .dbprevlr 20
+ 0004B4 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 0004B8 EB46            mov R11,R13
+ 0004BA 81B0            sub R13,R13,#4
+ 0004BC 0746            mov R7,R0
+ 0004BE 0D46            mov R5,R1
+ 0004C0 1646            mov R6,R2
+ 0004C2                 .dbblock 218
+ 0004C2                 .dbline 219
+ 0004C2 9520            movs R0,#149
+ 0004C4 0A21            movs R1,#10
+ 0004C6 BAB2            uxth R2,R7
+ 0004C8 D023            movs R3,#208
+ 0004CA 0095            str R5,[R13,#0]
+ 0004CC 00F084FD        bl _APICall#Fjjz
+ 0004D0 0546            mov R5,R0
+ 0004D2                 .dbline 220
+ 0004D2 36B1            cbz R6,L62
+ 0004D4                 .dbline 220
+ 0004D4 ACB2            uxth R4,R5
+ 0004D6 641C            adds R4,R4,#1
+ 0004D8 2046            mov R0,R4
+ 0004DA 3146            mov R1,R6
+ 0004DC 0622            movs R2,#6
+ 0004DE 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 0004E2         L62:
+ 0004E2                 .dbline 221
+ 0004E2 A8B2            uxth R0,R5
+ 0004E4                 .dbblkend 222
+ 0004E4         L61:
+ 0004E4 01B0            add R13,R13,#4
+ 0004E6 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 0004EA                 .dbfuncend
+ 0004EA                 .dbsym r h 5 s
+ 0004EA                 .dbsym r callback 6 pfV p2
+ 0004EA                 .dbsym r initial_value 5 pc p1
+ 0004EA                 .dbsym r alignment 7 s p0
+ 0004EA                 .dbstacksize 4
+ 0004EA                 .dbfunc e SmartIO_MakeWeekdaySelector _SmartIO_MakeWeekdaySelector#FtttPFvtE fs 224 4126716
+ 0004EA         ;              h -> R6
+ 0004EA         ;       callback -> R7
+ 0004EA         ;  initial_value -> R6
+ 0004EA         ;      alignment -> R8
+ 0004EA         _SmartIO_MakeWeekdaySelector#FtttPFvtE::
+ 0004EA                 .dbprevlr 24
+ 0004EA 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 0004EE EB46            mov R11,R13
+ 0004F0 81B0            sub R13,R13,#4
+ 0004F2 8046            mov R8,R0
+ 0004F4 0E46            mov R6,R1
+ 0004F6 1746            mov R7,R2
+ 0004F8                 .dbblock 225
+ 0004F8                 .dbline 226
+ 0004F8 5520            movs R0,#85
+ 0004FA 0A21            movs R1,#10
+ 0004FC 1FFA88F2        uxth R2,R8
+ 000500 D123            movs R3,#209
+ 000502 B4B2            uxth R4,R6
+ 000504 0094            str R4,[R13,#0]
+ 000506 00F067FD        bl _APICall#Fjjz
+ 00050A 0646            mov R6,R0
+ 00050C                 .dbline 227
+ 00050C 3FB1            cbz R7,L65
+ 00050E                 .dbline 227
+ 00050E 0124            movs R4,#1
+ 000510 B5B2            uxth R5,R6
+ 000512 6D1C            adds R5,R5,#1
+ 000514 2846            mov R0,R5
+ 000516 3946            mov R1,R7
+ 000518 2246            mov R2,R4
+ 00051A 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 00051E         L65:
+ 00051E                 .dbline 228
+ 00051E B0B2            uxth R0,R6
+ 000520                 .dbblkend 229
+ 000520         L64:
+ 000520 01B0            add R13,R13,#4
+ 000522 BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 000526                 .dbfuncend
+ 000526                 .dbsym r h 6 s
+ 000526                 .dbsym r callback 7 pfV p2
+ 000526                 .dbsym r initial_value 6 s p1
+ 000526                 .dbsym r alignment 8 s p0
+ 000526                 .dbstacksize 4
+ 000526                 .dbfunc e SmartIO_MakeOK _SmartIO_MakeOK#FttPcPFvtE fs 231 4126716
+ 000526         ;              h -> R6
+ 000526         ;       callback -> R7
+ 000526         ;           text -> R6
+ 000526         ;      alignment -> R8
+ 000526         _SmartIO_MakeOK#FttPcPFvtE::
+ 000526                 .dbprevlr 24
+ 000526 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 00052A EB46            mov R11,R13
+ 00052C 81B0            sub R13,R13,#4
+ 00052E 8046            mov R8,R0
+ 000530 0E46            mov R6,R1
+ 000532 1746            mov R7,R2
+ 000534                 .dbblock 232
+ 000534                 .dbline 233
+ 000534 9520            movs R0,#149
+ 000536 0A21            movs R1,#10
+ 000538 1FFA88F2        uxth R2,R8
+ 00053C D723            movs R3,#215
+ 00053E 0096            str R6,[R13,#0]
+ 000540 00F04AFD        bl _APICall#Fjjz
+ 000544 0646            mov R6,R0
+ 000546                 .dbline 234
+ 000546 3FB1            cbz R7,L68
+ 000548                 .dbline 234
+ 000548 0124            movs R4,#1
+ 00054A B5B2            uxth R5,R6
+ 00054C 6D1C            adds R5,R5,#1
+ 00054E 2846            mov R0,R5
+ 000550 3946            mov R1,R7
+ 000552 2246            mov R2,R4
+ 000554 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 000558         L68:
+ 000558                 .dbline 235
+ 000558 B0B2            uxth R0,R6
+ 00055A                 .dbblkend 236
+ 00055A         L67:
+ 00055A 01B0            add R13,R13,#4
+ 00055C BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 000560                 .dbfuncend
+ 000560                 .dbsym r h 6 s
+ 000560                 .dbsym r callback 7 pfV p2
+ 000560                 .dbsym r text 6 pc p1
+ 000560                 .dbsym r alignment 8 s p0
+ 000560                 .dbstacksize 4
+ 000560                 .dbfunc e SmartIO_MakeCancelOK _SmartIO_MakeCancelOK#FttPcPFvtE fs 238 4126716
+ 000560         ;              h -> R6
+ 000560         ;       callback -> R7
+ 000560         ;           text -> R6
+ 000560         ;      alignment -> R8
+ 000560         _SmartIO_MakeCancelOK#FttPcPFvtE::
+ 000560                 .dbprevlr 24
+ 000560 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 000564 EB46            mov R11,R13
+ 000566 81B0            sub R13,R13,#4
+ 000568 8046            mov R8,R0
+ 00056A 0E46            mov R6,R1
+ 00056C 1746            mov R7,R2
+ 00056E                 .dbblock 239
+ 00056E                 .dbline 240
+ 00056E 9520            movs R0,#149
+ 000570 0A21            movs R1,#10
+ 000572 1FFA88F2        uxth R2,R8
+ 000576 D923            movs R3,#217
+ 000578 0096            str R6,[R13,#0]
+ 00057A 00F02DFD        bl _APICall#Fjjz
+ 00057E 0646            mov R6,R0
+ 000580                 .dbline 241
+ 000580 3FB1            cbz R7,L71
+ 000582                 .dbline 241
+ 000582 0124            movs R4,#1
+ 000584 B5B2            uxth R5,R6
+ 000586 6D1C            adds R5,R5,#1
+ 000588 2846            mov R0,R5
+ 00058A 3946            mov R1,R7
+ 00058C 2246            mov R2,R4
+ 00058E 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 000592         L71:
+ 000592                 .dbline 242
+ 000592 B0B2            uxth R0,R6
+ 000594                 .dbblkend 243
+ 000594         L70:
+ 000594 01B0            add R13,R13,#4
+ 000596 BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 00059A                 .dbfuncend
+ 00059A                 .dbsym r h 6 s
+ 00059A                 .dbsym r callback 7 pfV p2
+ 00059A                 .dbsym r text 6 pc p1
+ 00059A                 .dbsym r alignment 8 s p0
+ 00059A                 .dbstacksize 4
+ 00059A                 .dbfunc e SmartIO_MakeOKLinkTo _SmartIO_MakeOKLinkTo#FtttPcPFvtE fs 245 4126716
+ 00059A         ;              h -> R6
+ 00059A         ;       callback -> R7
+ 00059A         ;           text -> R6
+ 00059A         ;   popup_handle -> R8
+ 00059A         ;      alignment -> R9
+ 00059A         _SmartIO_MakeOKLinkTo#FtttPcPFvtE::
+ 00059A                 .dbprevlr 28
+ 00059A 2DE9F04B        push {R4,R5,R6,R7,R8,R9,R11,LR}
+ 00059E EB46            mov R11,R13
+ 0005A0 82B0            sub R13,R13,#8
+ 0005A2 8146            mov R9,R0
+ 0005A4 8846            mov R8,R1
+ 0005A6 1646            mov R6,R2
+ 0005A8 1F46            mov R7,R3
+ 0005AA                 .dbblock 246
+ 0005AA                 .dbline 247
+ 0005AA 40F25520        mov R0,#597
+ 0005AE 0A21            movs R1,#10
+ 0005B0 1FFA89F2        uxth R2,R9
+ 0005B4 D823            movs R3,#216
+ 0005B6 1FFA88F4        uxth R4,R8
+ 0005BA 0094            str R4,[R13,#0]
+ 0005BC 0196            str R6,[R13,#+4]
+ 0005BE 00F00BFD        bl _APICall#Fjjz
+ 0005C2 0646            mov R6,R0
+ 0005C4                 .dbline 248
+ 0005C4 3FB1            cbz R7,L74
+ 0005C6                 .dbline 248
+ 0005C6 0124            movs R4,#1
+ 0005C8 B5B2            uxth R5,R6
+ 0005CA 6D1C            adds R5,R5,#1
+ 0005CC 2846            mov R0,R5
+ 0005CE 3946            mov R1,R7
+ 0005D0 2246            mov R2,R4
+ 0005D2 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 0005D6         L74:
+ 0005D6                 .dbline 249
+ 0005D6 B0B2            uxth R0,R6
+ 0005D8                 .dbblkend 250
+ 0005D8         L73:
+ 0005D8 02B0            add R13,R13,#8
+ 0005DA BDE8F08B        pop {R4,R5,R6,R7,R8,R9,R11,PC}
+ 0005DE                 .dbfuncend
+ 0005DE                 .dbsym r h 6 s
+ 0005DE                 .dbsym r callback 7 pfV p3
+ 0005DE                 .dbsym r text 6 pc p2
+ 0005DE                 .dbsym r popup_handle 8 s p1
+ 0005DE                 .dbsym r alignment 9 s p0
+ 0005DE                 .dbstacksize 8
+ 0005DE                 .dbfunc e SmartIO_MakeCheckboxes _SmartIO_MakeCheckboxes#FtttPFvtE fs 252 4126716
+ 0005DE         ;              h -> R6
+ 0005DE         ;       callback -> R7
+ 0005DE         ;       nentries -> R6
+ 0005DE         ;      alignment -> R8
+ 0005DE         _SmartIO_MakeCheckboxes#FtttPFvtE::
+ 0005DE                 .dbprevlr 24
+ 0005DE 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 0005E2 EB46            mov R11,R13
+ 0005E4 81B0            sub R13,R13,#4
+ 0005E6 8046            mov R8,R0
+ 0005E8 0E46            mov R6,R1
+ 0005EA 1746            mov R7,R2
+ 0005EC                 .dbblock 253
+ 0005EC                 .dbline 254
+ 0005EC 5520            movs R0,#85
+ 0005EE 0A21            movs R1,#10
+ 0005F0 1FFA88F2        uxth R2,R8
+ 0005F4 DD23            movs R3,#221
+ 0005F6 B4B2            uxth R4,R6
+ 0005F8 0094            str R4,[R13,#0]
+ 0005FA 00F0EDFC        bl _APICall#Fjjz
+ 0005FE 0646            mov R6,R0
+ 000600                 .dbline 255
+ 000600 3FB1            cbz R7,L77
+ 000602                 .dbline 255
+ 000602 0124            movs R4,#1
+ 000604 B5B2            uxth R5,R6
+ 000606 6D1C            adds R5,R5,#1
+ 000608 2846            mov R0,R5
+ 00060A 3946            mov R1,R7
+ 00060C 2246            mov R2,R4
+ 00060E 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 000612         L77:
+ 000612                 .dbline 256
+ 000612 B0B2            uxth R0,R6
+ 000614                 .dbblkend 257
+ 000614         L76:
+ 000614 01B0            add R13,R13,#4
+ 000616 BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 00061A                 .dbfuncend
+ 00061A                 .dbsym r h 6 s
+ 00061A                 .dbsym r callback 7 pfV p2
+ 00061A                 .dbsym r nentries 6 s p1
+ 00061A                 .dbsym r alignment 8 s p0
+ 00061A                 .dbstacksize 4
+ 00061A                 .dbfunc e SmartIO_MakeRadioButtons _SmartIO_MakeRadioButtons#FtttPFvtE fs 259 4126716
+ 00061A         ;              h -> R6
+ 00061A         ;       callback -> R7
+ 00061A         ;       nentries -> R6
+ 00061A         ;      alignment -> R8
+ 00061A         _SmartIO_MakeRadioButtons#FtttPFvtE::
+ 00061A                 .dbprevlr 24
+ 00061A 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 00061E EB46            mov R11,R13
+ 000620 81B0            sub R13,R13,#4
+ 000622 8046            mov R8,R0
+ 000624 0E46            mov R6,R1
+ 000626 1746            mov R7,R2
+ 000628                 .dbblock 260
+ 000628                 .dbline 261
+ 000628 5520            movs R0,#85
+ 00062A 0A21            movs R1,#10
+ 00062C 1FFA88F2        uxth R2,R8
+ 000630 DE23            movs R3,#222
+ 000632 B4B2            uxth R4,R6
+ 000634 0094            str R4,[R13,#0]
+ 000636 00F0CFFC        bl _APICall#Fjjz
+ 00063A 0646            mov R6,R0
+ 00063C                 .dbline 262
+ 00063C 3FB1            cbz R7,L80
+ 00063E                 .dbline 262
+ 00063E 0124            movs R4,#1
+ 000640 B5B2            uxth R5,R6
+ 000642 6D1C            adds R5,R5,#1
+ 000644 2846            mov R0,R5
+ 000646 3946            mov R1,R7
+ 000648 2246            mov R2,R4
+ 00064A 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 00064E         L80:
+ 00064E                 .dbline 263
+ 00064E B0B2            uxth R0,R6
+ 000650                 .dbblkend 264
+ 000650         L79:
+ 000650 01B0            add R13,R13,#4
+ 000652 BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 000656                 .dbfuncend
+ 000656                 .dbsym r h 6 s
+ 000656                 .dbsym r callback 7 pfV p2
+ 000656                 .dbsym r nentries 6 s p1
+ 000656                 .dbsym r alignment 8 s p0
+ 000656                 .dbstacksize 4
+ 000656                 .dbfunc e SmartIO_MakeTextEntry _SmartIO_MakeTextEntry#FttttPFvPcE fs 266 4126716
+ 000656         ;              h -> R5
+ 000656         ;       callback -> R6
+ 000656         ;         nlines -> R7
+ 000656         ; isRoundCorners -> R5
+ 000656         ;      alignment -> R8
+ 000656         _SmartIO_MakeTextEntry#FttttPFvPcE::
+ 000656                 .dbprevlr 24
+ 000656 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 00065A EB46            mov R11,R13
+ 00065C 82B0            sub R13,R13,#8
+ 00065E 8046            mov R8,R0
+ 000660 0D46            mov R5,R1
+ 000662 1746            mov R7,R2
+ 000664 1E46            mov R6,R3
+ 000666                 .dbblock 267
+ 000666                 .dbline 268
+ 000666 5520            movs R0,#85
+ 000668 0A21            movs R1,#10
+ 00066A 1FFA88F2        uxth R2,R8
+ 00066E DF23            movs R3,#223
+ 000670 ACB2            uxth R4,R5
+ 000672 0094            str R4,[R13,#0]
+ 000674 BCB2            uxth R4,R7
+ 000676 0CB9            cbnz R4,L84
+ 000678 0125            movs R5,#1
+ 00067A 00E0            b L85
+ 00067C         L84:
+ 00067C BDB2            uxth R5,R7
+ 00067E         L85:
+ 00067E 0195            str R5,[R13,#+4]
+ 000680 00F0AAFC        bl _APICall#Fjjz
+ 000684 0546            mov R5,R0
+ 000686                 .dbline 269
+ 000686 36B1            cbz R6,L86
+ 000688                 .dbline 269
+ 000688 ACB2            uxth R4,R5
+ 00068A 641C            adds R4,R4,#1
+ 00068C 2046            mov R0,R4
+ 00068E 3146            mov R1,R6
+ 000690 0622            movs R2,#6
+ 000692 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 000696         L86:
+ 000696                 .dbline 270
+ 000696 A8B2            uxth R0,R5
+ 000698                 .dbblkend 271
+ 000698         L82:
+ 000698 02B0            add R13,R13,#8
+ 00069A BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 00069E                 .dbfuncend
+ 00069E                 .dbsym r h 5 s
+ 00069E                 .dbsym r callback 6 pfV p3
+ 00069E                 .dbsym r nlines 7 s p2
+ 00069E                 .dbsym r isRoundCorners 5 s p1
+ 00069E                 .dbsym r alignment 8 s p0
+ 00069E                 .dbstacksize 8
+ 00069E                 .dbfunc e SmartIO_MakeNumberEntry _SmartIO_MakeNumberEntry#FtttPFvjE fs 273 4126716
+ 00069E         ;              h -> R5
+ 00069E         ;       callback -> R6
+ 00069E         ; isRoundCorners -> R5
+ 00069E         ;      alignment -> R7
+ 00069E         _SmartIO_MakeNumberEntry#FtttPFvjE::
+ 00069E                 .dbprevlr 20
+ 00069E 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 0006A2 EB46            mov R11,R13
+ 0006A4 81B0            sub R13,R13,#4
+ 0006A6 0746            mov R7,R0
+ 0006A8 0D46            mov R5,R1
+ 0006AA 1646            mov R6,R2
+ 0006AC                 .dbblock 274
+ 0006AC                 .dbline 275
+ 0006AC 5520            movs R0,#85
+ 0006AE 0A21            movs R1,#10
+ 0006B0 BAB2            uxth R2,R7
+ 0006B2 E023            movs R3,#224
+ 0006B4 ACB2            uxth R4,R5
+ 0006B6 0094            str R4,[R13,#0]
+ 0006B8 00F08EFC        bl _APICall#Fjjz
+ 0006BC 0546            mov R5,R0
+ 0006BE                 .dbline 276
+ 0006BE 36B1            cbz R6,L89
+ 0006C0                 .dbline 276
+ 0006C0 ACB2            uxth R4,R5
+ 0006C2 641C            adds R4,R4,#1
+ 0006C4 2046            mov R0,R4
+ 0006C6 3146            mov R1,R6
+ 0006C8 0522            movs R2,#5
+ 0006CA 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 0006CE         L89:
+ 0006CE                 .dbline 277
+ 0006CE A8B2            uxth R0,R5
+ 0006D0                 .dbblkend 278
+ 0006D0         L88:
+ 0006D0 01B0            add R13,R13,#4
+ 0006D2 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 0006D6                 .dbfuncend
+ 0006D6                 .dbsym r h 5 s
+ 0006D6                 .dbsym r callback 6 pfV p2
+ 0006D6                 .dbsym r isRoundCorners 5 s p1
+ 0006D6                 .dbsym r alignment 7 s p0
+ 0006D6                 .dbstacksize 4
+ 0006D6                 .dbfunc e SmartIO_MakePasswordEntry _SmartIO_MakePasswordEntry#FttPFvPcE fs 280 4126716
+ 0006D6         ;              h -> R5
+ 0006D6         ;       callback -> R6
+ 0006D6         ;      alignment -> R5
+ 0006D6         _SmartIO_MakePasswordEntry#FttPFvPcE::
+ 0006D6                 .dbprevlr 16
+ 0006D6 2DE97048        push {R4,R5,R6,R11,LR}
+ 0006DA EB46            mov R11,R13
+ 0006DC 0546            mov R5,R0
+ 0006DE 0E46            mov R6,R1
+ 0006E0                 .dbblock 281
+ 0006E0                 .dbline 282
+ 0006E0 1520            movs R0,#21
+ 0006E2 0A21            movs R1,#10
+ 0006E4 AAB2            uxth R2,R5
+ 0006E6 E123            movs R3,#225
+ 0006E8 00F076FC        bl _APICall#Fjjz
+ 0006EC 0546            mov R5,R0
+ 0006EE                 .dbline 283
+ 0006EE 36B1            cbz R6,L92
+ 0006F0                 .dbline 283
+ 0006F0 ACB2            uxth R4,R5
+ 0006F2 641C            adds R4,R4,#1
+ 0006F4 2046            mov R0,R4
+ 0006F6 3146            mov R1,R6
+ 0006F8 0622            movs R2,#6
+ 0006FA 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 0006FE         L92:
+ 0006FE                 .dbline 284
+ 0006FE A8B2            uxth R0,R5
+ 000700                 .dbblkend 285
+ 000700         L91:
+ 000700 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000704                 .dbfuncend
+ 000704                 .dbsym r h 5 s
+ 000704                 .dbsym r callback 6 pfV p1
+ 000704                 .dbsym r alignment 5 s p0
+ 000704                 .dbstacksize 0
+ 000704                 .dbfunc e SmartIO_MakeTextBox _SmartIO_MakeTextBox#FttttPc fs 287 4126716
+ 000704         ;           text -> R5
+ 000704         ;         nlines -> R6
+ 000704         ;          width -> R7
+ 000704         ;      alignment -> R8
+ 000704         _SmartIO_MakeTextBox#FttttPc::
+ 000704                 .dbprevlr 24
+ 000704 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 000708 EB46            mov R11,R13
+ 00070A 83B0            sub R13,R13,#12
+ 00070C 8046            mov R8,R0
+ 00070E 0F46            mov R7,R1
+ 000710 1646            mov R6,R2
+ 000712 1D46            mov R5,R3
+ 000714                 .dbblock 288
+ 000714                 .dbline 289
+ 000714 40F65510        mov R0,#2389
+ 000718 0A21            movs R1,#10
+ 00071A 1FFA88F2        uxth R2,R8
+ 00071E 4FF49673        mov R3,#300
+ 000722 BCB2            uxth R4,R7
+ 000724 0094            str R4,[R13,#0]
+ 000726 B4B2            uxth R4,R6
+ 000728 0194            str R4,[R13,#+4]
+ 00072A 0295            str R5,[R13,#+8]
+ 00072C 00F054FC        bl _APICall#Fjjz
+ 000730 0446            mov R4,R0
+ 000732 A0B2            uxth R0,R4
+ 000734                 .dbblkend 290
+ 000734         L94:
+ 000734 03B0            add R13,R13,#12
+ 000736 BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 00073A                 .dbfuncend
+ 00073A                 .dbsym r text 5 pc p3
+ 00073A                 .dbsym r nlines 6 s p2
+ 00073A                 .dbsym r width 7 s p1
+ 00073A                 .dbsym r alignment 8 s p0
+ 00073A                 .dbstacksize 12
+ 00073A                 .dbfunc e SmartIO_MakeMultilineBox _SmartIO_MakeMultilineBox#FttPc fs 292 4126716
+ 00073A         ;           text -> R5
+ 00073A         ;         nlines -> R6
+ 00073A         _SmartIO_MakeMultilineBox#FttPc::
+ 00073A                 .dbprevlr 16
+ 00073A 2DE97048        push {R4,R5,R6,R11,LR}
+ 00073E EB46            mov R11,R13
+ 000740 82B0            sub R13,R13,#8
+ 000742 0646            mov R6,R0
+ 000744 0D46            mov R5,R1
+ 000746                 .dbblock 293
+ 000746                 .dbline 294
+ 000746 40F25520        mov R0,#597
+ 00074A 0A21            movs R1,#10
+ 00074C 0022            movs R2,#0
+ 00074E 40F29113        mov R3,#401
+ 000752 B4B2            uxth R4,R6
+ 000754 0094            str R4,[R13,#0]
+ 000756 0195            str R5,[R13,#+4]
+ 000758 00F03EFC        bl _APICall#Fjjz
+ 00075C 0446            mov R4,R0
+ 00075E A0B2            uxth R0,R4
+ 000760                 .dbblkend 295
+ 000760         L95:
+ 000760 02B0            add R13,R13,#8
+ 000762 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000766                 .dbfuncend
+ 000766                 .dbsym r text 5 pc p1
+ 000766                 .dbsym r nlines 6 s p0
+ 000766                 .dbstacksize 8
+ 000766                 .dbfunc e SmartIO_MakeCounter _SmartIO_MakeCounter#Ftttj fs 297 4126716
+ 000766         ;  initial_value -> R5
+ 000766         ;        ndigits -> R6
+ 000766         ;      alignment -> R7
+ 000766         _SmartIO_MakeCounter#Ftttj::
+ 000766                 .dbprevlr 20
+ 000766 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 00076A EB46            mov R11,R13
+ 00076C 83B0            sub R13,R13,#12
+ 00076E 0746            mov R7,R0
+ 000770 0E46            mov R6,R1
+ 000772 1546            mov R5,R2
+ 000774                 .dbblock 298
+ 000774                 .dbline 299
+ 000774 40F25550        mov R0,#1365
+ 000778 0A21            movs R1,#10
+ 00077A BAB2            uxth R2,R7
+ 00077C 4FF4A073        mov R3,#320
+ 000780 B4B2            uxth R4,R6
+ 000782 0094            str R4,[R13,#0]
+ 000784 0195            str R5,[R13,#+4]
+ 000786 2C0C            lsrs R4,R5,#16
+ 000788 0294            str R4,[R13,#+8]
+ 00078A 00F025FC        bl _APICall#Fjjz
+ 00078E 0446            mov R4,R0
+ 000790 A0B2            uxth R0,R4
+ 000792                 .dbblkend 300
+ 000792         L96:
+ 000792 03B0            add R13,R13,#12
+ 000794 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 000798                 .dbfuncend
+ 000798                 .dbsym r initial_value 5 i p2
+ 000798                 .dbsym r ndigits 6 s p1
+ 000798                 .dbsym r alignment 7 s p0
+ 000798                 .dbstacksize 12
+ 000798                 .dbfunc e SmartIO_MakeProgressBar _SmartIO_MakeProgressBar#Ftttt fs 302 4126716
+ 000798         ; initial_percentage -> R5
+ 000798         ;      variation -> R6
+ 000798         ;      alignment -> R7
+ 000798         _SmartIO_MakeProgressBar#Ftttt::
+ 000798                 .dbprevlr 20
+ 000798 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 00079C EB46            mov R11,R13
+ 00079E 82B0            sub R13,R13,#8
+ 0007A0 0746            mov R7,R0
+ 0007A2 0E46            mov R6,R1
+ 0007A4 1546            mov R5,R2
+ 0007A6                 .dbblock 303
+ 0007A6                 .dbline 304
+ 0007A6 40F25510        mov R0,#341
+ 0007AA 0A21            movs R1,#10
+ 0007AC BAB2            uxth R2,R7
+ 0007AE 40F22D13        mov R3,#301
+ 0007B2 B4B2            uxth R4,R6
+ 0007B4 0094            str R4,[R13,#0]
+ 0007B6 ACB2            uxth R4,R5
+ 0007B8 0194            str R4,[R13,#+4]
+ 0007BA 00F00DFC        bl _APICall#Fjjz
+ 0007BE 0446            mov R4,R0
+ 0007C0 A0B2            uxth R0,R4
+ 0007C2                 .dbblkend 305
+ 0007C2         L97:
+ 0007C2 02B0            add R13,R13,#8
+ 0007C4 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 0007C8                 .dbfuncend
+ 0007C8                 .dbsym r initial_percentage 5 s p2
+ 0007C8                 .dbsym r variation 6 s p1
+ 0007C8                 .dbsym r alignment 7 s p0
+ 0007C8                 .dbstacksize 8
+ 0007C8                 .dbfunc e SmartIO_MakeProgressCircle _SmartIO_MakeProgressCircle#Ftttt fs 307 4126716
+ 0007C8         ; initial_percentage -> R5
+ 0007C8         ;      variation -> R6
+ 0007C8         ;      alignment -> R7
+ 0007C8         _SmartIO_MakeProgressCircle#Ftttt::
+ 0007C8                 .dbprevlr 20
+ 0007C8 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 0007CC EB46            mov R11,R13
+ 0007CE 82B0            sub R13,R13,#8
+ 0007D0 0746            mov R7,R0
+ 0007D2 0E46            mov R6,R1
+ 0007D4 1546            mov R5,R2
+ 0007D6                 .dbblock 308
+ 0007D6                 .dbline 309
+ 0007D6 40F25510        mov R0,#341
+ 0007DA 0A21            movs R1,#10
+ 0007DC BAB2            uxth R2,R7
+ 0007DE 4FF49773        mov R3,#302
+ 0007E2 B4B2            uxth R4,R6
+ 0007E4 0094            str R4,[R13,#0]
+ 0007E6 ACB2            uxth R4,R5
+ 0007E8 0194            str R4,[R13,#+4]
+ 0007EA 00F0F5FB        bl _APICall#Fjjz
+ 0007EE 0446            mov R4,R0
+ 0007F0 A0B2            uxth R0,R4
+ 0007F2                 .dbblkend 310
+ 0007F2         L98:
+ 0007F2 02B0            add R13,R13,#8
+ 0007F4 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 0007F8                 .dbfuncend
+ 0007F8                 .dbsym r initial_percentage 5 s p2
+ 0007F8                 .dbsym r variation 6 s p1
+ 0007F8                 .dbsym r alignment 7 s p0
+ 0007F8                 .dbstacksize 8
+ 0007F8                 .dbfunc e SmartIO_MakeHGauge _SmartIO_MakeHGauge#Ftttt fs 312 4126716
+ 0007F8         ; initial_percentage -> R5
+ 0007F8         ;      variation -> R6
+ 0007F8         ;      alignment -> R7
+ 0007F8         _SmartIO_MakeHGauge#Ftttt::
+ 0007F8                 .dbprevlr 20
+ 0007F8 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 0007FC EB46            mov R11,R13
+ 0007FE 82B0            sub R13,R13,#8
+ 000800 0746            mov R7,R0
+ 000802 0E46            mov R6,R1
+ 000804 1546            mov R5,R2
+ 000806                 .dbblock 313
+ 000806                 .dbline 314
+ 000806 40F25510        mov R0,#341
+ 00080A 0A21            movs R1,#10
+ 00080C BAB2            uxth R2,R7
+ 00080E 40F22F13        mov R3,#303
+ 000812 B4B2            uxth R4,R6
+ 000814 0094            str R4,[R13,#0]
+ 000816 ACB2            uxth R4,R5
+ 000818 0194            str R4,[R13,#+4]
+ 00081A 00F0DDFB        bl _APICall#Fjjz
+ 00081E 0446            mov R4,R0
+ 000820 A0B2            uxth R0,R4
+ 000822                 .dbblkend 315
+ 000822         L99:
+ 000822 02B0            add R13,R13,#8
+ 000824 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 000828                 .dbfuncend
+ 000828                 .dbsym r initial_percentage 5 s p2
+ 000828                 .dbsym r variation 6 s p1
+ 000828                 .dbsym r alignment 7 s p0
+ 000828                 .dbstacksize 8
+ 000828                 .dbfunc e SmartIO_MakeVGauge _SmartIO_MakeVGauge#Ftttt fs 317 4126716
+ 000828         ; initial_percentage -> R5
+ 000828         ;      variation -> R6
+ 000828         ;      alignment -> R7
+ 000828         _SmartIO_MakeVGauge#Ftttt::
+ 000828                 .dbprevlr 20
+ 000828 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 00082C EB46            mov R11,R13
+ 00082E 82B0            sub R13,R13,#8
+ 000830 0746            mov R7,R0
+ 000832 0E46            mov R6,R1
+ 000834 1546            mov R5,R2
+ 000836                 .dbblock 318
+ 000836                 .dbline 319
+ 000836 40F25510        mov R0,#341
+ 00083A 0A21            movs R1,#10
+ 00083C BAB2            uxth R2,R7
+ 00083E 4FF49873        mov R3,#304
+ 000842 B4B2            uxth R4,R6
+ 000844 0094            str R4,[R13,#0]
+ 000846 ACB2            uxth R4,R5
+ 000848 0194            str R4,[R13,#+4]
+ 00084A 00F0C5FB        bl _APICall#Fjjz
+ 00084E 0446            mov R4,R0
+ 000850 A0B2            uxth R0,R4
+ 000852                 .dbblkend 320
+ 000852         L100:
+ 000852 02B0            add R13,R13,#8
+ 000854 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 000858                 .dbfuncend
+ 000858                 .dbsym r initial_percentage 5 s p2
+ 000858                 .dbsym r variation 6 s p1
+ 000858                 .dbsym r alignment 7 s p0
+ 000858                 .dbstacksize 8
+ 000858                 .dbfunc e SmartIO_MakeSemiCircularGauge _SmartIO_MakeSemiCircularGauge#Ftttt fs 322 4126716
+ 000858         ; initial_percentage -> R5
+ 000858         ;       max_mark -> R6
+ 000858         ;      alignment -> R7
+ 000858         _SmartIO_MakeSemiCircularGauge#Ftttt::
+ 000858                 .dbprevlr 20
+ 000858 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 00085C EB46            mov R11,R13
+ 00085E 82B0            sub R13,R13,#8
+ 000860 0746            mov R7,R0
+ 000862 0E46            mov R6,R1
+ 000864 1546            mov R5,R2
+ 000866                 .dbblock 323
+ 000866                 .dbline 324
+ 000866 40F25510        mov R0,#341
+ 00086A 0A21            movs R1,#10
+ 00086C BAB2            uxth R2,R7
+ 00086E 40F23113        mov R3,#305
+ 000872 B4B2            uxth R4,R6
+ 000874 0094            str R4,[R13,#0]
+ 000876 ACB2            uxth R4,R5
+ 000878 0194            str R4,[R13,#+4]
+ 00087A 00F0ADFB        bl _APICall#Fjjz
+ 00087E 0446            mov R4,R0
+ 000880 A0B2            uxth R0,R4
+ 000882                 .dbblkend 325
+ 000882         L101:
+ 000882 02B0            add R13,R13,#8
+ 000884 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 000888                 .dbfuncend
+ 000888                 .dbsym r initial_percentage 5 s p2
+ 000888                 .dbsym r max_mark 6 s p1
+ 000888                 .dbsym r alignment 7 s p0
+ 000888                 .dbstacksize 8
+ 000888                 .dbfunc e SmartIO_MakeCircularGauge _SmartIO_MakeCircularGauge#Ftttt fs 327 4126716
+ 000888         ; initial_percentage -> R5
+ 000888         ;       max_mark -> R6
+ 000888         ;      alignment -> R7
+ 000888         _SmartIO_MakeCircularGauge#Ftttt::
+ 000888                 .dbprevlr 20
+ 000888 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 00088C EB46            mov R11,R13
+ 00088E 82B0            sub R13,R13,#8
+ 000890 0746            mov R7,R0
+ 000892 0E46            mov R6,R1
+ 000894 1546            mov R5,R2
+ 000896                 .dbblock 328
+ 000896                 .dbline 329
+ 000896 40F25510        mov R0,#341
+ 00089A 0A21            movs R1,#10
+ 00089C BAB2            uxth R2,R7
+ 00089E 4FF49973        mov R3,#306
+ 0008A2 B4B2            uxth R4,R6
+ 0008A4 0094            str R4,[R13,#0]
+ 0008A6 ACB2            uxth R4,R5
+ 0008A8 0194            str R4,[R13,#+4]
+ 0008AA 00F095FB        bl _APICall#Fjjz
+ 0008AE 0446            mov R4,R0
+ 0008B0 A0B2            uxth R0,R4
+ 0008B2                 .dbblkend 330
+ 0008B2         L102:
+ 0008B2 02B0            add R13,R13,#8
+ 0008B4 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 0008B8                 .dbfuncend
+ 0008B8                 .dbsym r initial_percentage 5 s p2
+ 0008B8                 .dbsym r max_mark 6 s p1
+ 0008B8                 .dbsym r alignment 7 s p0
+ 0008B8                 .dbstacksize 8
+ 0008B8                 .dbfunc e SmartIO_MakeBatteryLevel _SmartIO_MakeBatteryLevel#Ftttt fs 332 4126716
+ 0008B8         ; initial_percentage -> R5
+ 0008B8         ;      variation -> R6
+ 0008B8         ;      alignment -> R7
+ 0008B8         _SmartIO_MakeBatteryLevel#Ftttt::
+ 0008B8                 .dbprevlr 20
+ 0008B8 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 0008BC EB46            mov R11,R13
+ 0008BE 82B0            sub R13,R13,#8
+ 0008C0 0746            mov R7,R0
+ 0008C2 0E46            mov R6,R1
+ 0008C4 1546            mov R5,R2
+ 0008C6                 .dbblock 333
+ 0008C6                 .dbline 334
+ 0008C6 40F25510        mov R0,#341
+ 0008CA 0A21            movs R1,#10
+ 0008CC BAB2            uxth R2,R7
+ 0008CE 4FF49A73        mov R3,#308
+ 0008D2 B4B2            uxth R4,R6
+ 0008D4 0094            str R4,[R13,#0]
+ 0008D6 ACB2            uxth R4,R5
+ 0008D8 0194            str R4,[R13,#+4]
+ 0008DA 00F07DFB        bl _APICall#Fjjz
+ 0008DE 0446            mov R4,R0
+ 0008E0 A0B2            uxth R0,R4
+ 0008E2                 .dbblkend 335
+ 0008E2         L103:
+ 0008E2 02B0            add R13,R13,#8
+ 0008E4 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 0008E8                 .dbfuncend
+ 0008E8                 .dbsym r initial_percentage 5 s p2
+ 0008E8                 .dbsym r variation 6 s p1
+ 0008E8                 .dbsym r alignment 7 s p0
+ 0008E8                 .dbstacksize 8
+ 0008E8                 .dbfunc e SmartIO_MakeRGBLed _SmartIO_MakeRGBLed#Ftttt fs 337 4126716
+ 0008E8         ;  initial_state -> R5
+ 0008E8         ;          color -> R6
+ 0008E8         ;      alignment -> R7
+ 0008E8         _SmartIO_MakeRGBLed#Ftttt::
+ 0008E8                 .dbprevlr 20
+ 0008E8 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 0008EC EB46            mov R11,R13
+ 0008EE 82B0            sub R13,R13,#8
+ 0008F0 0746            mov R7,R0
+ 0008F2 0E46            mov R6,R1
+ 0008F4 1546            mov R5,R2
+ 0008F6                 .dbblock 338
+ 0008F6                 .dbline 339
+ 0008F6 40F25510        mov R0,#341
+ 0008FA 0A21            movs R1,#10
+ 0008FC BAB2            uxth R2,R7
+ 0008FE 40F23313        mov R3,#307
+ 000902 B4B2            uxth R4,R6
+ 000904 0094            str R4,[R13,#0]
+ 000906 ACB2            uxth R4,R5
+ 000908 0194            str R4,[R13,#+4]
+ 00090A 00F065FB        bl _APICall#Fjjz
+ 00090E 0446            mov R4,R0
+ 000910 A0B2            uxth R0,R4
+ 000912                 .dbblkend 340
+ 000912         L104:
+ 000912 02B0            add R13,R13,#8
+ 000914 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 000918                 .dbfuncend
+ 000918                 .dbsym r initial_state 5 s p2
+ 000918                 .dbsym r color 6 s p1
+ 000918                 .dbsym r alignment 7 s p0
+ 000918                 .dbstacksize 8
+ 000918                 .dbfunc e SmartIO_MakeCustomHGauge _SmartIO_MakeCustomHGauge#Fttjjt fs 342 4126716
+ 000918         ; initial_percentage -> R5
+ 000918         ;      end_color -> R6
+ 000918         ;    start_color -> R7
+ 000918         ;      alignment -> R8
+ 000918         _SmartIO_MakeCustomHGauge#Fttjjt::
+ 000918                 .dbprevlr 24
+ 000918 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 00091C EB46            mov R11,R13
+ 00091E 83B0            sub R13,R13,#12
+ 000920 8046            mov R8,R0
+ 000922 0F46            mov R7,R1
+ 000924 1646            mov R6,R2
+ 000926 1D46            mov R5,R3
+ 000928                 .dbblock 343
+ 000928                 .dbline 344
+ 000928 41F65570        mov R0,#8021
+ 00092C 0A21            movs R1,#10
+ 00092E 1FFA88F2        uxth R2,R8
+ 000932 4FF49B73        mov R3,#310
+ 000936 0097            str R7,[R13,#0]
+ 000938 0196            str R6,[R13,#+4]
+ 00093A ACB2            uxth R4,R5
+ 00093C 0294            str R4,[R13,#+8]
+ 00093E 00F04BFB        bl _APICall#Fjjz
+ 000942 0446            mov R4,R0
+ 000944 A0B2            uxth R0,R4
+ 000946                 .dbblkend 345
+ 000946         L105:
+ 000946 03B0            add R13,R13,#12
+ 000948 BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 00094C                 .dbfuncend
+ 00094C                 .dbsym r initial_percentage 5 s p3
+ 00094C                 .dbsym r end_color 6 i p2
+ 00094C                 .dbsym r start_color 7 i p1
+ 00094C                 .dbsym r alignment 8 s p0
+ 00094C                 .dbstacksize 12
+ 00094C                 .dbfunc e SmartIO_MakeCustomVGauge _SmartIO_MakeCustomVGauge#Fttjjt fs 347 4126716
+ 00094C         ; initial_percentage -> R5
+ 00094C         ;      end_color -> R6
+ 00094C         ;    start_color -> R7
+ 00094C         ;      alignment -> R8
+ 00094C         _SmartIO_MakeCustomVGauge#Fttjjt::
+ 00094C                 .dbprevlr 24
+ 00094C 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 000950 EB46            mov R11,R13
+ 000952 83B0            sub R13,R13,#12
+ 000954 8046            mov R8,R0
+ 000956 0F46            mov R7,R1
+ 000958 1646            mov R6,R2
+ 00095A 1D46            mov R5,R3
+ 00095C                 .dbblock 348
+ 00095C                 .dbline 349
+ 00095C 41F65570        mov R0,#8021
+ 000960 0A21            movs R1,#10
+ 000962 1FFA88F2        uxth R2,R8
+ 000966 40F23713        mov R3,#311
+ 00096A 0097            str R7,[R13,#0]
+ 00096C 0196            str R6,[R13,#+4]
+ 00096E ACB2            uxth R4,R5
+ 000970 0294            str R4,[R13,#+8]
+ 000972 00F031FB        bl _APICall#Fjjz
+ 000976 0446            mov R4,R0
+ 000978 A0B2            uxth R0,R4
+ 00097A                 .dbblkend 350
+ 00097A         L106:
+ 00097A 03B0            add R13,R13,#12
+ 00097C BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 000980                 .dbfuncend
+ 000980                 .dbsym r initial_percentage 5 s p3
+ 000980                 .dbsym r end_color 6 i p2
+ 000980                 .dbsym r start_color 7 i p1
+ 000980                 .dbsym r alignment 8 s p0
+ 000980                 .dbstacksize 12
+ 000980                 .dbfunc e SmartIO_SetSliceIcon _SmartIO_SetSliceIcon#Fstt fS 352 4126716
+ 000980         ;      icon_enum -> R5
+ 000980         ;         handle -> R6
+ 000980         _SmartIO_SetSliceIcon#Fstt::
+ 000980                 .dbprevlr 16
+ 000980 2DE97048        push {R4,R5,R6,R11,LR}
+ 000984 EB46            mov R11,R13
+ 000986 0646            mov R6,R0
+ 000988 0D46            mov R5,R1
+ 00098A                 .dbblock 353
+ 00098A                 .dbline 354
+ 00098A 1520            movs R0,#21
+ 00098C 0C21            movs R1,#12
+ 00098E B2B2            uxth R2,R6
+ 000990 ABB2            uxth R3,R5
+ 000992 00F021FB        bl _APICall#Fjjz
+ 000996 0446            mov R4,R0
+ 000998 20B2            sxth R0,R4
+ 00099A                 .dbblkend 355
+ 00099A         L107:
+ 00099A BDE87088        pop {R4,R5,R6,R11,PC}
+ 00099E                 .dbfuncend
+ 00099E                 .dbsym r icon_enum 5 s p1
+ 00099E                 .dbsym r handle 6 s p0
+ 00099E                 .dbstacksize 0
+ 00099E                 .dbfunc e SmartIO_MakeFreeformSlice _SmartIO_MakeFreeformSlice#Ftt fs 357 4126716
+ 00099E         ;         y_size -> R5
+ 00099E         _SmartIO_MakeFreeformSlice#Ftt::
+ 00099E                 .dbprevlr 12
+ 00099E 2DE93048        push {R4,R5,R11,LR}
+ 0009A2 EB46            mov R11,R13
+ 0009A4 0546            mov R5,R0
+ 0009A6                 .dbblock 358
+ 0009A6                 .dbline 359
+ 0009A6 0520            movs R0,#5
+ 0009A8 0E21            movs R1,#14
+ 0009AA AAB2            uxth R2,R5
+ 0009AC 00F014FB        bl _APICall#Fjjz
+ 0009B0 0446            mov R4,R0
+ 0009B2 A0B2            uxth R0,R4
+ 0009B4                 .dbblkend 360
+ 0009B4         L108:
+ 0009B4 BDE83088        pop {R4,R5,R11,PC}
+ 0009B8                 .dbfuncend
+ 0009B8                 .dbsym r y_size 5 s p0
+ 0009B8                 .dbstacksize 0
+ 0009B8                 .dbfunc e SmartIO_FFS_OnOffButton _SmartIO_FFS_OnOffButton#FttttttPFvtE fs 362 4126716
+ 0009B8         ;              h -> R5
+ 0009B8         ;       callback -> R11,32
+ 0009B8         ;  initial_value -> R11,28
+ 0009B8         ;      variation -> R5
+ 0009B8         ;          loc_y -> R6
+ 0009B8         ;          loc_x -> R7
+ 0009B8         ;     ffs_handle -> R8
+ 0009B8         _SmartIO_FFS_OnOffButton#FttttttPFvtE::
+ 0009B8                 .dbprevlr 24
+ 0009B8 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 0009BC EB46            mov R11,R13
+ 0009BE 84B0            sub R13,R13,#16
+ 0009C0 8046            mov R8,R0
+ 0009C2 0F46            mov R7,R1
+ 0009C4 1646            mov R6,R2
+ 0009C6 1D46            mov R5,R3
+ 0009C8                 .dbblock 363
+ 0009C8                 .dbline 364
+ 0009C8 41F25550        mov R0,#5461
+ 0009CC 0F21            movs R1,#15
+ 0009CE 1FFA88F2        uxth R2,R8
+ 0009D2 BBB2            uxth R3,R7
+ 0009D4 B4B2            uxth R4,R6
+ 0009D6 0094            str R4,[R13,#0]
+ 0009D8 C824            movs R4,#200
+ 0009DA 0194            str R4,[R13,#+4]
+ 0009DC ACB2            uxth R4,R5
+ 0009DE 0294            str R4,[R13,#+8]
+ 0009E0 BBF81CC0        ldrh R12,[R11,#+28]
+ 0009E4 1FFA8CF4        uxth R4,R12
+ 0009E8 0394            str R4,[R13,#+12]
+ 0009EA 00F0F5FA        bl _APICall#Fjjz
+ 0009EE 0546            mov R5,R0
+ 0009F0                 .dbline 365
+ 0009F0 DBF820C0        ldr R12,[R11,#+32]
+ 0009F4 BCF1000F        cmp R12,#0
+ 0009F8 04D0            beq L110
+ 0009FA                 .dbline 365
+ 0009FA DBF82010        ldr R1,[R11,#+32]
+ 0009FE 0122            movs R2,#1
+ 000A00 00F000F8        bl _SmartIO__RegisterCallback#FvtPFvEi
+ 000A04         L110:
+ 000A04                 .dbline 366
+ 000A04 A8B2            uxth R0,R5
+ 000A06                 .dbblkend 367
+ 000A06         L109:
+ 000A06 04B0            add R13,R13,#16
+ 000A08 BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 000A0C                 .dbfuncend
+ 000A0C                 .dbsym r h 5 s
+ 000A0C                 .dbsym l callback 32 pfV p5
+ 000A0C                 .dbsym l initial_value 28 s p4
+ 000A0C                 .dbsym r variation 5 s p3
+ 000A0C                 .dbsym r loc_y 6 s p2
+ 000A0C                 .dbsym r loc_x 7 s p1
+ 000A0C                 .dbsym r ffs_handle 8 s p0
+ 000A0C                 .dbstacksize 16
+ 000A0C                 .dbfunc e SmartIO_AddText _SmartIO_AddText#FstPc fS 461 4126716
+ 000A0C         ;           text -> R5
+ 000A0C         ;         handle -> R6
+ 000A0C         _SmartIO_AddText#FstPc::
+ 000A0C                 .dbprevlr 16
+ 000A0C 2DE97048        push {R4,R5,R6,R11,LR}
+ 000A10 EB46            mov R11,R13
+ 000A12 0646            mov R6,R0
+ 000A14 0D46            mov R5,R1
+ 000A16                 .dbblock 462
+ 000A16                 .dbline 463
+ 000A16 2520            movs R0,#37
+ 000A18 0B21            movs R1,#11
+ 000A1A B2B2            uxth R2,R6
+ 000A1C 2B46            mov R3,R5
+ 000A1E 00F0DBFA        bl _APICall#Fjjz
+ 000A22 0446            mov R4,R0
+ 000A24 20B2            sxth R0,R4
+ 000A26                 .dbblkend 464
+ 000A26         L112:
+ 000A26 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000A2A                 .dbfuncend
+ 000A2A                 .dbsym r text 5 pc p1
+ 000A2A                 .dbsym r handle 6 s p0
+ 000A2A                 .dbstacksize 0
+ 000A2A                 .dbfunc e SmartIO_ClearText _SmartIO_ClearText#Fst fS 466 4126716
+ 000A2A         ;         handle -> R5
+ 000A2A         _SmartIO_ClearText#Fst::
+ 000A2A                 .dbprevlr 12
+ 000A2A 2DE93048        push {R4,R5,R11,LR}
+ 000A2E EB46            mov R11,R13
+ 000A30 0546            mov R5,R0
+ 000A32                 .dbblock 467
+ 000A32                 .dbline 468
+ 000A32 0520            movs R0,#5
+ 000A34 1921            movs R1,#25
+ 000A36 AAB2            uxth R2,R5
+ 000A38 00F0CEFA        bl _APICall#Fjjz
+ 000A3C 0446            mov R4,R0
+ 000A3E 20B2            sxth R0,R4
+ 000A40                 .dbblkend 469
+ 000A40         L113:
+ 000A40 BDE83088        pop {R4,R5,R11,PC}
+ 000A44                 .dbfuncend
+ 000A44                 .dbsym r handle 5 s p0
+ 000A44                 .dbstacksize 0
+ 000A44                 .dbfunc e SmartIO_AddListItem _SmartIO_AddListItem#FttPc fs 471 4126716
+ 000A44         ;          label -> R5
+ 000A44         ;         handle -> R6
+ 000A44         _SmartIO_AddListItem#FttPc::
+ 000A44                 .dbprevlr 16
+ 000A44 2DE97048        push {R4,R5,R6,R11,LR}
+ 000A48 EB46            mov R11,R13
+ 000A4A 0646            mov R6,R0
+ 000A4C 0D46            mov R5,R1
+ 000A4E                 .dbblock 472
+ 000A4E                 .dbline 473
+ 000A4E 2520            movs R0,#37
+ 000A50 1721            movs R1,#23
+ 000A52 B2B2            uxth R2,R6
+ 000A54 2B46            mov R3,R5
+ 000A56 00F0BFFA        bl _APICall#Fjjz
+ 000A5A 0446            mov R4,R0
+ 000A5C A0B2            uxth R0,R4
+ 000A5E                 .dbblkend 474
+ 000A5E         L114:
+ 000A5E BDE87088        pop {R4,R5,R6,R11,PC}
+ 000A62                 .dbfuncend
+ 000A62                 .dbsym r label 5 pc p1
+ 000A62                 .dbsym r handle 6 s p0
+ 000A62                 .dbstacksize 0
+ 000A62                 .dbfunc e SmartIO_FillColor _SmartIO_FillColor#Fstj fS 476 4126716
+ 000A62         ;          color -> R6
+ 000A62         ;              h -> R7
+ 000A62         _SmartIO_FillColor#Fstj::
+ 000A62                 .dbprevlr 20
+ 000A62 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 000A66 EB46            mov R11,R13
+ 000A68 81B0            sub R13,R13,#4
+ 000A6A 0746            mov R7,R0
+ 000A6C 0E46            mov R6,R1
+ 000A6E                 .dbblock 477
+ 000A6E                 .dbline 478
+ 000A6E 5520            movs R0,#85
+ 000A70 1F21            movs R1,#31
+ 000A72 BAB2            uxth R2,R7
+ 000A74 4FF6FF74        mov R4,#65535
+ 000A78 06EA0403        and R3,R6,R4
+ 000A7C 350C            lsrs R5,R6,#16
+ 000A7E 05EA0404        and R4,R5,R4
+ 000A82 0094            str R4,[R13,#0]
+ 000A84 00F0A8FA        bl _APICall#Fjjz
+ 000A88 0446            mov R4,R0
+ 000A8A 20B2            sxth R0,R4
+ 000A8C                 .dbblkend 479
+ 000A8C         L115:
+ 000A8C 01B0            add R13,R13,#4
+ 000A8E BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 000A92                 .dbfuncend
+ 000A92                 .dbsym r color 6 i p1
+ 000A92                 .dbsym r h 7 s p0
+ 000A92                 .dbstacksize 4
+ 000A92                 .dbfunc e SmartIO_SetFont _SmartIO_SetFont#Fstttj fS 481 4126716
+ 000A92         ;          color -> R6
+ 000A92         ;       fontsize -> R7
+ 000A92         ; isSansSerifFont -> R8
+ 000A92         ;              h -> R9
+ 000A92         _SmartIO_SetFont#Fstttj::
+ 000A92                 .dbprevlr 28
+ 000A92 2DE9F04B        push {R4,R5,R6,R7,R8,R9,R11,LR}
+ 000A96 EB46            mov R11,R13
+ 000A98 83B0            sub R13,R13,#12
+ 000A9A 8146            mov R9,R0
+ 000A9C 8846            mov R8,R1
+ 000A9E 1746            mov R7,R2
+ 000AA0 1E46            mov R6,R3
+ 000AA2                 .dbblock 482
+ 000AA2                 .dbline 483
+ 000AA2 40F25550        mov R0,#1365
+ 000AA6 1E21            movs R1,#30
+ 000AA8 1FFA89F2        uxth R2,R9
+ 000AAC 1FFA88F3        uxth R3,R8
+ 000AB0 BCB2            uxth R4,R7
+ 000AB2 0094            str R4,[R13,#0]
+ 000AB4 4FF6FF74        mov R4,#65535
+ 000AB8 06EA0405        and R5,R6,R4
+ 000ABC 0195            str R5,[R13,#+4]
+ 000ABE 350C            lsrs R5,R6,#16
+ 000AC0 05EA0404        and R4,R5,R4
+ 000AC4 0294            str R4,[R13,#+8]
+ 000AC6 00F087FA        bl _APICall#Fjjz
+ 000ACA 0446            mov R4,R0
+ 000ACC 20B2            sxth R0,R4
+ 000ACE                 .dbblkend 484
+ 000ACE         L116:
+ 000ACE 03B0            add R13,R13,#12
+ 000AD0 BDE8F08B        pop {R4,R5,R6,R7,R8,R9,R11,PC}
+ 000AD4                 .dbfuncend
+ 000AD4                 .dbsym r color 6 i p3
+ 000AD4                 .dbsym r fontsize 7 s p2
+ 000AD4                 .dbsym r isSansSerifFont 8 s p1
+ 000AD4                 .dbsym r h 9 s p0
+ 000AD4                 .dbstacksize 12
+ 000AD4                 .dbfunc e SmartIO_UpdateIntValue _SmartIO_UpdateIntValue#Fstt fS 486 4126716
+ 000AD4         ;          value -> R5
+ 000AD4         ;         handle -> R6
+ 000AD4         _SmartIO_UpdateIntValue#Fstt::
+ 000AD4                 .dbprevlr 16
+ 000AD4 2DE97048        push {R4,R5,R6,R11,LR}
+ 000AD8 EB46            mov R11,R13
+ 000ADA 0646            mov R6,R0
+ 000ADC 0D46            mov R5,R1
+ 000ADE                 .dbblock 487
+ 000ADE                 .dbline 488
+ 000ADE 1520            movs R0,#21
+ 000AE0 1421            movs R1,#20
+ 000AE2 B2B2            uxth R2,R6
+ 000AE4 ABB2            uxth R3,R5
+ 000AE6 00F077FA        bl _APICall#Fjjz
+ 000AEA 0446            mov R4,R0
+ 000AEC 20B2            sxth R0,R4
+ 000AEE                 .dbblkend 489
+ 000AEE         L117:
+ 000AEE BDE87088        pop {R4,R5,R6,R11,PC}
+ 000AF2                 .dbfuncend
+ 000AF2                 .dbsym r value 5 s p1
+ 000AF2                 .dbsym r handle 6 s p0
+ 000AF2                 .dbstacksize 0
+ 000AF2                 .dbfunc e SmartIO_UpdateIntValue2 _SmartIO_UpdateIntValue2#Fsttt fS 491 4126716
+ 000AF2         ;         value2 -> R5
+ 000AF2         ;         value1 -> R6
+ 000AF2         ;         handle -> R7
+ 000AF2         _SmartIO_UpdateIntValue2#Fsttt::
+ 000AF2                 .dbprevlr 20
+ 000AF2 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 000AF6 EB46            mov R11,R13
+ 000AF8 81B0            sub R13,R13,#4
+ 000AFA 0746            mov R7,R0
+ 000AFC 0E46            mov R6,R1
+ 000AFE 1546            mov R5,R2
+ 000B00                 .dbblock 492
+ 000B00                 .dbline 493
+ 000B00 5520            movs R0,#85
+ 000B02 1421            movs R1,#20
+ 000B04 BAB2            uxth R2,R7
+ 000B06 B3B2            uxth R3,R6
+ 000B08 ACB2            uxth R4,R5
+ 000B0A 0094            str R4,[R13,#0]
+ 000B0C 00F064FA        bl _APICall#Fjjz
+ 000B10 0446            mov R4,R0
+ 000B12 20B2            sxth R0,R4
+ 000B14                 .dbblkend 494
+ 000B14         L118:
+ 000B14 01B0            add R13,R13,#4
+ 000B16 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 000B1A                 .dbfuncend
+ 000B1A                 .dbsym r value2 5 s p2
+ 000B1A                 .dbsym r value1 6 s p1
+ 000B1A                 .dbsym r handle 7 s p0
+ 000B1A                 .dbstacksize 4
+ 000B1A                 .dbfunc e SmartIO_UpdateIntValue3 _SmartIO_UpdateIntValue3#Fstttt fS 495 4126716
+ 000B1A         ;         value3 -> R5
+ 000B1A         ;         value2 -> R6
+ 000B1A         ;         value1 -> R7
+ 000B1A         ;         handle -> R8
+ 000B1A         _SmartIO_UpdateIntValue3#Fstttt::
+ 000B1A                 .dbprevlr 24
+ 000B1A 2DE9F049        push {R4,R5,R6,R7,R8,R11,LR}
+ 000B1E EB46            mov R11,R13
+ 000B20 82B0            sub R13,R13,#8
+ 000B22 8046            mov R8,R0
+ 000B24 0F46            mov R7,R1
+ 000B26 1646            mov R6,R2
+ 000B28 1D46            mov R5,R3
+ 000B2A                 .dbblock 496
+ 000B2A                 .dbline 497
+ 000B2A 40F25510        mov R0,#341
+ 000B2E 1421            movs R1,#20
+ 000B30 1FFA88F2        uxth R2,R8
+ 000B34 BBB2            uxth R3,R7
+ 000B36 B4B2            uxth R4,R6
+ 000B38 0094            str R4,[R13,#0]
+ 000B3A ACB2            uxth R4,R5
+ 000B3C 0194            str R4,[R13,#+4]
+ 000B3E 00F04BFA        bl _APICall#Fjjz
+ 000B42 0446            mov R4,R0
+ 000B44 20B2            sxth R0,R4
+ 000B46                 .dbblkend 498
+ 000B46         L119:
+ 000B46 02B0            add R13,R13,#8
+ 000B48 BDE8F089        pop {R4,R5,R6,R7,R8,R11,PC}
+ 000B4C                 .dbfuncend
+ 000B4C                 .dbsym r value3 5 s p3
+ 000B4C                 .dbsym r value2 6 s p2
+ 000B4C                 .dbsym r value1 7 s p1
+ 000B4C                 .dbsym r handle 8 s p0
+ 000B4C                 .dbstacksize 8
+ 000B4C                 .dbfunc e SmartIO_UpdateStringValue _SmartIO_UpdateStringValue#FstPc fS 500 4126716
+ 000B4C         ;            str -> R5
+ 000B4C         ;         handle -> R6
+ 000B4C         _SmartIO_UpdateStringValue#FstPc::
+ 000B4C                 .dbprevlr 16
+ 000B4C 2DE97048        push {R4,R5,R6,R11,LR}
+ 000B50 EB46            mov R11,R13
+ 000B52 0646            mov R6,R0
+ 000B54 0D46            mov R5,R1
+ 000B56                 .dbblock 501
+ 000B56                 .dbline 502
+ 000B56 2520            movs R0,#37
+ 000B58 1421            movs R1,#20
+ 000B5A B2B2            uxth R2,R6
+ 000B5C 2B46            mov R3,R5
+ 000B5E 00F03BFA        bl _APICall#Fjjz
+ 000B62 0446            mov R4,R0
+ 000B64 20B2            sxth R0,R4
+ 000B66                 .dbblkend 503
+ 000B66         L120:
+ 000B66 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000B6A                 .dbfuncend
+ 000B6A                 .dbsym r str 5 pc p1
+ 000B6A                 .dbsym r handle 6 s p0
+ 000B6A                 .dbstacksize 0
+ 000B6A                 .dbfunc e SmartIO_UpdateOnOffButton _SmartIO_UpdateOnOffButton#Fstt fS 505 4126716
+ 000B6A         ;          value -> R5
+ 000B6A         ;         handle -> R6
+ 000B6A         _SmartIO_UpdateOnOffButton#Fstt::
+ 000B6A                 .dbprevlr 16
+ 000B6A 2DE97048        push {R4,R5,R6,R11,LR}
+ 000B6E EB46            mov R11,R13
+ 000B70 0646            mov R6,R0
+ 000B72 0D46            mov R5,R1
+ 000B74                 .dbblock 505
+ 000B74                 .dbline 505
+ 000B74 3046            mov R0,R6
+ 000B76 2946            mov R1,R5
+ 000B78 FFF7ACFF        bl _SmartIO_UpdateIntValue#Fstt
+ 000B7C 0446            mov R4,R0
+ 000B7E 20B2            sxth R0,R4
+ 000B80                 .dbblkend 505
+ 000B80         L121:
+ 000B80 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000B84                 .dbfuncend
+ 000B84                 .dbsym r value 5 s p1
+ 000B84                 .dbsym r handle 6 s p0
+ 000B84                 .dbstacksize 0
+ 000B84                 .dbfunc e SmartIO_Update3PosButton _SmartIO_Update3PosButton#Fstt fS 506 4126716
+ 000B84         ;          value -> R5
+ 000B84         ;         handle -> R6
+ 000B84         _SmartIO_Update3PosButton#Fstt::
+ 000B84                 .dbprevlr 16
+ 000B84 2DE97048        push {R4,R5,R6,R11,LR}
+ 000B88 EB46            mov R11,R13
+ 000B8A 0646            mov R6,R0
+ 000B8C 0D46            mov R5,R1
+ 000B8E                 .dbblock 506
+ 000B8E                 .dbline 506
+ 000B8E 3046            mov R0,R6
+ 000B90 2946            mov R1,R5
+ 000B92 FFF79FFF        bl _SmartIO_UpdateIntValue#Fstt
+ 000B96 0446            mov R4,R0
+ 000B98 20B2            sxth R0,R4
+ 000B9A                 .dbblkend 506
+ 000B9A         L122:
+ 000B9A BDE87088        pop {R4,R5,R6,R11,PC}
+ 000B9E                 .dbfuncend
+ 000B9E                 .dbsym r value 5 s p1
+ 000B9E                 .dbsym r handle 6 s p0
+ 000B9E                 .dbstacksize 0
+ 000B9E                 .dbfunc e SmartIO_UpdateIncrementer _SmartIO_UpdateIncrementer#Fstt fS 507 4126716
+ 000B9E         ;          value -> R5
+ 000B9E         ;         handle -> R6
+ 000B9E         _SmartIO_UpdateIncrementer#Fstt::
+ 000B9E                 .dbprevlr 16
+ 000B9E 2DE97048        push {R4,R5,R6,R11,LR}
+ 000BA2 EB46            mov R11,R13
+ 000BA4 0646            mov R6,R0
+ 000BA6 0D46            mov R5,R1
+ 000BA8                 .dbblock 507
+ 000BA8                 .dbline 507
+ 000BA8 3046            mov R0,R6
+ 000BAA 2946            mov R1,R5
+ 000BAC FFF792FF        bl _SmartIO_UpdateIntValue#Fstt
+ 000BB0 0446            mov R4,R0
+ 000BB2 20B2            sxth R0,R4
+ 000BB4                 .dbblkend 507
+ 000BB4         L123:
+ 000BB4 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000BB8                 .dbfuncend
+ 000BB8                 .dbsym r value 5 s p1
+ 000BB8                 .dbsym r handle 6 s p0
+ 000BB8                 .dbstacksize 0
+ 000BB8                 .dbfunc e SmartIO_UpdateSlider _SmartIO_UpdateSlider#Fstt fS 508 4126716
+ 000BB8         ;          value -> R5
+ 000BB8         ;         handle -> R6
+ 000BB8         _SmartIO_UpdateSlider#Fstt::
+ 000BB8                 .dbprevlr 16
+ 000BB8 2DE97048        push {R4,R5,R6,R11,LR}
+ 000BBC EB46            mov R11,R13
+ 000BBE 0646            mov R6,R0
+ 000BC0 0D46            mov R5,R1
+ 000BC2                 .dbblock 508
+ 000BC2                 .dbline 508
+ 000BC2 3046            mov R0,R6
+ 000BC4 2946            mov R1,R5
+ 000BC6 FFF785FF        bl _SmartIO_UpdateIntValue#Fstt
+ 000BCA 0446            mov R4,R0
+ 000BCC 20B2            sxth R0,R4
+ 000BCE                 .dbblkend 508
+ 000BCE         L124:
+ 000BCE BDE87088        pop {R4,R5,R6,R11,PC}
+ 000BD2                 .dbfuncend
+ 000BD2                 .dbsym r value 5 s p1
+ 000BD2                 .dbsym r handle 6 s p0
+ 000BD2                 .dbstacksize 0
+ 000BD2                 .dbfunc e SmartIO_UpdateExpandableList _SmartIO_UpdateExpandableList#Fstt fS 509 4126716
+ 000BD2         ;          value -> R5
+ 000BD2         ;         handle -> R6
+ 000BD2         _SmartIO_UpdateExpandableList#Fstt::
+ 000BD2                 .dbprevlr 16
+ 000BD2 2DE97048        push {R4,R5,R6,R11,LR}
+ 000BD6 EB46            mov R11,R13
+ 000BD8 0646            mov R6,R0
+ 000BDA 0D46            mov R5,R1
+ 000BDC                 .dbblock 509
+ 000BDC                 .dbline 509
+ 000BDC 3046            mov R0,R6
+ 000BDE 2946            mov R1,R5
+ 000BE0 FFF778FF        bl _SmartIO_UpdateIntValue#Fstt
+ 000BE4 0446            mov R4,R0
+ 000BE6 20B2            sxth R0,R4
+ 000BE8                 .dbblkend 509
+ 000BE8         L125:
+ 000BE8 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000BEC                 .dbfuncend
+ 000BEC                 .dbsym r value 5 s p1
+ 000BEC                 .dbsym r handle 6 s p0
+ 000BEC                 .dbstacksize 0
+ 000BEC                 .dbfunc e SmartIO_UpdatePicker _SmartIO_UpdatePicker#Fstt fS 510 4126716
+ 000BEC         ;          value -> R5
+ 000BEC         ;         handle -> R6
+ 000BEC         _SmartIO_UpdatePicker#Fstt::
+ 000BEC                 .dbprevlr 16
+ 000BEC 2DE97048        push {R4,R5,R6,R11,LR}
+ 000BF0 EB46            mov R11,R13
+ 000BF2 0646            mov R6,R0
+ 000BF4 0D46            mov R5,R1
+ 000BF6                 .dbblock 510
+ 000BF6                 .dbline 510
+ 000BF6 3046            mov R0,R6
+ 000BF8 2946            mov R1,R5
+ 000BFA FFF76BFF        bl _SmartIO_UpdateIntValue#Fstt
+ 000BFE 0446            mov R4,R0
+ 000C00 20B2            sxth R0,R4
+ 000C02                 .dbblkend 510
+ 000C02         L126:
+ 000C02 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000C06                 .dbfuncend
+ 000C06                 .dbsym r value 5 s p1
+ 000C06                 .dbsym r handle 6 s p0
+ 000C06                 .dbstacksize 0
+ 000C06                 .dbfunc e SmartIO_UpdateMultiSelector _SmartIO_UpdateMultiSelector#Fstt fS 511 4126716
+ 000C06         ;          value -> R5
+ 000C06         ;         handle -> R6
+ 000C06         _SmartIO_UpdateMultiSelector#Fstt::
+ 000C06                 .dbprevlr 16
+ 000C06 2DE97048        push {R4,R5,R6,R11,LR}
+ 000C0A EB46            mov R11,R13
+ 000C0C 0646            mov R6,R0
+ 000C0E 0D46            mov R5,R1
+ 000C10                 .dbblock 511
+ 000C10                 .dbline 511
+ 000C10 3046            mov R0,R6
+ 000C12 2946            mov R1,R5
+ 000C14 FFF75EFF        bl _SmartIO_UpdateIntValue#Fstt
+ 000C18 0446            mov R4,R0
+ 000C1A 20B2            sxth R0,R4
+ 000C1C                 .dbblkend 511
+ 000C1C         L127:
+ 000C1C BDE87088        pop {R4,R5,R6,R11,PC}
+ 000C20                 .dbfuncend
+ 000C20                 .dbsym r value 5 s p1
+ 000C20                 .dbsym r handle 6 s p0
+ 000C20                 .dbstacksize 0
+ 000C20                 .dbfunc e SmartIO_UpdateNumberSelector _SmartIO_UpdateNumberSelector#Fstt fS 512 4126716
+ 000C20         ;          value -> R5
+ 000C20         ;         handle -> R6
+ 000C20         _SmartIO_UpdateNumberSelector#Fstt::
+ 000C20                 .dbprevlr 16
+ 000C20 2DE97048        push {R4,R5,R6,R11,LR}
+ 000C24 EB46            mov R11,R13
+ 000C26 0646            mov R6,R0
+ 000C28 0D46            mov R5,R1
+ 000C2A                 .dbblock 512
+ 000C2A                 .dbline 512
+ 000C2A 3046            mov R0,R6
+ 000C2C 2946            mov R1,R5
+ 000C2E FFF751FF        bl _SmartIO_UpdateIntValue#Fstt
+ 000C32 0446            mov R4,R0
+ 000C34 20B2            sxth R0,R4
+ 000C36                 .dbblkend 512
+ 000C36         L128:
+ 000C36 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000C3A                 .dbfuncend
+ 000C3A                 .dbsym r value 5 s p1
+ 000C3A                 .dbsym r handle 6 s p0
+ 000C3A                 .dbstacksize 0
+ 000C3A                 .dbfunc e SmartIO_UpdateCheckboxes _SmartIO_UpdateCheckboxes#Fstt fS 513 4126716
+ 000C3A         ;          value -> R5
+ 000C3A         ;         handle -> R6
+ 000C3A         _SmartIO_UpdateCheckboxes#Fstt::
+ 000C3A                 .dbprevlr 16
+ 000C3A 2DE97048        push {R4,R5,R6,R11,LR}
+ 000C3E EB46            mov R11,R13
+ 000C40 0646            mov R6,R0
+ 000C42 0D46            mov R5,R1
+ 000C44                 .dbblock 513
+ 000C44                 .dbline 513
+ 000C44 3046            mov R0,R6
+ 000C46 2946            mov R1,R5
+ 000C48 FFF744FF        bl _SmartIO_UpdateIntValue#Fstt
+ 000C4C 0446            mov R4,R0
+ 000C4E 20B2            sxth R0,R4
+ 000C50                 .dbblkend 513
+ 000C50         L129:
+ 000C50 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000C54                 .dbfuncend
+ 000C54                 .dbsym r value 5 s p1
+ 000C54                 .dbsym r handle 6 s p0
+ 000C54                 .dbstacksize 0
+ 000C54                 .dbfunc e SmartIO_UpdateRadioButtons _SmartIO_UpdateRadioButtons#Fstt fS 514 4126716
+ 000C54         ;          value -> R5
+ 000C54         ;         handle -> R6
+ 000C54         _SmartIO_UpdateRadioButtons#Fstt::
+ 000C54                 .dbprevlr 16
+ 000C54 2DE97048        push {R4,R5,R6,R11,LR}
+ 000C58 EB46            mov R11,R13
+ 000C5A 0646            mov R6,R0
+ 000C5C 0D46            mov R5,R1
+ 000C5E                 .dbblock 514
+ 000C5E                 .dbline 514
+ 000C5E 3046            mov R0,R6
+ 000C60 2946            mov R1,R5
+ 000C62 FFF737FF        bl _SmartIO_UpdateIntValue#Fstt
+ 000C66 0446            mov R4,R0
+ 000C68 20B2            sxth R0,R4
+ 000C6A                 .dbblkend 514
+ 000C6A         L130:
+ 000C6A BDE87088        pop {R4,R5,R6,R11,PC}
+ 000C6E                 .dbfuncend
+ 000C6E                 .dbsym r value 5 s p1
+ 000C6E                 .dbsym r handle 6 s p0
+ 000C6E                 .dbstacksize 0
+ 000C6E                 .dbfunc e SmartIO_UpdateCounter _SmartIO_UpdateCounter#Fstt fS 515 4126716
+ 000C6E         ;          value -> R5
+ 000C6E         ;         handle -> R6
+ 000C6E         _SmartIO_UpdateCounter#Fstt::
+ 000C6E                 .dbprevlr 16
+ 000C6E 2DE97048        push {R4,R5,R6,R11,LR}
+ 000C72 EB46            mov R11,R13
+ 000C74 0646            mov R6,R0
+ 000C76 0D46            mov R5,R1
+ 000C78                 .dbblock 515
+ 000C78                 .dbline 515
+ 000C78 3046            mov R0,R6
+ 000C7A 2946            mov R1,R5
+ 000C7C FFF72AFF        bl _SmartIO_UpdateIntValue#Fstt
+ 000C80 0446            mov R4,R0
+ 000C82 20B2            sxth R0,R4
+ 000C84                 .dbblkend 515
+ 000C84         L131:
+ 000C84 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000C88                 .dbfuncend
+ 000C88                 .dbsym r value 5 s p1
+ 000C88                 .dbsym r handle 6 s p0
+ 000C88                 .dbstacksize 0
+ 000C88                 .dbfunc e SmartIO_UpdateProgressBar _SmartIO_UpdateProgressBar#Fstt fS 516 4126716
+ 000C88         ;          value -> R5
+ 000C88         ;         handle -> R6
+ 000C88         _SmartIO_UpdateProgressBar#Fstt::
+ 000C88                 .dbprevlr 16
+ 000C88 2DE97048        push {R4,R5,R6,R11,LR}
+ 000C8C EB46            mov R11,R13
+ 000C8E 0646            mov R6,R0
+ 000C90 0D46            mov R5,R1
+ 000C92                 .dbblock 516
+ 000C92                 .dbline 516
+ 000C92 3046            mov R0,R6
+ 000C94 2946            mov R1,R5
+ 000C96 FFF71DFF        bl _SmartIO_UpdateIntValue#Fstt
+ 000C9A 0446            mov R4,R0
+ 000C9C 20B2            sxth R0,R4
+ 000C9E                 .dbblkend 516
+ 000C9E         L132:
+ 000C9E BDE87088        pop {R4,R5,R6,R11,PC}
+ 000CA2                 .dbfuncend
+ 000CA2                 .dbsym r value 5 s p1
+ 000CA2                 .dbsym r handle 6 s p0
+ 000CA2                 .dbstacksize 0
+ 000CA2                 .dbfunc e SmartIO_UpdateProgressCircle _SmartIO_UpdateProgressCircle#Fstt fS 517 4126716
+ 000CA2         ;          value -> R5
+ 000CA2         ;         handle -> R6
+ 000CA2         _SmartIO_UpdateProgressCircle#Fstt::
+ 000CA2                 .dbprevlr 16
+ 000CA2 2DE97048        push {R4,R5,R6,R11,LR}
+ 000CA6 EB46            mov R11,R13
+ 000CA8 0646            mov R6,R0
+ 000CAA 0D46            mov R5,R1
+ 000CAC                 .dbblock 517
+ 000CAC                 .dbline 517
+ 000CAC 3046            mov R0,R6
+ 000CAE 2946            mov R1,R5
+ 000CB0 FFF710FF        bl _SmartIO_UpdateIntValue#Fstt
+ 000CB4 0446            mov R4,R0
+ 000CB6 20B2            sxth R0,R4
+ 000CB8                 .dbblkend 517
+ 000CB8         L133:
+ 000CB8 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000CBC                 .dbfuncend
+ 000CBC                 .dbsym r value 5 s p1
+ 000CBC                 .dbsym r handle 6 s p0
+ 000CBC                 .dbstacksize 0
+ 000CBC                 .dbfunc e SmartIO_UpdateHGauge _SmartIO_UpdateHGauge#Fstt fS 518 4126716
+ 000CBC         ;          value -> R5
+ 000CBC         ;         handle -> R6
+ 000CBC         _SmartIO_UpdateHGauge#Fstt::
+ 000CBC                 .dbprevlr 16
+ 000CBC 2DE97048        push {R4,R5,R6,R11,LR}
+ 000CC0 EB46            mov R11,R13
+ 000CC2 0646            mov R6,R0
+ 000CC4 0D46            mov R5,R1
+ 000CC6                 .dbblock 518
+ 000CC6                 .dbline 518
+ 000CC6 3046            mov R0,R6
+ 000CC8 2946            mov R1,R5
+ 000CCA FFF703FF        bl _SmartIO_UpdateIntValue#Fstt
+ 000CCE 0446            mov R4,R0
+ 000CD0 20B2            sxth R0,R4
+ 000CD2                 .dbblkend 518
+ 000CD2         L134:
+ 000CD2 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000CD6                 .dbfuncend
+ 000CD6                 .dbsym r value 5 s p1
+ 000CD6                 .dbsym r handle 6 s p0
+ 000CD6                 .dbstacksize 0
+ 000CD6                 .dbfunc e SmartIO_UpdateVGauge _SmartIO_UpdateVGauge#Fstt fS 519 4126716
+ 000CD6         ;          value -> R5
+ 000CD6         ;         handle -> R6
+ 000CD6         _SmartIO_UpdateVGauge#Fstt::
+ 000CD6                 .dbprevlr 16
+ 000CD6 2DE97048        push {R4,R5,R6,R11,LR}
+ 000CDA EB46            mov R11,R13
+ 000CDC 0646            mov R6,R0
+ 000CDE 0D46            mov R5,R1
+ 000CE0                 .dbblock 519
+ 000CE0                 .dbline 519
+ 000CE0 3046            mov R0,R6
+ 000CE2 2946            mov R1,R5
+ 000CE4 FFF7F6FE        bl _SmartIO_UpdateIntValue#Fstt
+ 000CE8 0446            mov R4,R0
+ 000CEA 20B2            sxth R0,R4
+ 000CEC                 .dbblkend 519
+ 000CEC         L135:
+ 000CEC BDE87088        pop {R4,R5,R6,R11,PC}
+ 000CF0                 .dbfuncend
+ 000CF0                 .dbsym r value 5 s p1
+ 000CF0                 .dbsym r handle 6 s p0
+ 000CF0                 .dbstacksize 0
+ 000CF0                 .dbfunc e SmartIO_UpdateSemiCircularGauge _SmartIO_UpdateSemiCircularGauge#Fstt fS 520 4126716
+ 000CF0         ;          value -> R5
+ 000CF0         ;         handle -> R6
+ 000CF0         _SmartIO_UpdateSemiCircularGauge#Fstt::
+ 000CF0                 .dbprevlr 16
+ 000CF0 2DE97048        push {R4,R5,R6,R11,LR}
+ 000CF4 EB46            mov R11,R13
+ 000CF6 0646            mov R6,R0
+ 000CF8 0D46            mov R5,R1
+ 000CFA                 .dbblock 521
+ 000CFA                 .dbline 521
+ 000CFA 3046            mov R0,R6
+ 000CFC 2946            mov R1,R5
+ 000CFE FFF7E9FE        bl _SmartIO_UpdateIntValue#Fstt
+ 000D02 0446            mov R4,R0
+ 000D04 20B2            sxth R0,R4
+ 000D06                 .dbblkend 521
+ 000D06         L136:
+ 000D06 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000D0A                 .dbfuncend
+ 000D0A                 .dbsym r value 5 s p1
+ 000D0A                 .dbsym r handle 6 s p0
+ 000D0A                 .dbstacksize 0
+ 000D0A                 .dbfunc e SmartIO_UpdateCircularGauge _SmartIO_UpdateCircularGauge#Fstt fS 522 4126716
+ 000D0A         ;          value -> R5
+ 000D0A         ;         handle -> R6
+ 000D0A         _SmartIO_UpdateCircularGauge#Fstt::
+ 000D0A                 .dbprevlr 16
+ 000D0A 2DE97048        push {R4,R5,R6,R11,LR}
+ 000D0E EB46            mov R11,R13
+ 000D10 0646            mov R6,R0
+ 000D12 0D46            mov R5,R1
+ 000D14                 .dbblock 522
+ 000D14                 .dbline 522
+ 000D14 3046            mov R0,R6
+ 000D16 2946            mov R1,R5
+ 000D18 FFF7DCFE        bl _SmartIO_UpdateIntValue#Fstt
+ 000D1C 0446            mov R4,R0
+ 000D1E 20B2            sxth R0,R4
+ 000D20                 .dbblkend 522
+ 000D20         L137:
+ 000D20 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000D24                 .dbfuncend
+ 000D24                 .dbsym r value 5 s p1
+ 000D24                 .dbsym r handle 6 s p0
+ 000D24                 .dbstacksize 0
+ 000D24                 .dbfunc e SmartIO_UpdateCustomHGauge _SmartIO_UpdateCustomHGauge#Fstt fS 523 4126716
+ 000D24         ;          value -> R5
+ 000D24         ;         handle -> R6
+ 000D24         _SmartIO_UpdateCustomHGauge#Fstt::
+ 000D24                 .dbprevlr 16
+ 000D24 2DE97048        push {R4,R5,R6,R11,LR}
+ 000D28 EB46            mov R11,R13
+ 000D2A 0646            mov R6,R0
+ 000D2C 0D46            mov R5,R1
+ 000D2E                 .dbblock 523
+ 000D2E                 .dbline 523
+ 000D2E 3046            mov R0,R6
+ 000D30 2946            mov R1,R5
+ 000D32 FFF7CFFE        bl _SmartIO_UpdateIntValue#Fstt
+ 000D36 0446            mov R4,R0
+ 000D38 20B2            sxth R0,R4
+ 000D3A                 .dbblkend 523
+ 000D3A         L138:
+ 000D3A BDE87088        pop {R4,R5,R6,R11,PC}
+ 000D3E                 .dbfuncend
+ 000D3E                 .dbsym r value 5 s p1
+ 000D3E                 .dbsym r handle 6 s p0
+ 000D3E                 .dbstacksize 0
+ 000D3E                 .dbfunc e SmartIO_UpdateCustomVGauge _SmartIO_UpdateCustomVGauge#Fstt fS 524 4126716
+ 000D3E         ;          value -> R5
+ 000D3E         ;         handle -> R6
+ 000D3E         _SmartIO_UpdateCustomVGauge#Fstt::
+ 000D3E                 .dbprevlr 16
+ 000D3E 2DE97048        push {R4,R5,R6,R11,LR}
+ 000D42 EB46            mov R11,R13
+ 000D44 0646            mov R6,R0
+ 000D46 0D46            mov R5,R1
+ 000D48                 .dbblock 524
+ 000D48                 .dbline 524
+ 000D48 3046            mov R0,R6
+ 000D4A 2946            mov R1,R5
+ 000D4C FFF7C2FE        bl _SmartIO_UpdateIntValue#Fstt
+ 000D50 0446            mov R4,R0
+ 000D52 20B2            sxth R0,R4
+ 000D54                 .dbblkend 524
+ 000D54         L139:
+ 000D54 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000D58                 .dbfuncend
+ 000D58                 .dbsym r value 5 s p1
+ 000D58                 .dbsym r handle 6 s p0
+ 000D58                 .dbstacksize 0
+ 000D58                 .dbfunc e SmartIO_UpdateBatteryLevel _SmartIO_UpdateBatteryLevel#Fstt fS 525 4126716
+ 000D58         ;          value -> R5
+ 000D58         ;         handle -> R6
+ 000D58         _SmartIO_UpdateBatteryLevel#Fstt::
+ 000D58                 .dbprevlr 16
+ 000D58 2DE97048        push {R4,R5,R6,R11,LR}
+ 000D5C EB46            mov R11,R13
+ 000D5E 0646            mov R6,R0
+ 000D60 0D46            mov R5,R1
+ 000D62                 .dbblock 525
+ 000D62                 .dbline 525
+ 000D62 3046            mov R0,R6
+ 000D64 2946            mov R1,R5
+ 000D66 FFF7B5FE        bl _SmartIO_UpdateIntValue#Fstt
+ 000D6A 0446            mov R4,R0
+ 000D6C 20B2            sxth R0,R4
+ 000D6E                 .dbblkend 525
+ 000D6E         L140:
+ 000D6E BDE87088        pop {R4,R5,R6,R11,PC}
+ 000D72                 .dbfuncend
+ 000D72                 .dbsym r value 5 s p1
+ 000D72                 .dbsym r handle 6 s p0
+ 000D72                 .dbstacksize 0
+ 000D72                 .dbfunc e SmartIO_UpdateRGBLed _SmartIO_UpdateRGBLed#Fsttt fS 527 4126716
+ 000D72         ;         on_off -> R5
+ 000D72         ;          color -> R6
+ 000D72         ;         handle -> R7
+ 000D72         _SmartIO_UpdateRGBLed#Fsttt::
+ 000D72                 .dbprevlr 20
+ 000D72 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 000D76 EB46            mov R11,R13
+ 000D78 0746            mov R7,R0
+ 000D7A 0E46            mov R6,R1
+ 000D7C 1546            mov R5,R2
+ 000D7E                 .dbblock 528
+ 000D7E                 .dbline 528
+ 000D7E 3846            mov R0,R7
+ 000D80 3146            mov R1,R6
+ 000D82 2A46            mov R2,R5
+ 000D84 FFF7B5FE        bl _SmartIO_UpdateIntValue2#Fsttt
+ 000D88 0446            mov R4,R0
+ 000D8A 20B2            sxth R0,R4
+ 000D8C                 .dbblkend 528
+ 000D8C         L141:
+ 000D8C BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 000D90                 .dbfuncend
+ 000D90                 .dbsym r on_off 5 s p2
+ 000D90                 .dbsym r color 6 s p1
+ 000D90                 .dbsym r handle 7 s p0
+ 000D90                 .dbstacksize 0
+ 000D90                 .dbfunc e SmartIO_UpdateTextBox _SmartIO_UpdateTextBox#FstPc fS 530 4126716
+ 000D90         ;          value -> R5
+ 000D90         ;         handle -> R6
+ 000D90         _SmartIO_UpdateTextBox#FstPc::
+ 000D90                 .dbprevlr 16
+ 000D90 2DE97048        push {R4,R5,R6,R11,LR}
+ 000D94 EB46            mov R11,R13
+ 000D96 0646            mov R6,R0
+ 000D98 0D46            mov R5,R1
+ 000D9A                 .dbblock 531
+ 000D9A                 .dbline 532
+ 000D9A 3046            mov R0,R6
+ 000D9C 2946            mov R1,R5
+ 000D9E FFF7D5FE        bl _SmartIO_UpdateStringValue#FstPc
+ 000DA2 0446            mov R4,R0
+ 000DA4 20B2            sxth R0,R4
+ 000DA6                 .dbblkend 533
+ 000DA6         L142:
+ 000DA6 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000DAA                 .dbfuncend
+ 000DAA                 .dbsym r value 5 pc p1
+ 000DAA                 .dbsym r handle 6 s p0
+ 000DAA                 .dbstacksize 0
+ 000DAA                 .dbfunc e SmartIO_MakeSpacerSlice _SmartIO_MakeSpacerSlice#Fti fs 535 4126716
+ 000DAA         ;              h -> R6
+ 000DAA         ;              i -> R5
+ 000DAA         _SmartIO_MakeSpacerSlice#Fti::
+ 000DAA                 .dbprevlr 16
+ 000DAA 2DE97048        push {R4,R5,R6,R11,LR}
+ 000DAE EB46            mov R11,R13
+ 000DB0 0546            mov R5,R0
+ 000DB2                 .dbblock 536
+ 000DB2         L144:
+ 000DB2                 .dbline 540
+ 000DB2 0120            movs R0,#1
+ 000DB4 0D21            movs R1,#13
+ 000DB6 00F00FF9        bl _APICall#Fjjz
+ 000DBA 0646            mov R6,R0
+ 000DBC         L145:
+ 000DBC                 .dbline 541
+ 000DBC 2C46            mov R4,R5
+ 000DBE 651E            subs R5,R4,#1
+ 000DC0 002C            cmp R4,#0
+ 000DC2 F6DC            bgt L144
+ 000DC4                 .dbline 542
+ 000DC4 B0B2            uxth R0,R6
+ 000DC6                 .dbblkend 543
+ 000DC6         L143:
+ 000DC6 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000DCA                 .dbfuncend
+ 000DCA                 .dbsym r h 6 s
+ 000DCA                 .dbsym r i 5 I p0
+ 000DCA                 .dbstacksize 0
+ 000DCA                 .dbfunc e SmartIO_AutoBalance _SmartIO_AutoBalance#Fst fS 545 4126716
+ 000DCA         ;        page_id -> R5
+ 000DCA         _SmartIO_AutoBalance#Fst::
+ 000DCA                 .dbprevlr 12
+ 000DCA 2DE93048        push {R4,R5,R11,LR}
+ 000DCE EB46            mov R11,R13
+ 000DD0 0546            mov R5,R0
+ 000DD2                 .dbblock 546
+ 000DD2                 .dbline 547
+ 000DD2 0520            movs R0,#5
+ 000DD4 2B21            movs R1,#43
+ 000DD6 AAB2            uxth R2,R5
+ 000DD8 00F0FEF8        bl _APICall#Fjjz
+ 000DDC 0446            mov R4,R0
+ 000DDE 20B2            sxth R0,R4
+ 000DE0                 .dbblkend 548
+ 000DE0         L147:
+ 000DE0 BDE83088        pop {R4,R5,R11,PC}
+ 000DE4                 .dbfuncend
+ 000DE4                 .dbsym r page_id 5 s p0
+ 000DE4                 .dbstacksize 0
+ 000DE4                 .dbfunc e SmartIO_EnableObject _SmartIO_EnableObject#Fst fS 550 4126716
+ 000DE4         ;         handle -> R5
+ 000DE4         _SmartIO_EnableObject#Fst::
+ 000DE4                 .dbprevlr 12
+ 000DE4 2DE93048        push {R4,R5,R11,LR}
+ 000DE8 EB46            mov R11,R13
+ 000DEA 0546            mov R5,R0
+ 000DEC                 .dbblock 551
+ 000DEC                 .dbline 552
+ 000DEC 1520            movs R0,#21
+ 000DEE 2821            movs R1,#40
+ 000DF0 AAB2            uxth R2,R5
+ 000DF2 0123            movs R3,#1
+ 000DF4 00F0F0F8        bl _APICall#Fjjz
+ 000DF8 0446            mov R4,R0
+ 000DFA 20B2            sxth R0,R4
+ 000DFC                 .dbblkend 553
+ 000DFC         L148:
+ 000DFC BDE83088        pop {R4,R5,R11,PC}
+ 000E00                 .dbfuncend
+ 000E00                 .dbsym r handle 5 s p0
+ 000E00                 .dbstacksize 0
+ 000E00                 .dbfunc e SmartIO_DisableObject _SmartIO_DisableObject#Fst fS 555 4126716
+ 000E00         ;         handle -> R5
+ 000E00         _SmartIO_DisableObject#Fst::
+ 000E00                 .dbprevlr 12
+ 000E00 2DE93048        push {R4,R5,R11,LR}
+ 000E04 EB46            mov R11,R13
+ 000E06 0546            mov R5,R0
+ 000E08                 .dbblock 556
+ 000E08                 .dbline 557
+ 000E08 1520            movs R0,#21
+ 000E0A 2821            movs R1,#40
+ 000E0C AAB2            uxth R2,R5
+ 000E0E 0023            movs R3,#0
+ 000E10 00F0E2F8        bl _APICall#Fjjz
+ 000E14 0446            mov R4,R0
+ 000E16 20B2            sxth R0,R4
+ 000E18                 .dbblkend 558
+ 000E18         L149:
+ 000E18 BDE83088        pop {R4,R5,R11,PC}
+ 000E1C                 .dbfuncend
+ 000E1C                 .dbsym r handle 5 s p0
+ 000E1C                 .dbstacksize 0
+ 000E1C                 .dbfunc e SmartIO_ShowObject _SmartIO_ShowObject#Fst fS 560 4126716
+ 000E1C         ;         handle -> R5
+ 000E1C         _SmartIO_ShowObject#Fst::
+ 000E1C                 .dbprevlr 12
+ 000E1C 2DE93048        push {R4,R5,R11,LR}
+ 000E20 EB46            mov R11,R13
+ 000E22 0546            mov R5,R0
+ 000E24                 .dbblock 561
+ 000E24                 .dbline 562
+ 000E24 1520            movs R0,#21
+ 000E26 2921            movs R1,#41
+ 000E28 AAB2            uxth R2,R5
+ 000E2A 0123            movs R3,#1
+ 000E2C 00F0D4F8        bl _APICall#Fjjz
+ 000E30 0446            mov R4,R0
+ 000E32 20B2            sxth R0,R4
+ 000E34                 .dbblkend 563
+ 000E34         L150:
+ 000E34 BDE83088        pop {R4,R5,R11,PC}
+ 000E38                 .dbfuncend
+ 000E38                 .dbsym r handle 5 s p0
+ 000E38                 .dbstacksize 0
+ 000E38                 .dbfunc e SmartIO_HideObject _SmartIO_HideObject#Fst fS 565 4126716
+ 000E38         ;         handle -> R5
+ 000E38         _SmartIO_HideObject#Fst::
+ 000E38                 .dbprevlr 12
+ 000E38 2DE93048        push {R4,R5,R11,LR}
+ 000E3C EB46            mov R11,R13
+ 000E3E 0546            mov R5,R0
+ 000E40                 .dbblock 566
+ 000E40                 .dbline 567
+ 000E40 1520            movs R0,#21
+ 000E42 2921            movs R1,#41
+ 000E44 AAB2            uxth R2,R5
+ 000E46 0023            movs R3,#0
+ 000E48 00F0C6F8        bl _APICall#Fjjz
+ 000E4C 0446            mov R4,R0
+ 000E4E 20B2            sxth R0,R4
+ 000E50                 .dbblkend 568
+ 000E50         L151:
+ 000E50 BDE83088        pop {R4,R5,R11,PC}
+ 000E54                 .dbfuncend
+ 000E54                 .dbsym r handle 5 s p0
+ 000E54                 .dbstacksize 0
+ 000E54                 .dbfunc e SmartIO_DeleteObject _SmartIO_DeleteObject#Fst fS 570 4126716
+ 000E54         ;         handle -> R5
+ 000E54         _SmartIO_DeleteObject#Fst::
+ 000E54                 .dbprevlr 12
+ 000E54 2DE93048        push {R4,R5,R11,LR}
+ 000E58 EB46            mov R11,R13
+ 000E5A 0546            mov R5,R0
+ 000E5C                 .dbblock 571
+ 000E5C                 .dbline 572
+ 000E5C 1520            movs R0,#21
+ 000E5E 2A21            movs R1,#42
+ 000E60 AAB2            uxth R2,R5
+ 000E62 00F0B9F8        bl _APICall#Fjjz
+ 000E66 0446            mov R4,R0
+ 000E68 20B2            sxth R0,R4
+ 000E6A                 .dbblkend 573
+ 000E6A         L152:
+ 000E6A BDE83088        pop {R4,R5,R11,PC}
+ 000E6E                 .dbfuncend
+ 000E6E                 .dbsym r handle 5 s p0
+ 000E6E                 .dbstacksize 0
+ 000E6E                 .dbfunc e SmartIO_MakeLabel _SmartIO_MakeLabel#FtttPc fs 576 4126716
+ 000E6E         ;          label -> R5
+ 000E6E         ;         height -> R6
+ 000E6E         ;      alignment -> R7
+ 000E6E         _SmartIO_MakeLabel#FtttPc::
+ 000E6E                 .dbprevlr 20
+ 000E6E 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 000E72 EB46            mov R11,R13
+ 000E74 82B0            sub R13,R13,#8
+ 000E76 0746            mov R7,R0
+ 000E78 0E46            mov R6,R1
+ 000E7A 1546            mov R5,R2
+ 000E7C                 .dbblock 577
+ 000E7C                 .dbline 578
+ 000E7C 40F25520        mov R0,#597
+ 000E80 0A21            movs R1,#10
+ 000E82 BAB2            uxth R2,R7
+ 000E84 4FF4C873        mov R3,#400
+ 000E88 B4B2            uxth R4,R6
+ 000E8A 0094            str R4,[R13,#0]
+ 000E8C 0195            str R5,[R13,#+4]
+ 000E8E 00F0A3F8        bl _APICall#Fjjz
+ 000E92 0446            mov R4,R0
+ 000E94 A0B2            uxth R0,R4
+ 000E96                 .dbblkend 579
+ 000E96         L153:
+ 000E96 02B0            add R13,R13,#8
+ 000E98 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 000E9C                 .dbfuncend
+ 000E9C                 .dbsym r label 5 pc p2
+ 000E9C                 .dbsym r height 6 s p1
+ 000E9C                 .dbsym r alignment 7 s p0
+ 000E9C                 .dbstacksize 8
+ 000E9C                 .dbfunc e SmartIO_ReadEEPROM _SmartIO_ReadEEPROM#FPhtt fpc 591 4126716
+ 000E9C         ;         length -> R5
+ 000E9C         ;        address -> R6
+ 000E9C         _SmartIO_ReadEEPROM#FPhtt::
+ 000E9C                 .dbprevlr 16
+ 000E9C 2DE97048        push {R4,R5,R6,R11,LR}
+ 000EA0 EB46            mov R11,R13
+ 000EA2 0646            mov R6,R0
+ 000EA4 0D46            mov R5,R1
+ 000EA6                 .dbblock 592
+ 000EA6                 .dbline 593
+ 000EA6 1520            movs R0,#21
+ 000EA8 4FF68071        mov R1,#65408
+ 000EAC B2B2            uxth R2,R6
+ 000EAE ABB2            uxth R3,R5
+ 000EB0 00F092F8        bl _APICall#Fjjz
+ 000EB4 0446            mov R4,R0
+ 000EB6                 .dbblkend 594
+ 000EB6         L154:
+ 000EB6 BDE87088        pop {R4,R5,R6,R11,PC}
+ 000EBA                 .dbfuncend
+ 000EBA                 .dbsym r length 5 s p1
+ 000EBA                 .dbsym r address 6 s p0
+ 000EBA                 .dbstacksize 0
+ 000EBA                 .dbfunc e SmartIO_WriteEEPROM _SmartIO_WriteEEPROM#FsttPh fS 596 4126716
+ 000EBA         ;         buffer -> R5
+ 000EBA         ;         length -> R6
+ 000EBA         ;        address -> R7
+ 000EBA         _SmartIO_WriteEEPROM#FsttPh::
+ 000EBA                 .dbprevlr 20
+ 000EBA 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 000EBE EB46            mov R11,R13
+ 000EC0 81B0            sub R13,R13,#4
+ 000EC2 0746            mov R7,R0
+ 000EC4 0E46            mov R6,R1
+ 000EC6 1546            mov R5,R2
+ 000EC8                 .dbblock 597
+ 000EC8                 .dbline 598
+ 000EC8 9520            movs R0,#149
+ 000ECA 4FF47F41        mov R1,#65280
+ 000ECE BAB2            uxth R2,R7
+ 000ED0 B3B2            uxth R3,R6
+ 000ED2 0095            str R5,[R13,#0]
+ 000ED4 00F080F8        bl _APICall#Fjjz
+ 000ED8 0446            mov R4,R0
+ 000EDA 20B2            sxth R0,R4
+ 000EDC                 .dbblkend 599
+ 000EDC         L155:
+ 000EDC 01B0            add R13,R13,#4
+ 000EDE BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 000EE2                 .dbfuncend
+ 000EE2                 .dbsym r buffer 5 pc p2
+ 000EE2                 .dbsym r length 6 s p1
+ 000EE2                 .dbsym r address 7 s p0
+ 000EE2                 .dbstacksize 4
+ 000EE2                 .dbfunc e SmartIO_SetLED _SmartIO_SetLED#Fst fS 601 4126716
+ 000EE2         ;            led -> R5
+ 000EE2         _SmartIO_SetLED#Fst::
+ 000EE2                 .dbprevlr 12
+ 000EE2 2DE93048        push {R4,R5,R11,LR}
+ 000EE6 EB46            mov R11,R13
+ 000EE8 0546            mov R5,R0
+ 000EEA                 .dbblock 602
+ 000EEA                 .dbline 603
+ 000EEA 0520            movs R0,#5
+ 000EEC 4FF60171        mov R1,#65281
+ 000EF0 AAB2            uxth R2,R5
+ 000EF2 00F071F8        bl _APICall#Fjjz
+ 000EF6 0446            mov R4,R0
+ 000EF8 20B2            sxth R0,R4
+ 000EFA                 .dbblkend 604
+ 000EFA         L156:
+ 000EFA BDE83088        pop {R4,R5,R11,PC}
+ 000EFE                 .dbfuncend
+ 000EFE                 .dbsym r led 5 s p0
+ 000EFE                 .dbstacksize 0
+ 000EFE                 .dbfunc e SmartIO_ClearLED _SmartIO_ClearLED#Fst fS 606 4126716
+ 000EFE         ;            led -> R5
+ 000EFE         _SmartIO_ClearLED#Fst::
+ 000EFE                 .dbprevlr 12
+ 000EFE 2DE93048        push {R4,R5,R11,LR}
+ 000F02 EB46            mov R11,R13
+ 000F04 0546            mov R5,R0
+ 000F06                 .dbblock 607
+ 000F06                 .dbline 608
+ 000F06 0520            movs R0,#5
+ 000F08 4FF60271        mov R1,#65282
+ 000F0C AAB2            uxth R2,R5
+ 000F0E 00F063F8        bl _APICall#Fjjz
+ 000F12 0446            mov R4,R0
+ 000F14 20B2            sxth R0,R4
+ 000F16                 .dbblkend 609
+ 000F16         L157:
+ 000F16 BDE83088        pop {R4,R5,R11,PC}
+ 000F1A                 .dbfuncend
+ 000F1A                 .dbsym r led 5 s p0
+ 000F1A                 .dbstacksize 0
+ 000F1A                 .dbfunc e SmartIO_ToggleLED _SmartIO_ToggleLED#Fst fS 611 4126716
+ 000F1A         ;            led -> R5
+ 000F1A         _SmartIO_ToggleLED#Fst::
+ 000F1A                 .dbprevlr 12
+ 000F1A 2DE93048        push {R4,R5,R11,LR}
+ 000F1E EB46            mov R11,R13
+ 000F20 0546            mov R5,R0
+ 000F22                 .dbblock 612
+ 000F22                 .dbline 613
+ 000F22 0520            movs R0,#5
+ 000F24 4FF60371        mov R1,#65283
+ 000F28 AAB2            uxth R2,R5
+ 000F2A 00F055F8        bl _APICall#Fjjz
+ 000F2E 0446            mov R4,R0
+ 000F30 20B2            sxth R0,R4
+ 000F32                 .dbblkend 614
+ 000F32         L158:
+ 000F32 BDE83088        pop {R4,R5,R11,PC}
+ 000F36                 .dbfuncend
+ 000F36                 .dbsym r led 5 s p0
+ 000F36                 .dbstacksize 0
+ 000F36                 .dbfunc e SmartIO_GenRandomNumber _SmartIO_GenRandomNumber#Fjv fi 616 4126716
+ 000F36         _SmartIO_GenRandomNumber#Fjv::
+ 000F36                 .dbprevlr 8
+ 000F36 2DE91048        push {R4,R11,LR}
+ 000F3A EB46            mov R11,R13
+ 000F3C                 .dbblock 617
+ 000F3C                 .dbline 618
+ 000F3C 0120            movs R0,#1
+ 000F3E 4FF60471        mov R1,#65284
+ 000F42 00F049F8        bl _APICall#Fjjz
+ 000F46 0446            mov R4,R0
+ 000F48                 .dbblkend 619
+ 000F48         L159:
+ 000F48 BDE81088        pop {R4,R11,PC}
+ 000F4C                 .dbfuncend
+ 000F4C                 .dbstacksize 0
+ 000F4C                 .dbfunc e SmartIO_GetUniqueID _SmartIO_GetUniqueID#FPjv fpi 621 4126716
+ 000F4C                 .dbsym s val L161 A[8:2]i
+ 000F4C         ;              p -> R6
+ 000F4C         _SmartIO_GetUniqueID#FPjv::
+ 000F4C                 .dbprevlr 16
+ 000F4C 2DE97048        push {R4,R5,R6,R11,LR}
+ 000F50 EB46            mov R11,R13
+ 000F52                 .dbblock 622
+ 000F52                 .dbline 624
+ 000F52 0120            movs R0,#1
+ 000F54 4FF68171        mov R1,#65409
+ 000F58 00F03EF8        bl _APICall#Fjjz
+ 000F5C 0646            mov R6,R0
+ 000F5E                 .dbline 625
+ 000F5E 3468            ldr R4,[R6,#0]
+ 000F60 034D            ldr R5,LIT_SmartIO_GetUniqueID+0
+ 000F62 2C60            str R4,[R5,#0]
+ 000F64                 .dbline 626
+ 000F64 7468            ldr R4,[R6,#+4]
+ 000F66 034D            ldr R5,LIT_SmartIO_GetUniqueID+4
+ 000F68 2C60            str R4,[R5,#0]
+ 000F6A                 .dbline 627
+ 000F6A 0148            ldr R0,LIT_SmartIO_GetUniqueID+0
+ 000F6C                 .dbblkend 628
+ 000F6C         L160:
+ 000F6C BDE87088        pop {R4,R5,R6,R11,PC}
+ 000F70                 .dbfuncend
+                        .align4
+ 000F70                 .LITERAL
+ 000F70         LIT_SmartIO_GetUniqueID:
+ 000F70 00000000        .long L161
+ 000F74 04000000        .long L161+4
+ 000F78         	.ENDLITERAL
+ 000F78                 .dbsym r p 6 pi
+ 000F78                 .dbstacksize 0
+ 000F78                 .dbfunc e SmartIO_DebugUART _SmartIO_DebugUART#Fst fS 630 4126716
+ 000F78         ;         enable -> R5
+ 000F78         _SmartIO_DebugUART#Fst::
+ 000F78                 .dbprevlr 12
+ 000F78 2DE93048        push {R4,R5,R11,LR}
+ 000F7C EB46            mov R11,R13
+ 000F7E 0546            mov R5,R0
+ 000F80                 .dbblock 631
+ 000F80                 .dbline 632
+ 000F80 0520            movs R0,#5
+ 000F82 4FF60571        mov R1,#65285
+ 000F86 AAB2            uxth R2,R5
+ 000F88 00F026F8        bl _APICall#Fjjz
+ 000F8C 0446            mov R4,R0
+ 000F8E 20B2            sxth R0,R4
+ 000F90                 .dbblkend 633
+ 000F90         L163:
+ 000F90 BDE83088        pop {R4,R5,R11,PC}
+ 000F94                 .dbfuncend
+ 000F94                 .dbsym r enable 5 s p0
+ 000F94                 .dbstacksize 0
+ 000F94                 .dbfunc e SmartIO_GetPhoneTime _SmartIO_GetPhoneTime#FPcv fpc 636 4126716
+ 000F94         _SmartIO_GetPhoneTime#FPcv::
+ 000F94                 .dbprevlr 8
+ 000F94 2DE91048        push {R4,R11,LR}
+ 000F98 EB46            mov R11,R13
+ 000F9A                 .dbblock 637
+ 000F9A                 .dbline 638
+ 000F9A 0120            movs R0,#1
+ 000F9C 4FF68271        mov R1,#65410
+ 000FA0 00F01AF8        bl _APICall#Fjjz
+ 000FA4 0446            mov R4,R0
+ 000FA6                 .dbblkend 639
+ 000FA6         L164:
+ 000FA6 BDE81088        pop {R4,R11,PC}
+ 000FAA                 .dbfuncend
+ 000FAA                 .dbstacksize 0
+ 000FAA                 .dbfunc e SmartIO_GetPhoneGPS _SmartIO_GetPhoneGPS#FPcv fpc 641 4126716
+ 000FAA         _SmartIO_GetPhoneGPS#FPcv::
+ 000FAA                 .dbprevlr 8
+ 000FAA 2DE91048        push {R4,R11,LR}
+ 000FAE EB46            mov R11,R13
+ 000FB0                 .dbblock 642
+ 000FB0                 .dbline 643
+ 000FB0 0120            movs R0,#1
+ 000FB2 4FF68371        mov R1,#65411
+ 000FB6 00F00FF8        bl _APICall#Fjjz
+ 000FBA 0446            mov R4,R0
+ 000FBC                 .dbblkend 644
+ 000FBC         L165:
+ 000FBC BDE81088        pop {R4,R11,PC}
+ 000FC0                 .dbfuncend
+ 000FC0                 .dbstacksize 0
+ 000FC0                 .dbfunc e SmartIO_Beep _SmartIO_Beep#Fsv fS 646 4126716
+ 000FC0         _SmartIO_Beep#Fsv::
+ 000FC0                 .dbprevlr 8
+ 000FC0 2DE91048        push {R4,R11,LR}
+ 000FC4 EB46            mov R11,R13
+ 000FC6                 .dbblock 647
+ 000FC6                 .dbline 648
+ 000FC6 0120            movs R0,#1
+ 000FC8 4FF60671        mov R1,#65286
+ 000FCC 00F004F8        bl _APICall#Fjjz
+ 000FD0 0446            mov R4,R0
+ 000FD2 20B2            sxth R0,R4
+ 000FD4                 .dbblkend 649
+ 000FD4         L166:
+ 000FD4 BDE81088        pop {R4,R11,PC}
+ 000FD8                 .dbfuncend
+ 000FD8                 .dbstacksize 0
+ 000FD8                 .dbfunc s APICall _APICall#Fjjz fi 651 4126716
+ 000FD8         ;              i -> R9
+ 000FD8         ;            dst -> R10
+ 000FD8         ;         length -> R8
+ 000FD8         ;           mask -> R11,0
+ 000FD8         ;              i -> R11,4
+ 000FD8         ;         intarg -> R11,8
+ 000FD8         ;           args -> R11,12
+ 000FD8         ;          index -> R11,16
+ 000FD8         ;         strarg -> R11,20
+ 000FD8         ;        argmask -> R11,60
+ 000FD8         _APICall#Fjjz:
+ 000FD8                 .dbprevlr 56
+ 000FD8 0FB4            push {r0-r3}
+ 000FDA 2DE9F04F        push {R4,R5,R6,R7,R8,R9,R10,R11,LR}
+ 000FDE ADF1180B        sub R11,R13,#24
+ 000FE2 DD46            mov R13,R11
+ 000FE4                 .dbblock 652
+ 000FE4                 .dbline 653
+ 000FE4 5FF0000C        movs R12,#0
+ 000FE8 CBF810C0        str R12,[R11,#+16]
+ 000FEC                 .dbline 658
+ 000FEC 0BF1400C        add R12,R11,#0x40
+ 000FF0 CBF80CC0        str R12,[R11,#+12]
+ 000FF4                 .dbline 659
+ 000FF4 5FF0000C        movs R12,#0
+ 000FF8 CBF804C0        str R12,[R11,#+4]
+ 000FFC F1E0            b L172
+ 000FFE         L169:
+ 000FFE                 .dbline 661
+ 000FFE DBF83C40        ldr R4,[R11,#+60]
+ 001002 04F0030C        and R12,R4,#3
+ 001006 CBF800C0        str R12,[R11,#0]
+ 00100A                 .dbline 662
+ 00100A BCF1000F        cmp R12,#0
+ 00100E                 .dbline 663
+ 00100E 00F0EE80        beq L171
+ 001012         L173:
+ 001012                 .dbline 664
+ 001012 DBF800C0        ldr R12,[R11,#0]
+ 001016 BCF1010F        cmp R12,#1
+ 00101A 17D1            bne L175
+ 00101C                 .dbline 666
+ 00101C DBF80CC0        ldr R12,[R11,#+12]
+ 001020 0CF1040C        add R12,R12,#4
+ 001024 CBF80CC0        str R12,[R11,#+12]
+ 001028 7FF00304        mvns R4,#3
+ 00102C DBF80CC0        ldr R12,[R11,#+12]
+ 001030 5CF80430        ldr R3,[R12,R4]
+ 001034 CBF80830        str R3,[R11,#+8]
+ 001038                 .dbline 667
+ 001038 DBF810C0        ldr R12,[R11,#+16]
+ 00103C 4FEA4C04        lsl R4,R12,#1
+ 001040 724D            ldr R5,LIT_APICall$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_api+0
+ 001042 2D68            ldr R5,[R5,#0]
+ 001044 BBF80860        ldrh R6,[R11,#+8]
+ 001048 6653            strh R6,[R4,R5]
+ 00104A                 .dbline 668
+ 00104A B9E0            b L176
+ 00104C         L175:
+ 00104C                 .dbline 669
+ 00104C DBF800C0        ldr R12,[R11,#0]
+ 001050 BCF1020F        cmp R12,#2
+ 001054 3ED1            bne L177
+ 001056 6D4C            ldr R4,LIT_APICall$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_api+0
+ 001058 2468            ldr R4,[R4,#0]
+ 00105A 2488            ldrh R4,[R4,#0]
+ 00105C B4F57F4F        cmp R4,#65280
+ 001060 38D1            bne L177
+ 001062                 .dbline 671
+ 001062 DBF810C0        ldr R12,[R11,#+16]
+ 001066 BCF1030F        cmp R12,#3
+ 00106A 02D0            beq L179
+ 00106C                 .dbline 672
+ 00106C 7FF00000        mvns R0,#0
+ 001070 C6E0            b L167
+ 001072         L179:
+ 001072                 .dbline 674
+ 001072 DBF80CC0        ldr R12,[R11,#+12]
+ 001076 0CF1040C        add R12,R12,#4
+ 00107A CBF80CC0        str R12,[R11,#+12]
+ 00107E 7FF00304        mvns R4,#3
+ 001082 DBF80CC0        ldr R12,[R11,#+12]
+ 001086 5CF80430        ldr R3,[R12,R4]
+ 00108A CBF81430        str R3,[R11,#+20]
+ 00108E                 .dbline 675
+ 00108E 5F4C            ldr R4,LIT_APICall$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_api+0
+ 001090 2468            ldr R4,[R4,#0]
+ 001092 B4F80480        ldrh R8,[R4,#+4]
+ 001096                 .dbline 676
+ 001096 5D4C            ldr R4,LIT_APICall$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_api+0
+ 001098 2468            ldr R4,[R4,#0]
+ 00109A 04F1060A        add R10,R4,#6
+ 00109E                 .dbline 677
+ 00109E 5FF00009        movs R9,#0
+ 0010A2 0AE0            b L184
+ 0010A4         L181:
+ 0010A4                 .dbline 678
+ 0010A4 DBF81450        ldr R5,[R11,#+20]
+ 0010A8 05F1010C        add R12,R5,#1
+ 0010AC CBF814C0        str R12,[R11,#+20]
+ 0010B0 2D78            ldrb R5,[R5,#0]
+ 0010B2 0AF8015B        strb R5,[R10],#+1
+ 0010B6         L182:
+ 0010B6                 .dbline 677
+ 0010B6 09F10109        add R9,R9,#1
+ 0010BA         L184:
+ 0010BA                 .dbline 677
+ 0010BA 1FFA88F4        uxth R4,R8
+ 0010BE A145            cmp R9,R4
+ 0010C0 F0DB            blt L181
+ 0010C2                 .dbline 679
+ 0010C2 524C            ldr R4,LIT_APICall$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_api+0
+ 0010C4 2068            ldr R0,[R4,#0]
+ 0010C6 1FFA88F4        uxth R4,R8
+ 0010CA A11D            adds R1,R4,#6
+ 0010CC 00F000F8        bl _SmartIO__SendBytes#FjPhi
+ 0010D0 0446            mov R4,R0
+ 0010D2 95E0            b L167
+ 0010D4         L177:
+ 0010D4                 .dbline 681
+ 0010D4 DBF800C0        ldr R12,[R11,#0]
+ 0010D8 BCF1020F        cmp R12,#2
+ 0010DC 45D1            bne L185
+ 0010DE                 .dbline 683
+ 0010DE DBF80CC0        ldr R12,[R11,#+12]
+ 0010E2 0CF1040C        add R12,R12,#4
+ 0010E6 CBF80CC0        str R12,[R11,#+12]
+ 0010EA 7FF00304        mvns R4,#3
+ 0010EE DBF80CC0        ldr R12,[R11,#+12]
+ 0010F2 5CF80430        ldr R3,[R12,R4]
+ 0010F6 CBF81430        str R3,[R11,#+20]
+ 0010FA 2FE0            b L188
+ 0010FC         L187:
+ 0010FC                 .dbline 686
+ 0010FC 0124            movs R4,#1
+ 0010FE DBF810C0        ldr R12,[R11,#+16]
+ 001102 0CFA04F5        lsl R5,R12,R4
+ 001106 414E            ldr R6,LIT_APICall$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_api+0
+ 001108 3668            ldr R6,[R6,#0]
+ 00110A DBF814C0        ldr R12,[R11,#+20]
+ 00110E 1CF80440        ldrb R4,[R12,R4]
+ 001112 2402            lsls R4,R4,#8
+ 001114 DBF814C0        ldr R12,[R11,#+20]
+ 001118 9CF80070        ldrb R7,[R12,#0]
+ 00111C 3C43            orrs R4,R4,R7
+ 00111E AC53            strh R4,[R5,R6]
+ 001120                 .dbline 687
+ 001120 DBF814C0        ldr R12,[R11,#+20]
+ 001124 9CF80140        ldrb R4,[R12,#+1]
+ 001128 24B1            cbz R4,L192
+ 00112A DBF814C0        ldr R12,[R11,#+20]
+ 00112E 9CF80240        ldrb R4,[R12,#+2]
+ 001132 04B9            cbnz R4,L190
+ 001134         L192:
+ 001134                 .dbline 688
+ 001134 44E0            b L186
+ 001136         L190:
+ 001136                 .dbline 689
+ 001136 DBF814C0        ldr R12,[R11,#+20]
+ 00113A 0CF1020C        add R12,R12,#2
+ 00113E CBF814C0        str R12,[R11,#+20]
+ 001142                 .dbline 690
+ 001142 DBF810C0        ldr R12,[R11,#+16]
+ 001146 0CF1010C        add R12,R12,#1
+ 00114A CBF810C0        str R12,[R11,#+16]
+ 00114E                 .dbline 692
+ 00114E BCF1800F        cmp R12,#128
+ 001152 03DB            blt L193
+ 001154                 .dbline 694
+ 001154 0920            movs R0,#9
+ 001156 00F000F8        bl _SmartIO_Error#Fi
+ 00115A                 .dbline 695
+ 00115A 31E0            b L186
+ 00115C         L193:
+ 00115C         L188:
+ 00115C                 .dbline 684
+ 00115C DBF814C0        ldr R12,[R11,#+20]
+ 001160 9CF80040        ldrb R4,[R12,#0]
+ 001164 002C            cmp R4,#0
+ 001166 C9D1            bne L187
+ 001168                 .dbline 698
+ 001168 2AE0            b L186
+ 00116A         L185:
+ 00116A                 .dbline 699
+ 00116A DBF800C0        ldr R12,[R11,#0]
+ 00116E BCF1030F        cmp R12,#3
+ 001172 25D1            bne L195
+ 001174                 .dbline 701
+ 001174 DBF80CC0        ldr R12,[R11,#+12]
+ 001178 0CF1040C        add R12,R12,#4
+ 00117C CBF80CC0        str R12,[R11,#+12]
+ 001180 7FF00304        mvns R4,#3
+ 001184 DBF80CC0        ldr R12,[R11,#+12]
+ 001188 5CF80430        ldr R3,[R12,R4]
+ 00118C CBF80830        str R3,[R11,#+8]
+ 001190                 .dbline 702
+ 001190 DBF81040        ldr R4,[R11,#+16]
+ 001194 0125            movs R5,#1
+ 001196 04F1010C        add R12,R4,#1
+ 00119A CBF810C0        str R12,[R11,#+16]
+ 00119E AC40            lsls R4,R4,R5
+ 0011A0 1A4D            ldr R5,LIT_APICall$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_api+0
+ 0011A2 2D68            ldr R5,[R5,#0]
+ 0011A4 BBF80860        ldrh R6,[R11,#+8]
+ 0011A8 6653            strh R6,[R4,R5]
+ 0011AA                 .dbline 703
+ 0011AA DBF810C0        ldr R12,[R11,#+16]
+ 0011AE 4FEA4C04        lsl R4,R12,#1
+ 0011B2 164D            ldr R5,LIT_APICall$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_api+0
+ 0011B4 2D68            ldr R5,[R5,#0]
+ 0011B6 DBF808C0        ldr R12,[R11,#+8]
+ 0011BA 4FEA2C46        asr R6,R12,#16
+ 0011BE 6653            strh R6,[R4,R5]
+ 0011C0         L195:
+ 0011C0         L186:
+ 0011C0         L176:
+ 0011C0                 .dbline 705
+ 0011C0 DBF810C0        ldr R12,[R11,#+16]
+ 0011C4 0CF1010C        add R12,R12,#1
+ 0011C8 CBF810C0        str R12,[R11,#+16]
+ 0011CC                 .dbline 706
+ 0011CC DBF83C40        ldr R4,[R11,#+60]
+ 0011D0 A408            lsrs R4,R4,#2
+ 0011D2 CBF83C40        str R4,[R11,#+60]
+ 0011D6         L170:
+ 0011D6                 .dbline 659
+ 0011D6 DBF804C0        ldr R12,[R11,#+4]
+ 0011DA 0CF1010C        add R12,R12,#1
+ 0011DE CBF804C0        str R12,[R11,#+4]
+ 0011E2         L172:
+ 0011E2                 .dbline 659
+ 0011E2 DBF804C0        ldr R12,[R11,#+4]
+ 0011E6 BCF1080F        cmp R12,#8
+ 0011EA FFF608AF        blt L169
+ 0011EE         L171:
+ 0011EE                 .dbline 708
+ 0011EE 074C            ldr R4,LIT_APICall$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_api+0
+ 0011F0 2068            ldr R0,[R4,#0]
+ 0011F2 DBF810C0        ldr R12,[R11,#+16]
+ 0011F6 4FEA4C01        lsl R1,R12,#1
+ 0011FA 00F000F8        bl _SmartIO__SendBytes#FjPhi
+ 0011FE 0446            mov R4,R0
+ 001200                 .dbblkend 709
+ 001200         L167:
+ 001200 06B0            add R13,R13,#24
+ 001202 BDE8F01F        pop {R4,R5,R6,R7,R8,R9,R10,R11,R12}
+ 001206 04B0            add R13,R13,#16
+ 001208 6047            bx R12
+ 00120A                 .dbfuncend
+                        .align4
+ 00120C                 .LITERAL
+ 00120C         LIT_APICall$C__Work_newtech_Smart.IO_MCU_App_Host_Interface_Layer_smartio_api:
+ 00120C 04000000        .long _Command#Pt
+ 001210         	.ENDLITERAL
+ 001210                 .dbsym r i 9 I
+ 001210                 .dbsym r dst 10 pc
+ 001210                 .dbsym r length 8 s
+ 001210                 .dbsym l mask 0 i
+ 001210                 .dbsym l i 4 I
+ 001210                 .dbsym l intarg 8 I
+ 001210                 .dbsym l args 12 pc
+ 001210                 .dbsym l index 16 I
+ 001210                 .dbsym l strarg 20 pc
+ 001210                 .dbsym l argmask 60 i p0v
+ 001210                 .dbstacksize 24
+                        .area bss
+ 000008                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\smartio_api.c
+                        .align4
+ 000008         _host_sram_aligned_block#A64_j::
+ 000008                 .blkb 256
+ 000108                 .dbsym e host_sram_aligned_block _host_sram_aligned_block#A64_j A[256:64]i
+                        .area lit
+ 000000         _6#A5_c:
+ 000000 312E303200      .byte 49,46,48,50,0

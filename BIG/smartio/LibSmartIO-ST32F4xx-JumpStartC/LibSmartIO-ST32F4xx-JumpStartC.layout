@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<FileVersion major="1" minor="0" />
+	<ActiveTarget name="default" />
+	<File name="..\smartio_hardware_interface.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="486" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\smartio_interface.c" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2156" topLine="54" />
+		</Cursor>
+	</File>
+	<File name="..\smartio_interface.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="890" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="handlers.c" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="270" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="smartio_hardware_interface.c" open="1" top="1" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2410" topLine="70" />
+		</Cursor>
+	</File>
+	<File name="..\smartio_api.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="459" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\smartio_api.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="11289" topLine="272" />
+		</Cursor>
+	</File>
+	<EditorTabsLayout layout="081f76185ad9c2350000547500000002=0;SmartIO-ST32F4xx-JumpStartC:..\smartio_api.c,1;SmartIO-ST32F4xx-JumpStartC:..\smartio_api.h,2;SmartIO-ST32F4xx-JumpStartC:..\smartio_hardware_interface.h,3;SmartIO-ST32F4xx-JumpStartC:..\smartio_interface.h,4;SmartIO-ST32F4xx-JumpStartC:handlers.c,5;SmartIO-ST32F4xx-JumpStartC:..\smartio_interface.c,*6;SmartIO-ST32F4xx-JumpStartC:smartio_hardware_interface.c,7;UI Demo ST32F411-JumpStartC:STM32F411-ICCV8\main.c@layout2|name=dummy;caption=;state=2098174;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=559;besth=308;minw=559;minh=308;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=081f76185ad9c2350000547500000002;caption=;state=2098172;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=200;besth=200;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=202|" />
+</CodeBlocks_layout_file>
