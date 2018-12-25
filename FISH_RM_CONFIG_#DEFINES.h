@@ -7,10 +7,20 @@
 // this define must keep RESET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #define USE_CMAIN     // Affects cstartup_M.c FM0_COLD and FISH_return2c
 
+// pstat BASIS BEING ADDED HERE TO REPLACE pstat branch.
+// Disco Boots
+// PSTAT I expect swd errs
+
+// #define PSTAT_SPI1_TEST // works on DISCO
+// THIS IS CAUSING ST-LINK TO FAIL, MESSING WITH THE JTAG SWD SEETIINGS?
+// and I have to UNPLUG TARGET chip before SWD WILL WORK AGAIN,
+// Including unplugging target just to gain access to erase or download~!
+
+#define PSTAT_SPI3_TEST // CREATES SWD ERR?
+//#define PSTAT_BB_NOINIT_TEST  // SPI init in SOC_INIT
+//#define PSTAT_BB_TEST         // To change SPI init to BB
+
 // System:
-//#define PSTAT_SPI1_TEST
-//#define PSTAT_BB_NOINIT_TEST    // This is for the Bit Bang where SCLK 1 sets MOSI
-//#define PSTAT_BB_TEST
 #define TRUE_EQU_NEG_ONE
 #define XON_XOFF        // Use XON_XOFF Flow Control
 #define ABORT_STOP_TILL_CO

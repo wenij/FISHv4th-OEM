@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ELF Linker V8.22.1.15669/W32 for ARM                22/Dec/2018  14:09:10
+# IAR ELF Linker V8.22.1.15669/W32 for ARM                24/Dec/2018  16:49:16
 # Copyright 2007-2018 IAR Systems AB.
 #
 #    Output file  =  
@@ -10,7 +10,7 @@
 #        C:\Users\Clyde W Phillips
 #        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.map
 #    Command line =  
-#        -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWBA66.tmp ("C:\Users\Clyde W
+#        -f C:\Users\CLYDEW~1\AppData\Local\Temp\EW295D.tmp ("C:\Users\Clyde W
 #        Phillips
 #        Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\FISH_STM32F4_IAR.o"
 #        "C:\Users\Clyde W Phillips
@@ -72,22 +72,10 @@ do not initialize { rw, section .tcm_pref_stacks_and_vars };
   .intvec                 ro code  0x08000000   0x188  startup_stm32f4xx.o [1]
                                  - 0x08000188   0x188
 
-"P1":                                          0x4928
-  .text                   ro code  0x08000188  0x4764  FISH_STM32F4_IAR.o [1]
-  .text                   ro code  0x080048ec    0x34  main.o [1]
-  .text                   ro code  0x08004920    0x22  fpinit_M.o [3]
-  .text                   ro code  0x08004944     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004948     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x0800494c     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004950     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004954     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004958     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x0800495c     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004960     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004964     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004968     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x0800496c     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004970     0x4  startup_stm32f4xx.o [1]
+"P1":                                          0x4958
+  .text                   ro code  0x08000188  0x4794  FISH_STM32F4_IAR.o [1]
+  .text                   ro code  0x0800491c    0x34  main.o [1]
+  .text                   ro code  0x08004950    0x22  fpinit_M.o [3]
   .text                   ro code  0x08004974     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004978     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x0800497c     0x4  startup_stm32f4xx.o [1]
@@ -167,7 +155,19 @@ do not initialize { rw, section .tcm_pref_stacks_and_vars };
   .text                   ro code  0x08004aa4     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004aa8     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004aac     0x4  startup_stm32f4xx.o [1]
-                                 - 0x08004ab0  0x4928
+  .text                   ro code  0x08004ab0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004ab4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004ab8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004abc     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004ac0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004ac4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004ac8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004acc     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004ad0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004ad4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004ad8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004adc     0x4  startup_stm32f4xx.o [1]
+                                 - 0x08004ae0  0x4958
 
 "P2":                                           0x568
   .tcm_pref_stacks_and_vars
@@ -198,11 +198,11 @@ do not initialize { rw, section .tcm_pref_stacks_and_vars };
     Module               ro code  rw data
     ------               -------  -------
 C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj: [1]
-    FISH_STM32F4_IAR.o    18 276   67 208
+    FISH_STM32F4_IAR.o    18 324   67 208
     main.o                    52
     startup_stm32f4xx.o      756
     -------------------------------------
-    Total:                19 084   67 208
+    Total:                19 132   67 208
 
 command line: [2]
     -------------------------------------
@@ -216,7 +216,7 @@ m7M_tls.a: [3]
     Gaps                       2
     Linker created                  8 192
 -----------------------------------------
-    Grand Total:          19 120   75 400
+    Grand Total:          19 168   75 400
 
 
 *******************************************************************************
@@ -227,14 +227,14 @@ Entry                      Address  Size  Type      Object
 -----                      -------  ----  ----      ------
 CSTACK$$Base            0x2001e000         --   Gb  - Linker created -
 CSTACK$$Limit           0x20020000         --   Gb  - Linker created -
-C_CMSIS_DISABLE_IRQS    0x08004911   0x4  Code  Gb  main.o [1]
-C_CMSIS_ENABLE_IRQS     0x08004915   0x4  Code  Gb  main.o [1]
-FISH_return2c           0x08004444        Data  Gb  FISH_STM32F4_IAR.o [1]
+C_CMSIS_DISABLE_IRQS    0x08004941   0x4  Code  Gb  main.o [1]
+C_CMSIS_ENABLE_IRQS     0x08004945   0x4  Code  Gb  main.o [1]
+FISH_return2c           0x08004410        Data  Gb  FISH_STM32F4_IAR.o [1]
 FMx_SYSTICK_ISR         0x08000dcd        Code  Gb  FISH_STM32F4_IAR.o [1]
-HardFault_Handler       0x08004919   0x8  Code  Wk  main.o [1]
-NVIC_SystemReset        0x080048ed  0x1a  Code  Lc  main.o [1]
+HardFault_Handler       0x08004949   0x8  Code  Wk  main.o [1]
+NVIC_SystemReset        0x0800491d  0x1a  Code  Lc  main.o [1]
 STM32Fx_COLD_FISH       0x08000d51        Code  Gb  FISH_STM32F4_IAR.o [1]
-__iar_init_vfp          0x08004921        Code  Gb  fpinit_M.o [3]
+__iar_init_vfp          0x08004951        Code  Gb  fpinit_M.o [3]
 __iar_program_start     0x08000d51        Code  Gb  FISH_STM32F4_IAR.o [1]
 __iar_systems$$module {Abs}
                         0x00000001        Data  Gb  command line/config [2]
@@ -245,7 +245,7 @@ __vector_table          0x08000000        Data  Gb  startup_stm32f4xx.o [1]
 [2] = command line
 [3] = m7M_tls.a
 
-  19 120 bytes of readonly  code memory
+  19 168 bytes of readonly  code memory
   75 400 bytes of readwrite data memory
 
 Errors: none

@@ -4214,6 +4214,7 @@ TRUE_NEG_1_NFA:
  ALIGNROM 2,0xFFFFFFFF
     DC32	OFF_ZERO_NFA
 TRUE_NEG_1:
+ON:
     DC32	DOCON, -1
 
 //=============================== WORDCAT ====================================//
