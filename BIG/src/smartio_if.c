@@ -6,9 +6,9 @@
  *      Author: carstenh
  */
 
+#include <gpio.h>
 #include <string.h>
-#include "gpio.h"
-#include "usart.h"
+#include <usart.h>
 #include "smartio_if.h"
 #include "smartio_api.h"
 #include "smartio_interface.h"

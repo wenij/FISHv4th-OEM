@@ -31,6 +31,7 @@
 									<listOptionValue builtIn="false" value="__packed=__attribute__((__packed__))"/>
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
 									<listOptionValue builtIn="false" value="STM32F407xx"/>
+									<listOptionValue builtIn="false" value="HAL_TIM_MODULE_ENABLED"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.paths.1088124915" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/inc}&quot;"/>
@@ -39,6 +40,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/ST32MF4/Drivers/CMSIS/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/ST32MF4/inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/smartio}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/CMSIS_RTOS}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/portable/GCC/ARM_CM4F}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.dialect.std.103950338" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.909507829" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c"/>
@@ -65,6 +69,20 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1746223310.526363315" name="/" resourcePath="FreeRTOS">
+						<toolChain id="fr.ac6.managedbuild.toolchain.gnu.cross.exe.debug.754481519" name="Ac6 STM32 MCU GCC" superClass="fr.ac6.managedbuild.toolchain.gnu.cross.exe.debug" unusedChildren="">
+							<option id="fr.ac6.managedbuild.option.gnu.cross.mcu.1872811103.432992958" name="Mcu" superClass="fr.ac6.managedbuild.option.gnu.cross.mcu.1872811103"/>
+							<option id="fr.ac6.managedbuild.option.gnu.cross.fpu.550121663.436942589" name="Floating point hardware" superClass="fr.ac6.managedbuild.option.gnu.cross.fpu.550121663"/>
+							<option id="fr.ac6.managedbuild.option.gnu.cross.floatabi.664327562.1802035683" name="Floating-point ABI" superClass="fr.ac6.managedbuild.option.gnu.cross.floatabi.664327562"/>
+							<option id="fr.ac6.managedbuild.option.gnu.cross.board.1389979659.633630554" name="Board" superClass="fr.ac6.managedbuild.option.gnu.cross.board.1389979659"/>
+							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.160448704" name="MCU GCC Compiler" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1397439380"/>
+							<tool id="fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.1913884872" name="MCU G++ Compiler" superClass="fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.792950004"/>
+							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.linker.190157676" name="MCU GCC Linker" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.linker.1604009248"/>
+							<tool id="fr.ac6.managedbuild.tool.gnu.cross.cpp.linker.1182419211" name="MCU G++ Linker" superClass="fr.ac6.managedbuild.tool.gnu.cross.cpp.linker.668506934"/>
+							<tool id="fr.ac6.managedbuild.tool.gnu.archiver.2091384845" name="MCU GCC Archiver" superClass="fr.ac6.managedbuild.tool.gnu.archiver.1398270023"/>
+							<tool id="fr.ac6.managedbuild.tool.gnu.cross.assembler.1865725891" name="MCU GCC Assembler" superClass="fr.ac6.managedbuild.tool.gnu.cross.assembler.1521039999"/>
+						</toolChain>
+					</folderInfo>
 					<folderInfo id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1746223310.1534806579" name="/" resourcePath="inc">
 						<toolChain id="fr.ac6.managedbuild.toolchain.gnu.cross.exe.debug.1659719553" name="Ac6 STM32 MCU GCC" superClass="fr.ac6.managedbuild.toolchain.gnu.cross.exe.debug" unusedChildren="">
 							<option id="fr.ac6.managedbuild.option.gnu.cross.mcu.1872811103.1654457199" name="Mcu" superClass="fr.ac6.managedbuild.option.gnu.cross.mcu.1872811103"/>
@@ -87,6 +105,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FreeRTOS"/>
 						<entry excluding="Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c|startup/startup_stm32.s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ST32MF4"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="inc"/>
 						<entry excluding="LibSmartIO-ST32F4xx-JumpStartC/handlers.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="smartio"/>
@@ -130,6 +149,9 @@
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
 									<listOptionValue builtIn="false" value="STM32F407xx"/>
+								</option>
+								<option id="gnu.c.compiler.option.include.paths.2058969850" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/CMSIS_RTOS}&quot;"/>
 								</option>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1332569876" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s.1489991902" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s"/>
@@ -198,6 +220,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/ST32MF2/Drivers/STM32F2xx_HAL_Driver/Inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/ST32MF2/Inc}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/smartio}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/portable/GCC/ARM_CM4F}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/CMSIS_RTOS}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.dialect.std.1118861583" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1304071184" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c"/>
@@ -246,6 +271,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FreeRTOS"/>
 						<entry excluding="Drivers/STM32F2xx_HAL_Driver/Src/stm32f2xx_hal_uart.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ST32MF2"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="inc"/>
 						<entry excluding="LibSmartIO-ST32F4xx-JumpStartC/handlers.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="smartio"/>
@@ -289,6 +315,9 @@
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
 									<listOptionValue builtIn="false" value="STM32F407xx"/>
+								</option>
+								<option id="gnu.c.compiler.option.include.paths.233586364" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/CMSIS_RTOS}&quot;"/>
 								</option>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1408653395" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s.1336369747" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s"/>
@@ -334,9 +363,7 @@
 		</configuration>
 		<configuration configurationName="ReleaseF4"/>
 		<configuration configurationName="DebugF4"/>
-		<configuration configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="/big_fw_stm32f4"/>
-		</configuration>
+		<configuration configurationName="Debug"/>
 		<configuration configurationName="Release">
 			<resource resourceType="PROJECT" workspacePath="/big_fw_stm32f4"/>
 		</configuration>
@@ -344,6 +371,9 @@
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.release.698717646.937410992;fr.ac6.managedbuild.config.gnu.cross.exe.release.698717646.937410992.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1984122858;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1408653395">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.release.698717646;fr.ac6.managedbuild.config.gnu.cross.exe.release.698717646.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.373598650;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1332569876">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>

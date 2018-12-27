@@ -15,7 +15,7 @@
 #include "stm32f4xx_hal_spi.h"
 #include "stm32f4xx_hal.h"
 #endif
-#include "spi.h"
+#include <spi.h>
 #include "main.h"
 #include "smartio_interface.h"
 #include "smartio_hardware_interface.h"
