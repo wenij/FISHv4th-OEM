@@ -13,15 +13,11 @@
 #include "stm32f4xx_hal.h"
 #endif
 #include "isr.h"
-#include "usart.h"
+#include <usart.h>
 #include "smartio_if.h"
 
 void (*BT_ISR_ptr)(void) = NULL;
 
-void EXTI9_5_IRQHandler(void)
-{
-	HAL_GPIO_EXTI_IRQHandler(BT_IRQ_Pin);
-}
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
@@ -32,10 +28,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 }
 
 
-void USART2_IRQHandler(void)
-{
-	HAL_UART_IRQHandler(&huart2);
-}
 
 void USART2_ISR_ENABLE(void)
 {

@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * File Name          : SPI.c
+  * File Name          : SPI.h
   * Description        : This file provides code for the configuration
   *                      of the SPI instances.
   ******************************************************************************
@@ -36,106 +36,47 @@
   *
   ******************************************************************************
   */
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __spi_H
+#define __spi_H
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "spi.h"
+#ifdef STM32F205xx
+#include "stm32f2xx_hal.h"
+#else
+#include "stm32f4xx_hal.h"
+#endif
+#include "main.h"
 
-#include "gpio.h"
+/* USER CODE BEGIN Includes */
 
-/* USER CODE BEGIN 0 */
-SPI_HandleTypeDef* ActiveSPI;
-/* USER CODE END 0 */
+/* USER CODE END Includes */
 
-SPI_HandleTypeDef hspi3;
+extern SPI_HandleTypeDef* ActiveSPI;
 
-/* SPI3 init function */
-void MX_SPI3_Init(void)
-{
-  ActiveSPI = &hspi3;
 
-  hspi3.Instance = SPI3;
-  hspi3.Init.Mode = SPI_MODE_MASTER;
-  hspi3.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi3.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi3.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi3.Init.CLKPhase = SPI_PHASE_2EDGE;
-  hspi3.Init.NSS = SPI_NSS_SOFT;
-  hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
-  hspi3.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi3.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi3.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi3.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi3) != HAL_OK)
-  {
-    _Error_Handler(__FILE__, __LINE__);
-  }
+/* USER CODE BEGIN Private defines */
 
+/* USER CODE END Private defines */
+
+extern void _Error_Handler(char *, int);
+
+void MX_SPI1_Init(void);
+
+void MX_SPI3_Init(void);
+
+
+/* USER CODE BEGIN Prototypes */
+
+/* USER CODE END Prototypes */
+
+#ifdef __cplusplus
 }
-
-void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
-{
-
-  GPIO_InitTypeDef GPIO_InitStruct;
-  if(spiHandle->Instance==SPI3)
-  {
-  /* USER CODE BEGIN SPI3_MspInit 0 */
-
-  /* USER CODE END SPI3_MspInit 0 */
-    /* SPI3 clock enable */
-    __HAL_RCC_SPI3_CLK_ENABLE();
-  
-    /**SPI3 GPIO Configuration    
-    PB3     ------> SPI3_SCK
-    PB4     ------> SPI3_MISO
-    PB5     ------> SPI3_MOSI 
-    */
-    GPIO_InitStruct.Pin = GPIO_PIN_3;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /* USER CODE BEGIN SPI3_MspInit 1 */
-
-  /* USER CODE END SPI3_MspInit 1 */
-  }
-}
-
-void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
-{
-
-  if(spiHandle->Instance==SPI3)
-  {
-  /* USER CODE BEGIN SPI3_MspDeInit 0 */
-
-  /* USER CODE END SPI3_MspDeInit 0 */
-    /* Peripheral clock disable */
-    __HAL_RCC_SPI3_CLK_DISABLE();
-  
-    /**SPI3 GPIO Configuration    
-    PB3     ------> SPI3_SCK
-    PB4     ------> SPI3_MISO
-    PB5     ------> SPI3_MOSI 
-    */
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5);
-
-  /* USER CODE BEGIN SPI3_MspDeInit 1 */
-
-  /* USER CODE END SPI3_MspDeInit 1 */
-  }
-} 
-
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */
+#endif
+#endif /*__ spi_H */
 
 /**
   * @}

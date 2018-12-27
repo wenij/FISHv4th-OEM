@@ -38,9 +38,9 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "usart.h"
-
 #include "gpio.h"
+#include <gpio.h>
+#include <usart.h>
 
 /* USER CODE BEGIN 0 */
 

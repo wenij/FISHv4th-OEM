@@ -45,6 +45,9 @@
 #else
 #include "stm32f4xx_hal.h"
 #endif
+
+#include "cmsis_os.h"
+#include "cmsis_os.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -65,6 +68,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void MX_FREERTOS_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -117,6 +121,12 @@ int main(void)
   USART2_ISR_ENABLE();
 
   /* USER CODE END 2 */
+
+  /* Call init function for freertos objects (in freertos.c) */
+  MX_FREERTOS_Init();
+
+  /* Start scheduler */
+  osKernelStart();
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
