@@ -4563,7 +4563,6 @@ EMIT:
 #endif	// else IO2TP
  LTORG
 
-
 //	KEY KEY:	(  -- ch )
 
  SECTION .text : CONST (2)

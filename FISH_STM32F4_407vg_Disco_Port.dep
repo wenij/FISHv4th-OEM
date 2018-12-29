@@ -40,6 +40,7 @@
             <file>$PROJ_DIR$\FISH_STM32F4_IAR.s</file>
             <file>$PROJ_DIR$\Fixes in versions comments.c</file>
             <file>$PROJ_DIR$\main.c</file>
+            <file>$PROJ_DIR$\PSTAT_FISH.txt</file>
             <file>$PROJ_DIR$\startup_stm32f4xx.s</file>
             <file>$PROJ_DIR$\FISH_STM32F4_SOC_INIT.s</file>
             <file>$PROJ_DIR$\stm32f4xx.h</file>
@@ -53,13 +54,14 @@
             <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
             <file>$PROJ_DIR$\core_cmInstr.h</file>
             <file>$TOOLKIT_DIR$\inc\c\iccarm_builtin.h</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\FISH_STM32F4_407vg_Disco_Port.pbd</file>
         </outputs>
         <file>
             <name>[ROOT_NODE]</name>
             <outputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 15 26 38</file>
+                    <file> 39 15 26</file>
                 </tool>
             </outputs>
         </file>
@@ -68,13 +70,13 @@
             <outputs>
                 <tool>
                     <name>OBJCOPY</name>
-                    <file> 39 11</file>
+                    <file> 40 11</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 44 14 10 31 19</file>
+                    <file> 45 14 10 31 19</file>
                 </tool>
             </inputs>
         </file>
@@ -89,7 +91,7 @@
             <inputs>
                 <tool>
                     <name>AARM</name>
-                    <file> 0 1 6 24 9 25 40 23 16 28 29 2 7 3 22 30 36</file>
+                    <file> 0 1 6 24 9 25 41 23 16 28 29 2 7 3 22 30 37</file>
                 </tool>
             </inputs>
         </file>
@@ -121,7 +123,11 @@
             <inputs>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 4 13 8 37 41 46 42 27 43 20 21 5 45 47</file>
+                    <file> 4 13 8 38 42 47 43 27 44 20 21 5 46 48</file>
+                </tool>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 38 13 4 21 43 27 5 46 47 44 48 20 8 42</file>
                 </tool>
             </inputs>
         </file>
@@ -149,7 +155,7 @@
             <inputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 44 14 10 31 19</file>
+                    <file> 45 14 10 31 19</file>
                 </tool>
             </inputs>
         </file>
