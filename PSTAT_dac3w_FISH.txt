@@ -130,15 +130,15 @@ RXNE: Receive buffer not empty
 
 .CS
 
-\ TWO THINGS DONE - C! AND DACWORD
-: DW ( n24BITS -- )
-  DACWORD !
-  ON CS-DAC \ DAC PB13 CS (LEDRED) low=ON
-	~TXE	( MSB )	DACWORD 2 + C@ 3Fh AND SPI3-DR C!
+\ TWO THINGS DONE - C! AND ...
+: DW ( N3 n2 n1=MSB -- )
+\ this may have to read back false values, because the spi engine always reads back something.
+ 	ON CS-DAC \ DAC PB13 CS (LEDRED) low=ON
+	~TXE	( n1 )	3Fh AND SPI3-DR C!
   ~RXNE	SPI3-DR C@  DROP  ?OVR
-	~TXE	( MIDDLEBYTE ) DACWORD 1+ C@ SPI3-DR C!
+	~TXE	( n2 )  SPI3-DR C!
   ~RXNE	SPI3-DR C@  DROP  ?OVR
-	~TXE	( LSB ) DACWORD C@  SPI3-DR C!
+	~TXE	( n3 ) 	SPI3-DR C!
   ~RXNE	SPI3-DR C@  DROP  ?OVR
 	OFF CS-DAC \ DAC PB13 CS (LEDRED) high=OFF
 ;
@@ -148,11 +148,12 @@ RXNE: Receive buffer not empty
 \ DW WILL KILL THE BT CS
 \ CHECK FOR OVERRUN
 \	SPI3-SR @ 0F0h AND IF ." OVERRUN ERROR, GOING BYE " BYE THEN
-\	DO THE DAC
-	3F,FF,FFh 0 DO	\ I 1rst byte is AND'd with 3Fh
-		I  DW
-    ?KEY IF LEAVE THEN
-		10 MS
+\ now do the 3 write ramp.
+ON CS-DAC
+\	DO A 3 BYTE Write FOR THE DAC
+	FFh 0 DO	\ I 1rst byte is AND'd with 3Fh
+		I I I 03Fh AND DW
+		100 MS
 	LOOP
 	1 MS
 
@@ -162,23 +163,22 @@ RXNE: Receive buffer not empty
 : DAC-SCOPE-TEST BEGIN TS ?KEY UNTIL ;
 
 \ SPI3 3 BYTE DAC WRITE 
-: DAC3W	( n24BITS -- )
-  DACWORD !
-	CR ." DAC WRITE " DACWORD @ .H CR
+: DAC3W	( N1 N2 N3 -- )\
+	CR ." DAC 3 BYTE WRITE TEST"
 	ON CS-DAC \ DAC PB13 CS (LEDRED) low=ON
 	.DAC-CS
   ?OVR
-	DACWORD 2 + C@ DUP CR ." 1RST BYTE WRITTEN = " 03Fh AND .H
+	DUP CR ." 1RST BYTE WRITTEN = " 03Fh AND .H
 	~TXE	3Fh AND SPI3-DR C!
 	~RXNE	SPI3-DR C@
 	CR ." 1RST BYTE READ BACK = " .H
   ?OVR
-	DACWORD 1+ C@ DUP CR ." 2ND BYTE WRITTEN = "  .H
+	DUP CR ." 2ND BYTE WRITTEN = "  0FFh AND .H
 	~TXE	SPI3-DR C!
 	~RXNE	SPI3-DR C@
 	CR ." 2ND BYTE READ BACK = " .H
   ?OVR
-	DACWORD C@ DUP CR ." 3RD BYTE WRITTEN = "  .H
+	DUP CR ." 3RD BYTE WRITTEN = "  0FFh AND .H
 	~TXE	SPI3-DR C!
 	~RXNE	SPI3-DR C@
 	CR ." 3RD BYTE READ BACK = " .H
@@ -333,15 +333,15 @@ SEEBIT
 .SW
 .SPI3
 .CS
-\ 3F,FF,0h DAC3W
+\ FFh 7Fh A0h DAC3W
 ;
 
 .SPI3
 .SPI3-DUMP
 \ ThIS SHOULD SET 2.05V IF ALL SWITCHES ARE ON.
-3F,FF,FFh DAC3W
+FFh 7Fh A0h DAC3W
 
-\ 0 DAC3W
+FFh 7Fh 3Fh DAC3W
 \ WDR RDR ARE ATOMIC WORDS FOR THE LOOPBACK ISSUE.
 
 : WDR ( n=8bits -- ) \ write to spi3 odr 7 layer fifo
