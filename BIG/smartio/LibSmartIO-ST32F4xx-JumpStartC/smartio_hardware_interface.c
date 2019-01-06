@@ -21,6 +21,10 @@
 #include "smartio_hardware_interface.h"
 #include "isr.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+
 #include <string.h>
 
 /* ST-Nucleo F411 Smart.IO pin assignments
@@ -47,7 +51,8 @@
 void SmartIO_HardReset(void)
 {
 	HAL_GPIO_WritePin(BT_RST_GPIO_Port, BT_RST_Pin, GPIO_PIN_RESET);  //portc.Clear(7);
-	HAL_Delay(100);	//DelayMilliSecs(10);
+	//HAL_Delay(100);	//DelayMilliSecs(10);
+	vTaskDelay(  pdMS_TO_TICKS(100) );
 	HAL_GPIO_WritePin(BT_RST_GPIO_Port, BT_RST_Pin, GPIO_PIN_SET);	    //portc.Set(7);
 }
 
