@@ -13,6 +13,10 @@
 #include "smartio_api.h"
 #include "smartio_interface.h"
 
+/* Scheduler includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
 
 
 static void SifAppConnect(void); // Initializes App
@@ -86,6 +90,30 @@ void SifAppInit(void)
 
 	HAL_UART_Receive_IT( &huart2, (uint8_t*)MsgBuf, sizeof MsgBuf);
 }
+
+/* Main SmartIO task */
+
+
+void SifTask( void *params)
+{
+	//TickType_t xLastExecutionTime;
+	char * msg = "Tick\n\r";
+
+
+	/* Init the xLastExecutionTime variable on task entry. */
+	//xLastExecutionTime = xTaskGetTickCount();
+
+    SifInit();
+
+
+	for (;;)
+	{
+
+	  // Handle UI
+	  AppCommandHandler();
+	}
+}
+
 
 static command_app_state_t AppState = APP_IS_OFFLINE;
 
@@ -164,4 +192,6 @@ void SifSendInfoString(char * info)
 	HAL_UART_Receive_IT( &huart2, (uint8_t*)MsgBuf, sizeof MsgBuf);
 
 }
+
+
 

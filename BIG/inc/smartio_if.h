@@ -34,5 +34,6 @@ extern void SifSendInfoString(char * info);
 
 extern void SifInfoPending(void);
 
+extern void SifTask( void *params);
 
 #endif /* SMARTIO_IF_H_ */

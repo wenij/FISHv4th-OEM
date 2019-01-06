@@ -47,7 +47,7 @@
 #endif
 
 #include "cmsis_os.h"
-#include "cmsis_os.h"
+
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -116,7 +116,6 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  SifInit();
 
   USART2_ISR_ENABLE();
 
@@ -124,9 +123,6 @@ int main(void)
 
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
-
-  /* Start scheduler */
-  osKernelStart();
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -137,21 +133,17 @@ int main(void)
 	  HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
   }
 
-  while (1)
-  {
-	  // Handle UI
-	  AppCommandHandler();
+	/* Create a queue used by a task.  Messages are received via this queue. */
+	//xLCDQueue = xQueueCreate( mainLCD_QUEUE_SIZE, sizeof( xLCDMessage ) );
 
 
-	  // Poll UART. If there is data to receive, do it. We terminate a command with CRLF.
+  xTaskCreate( SifTask, "SmartIO", configMINIMAL_STACK_SIZE+100, NULL, 4, NULL );
 
- 	  // Poll transmit buffer. Tx on uart if data is to be transmitted.
+  /* Start scheduler */
+  osKernelStart();
 
-  /* USER CODE END WHILE */
+  return 0;
 
-  /* USER CODE BEGIN 3 */
-
-  }
   /* USER CODE END 3 */
 
 }

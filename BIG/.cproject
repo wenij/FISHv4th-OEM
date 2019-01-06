@@ -75,12 +75,19 @@
 							<option id="fr.ac6.managedbuild.option.gnu.cross.fpu.550121663.436942589" name="Floating point hardware" superClass="fr.ac6.managedbuild.option.gnu.cross.fpu.550121663"/>
 							<option id="fr.ac6.managedbuild.option.gnu.cross.floatabi.664327562.1802035683" name="Floating-point ABI" superClass="fr.ac6.managedbuild.option.gnu.cross.floatabi.664327562"/>
 							<option id="fr.ac6.managedbuild.option.gnu.cross.board.1389979659.633630554" name="Board" superClass="fr.ac6.managedbuild.option.gnu.cross.board.1389979659"/>
-							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.160448704" name="MCU GCC Compiler" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1397439380"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="fr.ac6.managedbuild.targetPlatform.gnu.cross" isAbstract="false" osList="all" superClass="fr.ac6.managedbuild.targetPlatform.gnu.cross"/>
+							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.160448704" name="MCU GCC Compiler" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1397439380">
+								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1177352704" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c"/>
+								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s.1909880614" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s"/>
+							</tool>
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.1913884872" name="MCU G++ Compiler" superClass="fr.ac6.managedbuild.tool.gnu.cross.cpp.compiler.792950004"/>
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.linker.190157676" name="MCU GCC Linker" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.linker.1604009248"/>
 							<tool id="fr.ac6.managedbuild.tool.gnu.cross.cpp.linker.1182419211" name="MCU G++ Linker" superClass="fr.ac6.managedbuild.tool.gnu.cross.cpp.linker.668506934"/>
 							<tool id="fr.ac6.managedbuild.tool.gnu.archiver.2091384845" name="MCU GCC Archiver" superClass="fr.ac6.managedbuild.tool.gnu.archiver.1398270023"/>
-							<tool id="fr.ac6.managedbuild.tool.gnu.cross.assembler.1865725891" name="MCU GCC Assembler" superClass="fr.ac6.managedbuild.tool.gnu.cross.assembler.1521039999"/>
+							<tool id="fr.ac6.managedbuild.tool.gnu.cross.assembler.1865725891" name="MCU GCC Assembler" superClass="fr.ac6.managedbuild.tool.gnu.cross.assembler.1521039999">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1453787482" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.assembler.input.416472902" superClass="fr.ac6.managedbuild.tool.gnu.cross.assembler.input"/>
+							</tool>
 						</toolChain>
 					</folderInfo>
 					<folderInfo id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1746223310.1534806579" name="/" resourcePath="inc">
@@ -105,7 +112,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FreeRTOS"/>
+						<entry excluding="Source/portable/GCC/ARM_CM3" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FreeRTOS"/>
 						<entry excluding="Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c|startup/startup_stm32.s" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ST32MF4"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="inc"/>
 						<entry excluding="LibSmartIO-ST32F4xx-JumpStartC/handlers.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="smartio"/>
@@ -175,6 +182,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="inc"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
@@ -212,6 +220,7 @@
 									<listOptionValue builtIn="false" value="__packed=__attribute__((__packed__))"/>
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
 									<listOptionValue builtIn="false" value="STM32F205xx"/>
+									<listOptionValue builtIn="false" value="HAL_TIM_MODULE_ENABLED"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.paths.1559147062" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/inc}&quot;"/>
@@ -271,7 +280,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FreeRTOS"/>
+						<entry excluding="Source/portable/GCC/ARM_CM4F" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FreeRTOS"/>
 						<entry excluding="Drivers/STM32F2xx_HAL_Driver/Src/stm32f2xx_hal_uart.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ST32MF2"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="inc"/>
 						<entry excluding="LibSmartIO-ST32F4xx-JumpStartC/handlers.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="smartio"/>
@@ -341,6 +350,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FreeRTOS/Source/portable/GCC/ARM_CM3"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="inc"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>

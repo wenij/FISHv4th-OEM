@@ -11,6 +11,9 @@
 #include "smartio_interface.h"
 #include "smartio_hardware_interface.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 volatile enum SPI_State SPI_State;
 
 typedef struct callback {
