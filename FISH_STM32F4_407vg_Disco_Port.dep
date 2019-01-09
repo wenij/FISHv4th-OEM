@@ -5,96 +5,57 @@
     <configuration>
         <name>FISHv4th 205 PSTAT</name>
         <outputs>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.7.out</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_IAR.s</file>
-            <file>$PROJ_DIR$\stm32f4xx.h</file>
-            <file>$PROJ_DIR$\startup_stm32f4xx.s</file>
-            <file>$PROJ_DIR$\Fixes in versions comments.c</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\Fixes in versions comments.pbi</file>
             <file>$PROJ_DIR$\FISH_STM32F4_STARTUP.s</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_UART3_INIT.s</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\List\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.map</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_MACROS.h</file>
+            <file>$PROJ_DIR$\startup_stm32f4xx.s</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_FLASH.s</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\FISH_STM32F4_IAR.o</file>
             <file>$PROJ_DIR$\core_cmInstr.h</file>
+            <file>$PROJ_DIR$\main.c</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_SLIB.s</file>
+            <file>$PROJ_DIR$\stm32F205RC.icf</file>
+            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+            <file>$PROJ_DIR$\FISH_CO_MSGS.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_EQUATES.h</file>
+            <file>$PROJ_DIR$\core_cmFunc.h</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.out</file>
+            <file>$PROJ_DIR$\PSTAT_FISH.txt</file>
+            <file>$PROJ_DIR$\FISH_GPIO_WC.h</file>
+            <file>$PROJ_DIR$\core_cm4_simd.h</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\Fixes in versions comments.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
+            <file>$PROJ_DIR$\stm32f4xx.h</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_IAR.s</file>
+            <file>$PROJ_DIR$\Fixes in versions comments.c</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\main.pbi</file>
+            <file>$PROJ_DIR$\FISH_AUTHOR.h</file>
             <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_SOC_INIT.s</file>
-            <file>$PROJ_DIR$\system_stm32f4xx.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\iccarm_builtin.h</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\startup_stm32f4xx.o</file>
+            <file>$PROJ_DIR$\FISH_RM_MSGS.h</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.7.out</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.hex</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_v1.8-OEM.hex</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\List\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.log</file>
             <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
             <file>$PROJ_DIR$\ioSTM32F4x7x.h</file>
-            <file>$PROJ_DIR$\FISH_CO_MSGS.h</file>
-            <file>$PROJ_DIR$\FISH_GPIO_WC.h</file>
-            <file>$PROJ_DIR$\FISH_RM_MSGS.h</file>
-            <file>$PROJ_DIR$\FISH_IAR.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_EQUATES.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_MACROS.h</file>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\FISH_STM32F4_407vg_Disco_Port.pbd</file>
             <file>$PROJ_DIR$\FISH_ARM_CORTEX_M_REGS.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_UART3_INIT.s</file>
-            <file>$PROJ_DIR$\main.c</file>
-            <file>$PROJ_DIR$\PSTAT_FISH.txt</file>
-            <file>$PROJ_DIR$\core_cmFunc.h</file>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.hex</file>
-            <file>$PROJ_DIR$\FISH_AUTHOR.h</file>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\Fixes in versions comments.pbi</file>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\List\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.map</file>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\startup_stm32f4xx.o</file>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.out</file>
-            <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\Fixes in versions comments.o</file>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\FISH_STM32F4_IAR.o</file>
+            <file>$PROJ_DIR$\FISH_IAR.h</file>
+            <file>$PROJ_DIR$\system_stm32f4xx.h</file>
             <file>$PROJ_DIR$\FISH_STM32F4_MAIN_INCLUDES.h</file>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\main.o</file>
-            <file>$PROJ_DIR$\core_cm4.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_MEMMAP.s</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
-            <file>$PROJ_DIR$\core_cm4_simd.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_SLIB.s</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_FLASH.s</file>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\List\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.log</file>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_v1.8-OEM.hex</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\FISH_STM32F4_407vg_Disco_Port.pbd</file>
             <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
-            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\main.pbi</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
-            <file>$PROJ_DIR$\stm32F205RC.icf</file>
+            <file>$PROJ_DIR$\core_cm4.h</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_SOC_INIT.s</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_MEMMAP.s</file>
+            <file>$TOOLKIT_DIR$\inc\c\iccarm_builtin.h</file>
+            <file>$PROJ_DIR$\FISHv4th 205 PSTAT\Obj\main.o</file>
             <file>$PROJ_DIR$\FISH_RM_CONFIG_#DEFINES.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
         </outputs>
-        <file>
-            <name>[ROOT_NODE]</name>
-            <outputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 28 43 30</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\FISHv4th 205 PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.7.out</name>
-            <outputs>
-                <tool>
-                    <name>OBJCOPY</name>
-                    <file> 44 25</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 48 34 33 36 29</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\FISH_STM32F4_IAR.s</name>
-            <outputs>
-                <tool>
-                    <name>AARM</name>
-                    <file> 34</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>AARM</name>
-                    <file> 35 26 16 12 20 18 49 17 38 41 5 13 21 42 14 15 8</file>
-                </tool>
-            </inputs>
-        </file>
         <file>
             <name>$PROJ_DIR$\startup_stm32f4xx.s</name>
             <outputs>
@@ -105,15 +66,160 @@
             </outputs>
         </file>
         <file>
+            <name>$PROJ_DIR$\main.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 47</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 26</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 23 43 42 12 35 14 28 49 8 22 46 16 20 39</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 42 43 20 23 39 8 35 14 22 16 12 28 49 46</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\FISHv4th 205 PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.out</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 3 34</file>
+                </tool>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 32</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 11 7 21 47 29</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\FISH_STM32F4_IAR.s</name>
+            <outputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 7</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 40 27 38 36 37 4 48 15 45 10 1 13 2 6 19 30 44</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
             <name>$PROJ_DIR$\Fixes in versions comments.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 33</file>
+                    <file> 21</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 27</file>
+                    <file> 0</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\FISHv4th 205 PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_Debug_ddmmyyyy_hhmmss.v1.7.out</name>
+            <outputs>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 33 32</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 11 7 21 47 29</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>[ROOT_NODE]</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 17 3 34</file>
+                </tool>
+            </outputs>
+        </file>
+    </configuration>
+    <configuration>
+        <name>STM32F407vg_Disco_Debug</name>
+        <outputs>
+            <file>$PROJ_DIR$\FISH_STM32F4_STARTUP.s</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_UART3_INIT.s</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_MACROS.h</file>
+            <file>$PROJ_DIR$\startup_stm32f4xx.s</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_FLASH.s</file>
+            <file>$PROJ_DIR$\core_cmInstr.h</file>
+            <file>$PROJ_DIR$\main.c</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_SLIB.s</file>
+            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+            <file>$PROJ_DIR$\FISH_CO_MSGS.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_EQUATES.h</file>
+            <file>$PROJ_DIR$\core_cmFunc.h</file>
+            <file>$PROJ_DIR$\FISH_GPIO_WC.h</file>
+            <file>$PROJ_DIR$\core_cm4_simd.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
+            <file>$PROJ_DIR$\stm32f4xx.h</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_IAR.s</file>
+            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Obj\FISH_STM32F4_IAR.o</file>
+            <file>$PROJ_DIR$\FISH_AUTHOR.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
+            <file>$PROJ_DIR$\FISH_RM_MSGS.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F407vg_Discovery_Board_168mhz_v1.8-OEM.hex</file>
+            <file>$PROJ_DIR$\ioSTM32F4x7x.h</file>
+            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Obj\main.o</file>
+            <file>$PROJ_DIR$\FISH_ARM_CORTEX_M_REGS.h</file>
+            <file>$PROJ_DIR$\FISH_IAR.h</file>
+            <file>$PROJ_DIR$\system_stm32f4xx.h</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_MAIN_INCLUDES.h</file>
+            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F205RC_STM_118mhz_v1.8-OEM.out</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+            <file>$PROJ_DIR$\core_cm4.h</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_SOC_INIT.s</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_MEMMAP.s</file>
+            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.hex</file>
+            <file>$PROJ_DIR$\STM32F407_Disco_Debug\List\FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.map</file>
+            <file>$TOOLKIT_DIR$\inc\c\iccarm_builtin.h</file>
+            <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
+            <file>$PROJ_DIR$\FISH_RM_CONFIG_#DEFINES.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+            <file>$PROJ_DIR$\STM32F407_Disco_Debug\List\FISH_STM32F4_IAR.lst</file>
+            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Obj\startup_stm32f4xx.o</file>
+            <file>$TOOLKIT_DIR$\lib\dl7M_tln.a</file>
+            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.out</file>
+            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.out</file>
+            <file>$TOOLKIT_DIR$\lib\m7M_tls.a</file>
+            <file>$PROJ_DIR$\STM32F407_Disco_Debug\List\FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.log</file>
+            <file>$PROJ_DIR$\stm32f407xG.icf</file>
+            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Obj\main.pbi</file>
+        </outputs>
+        <file>
+            <name>$PROJ_DIR$\startup_stm32f4xx.s</name>
+            <outputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 42</file>
                 </tool>
             </outputs>
         </file>
@@ -122,7 +228,161 @@
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 36</file>
+                    <file> 25</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 49</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 31 20 32 12 37 16 28 8 40 15 5 14 22 10</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\FISH_STM32F4_IAR.s</name>
+            <outputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 18 41</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 29 19 27 24 26 2 39 11 34 7 0 9 1 4 13 21 33</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F205RC_STM_118mhz_v1.8-OEM.out</name>
+            <outputs>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 23</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 48 18 25 42 38 46 43</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.out</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 36 47</file>
+                </tool>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 35</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 48 18 25 42 38 46 43</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.out</name>
+            <outputs>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 35</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 48 18 25 42 38 46 43</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>[ROOT_NODE]</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 36 47 44</file>
+                </tool>
+            </outputs>
+        </file>
+    </configuration>
+    <configuration>
+        <name>STM32F407vg_Disco_PubRel</name>
+        <outputs>
+            <file>$PROJ_DIR$\FISH_STM32F4_STARTUP.s</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_UART3_INIT.s</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_MACROS.h</file>
+            <file>$PROJ_DIR$\startup_stm32f4xx.s</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_FLASH.s</file>
+            <file>$PROJ_DIR$\core_cmInstr.h</file>
+            <file>$PROJ_DIR$\main.c</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_SLIB.s</file>
+            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+            <file>$PROJ_DIR$\FISH_CO_MSGS.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_EQUATES.h</file>
+            <file>$PROJ_DIR$\core_cmFunc.h</file>
+            <file>$PROJ_DIR$\PSTAT_FISH.txt</file>
+            <file>$PROJ_DIR$\FISH_GPIO_WC.h</file>
+            <file>$PROJ_DIR$\core_cm4_simd.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
+            <file>$PROJ_DIR$\stm32f4xx.h</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_IAR.s</file>
+            <file>$PROJ_DIR$\Fixes in versions comments.c</file>
+            <file>$PROJ_DIR$\FISH_AUTHOR.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
+            <file>$PROJ_DIR$\FISH_RM_MSGS.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+            <file>$PROJ_DIR$\ioSTM32F4x7x.h</file>
+            <file>$PROJ_DIR$\FISH_ARM_CORTEX_M_REGS.h</file>
+            <file>$PROJ_DIR$\FISH_IAR.h</file>
+            <file>$PROJ_DIR$\system_stm32f4xx.h</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_MAIN_INCLUDES.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+            <file>$PROJ_DIR$\core_cm4.h</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_SOC_INIT.s</file>
+            <file>$PROJ_DIR$\FISH_STM32F4_MEMMAP.s</file>
+            <file>$TOOLKIT_DIR$\inc\c\iccarm_builtin.h</file>
+            <file>$PROJ_DIR$\FISH_RM_CONFIG_#DEFINES.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+            <file>$PROJ_DIR$\STM32F4_PubRel\List\FISH_FORTH_STM32F4_Disco_PUBREL_RM_v1.7.log</file>
+            <file>$PROJ_DIR$\STM32F4_PubRel\Obj\Fixes in versions comments.o</file>
+            <file>$PROJ_DIR$\stm32f407xGg.icf</file>
+            <file>$PROJ_DIR$\STM32F4_PubRel\List\FISH_FORTH_STM32F4_Disco_PUBREL_RM_v1.7.map</file>
+            <file>$PROJ_DIR$\STM32F4_PubRel\Obj\FISH_STM32F4_IAR.o</file>
+            <file>$PROJ_DIR$\STM32F4_PubRel\Obj\Fixes in versions comments.pbi</file>
+            <file>$PROJ_DIR$\STM32F4_PubRel\Obj\FISH_STM32F4_407vg_Disco_Port.pbd</file>
+            <file>$PROJ_DIR$\STM32F4_PubRel\Obj\main.o</file>
+            <file>$PROJ_DIR$\STM32F4_PubRel\Exe\FISH_FORTH_STM32F4_Disco_PUBREL_RM_v1.7.out</file>
+            <file>$PROJ_DIR$\STM32F4_PubRel\Exe\FISH_FORTH_STM32F4_Disco_PUBREL_RM_v1.7.hex</file>
+            <file>$PROJ_DIR$\STM32F4_PubRel\Obj\main.pbi</file>
+            <file>$PROJ_DIR$\STM32F4_PubRel\Obj\startup_stm32f4xx.o</file>
+        </outputs>
+        <file>
+            <name>$PROJ_DIR$\startup_stm32f4xx.s</name>
+            <outputs>
+                <tool>
+                    <name>AARM</name>
+                    <file> 47</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\main.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 43</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
@@ -132,113 +392,7 @@
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 2 37 45 32 11 47 7 39 6 31 10 24 40 9</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 45 37 40 2 9 6 11 47 31 24 32 7 39 10</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\FISHv4th 205 PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.out</name>
-            <outputs>
-                <tool>
-                    <name>OBJCOPY</name>
-                    <file> 25</file>
-                </tool>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 28 43</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 48 34 33 36 29</file>
-                </tool>
-            </inputs>
-        </file>
-    </configuration>
-    <configuration>
-        <name>STM32F407vg_Disco_Debug</name>
-        <outputs>
-            <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
-            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.out</file>
-            <file>$TOOLKIT_DIR$\lib\dl7M_tln.a</file>
-            <file>$TOOLKIT_DIR$\lib\m7M_tls.a</file>
-            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Obj\startup_stm32f4xx.o</file>
-            <file>$PROJ_DIR$\STM32F407_Disco_Debug\List\FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.log</file>
-            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Obj\main.o</file>
-            <file>$PROJ_DIR$\STM32F407_Disco_Debug\List\FISH_STM32F4_IAR.lst</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_IAR.s</file>
-            <file>$PROJ_DIR$\stm32f4xx.h</file>
-            <file>$PROJ_DIR$\startup_stm32f4xx.s</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_STARTUP.s</file>
-            <file>$PROJ_DIR$\core_cmInstr.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_SOC_INIT.s</file>
-            <file>$PROJ_DIR$\system_stm32f4xx.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\iccarm_builtin.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
-            <file>$PROJ_DIR$\ioSTM32F4x7x.h</file>
-            <file>$PROJ_DIR$\FISH_CO_MSGS.h</file>
-            <file>$PROJ_DIR$\FISH_GPIO_WC.h</file>
-            <file>$PROJ_DIR$\FISH_RM_MSGS.h</file>
-            <file>$PROJ_DIR$\FISH_IAR.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_EQUATES.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_MACROS.h</file>
-            <file>$PROJ_DIR$\FISH_ARM_CORTEX_M_REGS.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_UART3_INIT.s</file>
-            <file>$PROJ_DIR$\main.c</file>
-            <file>$PROJ_DIR$\core_cmFunc.h</file>
-            <file>$PROJ_DIR$\FISH_AUTHOR.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_MAIN_INCLUDES.h</file>
-            <file>$PROJ_DIR$\core_cm4.h</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_MEMMAP.s</file>
-            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Obj\main.pbi</file>
-            <file>$PROJ_DIR$\STM32F407_Disco_Debug\List\FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.map</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
-            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.out</file>
-            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F205RC_STM_118mhz_v1.8-OEM.out</file>
-            <file>$PROJ_DIR$\core_cm4_simd.h</file>
-            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F407vg_Discovery_Board_168mhz_v1.8-OEM.hex</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_SLIB.s</file>
-            <file>$PROJ_DIR$\FISH_STM32F4_FLASH.s</file>
-            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.hex</file>
-            <file>$PROJ_DIR$\STM32F407_Disco_Debug\Obj\FISH_STM32F4_IAR.o</file>
-            <file>$PROJ_DIR$\stm32f407xG.icf</file>
-            <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
-            <file>$PROJ_DIR$\FISH_RM_CONFIG_#DEFINES.h</file>
-        </outputs>
-        <file>
-            <name>[ROOT_NODE]</name>
-            <outputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 36 5 1</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F407vg_Discovery_Board_168mhz_FISHv4th-OEM.out</name>
-            <outputs>
-                <tool>
-                    <name>OBJCOPY</name>
-                    <file> 44</file>
-                </tool>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 36 5</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 46 45 6 4 0 3 2</file>
+                    <file> 17 30 29 8 23 10 21 35 5 16 33 12 15 27</file>
                 </tool>
             </inputs>
         </file>
@@ -247,81 +401,56 @@
             <outputs>
                 <tool>
                     <name>AARM</name>
-                    <file> 45 7</file>
+                    <file> 40</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>AARM</name>
-                    <file> 32 29 22 18 25 24 49 23 34 42 11 19 26 43 20 21 14</file>
+                    <file> 28 20 26 24 25 2 34 11 32 7 0 9 1 4 14 22 31</file>
                 </tool>
             </inputs>
         </file>
         <file>
-            <name>$PROJ_DIR$\startup_stm32f4xx.s</name>
-            <outputs>
-                <tool>
-                    <name>AARM</name>
-                    <file> 4</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\main.c</name>
+            <name>$PROJ_DIR$\Fixes in versions comments.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 6</file>
+                    <file> 37</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 35</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 47 13 33 28 16 9 15 31 37 30 12 40 17 48</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.out</name>
-            <outputs>
-                <tool>
-                    <name>OBJCOPY</name>
-                    <file> 44</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 46 45 6 4 0 3 2</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\STM32F407_Disco_Debug\Exe\FISH_STM32F205RC_STM_118mhz_v1.8-OEM.out</name>
-            <outputs>
-                <tool>
-                    <name>OBJCOPY</name>
                     <file> 41</file>
                 </tool>
             </outputs>
+        </file>
+        <file>
+            <name>[ROOT_NODE]</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 44 39 36</file>
+                </tool>
+            </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\STM32F4_PubRel\Exe\FISH_FORTH_STM32F4_Disco_PUBREL_RM_v1.7.out</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 39 36</file>
+                </tool>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 45</file>
+                </tool>
+            </outputs>
             <inputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 46 45 6 4 0 3 2</file>
+                    <file> 38 40 37 43 47</file>
                 </tool>
             </inputs>
         </file>
-    </configuration>
-    <configuration>
-        <name>STM32F407vg_Disco_PubRel</name>
-        <outputs />
-        <forcedrebuild>
-            <name>[MULTI_TOOL]</name>
-            <tool>ILINK</tool>
-        </forcedrebuild>
     </configuration>
 </project>

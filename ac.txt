@@ -1,0 +1,25 @@
+Call Jr.
+Vape small and be active large~!
+--
+Memorize what you are learning from the team(s)~!
+Practise Cube clock setup:
+Cube PSTAT 118mhz clock example.ioc
+I nailed it~! Exactly like FISH prescalers and pll settings~!
+clk1/4 clck2/2~!!!
+Verify the PLL once more, Kolchak.
+Now find the shortest way~!
+
+PB3 is 3 O'Clock,
+and PB4 is MISO in the Middle,
+and PB5 is MOSI, who is the bossy~!
+
+Share with friends:
+Done=
+https://liveforlivemusic.com/news/grateful-dead-recording-fillmore-1-8-1966/
+
+Firefox: Suggest feature using Help > Submit Feedback 
+
+Cube:You can use a previously-saved configuration
+to create a new project with a new MCU of the same series.
+You create a new project with a new MCU
+and you import the previous project.

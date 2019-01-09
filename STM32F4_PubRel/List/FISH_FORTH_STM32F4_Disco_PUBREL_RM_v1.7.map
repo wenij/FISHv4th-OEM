@@ -1,33 +1,34 @@
 ###############################################################################
 #
-# IAR ELF Linker V8.22.1.15669/W32 for ARM                08/Jan/2019  18:12:43
+# IAR ELF Linker V8.22.1.15669/W32 for ARM                08/Jan/2019  08:01:29
 # Copyright 2007-2018 IAR Systems AB.
 #
 #    Output file  =  
-#        C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th 205
-#        PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.out
+#        C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F4_PubRel\Exe\FISH_FORTH_STM32F4_Disco_PUBREL_RM_v1.7.out
 #    Map file     =  
-#        C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th 205
-#        PSTAT\List\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.map
+#        C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F4_PubRel\List\FISH_FORTH_STM32F4_Disco_PUBREL_RM_v1.7.map
 #    Command line =  
-#        -f C:\Users\CLYDEW~1\AppData\Local\Temp\EW462E.tmp ("C:\Users\Clyde W
-#        Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th 205
-#        PSTAT\Obj\FISH_STM32F4_IAR.o" "C:\Users\Clyde W Phillips
-#        Jr\Desktop\FISHv4th-OEM\FISHv4th 205 PSTAT\Obj\Fixes in versions
+#        -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWA95A.tmp ("C:\Users\Clyde W
+#        Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F4_PubRel\Obj\FISH_STM32F4_IAR.o"
+#        "C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F4_PubRel\Obj\Fixes in versions
 #        comments.o" "C:\Users\Clyde W Phillips
-#        Jr\Desktop\FISHv4th-OEM\FISHv4th 205 PSTAT\Obj\main.o" "C:\Users\Clyde
-#        W Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th 205
-#        PSTAT\Obj\startup_stm32f4xx.o" -o "C:\Users\Clyde W Phillips
-#        Jr\Desktop\FISHv4th-OEM\FISHv4th 205
-#        PSTAT\Exe\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.out" --redirect
-#        _Printf=_PrintfFullNoMb --redirect _Scanf=_ScanfFullNoMb --map
-#        "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th 205
-#        PSTAT\List\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.map" --log
-#        initialization,modules,sections --log_file "C:\Users\Clyde W Phillips
-#        Jr\Desktop\FISHv4th-OEM\FISHv4th 205
-#        PSTAT\List\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.log" --config
-#        "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\stm32F205RC.icf"
-#        --no_library_search --no_entry --vfe --text_out locale)
+#        Jr\Desktop\FISHv4th-OEM\STM32F4_PubRel\Obj\main.o" "C:\Users\Clyde W
+#        Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F4_PubRel\Obj\startup_stm32f4xx.o" -o
+#        "C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F4_PubRel\Exe\FISH_FORTH_STM32F4_Disco_PUBREL_RM_v1.7.out"
+#        --map "C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F4_PubRel\List\FISH_FORTH_STM32F4_Disco_PUBREL_RM_v1.7.map"
+#        --log initialization,modules,sections --log_file "C:\Users\Clyde W
+#        Phillips
+#        Jr\Desktop\FISHv4th-OEM\STM32F4_PubRel\List\FISH_FORTH_STM32F4_Disco_PUBREL_RM_v1.7.log"
+#        --config "C:\Users\Clyde W Phillips
+#        Jr\Desktop\FISHv4th-OEM\stm32f407xGg.icf" --no_library_search
+#        --no_entry --vfe --text_out locale)
 #
 ###############################################################################
 
@@ -44,20 +45,18 @@ __dlib_version  = 6
 ***
 
 "A0":  place at 0x08000000 { ro section .intvec };
-"P1":  place in [from 0x08000000 to 0x0803ffff] { ro };
-"P2":  place in [from 0x20000000 to 0x2001bfff] {
-          section .sram_1rst_dict_stdio_bufs };
-"A1":  place at end of [from 0x20000000 to 0x2001bfff] {
+"P1":  place in [from 0x08000000 to 0x080fffff] { ro };
+"P2":  place in [from 0x10000000 to 0x1000ffff] {
           section .tcm_pref_stacks_and_vars };
-"P3":  place in [from 0x2001c000 to 0x2001ffff] {
+"P3":  place in [from 0x20000000 to 0x2000ffff] {
+          section .sram_1rst_dict_stdio_bufs };
+"P4":  place in [from 0x20010000 to 0x2001ffff] {
           section .sram_2nd_intvecs_unint };
 define block CSTACK with size = 8K, alignment = 8 { };
 define block HEAP with size = 8K, alignment = 8 { };
-"A2":  place at end of [from 0x2001c000 to 0x2001ffff] {
+"A1":  place at end of [from 0x20010000 to 0x2001ffff] {
           block CSTACK, block HEAP };
-do not initialize {
-   rw, section .sram_1rst_dict_stdio_bufs, section .sram_2nd_intvecs_unint,
-   section .tcm_pref_stacks_and_vars };
+do not initialize { rw, section .tcm_pref_stacks_and_vars };
 
   Section                 Kind        Address    Size  Object
   -------                 ----        -------    ----  ------
@@ -65,9 +64,13 @@ do not initialize {
   .intvec                 ro code  0x08000000   0x188  startup_stm32f4xx.o [1]
                                  - 0x08000188   0x188
 
-"P1":                                          0x4a00
-  .text                   ro code  0x08000188  0x4860  FISH_STM32F4_IAR.o [1]
-  .text                   ro code  0x080049e8    0x34  main.o [1]
+"P1":                                          0x49f0
+  .text                   ro code  0x08000188  0x4850  FISH_STM32F4_IAR.o [1]
+  .text                   ro code  0x080049d8    0x34  main.o [1]
+  .text                   ro code  0x08004a0c     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004a10     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004a14     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x08004a18     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004a1c     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004a20     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004a24     0x4  startup_stm32f4xx.o [1]
@@ -155,28 +158,24 @@ do not initialize {
   .text                   ro code  0x08004b6c     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004b70     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004b74     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b78     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b7c     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b80     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b84     0x4  startup_stm32f4xx.o [1]
-                                 - 0x08004b88  0x4a00
+                                 - 0x08004b78  0x49f0
 
-"P2":                                          0xff18
+"P2":                                           0x568
+  .tcm_pref_stacks_and_vars
+                          uninit   0x10000000   0x568  FISH_STM32F4_IAR.o [1]
+                                 - 0x10000568   0x568
+
+"P3":                                          0xff18
   .sram_1rst_dict_stdio_bufs
                           uninit   0x20000000  0xff18  FISH_STM32F4_IAR.o [1]
                                  - 0x2000ff18  0xff18
 
-"A1":                                           0x568
-  .tcm_pref_stacks_and_vars
-                          uninit   0x2001ba98   0x568  FISH_STM32F4_IAR.o [1]
-                                 - 0x2001c000   0x568
-
-"P3":                                           0x208
+"P4":                                           0x208
   .sram_2nd_intvecs_unint
-                          uninit   0x2001c000   0x208  FISH_STM32F4_IAR.o [1]
-                                 - 0x2001c208   0x208
+                          uninit   0x20010000   0x208  FISH_STM32F4_IAR.o [1]
+                                 - 0x20010208   0x208
 
-"A2":                                          0x2000
+"A1":                                          0x2000
   CSTACK                           0x2001e000  0x2000  <Block>
     CSTACK                uninit   0x2001e000  0x2000  <Block tail>
                                  - 0x20020000  0x2000
@@ -189,16 +188,16 @@ do not initialize {
 
     Module               ro code  rw data
     ------               -------  -------
-C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th 205 PSTAT\Obj: [1]
-    FISH_STM32F4_IAR.o    18 528   67 208
+C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F4_PubRel\Obj: [1]
+    FISH_STM32F4_IAR.o    18 512   67 208
     main.o                    52
     startup_stm32f4xx.o      756
     -------------------------------------
-    Total:                19 336   67 208
+    Total:                19 320   67 208
 
     Linker created                  8 192
 -----------------------------------------
-    Grand Total:          19 336   75 400
+    Grand Total:          19 320   75 400
 
 
 *******************************************************************************
@@ -209,12 +208,12 @@ Entry                      Address  Size  Type      Object
 -----                      -------  ----  ----      ------
 CSTACK$$Base            0x2001e000         --   Gb  - Linker created -
 CSTACK$$Limit           0x20020000         --   Gb  - Linker created -
-C_CMSIS_DISABLE_IRQS    0x08004a0d   0x4  Code  Gb  main.o [1]
-C_CMSIS_ENABLE_IRQS     0x08004a11   0x4  Code  Gb  main.o [1]
-FISH_return2c           0x080044a0        Data  Gb  FISH_STM32F4_IAR.o [1]
+C_CMSIS_DISABLE_IRQS    0x080049fd   0x4  Code  Gb  main.o [1]
+C_CMSIS_ENABLE_IRQS     0x08004a01   0x4  Code  Gb  main.o [1]
+FISH_return2c           0x08004490        Data  Gb  FISH_STM32F4_IAR.o [1]
 FMx_SYSTICK_ISR         0x08000dcd        Code  Gb  FISH_STM32F4_IAR.o [1]
-HardFault_Handler       0x08004a15   0x8  Code  Wk  main.o [1]
-NVIC_SystemReset        0x080049e9  0x1a  Code  Lc  main.o [1]
+HardFault_Handler       0x08004a05   0x8  Code  Wk  main.o [1]
+NVIC_SystemReset        0x080049d9  0x1a  Code  Lc  main.o [1]
 STM32Fx_COLD_FISH       0x08000d51        Code  Gb  FISH_STM32F4_IAR.o [1]
 __iar_program_start     0x08000d51        Code  Gb  FISH_STM32F4_IAR.o [1]
 __iar_systems$$module {Abs}
@@ -222,10 +221,10 @@ __iar_systems$$module {Abs}
 __vector_table          0x08000000        Data  Gb  startup_stm32f4xx.o [1]
 
 
-[1] = C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th 205 PSTAT\Obj
+[1] = C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F4_PubRel\Obj
 [2] = command line
 
-  19 336 bytes of readonly  code memory
+  19 320 bytes of readonly  code memory
   75 400 bytes of readwrite data memory
 
 Errors: none
