@@ -122,7 +122,9 @@ command_app_state_t AppCommandHandler(void)
 	if (AppState == APP_CAME_ONLINE)
 	{
 		// Connect
-		HAL_Delay(300);	//DelayMilliSecs(10);
+		vTaskDelay(  pdMS_TO_TICKS(300) );
+
+		//HAL_Delay(300);	//DelayMilliSecs(10);
 		SifAppInit();
 		AppState = APP_IS_ONLINE;
 		AppConnected = true;
