@@ -51,6 +51,14 @@
 #endif
 #include "main.h"
 
+ /* Scheduler includes. */
+#include <stdbool.h>
+
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+
+
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -70,6 +78,40 @@ void MX_SPI3_Init(void);
 
 
 /* USER CODE BEGIN Prototypes */
+// SPI Driver
+extern void SPI_driver_task( void * params );
+
+typedef enum
+{
+	SPI_SEND_SMARTIO,
+	SPI_SEND_DAC,
+	SPI_SEND_ADC,
+	SPI_RECV_DATA
+} SPI_MessageType;
+
+typedef struct
+{
+	// Sends data. Responds with SpiRespData
+	SPI_MessageType MsgType;
+	uint16_t length;	// Use a 0 length to do receive without transmitting first
+	uint8_t *data;
+	bool Response;
+	uint16_t rx_length;	// Expected length of receive data. Use 0 if not know. After a read the actual length is here.
+	uint16_t buf_size;
+	bool TxError;	// Error occurred during transmit
+	bool RxError;   // Error occurred during receive
+} SpiMsgContainer;
+
+
+extern bool SpiHiPriorityOnly;
+extern QueueHandle_t SpiSendQueue;
+extern QueueHandle_t SpiSmartIoQueue;	// Reply queue for SmartIO
+//extern QueueHandle_t SpiADC_Queue;		// Reply queue for ADC
+//extern QueueHandle_t SpiDAC_Queue;		// Reply Queue for DAC
+
+extern void SPI_SendData( SpiMsgContainer * SpiMsg, uint16_t length, SPI_MessageType Msg, uint16_t reply_length, uint8_t * data, uint16_t buffer_size, bool Response);
+extern void SPI_SendDataNoResponse(SpiMsgContainer * SpiMsg, uint16_t length, SPI_MessageType Msg, uint8_t * data);
+extern void SPI_ReadData(SpiMsgContainer * SpiMsg, SPI_MessageType Msg, uint8_t reply_length,  uint8_t * data, uint16_t reply_buf_size);
 
 /* USER CODE END Prototypes */
 
