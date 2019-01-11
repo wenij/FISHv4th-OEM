@@ -62,10 +62,13 @@ void SmartIO_HardReset(void)
  */
 void SmartIO_SPI_SendBytes(unsigned char *sendbuf, int sendlen)
 {
-	HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);	// spi1.ChipSelect();
-	HAL_SPI_Transmit(ActiveSPI, (uint8_t*)&sendlen, 2, HAL_MAX_DELAY);    // spi1.Write(sendlen); spi1.Write(sendlen >> 8);
-	HAL_SPI_Transmit(ActiveSPI, sendbuf, sendlen, HAL_MAX_DELAY);    //spi1.WriteByteArray(0, sendbuf, sendlen);
-    HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET); //spi1.ChipDeselect();
+	SpiMsgContainer Msg;
+
+	SPI_SendDataNoResponse(&Msg, sendlen, SPI_SEND_SMARTIO, sendbuf);		// The SPI driver incorporates some of the protocol
+
+	// Acknowledges the message was sent
+	xQueueReceive( SpiSmartIoQueue, (void*)&Msg, portMAX_DELAY );
+
 }
 
 /* read bytes from the SPI port
@@ -74,44 +77,20 @@ void SmartIO_SPI_SendBytes(unsigned char *sendbuf, int sendlen)
  */
 int SmartIO_SPI_ReadBytes(unsigned char *replybuf, int buflen)
 {
-	HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);	// spi1.ChipSelect();
+	SpiMsgContainer Msg;
 	int replylen;
 
-#if 0
+	SPI_ReadData( &Msg, SPI_SEND_SMARTIO, 0, replybuf, buflen);
 
-	memset(replybuf, 0xff, 6);
-	HAL_SPI_Receive( ActiveSPI, replybuf, 6, HAL_MAX_DELAY);	//int low = spi1.Read();
+	// Returns data that was read
+	xQueueReceive( SpiSmartIoQueue, (void*)&Msg, portMAX_DELAY );
 
-	replylen = (int)replybuf[0] | (int)(replybuf[1] << 8);	// int replylen = (spi1.Read() << 8) | low;
-	{
-		int i;
-
-		for (i=2; i<6; i++)
-		{
-			replybuf[i-2] = replybuf[i];
-		}
-	}
-#endif
-
-	memset(replybuf, 0xff, 2);
-
-	HAL_SPI_Receive( ActiveSPI, replybuf, 2, 100);	//int low = spi1.Read();
-
-	replylen = (int)replybuf[0] | (int)(replybuf[1] << 8);	// int replylen = (spi1.Read() << 8) | low;
+	replylen = Msg.rx_length;
 
     // printf("reading %d bytes from Smart.IO\n", replylen);
 
     if (replylen > buflen)
         replylen = -1;
-    else
-    {
-    	memset(replybuf, 0xff, replylen);
-
-    	HAL_SPI_Receive( ActiveSPI, replybuf, replylen, 100);	//spi1.ReadBytes(replybuf, replylen);
-
-    }
-
-    HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET); //spi1.ChipDeselect();
 
     return replylen;
 }

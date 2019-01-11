@@ -250,6 +250,128 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
 
 /* USER CODE BEGIN 1 */
 
+QueueHandle_t SpiSendQueue = NULL;
+QueueHandle_t SpiSmartIoQueue = NULL;
+
+
+void SPI_driver_task( void * params )
+{
+	SpiMsgContainer Msg;
+	bool TxError = false;
+	bool RxError = false;
+	SPI_MessageType Command = Msg.MsgType;
+
+	while(1)
+	{
+		xQueueReceive( SpiSendQueue, (void*)&Msg, portMAX_DELAY );
+
+		if (Msg.data != NULL )
+		{
+			// Process the send command
+			switch (Command)
+			{
+			case SPI_SEND_SMARTIO:
+				HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);	// spi1.ChipSelect();
+
+				if (Msg.length > 0)
+				{
+					HAL_SPI_Transmit(ActiveSPI, &Msg.length, 2, HAL_MAX_DELAY);    // spi1.Write(sendlen); spi1.Write(sendlen >> 8);
+					HAL_SPI_Transmit(ActiveSPI, Msg.data, Msg.length, HAL_MAX_DELAY);    //spi1.WriteByteArray(0, sendbuf, sendlen);
+				}
+
+				if (Msg.Response)
+				{
+					// Read
+					if (Msg.rx_length == 0)
+					{
+						uint8_t buf[2] = {0xFF, 0xFF};
+						// Read first two bytes to get the length
+						HAL_SPI_Receive( ActiveSPI, buf, 2, 100);	//int low = spi1.Read();
+						Msg.rx_length = (uint16_t)(buf[1] << 8) + (uint16_t)buf[0];
+					}
+
+					if (Msg.rx_length > 0)
+					{
+						// Make sure we stay within the buffer
+						if (Msg.buf_size < Msg.rx_length ) Msg.rx_length = Msg.buf_size;
+
+						HAL_SPI_Receive( ActiveSPI, Msg.data, Msg.rx_length, 100);	//int low = spi1.Read();
+
+					}
+					else
+					{
+						RxError = true;
+					}
+				}
+				else
+				{
+					Msg.rx_length = 0;
+				}
+				HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);	// spi1.ChipSelect();
+
+				break;
+			case SPI_SEND_DAC:
+				break;
+			case SPI_SEND_ADC:
+				break;
+			default:
+				TxError = true;
+				break;
+			}
+
+		}
+		else
+		{
+			TxError = RxError = true;
+		}
+
+		// Send the response
+		Msg.TxError = TxError;
+		Msg.RxError = RxError;
+		Msg.MsgType = SPI_RECV_DATA;
+
+		switch (Command)
+		{
+		case SPI_SEND_SMARTIO:
+			xQueueSend( SpiSmartIoQueue, &Msg, 0U );
+			break;
+		case SPI_SEND_DAC:
+			break;
+		case SPI_SEND_ADC:
+			break;
+		default:
+			break;
+		}
+
+	}
+
+}
+
+bool SpiHiPriorityOnly = false;
+
+void SPI_SendData( SpiMsgContainer * SpiMsg, uint16_t length, SPI_MessageType Msg, uint16_t reply_length, uint8_t * data, uint16_t buffer_size, bool Response)
+{
+	SpiMsg->length = length;
+	SpiMsg->MsgType = Msg;
+	SpiMsg->rx_length = reply_length;
+	SpiMsg->data = data;
+	SpiMsg->buf_size = buffer_size;
+	SpiMsg->Response = Response;
+
+	xQueueSend( SpiSendQueue, SpiMsg, 0 );
+}
+
+void SPI_SendDataNoResponse(SpiMsgContainer * SpiMsg, uint16_t length, SPI_MessageType Msg, uint8_t * data)
+{
+	SPI_SendData(SpiMsg, length, Msg, 0, data, 0, false);
+}
+
+
+void SPI_ReadData(SpiMsgContainer * SpiMsg, SPI_MessageType Msg, uint8_t reply_length,  uint8_t * data, uint16_t reply_buf_size)
+{
+	SPI_SendData(SpiMsg, 0, Msg, reply_length, data, reply_buf_size, true);
+}
+
 /* USER CODE END 1 */
 
 /**

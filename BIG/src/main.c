@@ -134,10 +134,12 @@ int main(void)
   }
 
 	/* Create a queue used by a task.  Messages are received via this queue. */
-	//xLCDQueue = xQueueCreate( mainLCD_QUEUE_SIZE, sizeof( xLCDMessage ) );
 
+  SpiSendQueue = xQueueCreate( 4 /*Queue size */, sizeof( SpiMsgContainer ) );
+  SpiSmartIoQueue = xQueueCreate( 1 /*Queue size */, sizeof( SpiMsgContainer ) );
 
   xTaskCreate( SifTask, "SmartIO", configMINIMAL_STACK_SIZE+100, NULL, 4, NULL );
+  xTaskCreate( SPI_driver_task, "SpiDriver", configMINIMAL_STACK_SIZE+100, NULL, 0, NULL );	// Highest Priority
 
   /* Start scheduler */
   osKernelStart();
