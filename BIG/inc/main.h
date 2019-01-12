@@ -42,8 +42,32 @@
 #define __MAIN_H__
 
 /* Includes ------------------------------------------------------------------*/
+ /* Scheduler includes. */
+#include <stdbool.h>
+
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
 
 /* USER CODE BEGIN Includes */
+
+// OS Messaging Queues. They are defined in the respective task source files but references are collated here for simplicity
+extern QueueHandle_t SpiSmartIoQueue;	// Queue for SmartIO task SPI interface (separate from others)
+extern QueueHandle_t SpiSendQueue;  // Queue for SPI Driver using container
+extern QueueHandle_t CliDataQueue;  // Queue for CLI task
+
+
+//extern QueueHandle_t ADC_Queue;		// Reply queue for ADC and DAC
+//extern QueueHandle_t DAC_Queue;		// Reply Queue for DAC
+
+// Global message type definitions recognized by all tasks. All IPC structures must also have this type as their first element
+typedef enum
+{
+	SPI_MESSAGE_TYPE,
+	CLI_MESSAGE_TYPE,
+	SIF_MESSAGE_TYPE,
+	MEASUREMENT_MESSAGE_TYPE
+} MessageType;
 
 /* USER CODE END Includes */
 
@@ -65,6 +89,12 @@
 #define B1_GPIO_Port GPIOA
 #define BOOT1_Pin GPIO_PIN_2
 #define BOOT1_GPIO_Port GPIOB
+#define ADC_DRDYn_Pin GPIO_PIN_5
+#define ADC_DRDYn_GPIO_Port GPIOC
+#define ADC_RSTn_Pin GPIO_PIN_0
+#define ADC_RSTn_GPIO_Port GPIOB
+#define ADC_PDN_Pin GPIO_PIN_1
+#define ADC_PDN_GPIO_Port GPIOB
 #define ADC_CSn_Pin GPIO_PIN_12
 #define ADC_CSn_GPIO_Port GPIOB
 #define DAC_CSn_Pin GPIO_PIN_13
