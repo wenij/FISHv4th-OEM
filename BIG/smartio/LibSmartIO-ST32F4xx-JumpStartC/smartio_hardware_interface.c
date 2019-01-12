@@ -56,14 +56,14 @@ void SmartIO_HardReset(void)
 	HAL_GPIO_WritePin(BT_RST_GPIO_Port, BT_RST_Pin, GPIO_PIN_SET);	    //portc.Set(7);
 }
 
+static 	SpiSendPortMessage Msg;
+
 /* send bytes out using the SPI port
  *  sendbuf: buffer containing content to send
  *  sendlen: number of bytes to send
  */
 void SmartIO_SPI_SendBytes(unsigned char *sendbuf, int sendlen)
 {
-	SpiMsgContainer Msg;
-
 	SPI_SendDataNoResponse(&Msg, sendlen, SPI_SEND_SMARTIO, sendbuf);		// The SPI driver incorporates some of the protocol
 
 	// Acknowledges the message was sent
@@ -77,7 +77,6 @@ void SmartIO_SPI_SendBytes(unsigned char *sendbuf, int sendlen)
  */
 int SmartIO_SPI_ReadBytes(unsigned char *replybuf, int buflen)
 {
-	SpiMsgContainer Msg;
 	int replylen;
 
 	SPI_ReadData( &Msg, SPI_SEND_SMARTIO, 0, replybuf, buflen);
@@ -85,7 +84,7 @@ int SmartIO_SPI_ReadBytes(unsigned char *replybuf, int buflen)
 	// Returns data that was read
 	xQueueReceive( SpiSmartIoQueue, (void*)&Msg, portMAX_DELAY );
 
-	replylen = Msg.rx_length;
+	replylen = Msg.SpiMessage.rx_length;
 
     // printf("reading %d bytes from Smart.IO\n", replylen);
 

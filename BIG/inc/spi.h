@@ -51,12 +51,7 @@
 #endif
 #include "main.h"
 
- /* Scheduler includes. */
-#include <stdbool.h>
 
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
 
 
 /* USER CODE BEGIN Includes */
@@ -102,16 +97,23 @@ typedef struct
 	bool RxError;   // Error occurred during receive
 } SpiMsgContainer;
 
+// This is used for the queue
+typedef struct
+{
+	MessageType Type;
+	union
+	{
+		SpiMsgContainer SpiMessage;
+	};
+
+} SpiSendPortMessage;
 
 extern bool SpiHiPriorityOnly;
-extern QueueHandle_t SpiSendQueue;
-extern QueueHandle_t SpiSmartIoQueue;	// Reply queue for SmartIO
-//extern QueueHandle_t SpiADC_Queue;		// Reply queue for ADC
-//extern QueueHandle_t SpiDAC_Queue;		// Reply Queue for DAC
 
-extern void SPI_SendData( SpiMsgContainer * SpiMsg, uint16_t length, SPI_MessageType Msg, uint16_t reply_length, uint8_t * data, uint16_t buffer_size, bool Response);
-extern void SPI_SendDataNoResponse(SpiMsgContainer * SpiMsg, uint16_t length, SPI_MessageType Msg, uint8_t * data);
-extern void SPI_ReadData(SpiMsgContainer * SpiMsg, SPI_MessageType Msg, uint8_t reply_length,  uint8_t * data, uint16_t reply_buf_size);
+
+extern void SPI_SendData( SpiSendPortMessage * SpiMsg, uint16_t length, SPI_MessageType Msg, uint16_t reply_length, uint8_t * data, uint16_t buffer_size, bool Response);
+extern void SPI_SendDataNoResponse(SpiSendPortMessage * SpiMsg, uint16_t length, SPI_MessageType Msg, uint8_t * data);
+extern void SPI_ReadData(SpiSendPortMessage * SpiMsg, SPI_MessageType Msg, uint8_t reply_length,  uint8_t * data, uint16_t reply_buf_size);
 
 /* USER CODE END Prototypes */
 

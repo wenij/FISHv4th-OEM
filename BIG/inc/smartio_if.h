@@ -12,6 +12,29 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "main.h"
+#include "spi.h"
+#include "cli.h"
+
+ typedef enum
+ {
+	 SIF_SPI_MESSAGE,
+	 SIF_CLI_COMMAND
+ } SifMessageType;
+
+// SIF message container
+
+ typedef struct
+ {
+	 SifMessageType Type;
+	 union
+	 {
+		 SpiMsgContainer SpiMsg;
+		 CliCmdContainer Cmd;
+	 } Msg;
+ } SifPortMessage;
+
+
 typedef enum
 {
 	APP_IS_OFFLINE,
@@ -35,5 +58,7 @@ extern void SifSendInfoString(char * info);
 extern void SifInfoPending(void);
 
 extern void SifTask( void *params);
+
+
 
 #endif /* SMARTIO_IF_H_ */

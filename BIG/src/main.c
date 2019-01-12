@@ -55,7 +55,10 @@
 
 
 /* USER CODE BEGIN Includes */
+
+// Includes for other tasks
 #include "smartio_if.h"
+#include "cli.h"
 
 /* USER CODE END Includes */
 
@@ -87,7 +90,6 @@ void MX_FREERTOS_Init(void);
 
 int main(void)
 {
-	bool UI_Connected = false;
 
   /* USER CODE BEGIN 1 */
 
@@ -127,19 +129,18 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  {
-	  char * msg = "B.I.G. - Bedbug Intelligence Group - PSTAT\n\r";
-
-	  HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-  }
 
 	/* Create a queue used by a task.  Messages are received via this queue. */
 
-  SpiSendQueue = xQueueCreate( 4 /*Queue size */, sizeof( SpiMsgContainer ) );
-  SpiSmartIoQueue = xQueueCreate( 1 /*Queue size */, sizeof( SpiMsgContainer ) );
+  SpiSendQueue = xQueueCreate( 4 /*Queue size */, sizeof( SpiSendPortMessage ) );
+  SpiSmartIoQueue = xQueueCreate( 1 /*Queue size */, sizeof( SpiSendPortMessage ) );
+  CliDataQueue = xQueueCreate( 4 /*Queue size */, sizeof( CliPortMessage ) );
 
-  xTaskCreate( SifTask, "SmartIO", configMINIMAL_STACK_SIZE+100, NULL, 4, NULL );
   xTaskCreate( SPI_driver_task, "SpiDriver", configMINIMAL_STACK_SIZE+100, NULL, 0, NULL );	// Highest Priority
+
+  xTaskCreate( cli_task, "CLI", configMINIMAL_STACK_SIZE+100, NULL, 4, NULL );	// middle Priority
+
+  xTaskCreate( SifTask, "SmartIO", configMINIMAL_STACK_SIZE+100, NULL, 6, NULL ); // Lowest Priority
 
   /* Start scheduler */
   osKernelStart();

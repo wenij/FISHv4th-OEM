@@ -42,6 +42,8 @@
 #include <gpio.h>
 #include <spi.h>
 
+#include "smartio_if.h"
+
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
@@ -253,49 +255,54 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
 QueueHandle_t SpiSendQueue = NULL;
 QueueHandle_t SpiSmartIoQueue = NULL;
 
+static SpiSendPortMessage PortMsg;
 
 void SPI_driver_task( void * params )
 {
-	SpiMsgContainer Msg;
+	SpiMsgContainer* Msg;
 	bool TxError = false;
 	bool RxError = false;
-	SPI_MessageType Command = Msg.MsgType;
+	SPI_MessageType Command;
 
 	while(1)
 	{
-		xQueueReceive( SpiSendQueue, (void*)&Msg, portMAX_DELAY );
+		xQueueReceive( SpiSendQueue, (void*)&PortMsg, portMAX_DELAY );
 
-		if (Msg.data != NULL )
+		Msg = &PortMsg.SpiMessage;
+
+		if (Msg->data != NULL )
 		{
+			Command = Msg->MsgType;
+
 			// Process the send command
 			switch (Command)
 			{
 			case SPI_SEND_SMARTIO:
 				HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);	// spi1.ChipSelect();
 
-				if (Msg.length > 0)
+				if (Msg->length > 0)
 				{
-					HAL_SPI_Transmit(ActiveSPI, &Msg.length, 2, HAL_MAX_DELAY);    // spi1.Write(sendlen); spi1.Write(sendlen >> 8);
-					HAL_SPI_Transmit(ActiveSPI, Msg.data, Msg.length, HAL_MAX_DELAY);    //spi1.WriteByteArray(0, sendbuf, sendlen);
+					HAL_SPI_Transmit(ActiveSPI, (uint8_t*)&Msg->length, 2, HAL_MAX_DELAY);    // spi1.Write(sendlen); spi1.Write(sendlen >> 8);
+					HAL_SPI_Transmit(ActiveSPI, Msg->data, Msg->length, HAL_MAX_DELAY);    //spi1.WriteByteArray(0, sendbuf, sendlen);
 				}
 
-				if (Msg.Response)
+				if (Msg->Response)
 				{
 					// Read
-					if (Msg.rx_length == 0)
+					if (Msg->rx_length == 0)
 					{
 						uint8_t buf[2] = {0xFF, 0xFF};
 						// Read first two bytes to get the length
 						HAL_SPI_Receive( ActiveSPI, buf, 2, 100);	//int low = spi1.Read();
-						Msg.rx_length = (uint16_t)(buf[1] << 8) + (uint16_t)buf[0];
+						Msg->rx_length = (uint16_t)(buf[1] << 8) + (uint16_t)buf[0];
 					}
 
-					if (Msg.rx_length > 0)
+					if (Msg->rx_length > 0)
 					{
 						// Make sure we stay within the buffer
-						if (Msg.buf_size < Msg.rx_length ) Msg.rx_length = Msg.buf_size;
+						if (Msg->buf_size < Msg->rx_length ) Msg->rx_length = Msg->buf_size;
 
-						HAL_SPI_Receive( ActiveSPI, Msg.data, Msg.rx_length, 100);	//int low = spi1.Read();
+						HAL_SPI_Receive( ActiveSPI, Msg->data, Msg->rx_length, 100);	//int low = spi1.Read();
 
 					}
 					else
@@ -305,7 +312,7 @@ void SPI_driver_task( void * params )
 				}
 				else
 				{
-					Msg.rx_length = 0;
+					Msg->rx_length = 0;
 				}
 				HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);	// spi1.ChipSelect();
 
@@ -326,14 +333,14 @@ void SPI_driver_task( void * params )
 		}
 
 		// Send the response
-		Msg.TxError = TxError;
-		Msg.RxError = RxError;
-		Msg.MsgType = SPI_RECV_DATA;
+		Msg->TxError = TxError;
+		Msg->RxError = RxError;
+		Msg->MsgType = SPI_RECV_DATA;
 
 		switch (Command)
 		{
 		case SPI_SEND_SMARTIO:
-			xQueueSend( SpiSmartIoQueue, &Msg, 0U );
+			xQueueSend( SpiSmartIoQueue, &PortMsg, 0U );
 			break;
 		case SPI_SEND_DAC:
 			break;
@@ -349,25 +356,26 @@ void SPI_driver_task( void * params )
 
 bool SpiHiPriorityOnly = false;
 
-void SPI_SendData( SpiMsgContainer * SpiMsg, uint16_t length, SPI_MessageType Msg, uint16_t reply_length, uint8_t * data, uint16_t buffer_size, bool Response)
+void SPI_SendData( SpiSendPortMessage * SpiMsg, uint16_t length, SPI_MessageType Msg, uint16_t reply_length, uint8_t * data, uint16_t buffer_size, bool Response)
 {
-	SpiMsg->length = length;
-	SpiMsg->MsgType = Msg;
-	SpiMsg->rx_length = reply_length;
-	SpiMsg->data = data;
-	SpiMsg->buf_size = buffer_size;
-	SpiMsg->Response = Response;
+	SpiMsg->Type = SPI_MESSAGE_TYPE;
+	SpiMsg->SpiMessage.length = length;
+	SpiMsg->SpiMessage.MsgType = Msg;
+	SpiMsg->SpiMessage.rx_length = reply_length;
+	SpiMsg->SpiMessage.data = data;
+	SpiMsg->SpiMessage.buf_size = buffer_size;
+	SpiMsg->SpiMessage.Response = Response;
 
 	xQueueSend( SpiSendQueue, SpiMsg, 0 );
 }
 
-void SPI_SendDataNoResponse(SpiMsgContainer * SpiMsg, uint16_t length, SPI_MessageType Msg, uint8_t * data)
+void SPI_SendDataNoResponse(SpiSendPortMessage * SpiMsg, uint16_t length, SPI_MessageType Msg, uint8_t * data)
 {
 	SPI_SendData(SpiMsg, length, Msg, 0, data, 0, false);
 }
 
 
-void SPI_ReadData(SpiMsgContainer * SpiMsg, SPI_MessageType Msg, uint8_t reply_length,  uint8_t * data, uint16_t reply_buf_size)
+void SPI_ReadData(SpiSendPortMessage * SpiMsg, SPI_MessageType Msg, uint8_t reply_length,  uint8_t * data, uint16_t reply_buf_size)
 {
 	SPI_SendData(SpiMsg, 0, Msg, reply_length, data, reply_buf_size, true);
 }

@@ -97,8 +97,6 @@ void SifAppInit(void)
 void SifTask( void *params)
 {
 	//TickType_t xLastExecutionTime;
-	char * msg = "Tick\n\r";
-
 
 	/* Init the xLastExecutionTime variable on task entry. */
 	//xLastExecutionTime = xTaskGetTickCount();
@@ -108,9 +106,11 @@ void SifTask( void *params)
 
 	for (;;)
 	{
-
 	  // Handle UI
 	  AppCommandHandler();
+
+      vTaskDelay(  pdMS_TO_TICKS(20) );	// Give others a chance to run
+
 	}
 }
 
@@ -121,7 +121,7 @@ command_app_state_t AppCommandHandler(void)
 {
 	if (AppState == APP_CAME_ONLINE)
 	{
-		// Connect
+		// Connect. 300 ms is a empirically found to be a good number. Documentation has 10 ms but the smartio module doesn't respond.
 		vTaskDelay(  pdMS_TO_TICKS(300) );
 
 		//HAL_Delay(300);	//DelayMilliSecs(10);
