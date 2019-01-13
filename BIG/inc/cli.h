@@ -23,40 +23,52 @@
 #include "task.h"
 #include "queue.h"
 
+
+#define TXT_MESSAGE_BUF_SIZE 128
+
  typedef enum
  {
 	 CLI_MESSAGE,
 	 CLI_COMMAND
  } CliMessageType;
 
+ typedef struct
+ {
+	 uint8_t Id;
+	 uint8_t Parameters[8];
+ } CliCmd_t;
+
 // CLI message container
  typedef struct
  {
 	CliMessageType CliMessageType;
-	uint16_t length;	// length of data in msg buffer
-	char *msg;
+	union
+	{
+		char *msg;	// 0-terminated string associated with CLI_MESSAGE
+		CliCmd_t Cmd; // Command structure associated with CLI_COMMAND
+	};
  } CliMsgContainer;
-
- typedef struct
- {
-	 CliMessageType CliMessageType;
-	 uint8_t Id;
-	 uint8_t Parameters[8];
- } CliCmdContainer;
 
  typedef struct
  {
 	 MessageType Type;
 	 union
 	 {
-		 CliMsgContainer Message;
-		 CliCmdContainer Cmd;
+		 CliMsgContainer CliMsg;
 	 };
 
  } CliPortMessage;
 
 
 extern void cli_task(void * parm);
+
+extern void CliSendMsg(CliPortMessage* Msg, char * content);
+
+extern void CliSendCmd(CliPortMessage* Msg, CliCmd_t * msg);
+
+extern void CliInfoPending(void);
+
+
 
 #ifdef __cplusplus
 }

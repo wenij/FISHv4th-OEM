@@ -55,7 +55,7 @@
 extern QueueHandle_t SpiSmartIoQueue;	// Queue for SmartIO task SPI interface (separate from others)
 extern QueueHandle_t SpiSendQueue;  // Queue for SPI Driver using container
 extern QueueHandle_t CliDataQueue;  // Queue for CLI task
-
+extern QueueHandle_t SifQueue;  	// Second Queue for the SmartIO task for general messaging.
 
 //extern QueueHandle_t ADC_Queue;		// Reply queue for ADC and DAC
 //extern QueueHandle_t DAC_Queue;		// Reply Queue for DAC
