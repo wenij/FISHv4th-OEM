@@ -326,28 +326,24 @@ void SPI_driver_task( void * params )
 				break;
 			}
 
-		}
-		else
-		{
-			TxError = RxError = true;
-		}
 
-		// Send the response
-		Msg->TxError = TxError;
-		Msg->RxError = RxError;
-		Msg->MsgType = SPI_RECV_DATA;
+			// Send the response
+			Msg->TxError = TxError;
+			Msg->RxError = RxError;
+			Msg->MsgType = SPI_RECV_DATA;
 
-		switch (Command)
-		{
-		case SPI_SEND_SMARTIO:
-			xQueueSend( SpiSmartIoQueue, &PortMsg, 0U );
-			break;
-		case SPI_SEND_DAC:
-			break;
-		case SPI_SEND_ADC:
-			break;
-		default:
-			break;
+			switch (Command)
+			{
+			case SPI_SEND_SMARTIO:
+				xQueueSend( SpiSmartIoQueue, &PortMsg, 0U );
+				break;
+			case SPI_SEND_DAC:
+				break;
+			case SPI_SEND_ADC:
+				break;
+			default:
+				break;
+			}
 		}
 
 	}

@@ -14,7 +14,7 @@
 #endif
 #include "isr.h"
 #include <usart.h>
-#include "smartio_if.h"
+#include "cli.h"
 
 void (*BT_ISR_ptr)(void) = NULL;
 
@@ -40,7 +40,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	if (huart->pRxBuffPtr != NULL)
 	{
 		huart->pRxBuffPtr[huart->RxXferCount] = 0;	// Making sure we are 0 terminated
-		SifInfoPending();
+		CliInfoPending();
 	}
 }
 

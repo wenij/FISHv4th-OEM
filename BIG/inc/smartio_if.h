@@ -18,47 +18,35 @@
 
  typedef enum
  {
-	 SIF_SPI_MESSAGE,
+	 SIF_CLI_MESSAGE,
 	 SIF_CLI_COMMAND
  } SifMessageType;
 
 // SIF message container
+ typedef struct
+ {
+	 SifMessageType SifMsgType;
+	 union
+	 {
+		 char * 	Msg;	// Associated with SIF_CLI_MESSAGE
+		 CliCmd_t   CliCmd; // Associated with SIF_CLI_COMMAND
+	 };
+ } SifMessageContainer;
+
 
  typedef struct
  {
-	 SifMessageType Type;
+	 MessageType Type;
 	 union
 	 {
-		 SpiMsgContainer SpiMsg;
-		 CliCmdContainer Cmd;
-	 } Msg;
+		 SifMessageContainer SifMsg; // Associated with SIF_MESSAGE
+	 };
  } SifPortMessage;
 
 
-typedef enum
-{
-	APP_IS_OFFLINE,
-	APP_CAME_ONLINE,
-	APP_IS_ONLINE
-
-} command_app_state_t;
-
-// Main command handler. Pass it a string from the UART and it will buffer the string and act upon it if terminated with CRLF. In this demo mode it will send things to the app.
-extern bool Command( char * buf, int length);
-
-extern void SifInit(void);	// Initializes command handler
-
-extern void SifAppInit(void);  // Initialize App
-
-extern bool AppConnected;
-extern command_app_state_t AppCommandHandler(void);
-
-extern void SifSendInfoString(char * info);
-
-extern void SifInfoPending(void);
-
 extern void SifTask( void *params);
 
+extern void SifSendCliMessage( SifPortMessage * Msg, char * content);
 
 
 #endif /* SMARTIO_IF_H_ */

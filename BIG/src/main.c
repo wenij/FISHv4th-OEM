@@ -135,6 +135,7 @@ int main(void)
   SpiSendQueue = xQueueCreate( 4 /*Queue size */, sizeof( SpiSendPortMessage ) );
   SpiSmartIoQueue = xQueueCreate( 1 /*Queue size */, sizeof( SpiSendPortMessage ) );
   CliDataQueue = xQueueCreate( 4 /*Queue size */, sizeof( CliPortMessage ) );
+  SifQueue = xQueueCreate( 4 /*Queue size */, sizeof( SifPortMessage ) );
 
   xTaskCreate( SPI_driver_task, "SpiDriver", configMINIMAL_STACK_SIZE+100, NULL, 0, NULL );	// Highest Priority
 

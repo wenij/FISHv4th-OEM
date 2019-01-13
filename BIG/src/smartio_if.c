@@ -8,7 +8,7 @@
 
 #include <gpio.h>
 #include <string.h>
-#include <usart.h>
+
 #include "smartio_if.h"
 #include "smartio_api.h"
 #include "smartio_interface.h"
@@ -18,6 +18,8 @@
 #include "task.h"
 #include "queue.h"
 
+QueueHandle_t SifQueue;  	// Second Queue for the SmartIO task for general messaging.
+
 
 static void SifAppConnect(void); // Initializes App
 static void SifAppDisconnect(void);	// App disconnect
@@ -25,8 +27,22 @@ static void SifAppDisconnect(void);	// App disconnect
 static char * SIO_Version;
 
 static void SifOnOffButtonCb( uint16_t value );
+typedef enum
+{
+	APP_IS_OFFLINE,
+	APP_CAME_ONLINE,
+	APP_IS_ONLINE
 
-bool AppConnected = false;
+} command_app_state_t;
+
+
+static void SifInit(void);	// Initializes command handler
+
+static void SifAppInit(void);  // Initialize App
+
+static command_app_state_t AppCommandHandler(void);
+
+static void SifSendInfoString(char * info);
 
 static int AppSPI_State = SPI_IDLE;
 
@@ -42,13 +58,18 @@ void SifInit(void)
 }
 
 static tHandle info_hdl;
-static char MsgBuf[128];
-static bool InfoPending=false;
 
+void SifSendCliMessage( SifPortMessage * Msg, char * content)
+{
+	Msg->Type = SIF_MESSAGE_TYPE;
+	Msg->SifMsg.SifMsgType = SIF_CLI_MESSAGE;
+	Msg->SifMsg.Msg = content;
+
+	xQueueSend( SifQueue, Msg, 0 );
+}
 
 void SifAppInit(void)
 {
-	InfoPending = false;
 
 	// Initialize UI
 	 SmartIO_AppTitle("B.I.G");
@@ -88,11 +109,12 @@ void SifAppInit(void)
 
 	 SmartIO_AutoBalance(p1);
 
-	HAL_UART_Receive_IT( &huart2, (uint8_t*)MsgBuf, sizeof MsgBuf);
 }
 
 /* Main SmartIO task */
 
+static SifPortMessage PortMsg;
+static CliPortMessage CliPortMsg;
 
 void SifTask( void *params)
 {
@@ -109,7 +131,16 @@ void SifTask( void *params)
 	  // Handle UI
 	  AppCommandHandler();
 
-      vTaskDelay(  pdMS_TO_TICKS(20) );	// Give others a chance to run
+	  if (xQueueReceive( SifQueue, (void*)&PortMsg, 20 ))
+	  {
+		  if (PortMsg.Type = SIF_MESSAGE_TYPE)
+		  {
+			  if (PortMsg.SifMsg.SifMsgType == SIF_CLI_MESSAGE)
+			  {
+				  SifSendInfoString(PortMsg.SifMsg.Msg);
+			  }
+		  }
+	  }
 
 	}
 }
@@ -127,7 +158,6 @@ command_app_state_t AppCommandHandler(void)
 		//HAL_Delay(300);	//DelayMilliSecs(10);
 		SifAppInit();
 		AppState = APP_IS_ONLINE;
-		AppConnected = true;
 	}
 
 
@@ -136,11 +166,6 @@ command_app_state_t AppCommandHandler(void)
 		SmartIO_ProcessUserInput();
 	}
 
-	if (InfoPending)
-	{
-		InfoPending = false;
-		SifSendInfoString( MsgBuf );
-	}
 
 	return(AppState);
 }
@@ -150,7 +175,8 @@ void SifAppConnect(void)
 {
 	char * msg = "App is online\n\r";
 
-	HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+	CliSendMsg(&CliPortMsg, msg);
+
 	AppState = APP_CAME_ONLINE;
 
 }
@@ -158,12 +184,13 @@ void SifAppConnect(void)
 void SifAppDisconnect(void)
 {
 	AppSPI_State = SPI_IDLE;
-	AppConnected = false;
+
 	AppState = APP_IS_OFFLINE;
 
 	char * msg = "App is offline\n\r";
 
-	HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+	CliSendMsg(&CliPortMsg, msg);
+
 }
 
 
@@ -174,13 +201,11 @@ void SifOnOffButtonCb( uint16_t value )
 
 	n = sprintf(msg, "App ON/OFF button pressed (value %d)\n\r", value);
 
-	HAL_UART_Transmit(&huart2, (uint8_t*)msg, n, 100);
+	CliSendMsg(&CliPortMsg, msg);
+
 }
 
-void SifInfoPending(void)
-{
-	InfoPending = true;
-}
+
 
 void SifSendInfoString(char * info)
 {
@@ -190,8 +215,6 @@ void SifSendInfoString(char * info)
 
 		SmartIO_AddText(info_hdl+1, info);
 	}
-
-	HAL_UART_Receive_IT( &huart2, (uint8_t*)MsgBuf, sizeof MsgBuf);
 
 }
 
