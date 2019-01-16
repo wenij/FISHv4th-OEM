@@ -127,7 +127,7 @@ void SmartIO__RegisterCallback(uint16_t handle, void (*func)(), int argtype)
     }
 
 static CALLBACK_ENTRY *FindCallbackEntry(uint16_t handle)
-    {
+{
     CALLBACK_ENTRY *p = &callback_table[0];
 
     for (int i = 0; i < callback_table_index; i++)
@@ -137,7 +137,7 @@ static CALLBACK_ENTRY *FindCallbackEntry(uint16_t handle)
         p++;
         }
     return 0;
-    }
+}
 
 void SmartIO_ProcessUserInput(void)
     {

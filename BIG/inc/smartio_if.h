@@ -16,37 +16,23 @@
 #include "spi.h"
 #include "cli.h"
 
- typedef enum
- {
-	 SIF_CLI_MESSAGE,
-	 SIF_CLI_COMMAND
- } SifMessageType;
+typedef enum
+{
+    SIF_MESSAGE,
+} SifMessageType;
 
 // SIF message container
- typedef struct
- {
-	 SifMessageType SifMsgType;
-	 union
-	 {
-		 char * 	Msg;	// Associated with SIF_CLI_MESSAGE
-		 CliCmd_t   CliCmd; // Associated with SIF_CLI_COMMAND
-	 };
- } SifMessageContainer;
+typedef struct
+{
+    SifMessageType SifMsgType;
+    union
+    {
 
-
- typedef struct
- {
-	 MessageType Type;
-	 union
-	 {
-		 SifMessageContainer SifMsg; // Associated with SIF_MESSAGE
-	 };
- } SifPortMessage;
+    };
+} SifMessageContainer;
 
 
 extern void SifTask( void *params);
-
-extern void SifSendCliMessage( SifPortMessage * Msg, char * content);
 
 
 #endif /* SMARTIO_IF_H_ */
