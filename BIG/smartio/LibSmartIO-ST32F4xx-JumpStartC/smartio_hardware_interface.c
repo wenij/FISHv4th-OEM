@@ -56,7 +56,6 @@ void SmartIO_HardReset(void)
 	HAL_GPIO_WritePin(BT_RST_GPIO_Port, BT_RST_Pin, GPIO_PIN_SET);	    //portc.Set(7);
 }
 
-static 	SpiSendPortMessage Msg;
 
 /* send bytes out using the SPI port
  *  sendbuf: buffer containing content to send
@@ -64,11 +63,18 @@ static 	SpiSendPortMessage Msg;
  */
 void SmartIO_SPI_SendBytes(unsigned char *sendbuf, int sendlen)
 {
-	SPI_SendDataNoResponse(&Msg, sendlen, SPI_SEND_SMARTIO, sendbuf);		// The SPI driver incorporates some of the protocol
+    Message_t Msg;
+    SpiMsgContainer * spimsg;
+
+	SPI_SendDataNoResponse(sendlen, SPI_SEND_SMARTIO, sendbuf);		// The SPI driver incorporates some of the protocol
 
 	// Acknowledges the message was sent
 	xQueueReceive( SpiSmartIoQueue, (void*)&Msg, portMAX_DELAY );
+    spimsg = (SpiMsgContainer*)Msg.data;
 
+    // Free allocated memory
+    vPortFree(spimsg->data);
+    vPortFree(spimsg);
 }
 
 /* read bytes from the SPI port
@@ -78,18 +84,34 @@ void SmartIO_SPI_SendBytes(unsigned char *sendbuf, int sendlen)
 int SmartIO_SPI_ReadBytes(unsigned char *replybuf, int buflen)
 {
 	int replylen;
+    Message_t Msg;
+    SpiMsgContainer * spimsg;
 
-	SPI_ReadData( &Msg, SPI_SEND_SMARTIO, 0, replybuf, buflen);
+	SPI_ReadData( SPI_SEND_SMARTIO, 0, replybuf, buflen);
 
 	// Returns data that was read
 	xQueueReceive( SpiSmartIoQueue, (void*)&Msg, portMAX_DELAY );
+	spimsg = (SpiMsgContainer*)Msg.data;
 
-	replylen = Msg.SpiMessage.rx_length;
+
+	replylen = spimsg->rx_length;
 
     // printf("reading %d bytes from Smart.IO\n", replylen);
 
     if (replylen > buflen)
+    {
         replylen = -1;
+    }
+    else
+    {
+        // Copy the reply data back out
+        memcpy( replybuf, spimsg->data, replylen);
+    }
+
+    // Free allocated memory
+    vPortFree(spimsg->data);
+    vPortFree(spimsg);
+
 
     return replylen;
 }

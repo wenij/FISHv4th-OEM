@@ -32,6 +32,7 @@
 	 CLI_COMMAND
  } CliMessageType;
 
+
  typedef struct
  {
 	 uint8_t Id;
@@ -44,27 +45,22 @@
 	CliMessageType CliMessageType;
 	union
 	{
-		char *msg;	// 0-terminated string associated with CLI_MESSAGE
+	    char * string;	// String associated with CLI_MESSAGE
 		CliCmd_t Cmd; // Command structure associated with CLI_COMMAND
 	};
  } CliMsgContainer;
 
- typedef struct
- {
-	 MessageType Type;
-	 union
-	 {
-		 CliMsgContainer CliMsg;
-	 };
-
- } CliPortMessage;
 
 
 extern void cli_task(void * parm);
 
-extern void CliSendMsg(CliPortMessage* Msg, char * content);
+// Send text to CLI. The text message is copied in to the message.
+// This way it can be called with a text in quotes "text" as a parameter.
+extern void CliSendTextMsg(char * text, QueueHandle_t * queue);
 
-extern void CliSendCmd(CliPortMessage* Msg, CliCmd_t * msg);
+extern void CliSendTextMsgNoCopy(char * text, QueueHandle_t * queue); // Same as Cli Send Text Message but the text isn't copied before sending
+
+extern void CliSendCmd(CliCmd_t * msg);
 
 extern void CliInfoPending(void);
 

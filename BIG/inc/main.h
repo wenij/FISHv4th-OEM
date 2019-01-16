@@ -69,6 +69,14 @@ typedef enum
 	MEASUREMENT_MESSAGE_TYPE
 } MessageType;
 
+// Global message type used for all communications. All messages posted to queues are done so via copy
+// the data pointer can be either dynamic or static.
+typedef struct
+{
+    MessageType Type;
+    uint8_t *data;
+} Message_t;
+
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/

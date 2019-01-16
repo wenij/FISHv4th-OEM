@@ -89,31 +89,22 @@ typedef struct
 	// Sends data. Responds with SpiRespData
 	SPI_MessageType MsgType;
 	uint16_t length;	// Use a 0 length to do receive without transmitting first
-	uint8_t *data;
 	bool Response;
-	uint16_t rx_length;	// Expected length of receive data. Use 0 if not know. After a read the actual length is here.
+	uint16_t rx_length;	// Expected length of receive data. Use 0 if not known. After a read the actual length is here.
 	uint16_t buf_size;
 	bool TxError;	// Error occurred during transmit
 	bool RxError;   // Error occurred during receive
+    uint8_t *data;  // Pointer to payload data
+
 } SpiMsgContainer;
 
-// This is used for the queue
-typedef struct
-{
-	MessageType Type;
-	union
-	{
-		SpiMsgContainer SpiMessage;
-	};
-
-} SpiSendPortMessage;
 
 extern bool SpiHiPriorityOnly;
 
 
-extern void SPI_SendData( SpiSendPortMessage * SpiMsg, uint16_t length, SPI_MessageType Msg, uint16_t reply_length, uint8_t * data, uint16_t buffer_size, bool Response);
-extern void SPI_SendDataNoResponse(SpiSendPortMessage * SpiMsg, uint16_t length, SPI_MessageType Msg, uint8_t * data);
-extern void SPI_ReadData(SpiSendPortMessage * SpiMsg, SPI_MessageType Msg, uint8_t reply_length,  uint8_t * data, uint16_t reply_buf_size);
+extern void SPI_SendData( uint16_t length, SPI_MessageType Msg, uint16_t reply_length, uint8_t * data, uint16_t buffer_size, bool Response);
+extern void SPI_SendDataNoResponse( uint16_t length, SPI_MessageType Msg, uint8_t * data);
+extern void SPI_ReadData( SPI_MessageType Msg, uint8_t reply_length,  uint8_t * data, uint16_t reply_buf_size);
 
 /* USER CODE END Prototypes */
 

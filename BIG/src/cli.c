@@ -12,16 +12,15 @@
 #include "smartio_if.h"
 
 QueueHandle_t CliDataQueue;
-CliPortMessage PortMsg;
+static uint8_t * UartRxBuffer;
 
 static bool InfoPending=false;
-static char MsgBuf[TXT_MESSAGE_BUF_SIZE];	// UART incoming message buffer
-static char MsgBufIPC[TXT_MESSAGE_BUF_SIZE];	// IPC Message buffer
 
 static void CliParseCommand(void);
 
 void cli_task(void * parm)
 {
+    Message_t PortMsg;
 
 	{
 		char * msg = "B.I.G. - Bedbug Intelligence Group - PSTAT\n\r";
@@ -32,8 +31,10 @@ void cli_task(void * parm)
 	InfoPending = false;
 	// Parse and distribute incoming messages
 
-	// Ready for another message
-	HAL_UART_Receive_IT( &huart2, (uint8_t*)MsgBuf, sizeof MsgBuf);
+	// Ready for a message
+	UartRxBuffer=pvPortMalloc(TXT_MESSAGE_BUF_SIZE);
+
+	HAL_UART_Receive_IT( &huart2, (uint8_t*)UartRxBuffer, sizeof UartRxBuffer);
 
 
 	for (;;)
@@ -43,12 +44,18 @@ void cli_task(void * parm)
 		{
 			if (PortMsg.Type == CLI_MESSAGE_TYPE)
 			{
-				if (PortMsg.CliMsg.CliMessageType == CLI_MESSAGE)
+			    CliMsgContainer* msg = (CliMsgContainer*)PortMsg.data;
+
+				if (msg->CliMessageType == CLI_MESSAGE)
 				{
 					// CLI Message
-					HAL_UART_Transmit(&huart2, (uint8_t*)PortMsg.CliMsg.msg, strlen(PortMsg.CliMsg.msg), 100);
+					HAL_UART_Transmit(&huart2, (uint8_t*)msg->string, strlen(msg->string), 100); // This is a blocking call.
+
+					// Free memory
+					vPortFree(msg->string);
+					vPortFree(msg);
 				}
-				else if (PortMsg.CliMsg.CliMessageType == CLI_COMMAND)
+				else if (msg->CliMessageType == CLI_COMMAND)
 				{
 					// TBD
 
@@ -66,7 +73,8 @@ void cli_task(void * parm)
 			CliParseCommand();
 
 			// Ready for another message
-			HAL_UART_Receive_IT( &huart2, (uint8_t*)MsgBuf, sizeof MsgBuf);
+			UartRxBuffer=pvPortMalloc(TXT_MESSAGE_BUF_SIZE);
+			HAL_UART_Receive_IT( &huart2, (uint8_t*)UartRxBuffer, sizeof UartRxBuffer);
 
 		}
 
@@ -74,22 +82,47 @@ void cli_task(void * parm)
 }
 
 
-void CliSendMsg(CliPortMessage* Msg, char * content)
+void CliSendTextMsg(char * text, QueueHandle_t * queue)
 {
-	Msg->Type = CLI_MESSAGE_TYPE;
-	Msg->CliMsg.CliMessageType = CLI_MESSAGE;
-	Msg->CliMsg.msg = content;
+    Message_t Msg;
+    CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
 
-	xQueueSend( CliDataQueue, Msg, 0 );
+    Msg.data = (uint8_t*)payload;
+	Msg.Type = CLI_MESSAGE_TYPE;
+	payload->CliMessageType = CLI_MESSAGE;
+
+	payload->string = (char *)pvPortMalloc( strlen(text) + 2);
+	strcpy( payload->string, text);
+
+	xQueueSend( queue, &Msg, 0 );
 }
 
-void CliSendCmd(CliPortMessage* Msg, CliCmd_t * msg)
+void CliSendTextMsgNoCopy(char * text, QueueHandle_t * queue)
 {
-	Msg->Type = CLI_MESSAGE_TYPE;
-	Msg->CliMsg.CliMessageType = CLI_COMMAND;
-	memcpy(&Msg->CliMsg.Cmd, msg, sizeof(CliCmd_t));
+    Message_t Msg;
+    CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
 
-	xQueueSend( CliDataQueue, Msg, 0 );
+    Msg.data = (uint8_t*)payload;
+    Msg.Type = CLI_MESSAGE_TYPE;
+    payload->CliMessageType = CLI_MESSAGE;
+
+    payload->string = text;
+
+    xQueueSend( queue, &Msg, 0 );
+}
+
+void CliSendCmd(CliCmd_t * msg)
+{
+    Message_t Msg;
+    CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
+
+    Msg.data = (uint8_t*)payload;
+	Msg.Type = CLI_MESSAGE_TYPE;
+
+	payload->CliMessageType = CLI_COMMAND;
+	memcpy(&payload->Cmd, msg, sizeof(CliCmd_t));
+
+	xQueueSend( CliDataQueue, &Msg, 0 );
 }
 
 void CliInfoPending(void)
@@ -99,16 +132,14 @@ void CliInfoPending(void)
 
 static const char * OkMsg = "OK\n\r";
 
-static SifPortMessage SifMsg;
-
 void CliParseCommand(void)
 {
 	// For now just send data to the SmartIO task.
-	strcpy(MsgBufIPC, MsgBuf);	// Copy to another buffer so we free up the receive buffer immediately.
+    {
+        CliSendTextMsgNoCopy(UartRxBuffer, SifQueue);
 
-	SifSendCliMessage(&SifMsg, MsgBufIPC);
-
-	// Send OK
-	HAL_UART_Transmit(&huart2, (uint8_t*)OkMsg, strlen(OkMsg), 100);
+        // Send OK
+        HAL_UART_Transmit(&huart2, (uint8_t*)OkMsg, strlen(OkMsg), 100);
+    }
 
 }

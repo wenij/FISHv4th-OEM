@@ -132,10 +132,10 @@ int main(void)
 
 	/* Create a queue used by a task.  Messages are received via this queue. */
 
-  SpiSendQueue = xQueueCreate( 4 /*Queue size */, sizeof( SpiSendPortMessage ) );
-  SpiSmartIoQueue = xQueueCreate( 1 /*Queue size */, sizeof( SpiSendPortMessage ) );
-  CliDataQueue = xQueueCreate( 4 /*Queue size */, sizeof( CliPortMessage ) );
-  SifQueue = xQueueCreate( 4 /*Queue size */, sizeof( SifPortMessage ) );
+  SpiSendQueue = xQueueCreate( 4 /*Queue size */, sizeof( Message_t ) );
+  SpiSmartIoQueue = xQueueCreate( 1 /*Queue size */, sizeof( Message_t ) );
+  CliDataQueue = xQueueCreate( 4 /*Queue size */, sizeof( Message_t ) );
+  SifQueue = xQueueCreate( 4 /*Queue size */, sizeof( Message_t ) );
 
   xTaskCreate( SPI_driver_task, "SpiDriver", configMINIMAL_STACK_SIZE+100, NULL, 0, NULL );	// Highest Priority
 

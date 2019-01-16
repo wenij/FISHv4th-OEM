@@ -42,7 +42,7 @@ static void SifAppInit(void);  // Initialize App
 
 static command_app_state_t AppCommandHandler(void);
 
-static void SifSendInfoString(char * info);
+static void SifSendInfoString(uint8_t * info);
 
 static int AppSPI_State = SPI_IDLE;
 
@@ -59,14 +59,6 @@ void SifInit(void)
 
 static tHandle info_hdl;
 
-void SifSendCliMessage( SifPortMessage * Msg, char * content)
-{
-	Msg->Type = SIF_MESSAGE_TYPE;
-	Msg->SifMsg.SifMsgType = SIF_CLI_MESSAGE;
-	Msg->SifMsg.Msg = content;
-
-	xQueueSend( SifQueue, Msg, 0 );
-}
 
 void SifAppInit(void)
 {
@@ -113,8 +105,7 @@ void SifAppInit(void)
 
 /* Main SmartIO task */
 
-static SifPortMessage PortMsg;
-static CliPortMessage CliPortMsg;
+
 
 void SifTask( void *params)
 {
@@ -128,16 +119,23 @@ void SifTask( void *params)
 
 	for (;;)
 	{
+	    Message_t PortMsg;
+
 	  // Handle UI
 	  AppCommandHandler();
 
 	  if (xQueueReceive( SifQueue, (void*)&PortMsg, 20 ))
 	  {
-		  if (PortMsg.Type = SIF_MESSAGE_TYPE)
+		  if (PortMsg.Type == CLI_MESSAGE_TYPE)
 		  {
-			  if (PortMsg.SifMsg.SifMsgType == SIF_CLI_MESSAGE)
+		      CliMsgContainer * msg = (CliMsgContainer*)PortMsg.data;
+
+			  if (msg->CliMessageType == CLI_MESSAGE)
 			  {
-				  SifSendInfoString(PortMsg.SifMsg.Msg);
+				  SifSendInfoString( (uint8_t*)msg->string);
+
+				  vPortFree(msg->string);
+				  vPortFree(msg);
 			  }
 		  }
 	  }
@@ -175,7 +173,7 @@ void SifAppConnect(void)
 {
 	char * msg = "App is online\n\r";
 
-	CliSendMsg(&CliPortMsg, msg);
+	CliSendTextMsg(msg, CliDataQueue);
 
 	AppState = APP_CAME_ONLINE;
 
@@ -187,9 +185,8 @@ void SifAppDisconnect(void)
 
 	AppState = APP_IS_OFFLINE;
 
-	char * msg = "App is offline\n\r";
 
-	CliSendMsg(&CliPortMsg, msg);
+	CliSendTextMsg("App is offline\n\r", CliDataQueue);
 
 }
 
@@ -197,23 +194,22 @@ void SifAppDisconnect(void)
 void SifOnOffButtonCb( uint16_t value )
 {
 	char msg[64];
-	int n;
 
-	n = sprintf(msg, "App ON/OFF button pressed (value %d)\n\r", value);
+	sprintf(msg, "App ON/OFF button pressed (value %d)\n\r", value);
 
-	CliSendMsg(&CliPortMsg, msg);
+	CliSendTextMsg(msg, CliDataQueue);
 
 }
 
 
 
-void SifSendInfoString(char * info)
+void SifSendInfoString(uint8_t * info)
 {
 	if (AppState == APP_IS_ONLINE)
 	{
 		SmartIO_ClearText(info_hdl+1);
 
-		SmartIO_AddText(info_hdl+1, info);
+		SmartIO_AddText(info_hdl+1, (char *)info);
 	}
 
 }
