@@ -29,9 +29,9 @@ static char * SIO_Version;
 static void SifOnOffButtonCb( uint16_t value );
 typedef enum
 {
-	APP_IS_OFFLINE,
-	APP_CAME_ONLINE,
-	APP_IS_ONLINE
+    APP_IS_OFFLINE,
+    APP_CAME_ONLINE,
+    APP_IS_ONLINE
 
 } command_app_state_t;
 
@@ -48,12 +48,12 @@ static int AppSPI_State = SPI_IDLE;
 
 void SifInit(void)
 {
-	HAL_NVIC_SetPriority(EXTI9_5_IRQn, 1, 0);
-	HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+    HAL_NVIC_SetPriority(EXTI9_5_IRQn, 1, 0);
+    HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 
-	SmartIO_Init( SifAppConnect, SifAppDisconnect);		// Initialize the Smart IO interface
-	SIO_Version = SmartIO_GetVersion();	// Firmware version string
+    SmartIO_Init( SifAppConnect, SifAppDisconnect);		// Initialize the Smart IO interface
+    SIO_Version = SmartIO_GetVersion();	// Firmware version string
 
 }
 
@@ -63,21 +63,21 @@ static tHandle info_hdl;
 void SifAppInit(void)
 {
 
-	// Initialize UI
-	 SmartIO_AppTitle("B.I.G");
-	 tHandle p1 = SmartIO_MakePage();
-	 tHandle l1= SmartIO_MakeLabel(0, 40, "Bedbug Intelligence Group" );
-	 tHandle h1 = SmartIO_MakeOnOffButton(0, 0, 1, SifOnOffButtonCb);
-	 SmartIO_AddText(h1, "PSTAT");
-	 SmartIO_SetSliceIcon(h1, SMARTIO_ICON_POWER);
+    // Initialize UI
+    SmartIO_AppTitle("B.I.G");
+    tHandle p1 = SmartIO_MakePage();
+    tHandle l1= SmartIO_MakeLabel(0, 40, "Bedbug Intelligence Group" );
+    tHandle h1 = SmartIO_MakeOnOffButton(0, 0, 1, SifOnOffButtonCb);
+    SmartIO_AddText(h1, "PSTAT");
+    SmartIO_SetSliceIcon(h1, SMARTIO_ICON_POWER);
 
-	 info_hdl = SmartIO_MakeTextBox(1, 320, 2, "Info from terminal");
+    info_hdl = SmartIO_MakeTextBox(1, 320, 2, "Info from terminal");
 
-//	 tHandle h3 = SmartIO_MakeSlider(1, 0, 30, Slider1);
+    //	 tHandle h3 = SmartIO_MakeSlider(1, 0, 30, Slider1);
 
-	 //SmartIO_MakeSpacerSlice(2);
-	 //tHandle tl0 = SmartIO_MakeLabel(0, 1, "Test App demonstrating functionality");
-	 /*
+    //SmartIO_MakeSpacerSlice(2);
+    //tHandle tl0 = SmartIO_MakeLabel(0, 1, "Test App demonstrating functionality");
+    /*
 	 tHandle tl1 = SmartIO_MakeLabel(0, 0, " Weekdays");
 	 tHandle th1 = SmartIO_MakeTimeSelector(0, 1, "17:00", ts1);
 	 SmartIO_AddText(th1, "ON at");
@@ -97,9 +97,9 @@ void SifAppInit(void)
 	 SmartIO_SetSliceIcon(th4, SMARTIO_ICON_QUERY);
 	 SmartIO_GroupObjects(0, tl2, th3, th4, 0);
 	 SmartIO_MakeSpacerSlice(3);
-	 */
+     */
 
-	 SmartIO_AutoBalance(p1);
+    SmartIO_AutoBalance(p1);
 
 }
 
@@ -109,38 +109,38 @@ void SifAppInit(void)
 
 void SifTask( void *params)
 {
-	//TickType_t xLastExecutionTime;
+    //TickType_t xLastExecutionTime;
 
-	/* Init the xLastExecutionTime variable on task entry. */
-	//xLastExecutionTime = xTaskGetTickCount();
+    /* Init the xLastExecutionTime variable on task entry. */
+    //xLastExecutionTime = xTaskGetTickCount();
 
     SifInit();
 
 
-	for (;;)
-	{
-	    Message_t PortMsg;
+    for (;;)
+    {
+        Message_t PortMsg;
 
-	  // Handle UI
-	  AppCommandHandler();
+        // Handle UI
+        AppCommandHandler();
 
-	  if (xQueueReceive( SifQueue, (void*)&PortMsg, 20 ))
-	  {
-		  if (PortMsg.Type == CLI_MESSAGE_TYPE)
-		  {
-		      CliMsgContainer * msg = (CliMsgContainer*)PortMsg.data;
+        if (xQueueReceive( SifQueue, (void*)&PortMsg, 20 ))
+        {
+            if (PortMsg.Type == CLI_TEXT_MESSAGE)
+            {
+                CliMsgContainer * msg = (CliMsgContainer*)PortMsg.data;
 
-			  if (msg->CliMessageType == CLI_MESSAGE)
-			  {
-				  SifSendInfoString( (uint8_t*)msg->string);
+                if (msg != NULL)
+                {
+                    SifSendInfoString( (uint8_t*)msg->string);
 
-				  vPortFree(msg->string);
-				  vPortFree(msg);
-			  }
-		  }
-	  }
+                    vPortFree(msg->string);
+                    vPortFree(msg);
+                }
+            }
+        }
 
-	}
+    }
 }
 
 
@@ -148,56 +148,56 @@ static command_app_state_t AppState = APP_IS_OFFLINE;
 
 command_app_state_t AppCommandHandler(void)
 {
-	if (AppState == APP_CAME_ONLINE)
-	{
-		// Connect. 300 ms is a empirically found to be a good number. Documentation has 10 ms but the smartio module doesn't respond.
-		vTaskDelay(  pdMS_TO_TICKS(300) );
+    if (AppState == APP_CAME_ONLINE)
+    {
+        // Connect. 300 ms is a empirically found to be a good number. Documentation has 10 ms but the smartio module doesn't respond.
+        vTaskDelay(  pdMS_TO_TICKS(300) );
 
-		//HAL_Delay(300);	//DelayMilliSecs(10);
-		SifAppInit();
-		AppState = APP_IS_ONLINE;
-	}
-
-
-	while (SPI_State == SPI_SMARTIO_ASYNC_REQUEST)
-	{
-		SmartIO_ProcessUserInput();
-	}
+        //HAL_Delay(300);	//DelayMilliSecs(10);
+        SifAppInit();
+        AppState = APP_IS_ONLINE;
+    }
 
 
-	return(AppState);
+    while (SPI_State == SPI_SMARTIO_ASYNC_REQUEST)
+    {
+        SmartIO_ProcessUserInput();
+    }
+
+
+    return(AppState);
 }
 
 
 void SifAppConnect(void)
 {
-	char * msg = "App is online\n\r";
+    char * msg = "App is online\n\r";
 
-	CliSendTextMsg(msg, CliDataQueue);
+    CliSendTextMsg(msg, CliDataQueue);
 
-	AppState = APP_CAME_ONLINE;
+    AppState = APP_CAME_ONLINE;
 
 }
 
 void SifAppDisconnect(void)
 {
-	AppSPI_State = SPI_IDLE;
+    AppSPI_State = SPI_IDLE;
 
-	AppState = APP_IS_OFFLINE;
+    AppState = APP_IS_OFFLINE;
 
 
-	CliSendTextMsg("App is offline\n\r", CliDataQueue);
+    CliSendTextMsg("App is offline\n\r", CliDataQueue);
 
 }
 
 
 void SifOnOffButtonCb( uint16_t value )
 {
-	char msg[64];
+    char msg[64];
 
-	sprintf(msg, "App ON/OFF button pressed (value %d)\n\r", value);
+    sprintf(msg, "App ON/OFF button pressed (value %d)\n\r", value);
 
-	CliSendTextMsg(msg, CliDataQueue);
+    CliSendTextMsg(msg, CliDataQueue);
 
 }
 
@@ -205,12 +205,12 @@ void SifOnOffButtonCb( uint16_t value )
 
 void SifSendInfoString(uint8_t * info)
 {
-	if (AppState == APP_IS_ONLINE)
-	{
-		SmartIO_ClearText(info_hdl+1);
+    if (AppState == APP_IS_ONLINE)
+    {
+        SmartIO_ClearText(info_hdl+1);
 
-		SmartIO_AddText(info_hdl+1, (char *)info);
-	}
+        SmartIO_AddText(info_hdl+1, (char *)info);
+    }
 
 }
 

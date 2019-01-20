@@ -42,26 +42,23 @@ void cli_task(void * parm)
 		// Handle CLI Queue
 		if (xQueueReceive( CliDataQueue, (void*)&PortMsg, 10 ))
 		{
-			if (PortMsg.Type == CLI_MESSAGE_TYPE)
+			if (PortMsg.Type == CLI_TEXT_MESSAGE)
 			{
 			    CliMsgContainer* msg = (CliMsgContainer*)PortMsg.data;
 
-				if (msg->CliMessageType == CLI_MESSAGE)
-				{
-					// CLI Message
-					HAL_UART_Transmit(&huart2, (uint8_t*)msg->string, strlen(msg->string), 100); // This is a blocking call.
+                // CLI Message
+                HAL_UART_Transmit(&huart2, (uint8_t*)msg->string, strlen(msg->string), 100); // This is a blocking call.
 
-					// Free memory
-					vPortFree(msg->string);
-					vPortFree(msg);
-				}
-				else if (msg->CliMessageType == CLI_COMMAND)
-				{
-					// TBD
+                // Free memory
+                vPortFree(msg->string);
+                vPortFree(msg);
+            }
+            else if (PortMsg.Type == CLI_COMMAND_MESSAGE)
+            {
+                // TBD
 
-				}
+            }
 
-			}
 		}
 
 		// check for incoming USART messages
@@ -88,8 +85,7 @@ void CliSendTextMsg(char * text, QueueHandle_t * queue)
     CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
 
     Msg.data = (uint8_t*)payload;
-	Msg.Type = CLI_MESSAGE_TYPE;
-	payload->CliMessageType = CLI_MESSAGE;
+	Msg.Type = CLI_TEXT_MESSAGE;
 
 	payload->string = (char *)pvPortMalloc( strlen(text) + 2);
 	strcpy( payload->string, text);
@@ -103,8 +99,7 @@ void CliSendTextMsgNoCopy(char * text, QueueHandle_t * queue)
     CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
 
     Msg.data = (uint8_t*)payload;
-    Msg.Type = CLI_MESSAGE_TYPE;
-    payload->CliMessageType = CLI_MESSAGE;
+    Msg.Type = CLI_TEXT_MESSAGE;
 
     payload->string = text;
 
@@ -117,9 +112,8 @@ void CliSendCmd(CliCmd_t * msg)
     CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
 
     Msg.data = (uint8_t*)payload;
-	Msg.Type = CLI_MESSAGE_TYPE;
+	Msg.Type = CLI_COMMAND_MESSAGE;
 
-	payload->CliMessageType = CLI_COMMAND;
 	memcpy(&payload->Cmd, msg, sizeof(CliCmd_t));
 
 	xQueueSend( CliDataQueue, &Msg, 0 );
@@ -136,7 +130,7 @@ void CliParseCommand(void)
 {
 	// For now just send data to the SmartIO task.
     {
-        CliSendTextMsgNoCopy(UartRxBuffer, SifQueue);
+        CliSendTextMsgNoCopy( (char*)UartRxBuffer, SifQueue);
 
         // Send OK
         HAL_UART_Transmit(&huart2, (uint8_t*)OkMsg, strlen(OkMsg), 100);

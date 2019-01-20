@@ -57,16 +57,20 @@ extern QueueHandle_t SpiSendQueue;  // Queue for SPI Driver using container
 extern QueueHandle_t CliDataQueue;  // Queue for CLI task
 extern QueueHandle_t SifQueue;  	// Second Queue for the SmartIO task for general messaging.
 
-//extern QueueHandle_t ADC_Queue;		// Reply queue for ADC and DAC
+extern QueueHandle_t ADC_Queue;		// Reply Queue for ADC
 //extern QueueHandle_t DAC_Queue;		// Reply Queue for DAC
 
-// Global message type definitions recognized by all tasks. All IPC structures must also have this type as their first element
+// Global message type definitions, Unique ids for all messages makes identification and tracing of messages easier.
 typedef enum
 {
-	SPI_MESSAGE_TYPE,
-	CLI_MESSAGE_TYPE,
-	SIF_MESSAGE_TYPE,
-	MEASUREMENT_MESSAGE_TYPE
+	SPI_SEND_MESSAGE,
+	SPI_ADC_IO_MESSAGE,
+	SPI_DAC_IO_MESSAGE,
+	SPI_READ_MESSAGE,
+    CLI_TEXT_MESSAGE,
+    CLI_COMMAND_MESSAGE,
+	SIF_MESSAGE,
+	MEASUREMENT_MESSAGE
 } MessageType;
 
 // Global message type used for all communications. All messages posted to queues are done so via copy
