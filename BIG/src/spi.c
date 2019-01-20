@@ -258,25 +258,24 @@ QueueHandle_t SpiSmartIoQueue = NULL;
 
 void SPI_driver_task( void * params )
 {
-    SpiMsgContainer* Msg;
     Message_t PortMsg;
     bool TxError = false;
     bool RxError = false;
-    SPI_MessageType Command;
+    MessageType Command;
 
     while(1)
     {
         xQueueReceive( SpiSendQueue, (void*)&PortMsg, portMAX_DELAY );
 
-        Msg = (SpiMsgContainer*)PortMsg.data;
-
-
-        Command = Msg->MsgType;
+        Command = PortMsg.Type;
 
         // Process the send command
         switch (Command)
         {
-        case SPI_SEND_SMARTIO:
+        case SPI_SEND_MESSAGE:
+        {
+            SpiMsgContainer* Msg = (SpiMsgContainer*)PortMsg.data;
+
             HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);	// spi1.ChipSelect();
 
             if (Msg->length > 0)
@@ -288,7 +287,7 @@ void SPI_driver_task( void * params )
             if (Msg->Response)
             {
                 // Read
-                if (Msg->rx_length == 0)
+                //if (Msg->rx_length == 0)
                 {
                     uint8_t buf[2] = {0xFF, 0xFF};
                     // Read first two bytes to get the length
@@ -298,18 +297,17 @@ void SPI_driver_task( void * params )
 
                 if (Msg->rx_length > 0)
                 {
-                    if ((Msg->data != NULL) && (Msg->length < Msg->rx_length))
+                    if ((Msg->data != NULL) && (Msg->buf_size < Msg->rx_length))
                     {
                         vPortFree(Msg->data);   // Data buffer too small
+                        Msg->data = NULL;
                     }
 
                     if (Msg->data == NULL)
                     {
                         Msg->data = pvPortMalloc(Msg->rx_length);
+                        Msg->buf_size = Msg->rx_length;
                     }
-
-                    // Make sure we stay within the buffer
-                    if (Msg->buf_size < Msg->rx_length ) Msg->rx_length = Msg->buf_size;
 
                     HAL_SPI_Receive( ActiveSPI, Msg->data, Msg->rx_length, 100);	//int low = spi1.Read();
 
@@ -325,34 +323,90 @@ void SPI_driver_task( void * params )
             }
             HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);	// spi1.ChipSelect();
 
-            break;
-        case SPI_SEND_DAC:
-            break;
-        case SPI_SEND_ADC:
-            break;
-        default:
-            TxError = true;
-            break;
-        }
+            // Send the response
+            Msg->TxError = TxError;
+            Msg->RxError = RxError;
+            PortMsg.Type = SPI_READ_MESSAGE;
 
-
-        // Send the response
-        Msg->TxError = TxError;
-        Msg->RxError = RxError;
-        Msg->MsgType = SPI_RECV_DATA;
-
-        switch (Command)
-        {
-        case SPI_SEND_SMARTIO:
             xQueueSend( SpiSmartIoQueue, &PortMsg, 0U );
+
+        }
+        break;
+        case SPI_DAC_IO_MESSAGE:
+        {
+            SpiMsgContainer* Msg = (SpiMsgContainer*)PortMsg.data;
+
+            HAL_GPIO_WritePin(DAC_CSn_GPIO_Port, DAC_CSn_Pin, GPIO_PIN_RESET);    // DAC Chip select
+
+
+
+            HAL_GPIO_WritePin(DAC_CSn_GPIO_Port, DAC_CSn_Pin, GPIO_PIN_SET);  // DAC Chip select
             break;
-        case SPI_SEND_DAC:
+        }
+        case SPI_ADC_IO_MESSAGE:
+        {
+            SpiMsgContainer* Msg = (SpiMsgContainer*)PortMsg.data;
+
+            HAL_GPIO_WritePin(ADC_CSn_GPIO_Port, ADC_CSn_Pin, GPIO_PIN_RESET);    // ADC Chip select
+
+            if (Msg->length > 0)
+            {
+                HAL_SPI_Transmit(ActiveSPI, Msg->data, Msg->length, HAL_MAX_DELAY);
+            }
+
+            //The command and data read should be spaced t6 (50 ADC clocks, min = 6.6 us).
+
+            if (Msg->Response)
+            {
+                // Read
+
+                if (Msg->rx_length > 0)
+                {
+                    if ((Msg->data != NULL) && (Msg->buf_size < Msg->rx_length))
+                    {
+                        vPortFree(Msg->data);   // Data buffer too small
+                        Msg->data = NULL;
+                    }
+
+                    if (Msg->data == NULL)
+                    {
+                        Msg->data = pvPortMalloc(Msg->rx_length);
+                        Msg->buf_size = Msg->rx_length;
+                    }
+
+                    HAL_SPI_Receive( ActiveSPI, Msg->data, Msg->rx_length, 100);
+
+                }
+                else
+                {
+                    RxError = true;
+                }
+            }
+            else
+            {
+                Msg->rx_length = 0;
+            }
+
+            HAL_GPIO_WritePin(ADC_CSn_GPIO_Port, ADC_CSn_Pin, GPIO_PIN_SET);    // ADC Chip select
+
+
+            // Send the response
+            Msg->TxError = TxError;
+            Msg->RxError = RxError;
+            PortMsg.Type = SPI_READ_MESSAGE;
+
+            xQueueSend( SpiSmartIoQueue, &PortMsg, 0U );
+
+
+
+
+            HAL_GPIO_WritePin(ADC_CSn_GPIO_Port, ADC_CSn_Pin, GPIO_PIN_SET);  // ADC Chip select
             break;
-        case SPI_SEND_ADC:
-            break;
+        }
         default:
             break;
         }
+
     }
 
 
@@ -360,7 +414,7 @@ void SPI_driver_task( void * params )
 
 bool SpiHiPriorityOnly = false;
 
-void SPI_SendData(uint16_t length, SPI_MessageType Msg, uint16_t reply_length, uint8_t * data, uint16_t buffer_size, bool Response)
+void SPI_SendData(MessageType Id, uint16_t length,  uint16_t reply_length, uint8_t * data, bool Response)
 {
     Message_t msg;
     SpiMsgContainer *msg_p;
@@ -368,13 +422,21 @@ void SPI_SendData(uint16_t length, SPI_MessageType Msg, uint16_t reply_length, u
     if ( Response || (length > 0))   // Length should only be 0 if getting a response aka a Read
     {
         msg.data = pvPortMalloc( sizeof(SpiMsgContainer));
-        msg.Type = SPI_MESSAGE_TYPE;
+        msg.Type = Id;
         msg_p = (SpiMsgContainer*)msg.data;
         msg_p->length = length;
+        if (reply_length > length)
+        {
+            msg_p->buf_size = reply_length;
+        }
+        else
+        {
+            msg_p->buf_size = length;
+        }
 
         if (length > 0)
         {
-            msg_p->data = pvPortMalloc(length);
+            msg_p->data = pvPortMalloc(msg_p->buf_size);
             memcpy(msg_p->data, data, length);
         }
         else
@@ -382,27 +444,23 @@ void SPI_SendData(uint16_t length, SPI_MessageType Msg, uint16_t reply_length, u
             msg_p->data = NULL;
         }
 
-        msg_p->MsgType = Msg;
-
-        msg_p->MsgType = Msg;
         msg_p->rx_length = reply_length;
 
-        msg_p->buf_size = buffer_size;
         msg_p->Response = Response;
 
         xQueueSend( SpiSendQueue, &msg, 0 );
     }
 }
 
-void SPI_SendDataNoResponse( uint16_t length, SPI_MessageType Msg, uint8_t * data)
+void SPI_SendDataNoResponse(MessageType Id, uint16_t length, uint8_t * data)
 {
-    SPI_SendData(length, Msg, 0, data, 0, false);
+    SPI_SendData(Id, length, 0, data, false);
 }
 
 
-void SPI_ReadData( SPI_MessageType Msg, uint8_t reply_length,  uint8_t * data, uint16_t reply_buf_size)
+void SPI_ReadData(MessageType Id, uint8_t reply_length,  uint8_t * data)
 {
-    SPI_SendData(0, Msg, reply_length, data, reply_buf_size, true);
+    SPI_SendData(Id, 0, reply_length, data, true);
 }
 
 /* USER CODE END 1 */

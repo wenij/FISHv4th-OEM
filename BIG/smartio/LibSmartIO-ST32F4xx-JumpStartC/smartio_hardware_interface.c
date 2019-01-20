@@ -66,7 +66,7 @@ void SmartIO_SPI_SendBytes(unsigned char *sendbuf, int sendlen)
     Message_t Msg;
     SpiMsgContainer * spimsg;
 
-	SPI_SendDataNoResponse(sendlen, SPI_SEND_SMARTIO, sendbuf);		// The SPI driver incorporates some of the protocol
+	SPI_SendDataNoResponse(SPI_SEND_MESSAGE, sendlen, sendbuf);		// The SPI driver incorporates some of the protocol
 
 	// Acknowledges the message was sent
 	xQueueReceive( SpiSmartIoQueue, (void*)&Msg, portMAX_DELAY );
@@ -87,7 +87,7 @@ int SmartIO_SPI_ReadBytes(unsigned char *replybuf, int buflen)
     Message_t Msg;
     SpiMsgContainer * spimsg;
 
-	SPI_ReadData( SPI_SEND_SMARTIO, 0, replybuf, buflen);
+	SPI_ReadData(SPI_SEND_MESSAGE, buflen, replybuf);
 
 	// Returns data that was read
 	xQueueReceive( SpiSmartIoQueue, (void*)&Msg, portMAX_DELAY );

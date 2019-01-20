@@ -26,12 +26,6 @@
 
 #define TXT_MESSAGE_BUF_SIZE 128
 
- typedef enum
- {
-	 CLI_MESSAGE,
-	 CLI_COMMAND
- } CliMessageType;
-
 
  typedef struct
  {
@@ -42,7 +36,6 @@
 // CLI message container
  typedef struct
  {
-	CliMessageType CliMessageType;
 	union
 	{
 	    char * string;	// String associated with CLI_MESSAGE

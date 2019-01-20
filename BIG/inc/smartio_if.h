@@ -16,19 +16,12 @@
 #include "spi.h"
 #include "cli.h"
 
-typedef enum
-{
-    SIF_MESSAGE,
-} SifMessageType;
+
 
 // SIF message container
 typedef struct
 {
-    SifMessageType SifMsgType;
-    union
-    {
 
-    };
 } SifMessageContainer;
 
 
