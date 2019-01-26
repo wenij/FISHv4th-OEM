@@ -16,7 +16,7 @@ __iar_program_start
 // :NONAME FM0_COLD ( -- ) Reset Vector entry point. Setup FISH Virtual Machine.
 STM32Fx_COLD_FISH:
 // Initialize DICT RAM segment
-
+#ifdef TESTRAM
 	ldr	n, = 0x11111111	        // fill pattern
 	ldr	t, = RAM_START          // START OF RAM WHERE DICT IS ALLOCATED
                                         // IN MEMMAP segment
@@ -26,7 +26,8 @@ _fillRAM:
 	adds	t, t, #4
 	cmp	t, y
 	blo	_fillRAM
-        
+#endif
+
 #ifdef USE_CMAIN
 // cmainfix
 //	PUSH lr to sp for BYE

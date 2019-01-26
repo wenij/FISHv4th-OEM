@@ -71,15 +71,38 @@ CR
 .S
 ;
 
-ZEROLBT
+: 2SLBT \ ( 2ND 1RST -- ) 
+  ?OVR  \ Report OVR flag status.
+\ THESE TWO BYTES SHOULD LOOP BACK
+	DUP CR ." 1RST BYTE WRITTEN = " .H  \ print out the byte to write
+	~TXE	SPI3-DR C!  \ wait for TXE and write 
+	~RXNE	SPI3-DR C@  \ wait for RXNE and read
+	CR ." 1RST BYTE READ BACK SHOULD = WRITE = " .H  \ EXPECTED WHAT WAS WRITTEN
+  ?OVR
+	DUP CR ." 2ND BYTE WRITTEN = "  .H
+	~TXE	SPI3-DR C!
+	~RXNE	SPI3-DR C@
+ 
+	CR ." 2ND BYTE READ BACK SHOULD = WRITE = " .H  \ EXPECTED WHAT WAS WRITTEN
+  ?OVR
+CR
+.S
+;
+
+\ ZEROLBT
 
 
-FFLBT
+\ FFLBT
 
 
-FFLBT
+\ FFLBT
 
-APLBT
+\ APLBT
 
 
-~APLBT
+\ ~APLBT
+
+
+lSLBT
+
+

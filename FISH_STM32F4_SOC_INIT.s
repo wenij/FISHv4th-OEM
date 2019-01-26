@@ -60,11 +60,11 @@ SoCinit:
 #if STM32F4_XRC08_168MHZ | STM32F205RC_XRC10_118MHZ
 ; 168MHz SYSCLK, 84MHz PCLK2, 42MHz PCLK1 for USB and RNG, 38.4MHz for I2S
   DC32	atk,RCC_CR, ork,1, strk,RCC_CR			; Set HSION bit
-  DC32	strva,0,RCC_CFGR				; Reset CFGR register
+  DC32	strva,0,RCC_CFGR				            ; Reset CFGR register
   DC32	atk,RCC_CR, andk,0FEF6FFFFh, strk,RCC_CR	; Reset HSEON, CSSON and PLLON bits
-  DC32	strva,24003010h,RCC_PLLCFGR			; jam PLLCFGR register to PUR value
+  DC32	strva,24003010h,RCC_PLLCFGR			    ; jam PLLCFGR register to PUR value
   DC32	atk,RCC_CR, andk,0FFFBFFFFh, strk,RCC_CR	; Reset HSEBYP bit
-  DC32	strva,0,RCC_CIR					; Disable all interrupts
+  DC32	strva,0,RCC_CIR					            ; Disable all interrupts
 
 RCC_CR_HSEON	EQU	00010000h
 
@@ -258,7 +258,7 @@ typedef enum gpio_af {
 /* Intialize PORTB_MODER pins this way.
 Value at end is this init								...........
 PB15    BT-RST	        is active high.	0x1
-PB14    BT-CSn	        is active low. 	0x1 SANITYY CHECK CS-BT USES THIS!!!
+PB14    BT-CSn	        is active low. 	0x1
 PB13    DAC-CSn        	is active low. 	0x1
 PB12		ADC-CSn					is active low. 	0x1
 PB11		SDA2						I2C START (NOT USED)
@@ -267,12 +267,12 @@ PB9			NC
 PB8			NC
 PB7			SDA1
 PB6			SCL1						I2C END (NOT USED)
-PB5			SPI1-MOSI				is AF 7, SPI3_MOSI 0x2
-PB4			SPI1-MISO				is AF 7, SPI3_MISO 0x2
-PB3			JTDO/SPI1-SCLK	is AF 7, SPI3_SCLK 0x2
-PB2			BOOT0		        Do not program	 0x0
-PB1			ADC-PDN	        is active low. 	 0x1
-PB0     ADC-RSTn				is active high.	 0x1
+PB5			SPI1-MOSI				is SPI3_MOSI    0x2
+PB4			SPI1-MISO				is SPI3_MISO    0x2
+PB3			JTDO/SPI1-SCLK	is SPI3_SCLK    0x2
+PB2			BOOT0		        Do not program	0x0
+PB1			ADC-PDN	        is active low. 	0x1
+PB0     ADC-RSTn				is active high.	0x1
 */
 // NO MORE /*  ...  */ COMMENTS UNTIL THE END OF THIS SEGMENT:
   DC32  LIT, RCC_AHB1ENR, LIT, 010b, SETBITS	; GPIO port B clk enable
@@ -301,24 +301,26 @@ PB0     ADC-RSTn				is active high.	 0x1
 
 #ifdef PSTAT_SPI1_TEST
 // Change this to full init if used again. Was enabling SPE in seperate step before.
-DC32	LIT, SPI1_CR1, LIT, 033Dh, SETBITS		// ENABLE CONFIG BEFORE
+DC32	LIT, SPI1_CR1, LIT, 033Dh, SETBITS		// ENABLE CONFIG BEFORE = lowest baud?
 // May need to enable SPE as 2nd step
 //	1000000b 040h = ENABLE SPE
 	DC32	LIT, SPI3_CR1, LIT, 040h, SETBITS	// ENABLING SPI
 #endif
 #ifdef PSTAT_SPI3_TEST
-// 365H is correct accoding to CUBE
-//  DC32  LIT, SPI3_CR1, LIT, 0365h, SETBITS
+//  DC32  LIT, SPI3_CR1, LIT, 0365h, SETBITS  // Middle speed; low speed is 037dh 
 // May need to enable SPE as 2nd step
 // DFF bit: This bit should be written only when SPI is disabled (SPE = ‘0’) for correct operation.
-  DC32  LIT, SPI3_CR1, LIT, 0325h, SETBITS
+//  DC32  LIT, SPI3_CR1, LIT, 0325h, SETBITS
+// lowest baud rate
+  DC32  LIT, SPI3_CR1, LIT, 033Dh, SETBITS
 //	1000000b 040h = ENABLE SPE
   DC32	LIT, SPI3_CR1, LIT, 040h, SETBITS	// ENABLING SPI
 // Achieves 0365h init~!
-// CUBE LOW SPEED
+// LOW SPEED is zero GPIOB_OSPEEDR init, it's reset value is 0C0h 
 //  DC32  LIT, GPIOB_OSPEEDR, LIT, 00FC0h, SETBITS
 // MDIUM SPEED 10101,00,00,00b 0540h SETBITS OFF
-  DC32  LIT, 0540h, LIT, GPIOB_OSPEEDR, STORE
+//  DC32  LIT, 0540h, LIT, GPIOB_OSPEEDR, STORE
+  DC32  LIT, 0h, LIT, GPIOB_OSPEEDR, STORE  // low speed all port b
 // CUBE 
 /* pstat DOING 580 FROM THIS~!
 DC32  LIT, GPIOB_PUPDR, LIT, 0480h, SETBITS
@@ -326,8 +328,8 @@ DC32  LIT, GPIOB_PUPDR, LIT, 0480h, SETBITS
   DC32  LIT, 0480h, LIT, GPIOB_PUPDR, STORE
 #endif
 
-// Set CS's AND ADC-RST/PDN pins 1&2, AND BT-RST ON 15 according to logic.
-  DC32  LIT, GPIOB_ODR, LIT, 0F003h, SETBITS
+// Set CS's AND ADC-RSTn/PDN pins 1&2, AND BT-RST ON 15 according to logic.
+  DC32  LIT, GPIOB_ODR, LIT, 0F001h, SETBITS
 
 #ifdef PSTAT_BB_NOINIT_TEST
 // NO GPIOB_MODER INIT. RESET INIT = 280h

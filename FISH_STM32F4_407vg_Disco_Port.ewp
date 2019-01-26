@@ -3079,6 +3079,9 @@
         <name>$PROJ_DIR$\PSTAT_FISH.txt</name>
     </file>
     <file>
+        <name>$PROJ_DIR$\PSTAT_FISH_ADC_RREG.txt</name>
+    </file>
+    <file>
         <name>$PROJ_DIR$\startup_stm32f4xx.s</name>
     </file>
 </project>
