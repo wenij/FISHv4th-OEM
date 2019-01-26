@@ -1,12 +1,12 @@
 ###################################################################################################
 #                                                                                                 #
-#     IAR Assembler V8.22.1.15669/W32 for ARM 25/Jan/2019  23:16:20                               #
+#     IAR Assembler V8.22.1.15669/W32 for ARM 26/Jan/2019  09:02:50                               #
 #     Copyright 1999-2018 IAR Systems AB.                                                         #
 #                                                                                                 #
 #           Source file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_IAR.s #
 #           List file     =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\FISH_STM32F4_IAR.lst#
 #           Object file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\FISH_STM32F4_IAR.o#
-#           Command line  =  -f C:\Users\CLYDEW~1\AppData\Local\Temp\EW5A95.tmp                   #
+#           Command line  =  -f C:\Users\CLYDEW~1\AppData\Local\Temp\EW4C3B.tmp                   #
 #                            (C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISH_STM32F4_IAR.s #
 #                            -OC:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj #
 #                            -s+ -M<> -w+ -r -DSTM32F4_XRC08_168MHZ                               #
@@ -17033,12 +17033,12 @@
                   412D5445414D2
                   0464F52544820
                   3A20         
-   79    0000004D 4A616E2032352   DC8 __DATE__        // Null string
+   79    0000004D 4A616E2032362   DC8 __DATE__        // Null string
                   03230313900  
    80                           msg_FISH_TIMESTAMP:
    81    00000059 20617420        DC8 ' at '
-   82    0000005D 32333A31363A3   DC8 __TIME__        // Null string
-                  23000        
+   82    0000005D 30393A30323A3   DC8 __TIME__        // Null string
+                  53000        
    83                           #ifdef EOL_NAK
    84                           msg_SIGNON_DLE:
    85    00000066 1500            DC8 0x15, 0
@@ -26774,9 +26774,9 @@
                   .            
   329                           #endif
   330                           
-  331                           // Set CS's AND ADC-RSTn/PDN pins 1&2, AND BT-RST ON 15 according to logic.
-  332    000002F4 ........14040   DC32  LIT, GPIOB_ODR, LIT, 0F001h, SETBITS
-                  240........01
+  331                           // Set CS's AND ADC-RSTn/PDNn pins 1&2, AND BT-RST ON 15 according to logic.
+  332    000002F4 ........14040   DC32  LIT, GPIOB_ODR, LIT, 0F003h, SETBITS
+                  240........03
                   F00000.......
                   .            
   333                           

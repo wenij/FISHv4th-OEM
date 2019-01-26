@@ -32,7 +32,7 @@ CR  ?SPI3-DIRECTION CR
 .SPI3
 
 (
-\ The gpioa registers involved.
+\ The GPIOA registers involved.
 040020000h	CONSTANT	GPIOA-MODER
 040020004h	CONSTANT	GPIOA-OTYPER
 040020008h	CONSTANT	GPIOA-OSPEEDR
@@ -51,13 +51,13 @@ CR  ?SPI3-DIRECTION CR
 \ talking Create Does~!
 
 (
-\ The gpiob registers involved.
+\ The GPIOB registers involved.
 040020414h	CONSTANT	GPIOB-ODR
 040020441h	CONSTANT	GPIOB-IDR
 040020400h	CONSTANT	GPIOB-MODER
 )
 (
-\ The gpioc registers involved.
+\ The GPIOC registers involved.
 040020814h	CONSTANT	GPIOC-ODR
 040020810h	CONSTANT	GPIOC-IDR
 040020800h	CONSTANT	GPIOC-MODER     \ NEEDED FOR BIT BANG TEST
@@ -70,13 +70,12 @@ CR  ?SPI3-DIRECTION CR
 \ 1 9 LSL .SB TOS> 1000000000b
 
 
-\ SPI3 WORDS FOR THE DAC.
 \ ~WORD IS A WAIT UNTIL LOOP IS TRUE.
 \ ?WORD AND .WORD ARE PRINTOUTS.
-\ WORD? IS FLAG GENERATOR, ON OR OFF.
+\ WORD? IS FLAG ARGUMENT GENERATOR, ON OR OFF.
 
 (
-TXE: Transmit buffer empty
+TXE: Transmit buffer empty = BIT 1
 0: Tx buffer not empty
 1: Tx buffer empty
 )
@@ -87,7 +86,7 @@ TXE: Transmit buffer empty
  SPI3-SR @ 2 AND IF ON ELSE OFF THEN ;
 
 (
-RXNE: Receive buffer not empty
+RXNE: Receive buffer not empty = BIT 0
 0: Rx buffer empty
 1: Rx buffer not empty
 )
@@ -287,8 +286,8 @@ PB5   SPI3-MOSI         is AF, SPI3_MOSI 0x2
 PB4   SPI3-MISO         is AF, SPI3_MISO 0x2
 PB3   JTDO/SPI3-SCLK    is AF, SPI3_SCLK 0x2
 PB2   BOOT0             Do not program	 0x0
-PB1   ADC-PDN           is active low. 	 0x1
-PB0   ADC-RSTn          is active high.	 0x1
+PB1   ADC-PDNn          is active low. 	 0x1
+PB0   ADC-RSTn          is active LOW.	 0x1
 )
 
 (
