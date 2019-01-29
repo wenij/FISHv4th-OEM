@@ -66,7 +66,9 @@ void SifAppInit(void)
     // Initialize UI
     SmartIO_AppTitle("B.I.G");
     tHandle p1 = SmartIO_MakePage();
-    tHandle l1= SmartIO_MakeLabel(0, 40, "Bedbug Intelligence Group" );
+
+    SmartIO_MakeLabel(0, 40, "Bedbug Intelligence Group" );
+
     tHandle h1 = SmartIO_MakeOnOffButton(0, 0, 1, SifOnOffButtonCb);
     SmartIO_AddText(h1, "PSTAT");
     SmartIO_SetSliceIcon(h1, SMARTIO_ICON_POWER);
@@ -132,9 +134,9 @@ void SifTask( void *params)
 
                 if (msg != NULL)
                 {
-                    SifSendInfoString( (uint8_t*)msg->string);
+                    SifSendInfoString( (uint8_t*)msg->CLI_MESSAGE_data);
 
-                    vPortFree(msg->string);
+                    vPortFree(msg->CLI_MESSAGE_data);
                     vPortFree(msg);
                 }
             }

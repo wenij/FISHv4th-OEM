@@ -29,7 +29,6 @@
  typedef enum
  {
      PSTAT_MEASUREMENT_REQ,
-     PSTAT_MEASUREMENT_RESP,
      ADC_CAL_REQ,
      DAC_SET_REQ,
      DAC_CAL_REQ
@@ -38,7 +37,7 @@
  typedef struct
  {
      CliCommandId Id;
-	 uint8_t Parameters[8];
+     uint32_t Param;
  } CliCmd_t;
 
 // CLI message container
@@ -46,9 +45,9 @@
  {
 	union
 	{
-	    char * string;	// String associated with CLI_MESSAGE
-		CliCmd_t Cmd; // Command structure associated with CLI_COMMAND
-		pstatMeasurement_t pstat_measurements;  // ADC_CONV_RESP structure
+	    char * CLI_MESSAGE_data;	// String associated with CLI_MESSAGE
+	    CliCmd_t CLI_COMMAND_data;  // data structure associated with CLI_COMMAND
+		pstatMeasurement_t ADC_CONV_RESP_data;  // ADC_CONV_RESP structure
 	};
  } CliMsgContainer;
 
@@ -62,7 +61,9 @@ extern void CliSendTextMsg(char * text, QueueHandle_t * queue);
 
 extern void CliSendTextMsgNoCopy(char * text, QueueHandle_t * queue); // Same as Cli Send Text Message but the text isn't copied before sending
 
-extern void CliSendResp(CliCmd_t * msg);
+extern void CliSendCmdResp(CliCommandId CmdId, uint32_t data);
+
+extern void CliSendMeasurementResp(pstatMeasurement_t * data);
 
 extern void CliInfoPending(void);
 

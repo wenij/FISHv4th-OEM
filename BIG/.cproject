@@ -152,7 +152,6 @@
 									<listOptionValue builtIn="false" value="__packed=__attribute__((__packed__))"/>
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
 									<listOptionValue builtIn="false" value="STM32F205xx"/>
-									<listOptionValue builtIn="false" value="HAL_TIM_MODULE_ENABLED"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.paths.1559147062" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/inc}&quot;"/>

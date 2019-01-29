@@ -12,6 +12,7 @@
 #include "smartio_if.h"
 #include "adc_ads1256.h"
 #include "dac_ad5662.h"
+#include "util.h"
 
 QueueHandle_t CliDataQueue;
 static uint8_t * UartRxBuffer;
@@ -21,7 +22,7 @@ static bool InfoPending=false;
 
 static void CliParseCommand(void);
 
-static void CliSendCmd(CliCmd_t * msg, QueueHandle_t Destination);
+static void CliSendCmd(CliCommandId CmdId, uint32_t data, QueueHandle_t Destination);
 
 
 void cli_task(void * parm)
@@ -53,18 +54,72 @@ void cli_task(void * parm)
 			    CliMsgContainer* msg = (CliMsgContainer*)PortMsg.data;
 
                 // CLI Message
-                HAL_UART_Transmit(cli_uart, (uint8_t*)msg->string, strlen(msg->string), 100); // This is a blocking call.
+                HAL_UART_Transmit(cli_uart, (uint8_t*)msg->CLI_MESSAGE_data, strlen(msg->CLI_MESSAGE_data), 100); // This is a blocking call.
 
                 // Free memory
-                vPortFree(msg->string);
+                vPortFree(msg->CLI_MESSAGE_data);
                 vPortFree(msg);
             }
             else if (PortMsg.Type == CLI_COMMAND_RESP)
             {
-                // TBD
+                CliMsgContainer* msg = (CliMsgContainer*)PortMsg.data;
+
+                switch (msg->CLI_COMMAND_data.Id)
+                {
+
+                default:
+                    vPortFree(PortMsg.data);
+                    break;
+                }
                 // Free memory
 
+            }
+            else if (PortMsg.Type == CLI_MEASUREMENT_RESP)
+            {
+                int bufSize = 300;
+                CliMsgContainer* msg = (CliMsgContainer*)PortMsg.data;
+
+                char * outp = (char*)pvPortMalloc(bufSize);
+                char * temp = (char*)pvPortMalloc(24);
+
+                *outp = 0;
+
+                strcat(outp, "  ADC_WE: ");
+                NumToHexString( msg->ADC_CONV_RESP_data.ADC_WE, 8, temp, 24);
+                strcat(outp, temp);
+
+                strcat(outp, ", ADC_RE: ");
+                NumToHexString( msg->ADC_CONV_RESP_data.ADC_RE, 8, temp, 24);
+                strcat(outp, temp);
+
+                strcat(outp, ", ADC_DAC_RE: ");
+                NumToHexString( msg->ADC_CONV_RESP_data.ADC_DAC_RE, 8, temp, 24);
+                strcat(outp, temp);
+
+                strcat(outp, ", REF_1_3rd: ");
+                NumToHexString( msg->ADC_CONV_RESP_data.VREF_1_3rd, 8, temp, 24);
+                strcat(outp, temp);
+
+                strcat(outp, ", REF_2_3rd: ");
+                NumToHexString( msg->ADC_CONV_RESP_data.VREF_2_3rd, 8, temp, 24);
+                strcat(outp, temp);
+
+                strcat(outp, ", Scale: ");
+                NumToHexString( msg->ADC_CONV_RESP_data.WE_Scale, 8, temp, 24);
+                strcat(outp, temp);
+
+                strcat(outp, ", DAC: ");
+                NumToHexString( msg->ADC_CONV_RESP_data.DAC_Setting, 8, temp, 24);
+                strcat(outp, temp);
+
                 vPortFree(PortMsg.data);
+                vPortFree(temp);
+
+                // Send measurements out
+                HAL_UART_Transmit(cli_uart, (uint8_t*)outp, strlen(outp), 100); // This is a blocking call.
+
+                vPortFree(outp);
+
             }
 
 		}
@@ -95,8 +150,8 @@ void CliSendTextMsg(char * text, QueueHandle_t * queue)
     Msg.data = (uint8_t*)payload;
 	Msg.Type = CLI_TEXT_MESSAGE;
 
-	payload->string = (char *)pvPortMalloc( strlen(text) + 2);
-	strcpy( payload->string, text);
+	payload->CLI_MESSAGE_data = (char *)pvPortMalloc( strlen(text) + 2);
+	strcpy( payload->CLI_MESSAGE_data, text);
 
 	xQueueSend( queue, &Msg, 0 );
 }
@@ -109,37 +164,49 @@ void CliSendTextMsgNoCopy(char * text, QueueHandle_t * queue)
     Msg.data = (uint8_t*)payload;
     Msg.Type = CLI_TEXT_MESSAGE;
 
-    payload->string = text;
+    payload->CLI_MESSAGE_data = text;
 
     xQueueSend( queue, &Msg, 0 );
 }
 
-void CliSendResp(CliCmd_t * msg)
+void CliSendCmdResp(CliCommandId CmdId, uint32_t data)
 {
     Message_t Msg;
     CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
 
     Msg.data = (uint8_t*)payload;
 	Msg.Type = CLI_COMMAND_RESP;
-
-	memcpy(&payload->Cmd, msg, sizeof(CliCmd_t));
+	payload->CLI_COMMAND_data.Id = CmdId;
+    payload->CLI_COMMAND_data.Param = data;
 
 	xQueueSend( CliDataQueue, &Msg, 0 );
 }
 
-void CliSendCmd(CliCmd_t * msg, QueueHandle_t Destination)
+void CliSendCmd(CliCommandId CmdId, uint32_t data, QueueHandle_t Destination)
 {
     Message_t Msg;
     CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
 
     Msg.data = (uint8_t*)payload;
     Msg.Type = CLI_COMMAND_MESSAGE;
-
-    memcpy(&payload->Cmd, msg, sizeof(CliCmd_t));
+    payload->CLI_COMMAND_data.Id = CmdId;
+    payload->CLI_COMMAND_data.Param = data;
 
     xQueueSend( Destination, &Msg, 0 );
 }
 
+void CliSendMeasurementResp(pstatMeasurement_t * data)
+{
+    Message_t Msg;
+    CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
+
+    Msg.data = (uint8_t*)payload;
+    Msg.Type = CLI_MEASUREMENT_RESP;
+
+    memcpy( &payload->ADC_CONV_RESP_data, data, sizeof(pstatMeasurement_t));
+
+    xQueueSend( CliDataQueue, &Msg, 0 );
+}
 
 void CliInfoPending(void)
 {
@@ -167,17 +234,14 @@ void CliParseCommand(void)
 
     if (UartRxBuffer[0] == '*')
     {
-        CliCmd_t cmd;
-
         // Parse commands.
-        if (strcmp("adc_read", (const char*)&UartRxBuffer[1]) == 0)
+        if (strcmp("meas", (const char*)&UartRxBuffer[1]) == 0)
         {
             // ADC Read
-            cmd.Id = PSTAT_MEASUREMENT_REQ;
-
-            CliSendCmd( &cmd, pstat_Queue);
-
+            CliSendCmd(PSTAT_MEASUREMENT_REQ, 0, pstat_Queue);
         }
+
+        vPortFree(UartRxBuffer);
     }
     else
     {
