@@ -96,25 +96,8 @@ extern void ads1256_SetPGA( ads1256_pga_t gain );
      ADS1256_CHANNEL_AINCOM = 8
  } ads1256_channel_t;
 
-extern int32_t ads1256_ReadChannel( ads1256_channel_t channel, bool pos, uint16_t averages);
+extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel, uint16_t averages);
 
- /*
-  * ReadChannelPair
-  *
-  * Read an A/D channel Pair. Typical for differential measurements.
-  * The function will set the channels, wait for a conversion, and read the result back.
-  * A number of averages can be requested. That many values will be read back and averaged.
-  * Parameters:
-  *     Channel 1 - First Channel
-  *     Pos 1 (true is the positive input select, false is negative input select) for first channel
-  *     Channel 2 - Second Channel
-  *     Pos 2 (true is the positive input select, false is negative input select) for second channel
-  *     Averages
-  *
-  * Return Value:
-  *    Result
-  */
-extern int32_t ads1256_ReadChannelPair( ads1256_channel_t channel1, bool pos1, ads1256_channel_t channel2, bool pos2, uint16_t averages);
 
  /*
   * SelfTest
@@ -148,6 +131,7 @@ extern int32_t ads1256_ReadChannelPair( ads1256_channel_t channel1, bool pos1, a
 #define ADS1256_RESET  0xfe
 #define ADS1256_WAKEUP_2 0xff
 
+#define ADS1256_BUILD_WRITE_REG_CMD(_reg)  ADS1256_WRITE_REGS | (_reg)
  /*
   * Address Map for the device
   */
@@ -163,7 +147,7 @@ extern int32_t ads1256_ReadChannelPair( ads1256_channel_t channel1, bool pos1, a
 #define ADS1256_STATUS_DRDYn 0x01
 
  // Register 1 MUX Register
-#define ADS1256_MUX_REGISTER 3
+#define ADS1256_MUX_REGISTER 1
 
 #define ADS1256_MUX_PSEL  0xF0
 #define ADS1256_MUX_NSEL  0x0F

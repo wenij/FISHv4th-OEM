@@ -22,14 +22,22 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
-
+#include "pstat.h"
 
 #define TXT_MESSAGE_BUF_SIZE 128
 
+ typedef enum
+ {
+     PSTAT_MEASUREMENT_REQ,
+     PSTAT_MEASUREMENT_RESP,
+     ADC_CAL_REQ,
+     DAC_SET_REQ,
+     DAC_CAL_REQ
+ } CliCommandId;
 
  typedef struct
  {
-	 uint8_t Id;
+     CliCommandId Id;
 	 uint8_t Parameters[8];
  } CliCmd_t;
 
@@ -40,6 +48,7 @@
 	{
 	    char * string;	// String associated with CLI_MESSAGE
 		CliCmd_t Cmd; // Command structure associated with CLI_COMMAND
+		pstatMeasurement_t pstat_measurements;  // ADC_CONV_RESP structure
 	};
  } CliMsgContainer;
 
@@ -53,7 +62,7 @@ extern void CliSendTextMsg(char * text, QueueHandle_t * queue);
 
 extern void CliSendTextMsgNoCopy(char * text, QueueHandle_t * queue); // Same as Cli Send Text Message but the text isn't copied before sending
 
-extern void CliSendCmd(CliCmd_t * msg);
+extern void CliSendResp(CliCmd_t * msg);
 
 extern void CliInfoPending(void);
 

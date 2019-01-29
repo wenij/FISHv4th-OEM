@@ -10,13 +10,19 @@
 #include "cli.h"
 #include "usart.h"
 #include "smartio_if.h"
+#include "adc_ads1256.h"
+#include "dac_ad5662.h"
 
 QueueHandle_t CliDataQueue;
 static uint8_t * UartRxBuffer;
+#define UART_RX_BUF_SIZE 128
 
 static bool InfoPending=false;
 
 static void CliParseCommand(void);
+
+static void CliSendCmd(CliCmd_t * msg, QueueHandle_t Destination);
+
 
 void cli_task(void * parm)
 {
@@ -25,7 +31,7 @@ void cli_task(void * parm)
 	{
 		char * msg = "B.I.G. - Bedbug Intelligence Group - PSTAT\n\r";
 
-		HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+		HAL_UART_Transmit(cli_uart, (uint8_t*)msg, strlen(msg), 100);
 	}
 
 	InfoPending = false;
@@ -34,7 +40,7 @@ void cli_task(void * parm)
 	// Ready for a message
 	UartRxBuffer=pvPortMalloc(TXT_MESSAGE_BUF_SIZE);
 
-	HAL_UART_Receive_IT( &huart2, (uint8_t*)UartRxBuffer, sizeof UartRxBuffer);
+	HAL_UART_Receive_IT( cli_uart, (uint8_t*)UartRxBuffer, UART_RX_BUF_SIZE);
 
 
 	for (;;)
@@ -47,16 +53,18 @@ void cli_task(void * parm)
 			    CliMsgContainer* msg = (CliMsgContainer*)PortMsg.data;
 
                 // CLI Message
-                HAL_UART_Transmit(&huart2, (uint8_t*)msg->string, strlen(msg->string), 100); // This is a blocking call.
+                HAL_UART_Transmit(cli_uart, (uint8_t*)msg->string, strlen(msg->string), 100); // This is a blocking call.
 
                 // Free memory
                 vPortFree(msg->string);
                 vPortFree(msg);
             }
-            else if (PortMsg.Type == CLI_COMMAND_MESSAGE)
+            else if (PortMsg.Type == CLI_COMMAND_RESP)
             {
                 // TBD
+                // Free memory
 
+                vPortFree(PortMsg.data);
             }
 
 		}
@@ -71,7 +79,7 @@ void cli_task(void * parm)
 
 			// Ready for another message
 			UartRxBuffer=pvPortMalloc(TXT_MESSAGE_BUF_SIZE);
-			HAL_UART_Receive_IT( &huart2, (uint8_t*)UartRxBuffer, sizeof UartRxBuffer);
+			HAL_UART_Receive_IT( cli_uart, (uint8_t*)UartRxBuffer, UART_RX_BUF_SIZE);
 
 		}
 
@@ -106,18 +114,32 @@ void CliSendTextMsgNoCopy(char * text, QueueHandle_t * queue)
     xQueueSend( queue, &Msg, 0 );
 }
 
-void CliSendCmd(CliCmd_t * msg)
+void CliSendResp(CliCmd_t * msg)
 {
     Message_t Msg;
     CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
 
     Msg.data = (uint8_t*)payload;
-	Msg.Type = CLI_COMMAND_MESSAGE;
+	Msg.Type = CLI_COMMAND_RESP;
 
 	memcpy(&payload->Cmd, msg, sizeof(CliCmd_t));
 
 	xQueueSend( CliDataQueue, &Msg, 0 );
 }
+
+void CliSendCmd(CliCmd_t * msg, QueueHandle_t Destination)
+{
+    Message_t Msg;
+    CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
+
+    Msg.data = (uint8_t*)payload;
+    Msg.Type = CLI_COMMAND_MESSAGE;
+
+    memcpy(&payload->Cmd, msg, sizeof(CliCmd_t));
+
+    xQueueSend( Destination, &Msg, 0 );
+}
+
 
 void CliInfoPending(void)
 {
@@ -126,14 +148,44 @@ void CliInfoPending(void)
 
 static const char * OkMsg = "OK\n\r";
 
+static uint8_t CliParseParameterString(char * src, uint8_t *params, uint8_t buf_length )
+{
+    int count;
+    uint8_t val;
+
+    while (*src != 0)
+    {
+        src++;
+    }
+}
+
 void CliParseCommand(void)
 {
-	// For now just send data to the SmartIO task.
+    int length = cli_uart->RxXferCount;
+
+    if (length <= 0)  return;
+
+    if (UartRxBuffer[0] == '*')
     {
+        CliCmd_t cmd;
+
+        // Parse commands.
+        if (strcmp("adc_read", (const char*)&UartRxBuffer[1]) == 0)
+        {
+            // ADC Read
+            cmd.Id = PSTAT_MEASUREMENT_REQ;
+
+            CliSendCmd( &cmd, pstat_Queue);
+
+        }
+    }
+    else
+    {
+        /// All text just send to the smartIO interface
         CliSendTextMsgNoCopy( (char*)UartRxBuffer, SifQueue);
 
         // Send OK
-        HAL_UART_Transmit(&huart2, (uint8_t*)OkMsg, strlen(OkMsg), 100);
+        HAL_UART_Transmit(cli_uart, (uint8_t*)OkMsg, length, 100);
     }
 
 }

@@ -12,11 +12,12 @@
 #include "adc_ads1256.h"
 
 #include "spi.h"
+#include "tim.h"
 /*
  * Local Functions and type definitions
  */
 
-static uint16_t SendReceiveSPI( int Address, uint8_t * TxData, uint16_t TxLength, uint8_t **RxData, uint16_t RxLength);
+static uint16_t SendReceiveSPI( uint8_t * TxData, uint16_t TxLength, uint8_t **RxData, uint16_t RxLength);
 static bool WaitForDataReady(GPIO_PinState value);
 static void StartConversion(void);
 
@@ -39,8 +40,8 @@ static void StartConversion(void);
      // Reset the ADC by pulsing the Reset Line.
      HAL_GPIO_WritePin(ADC_RSTn_GPIO_Port, ADC_RSTn_Pin, GPIO_PIN_RESET);    // ADC Reset Pin
 
-     // Short delay 2 ms
-     vTaskDelay(  pdMS_TO_TICKS(2) );
+     // Short delay 4 us
+     TimDelayMicroSeconds( 4 );
 
      HAL_GPIO_WritePin(ADC_RSTn_GPIO_Port, ADC_RSTn_Pin, GPIO_PIN_SET);    // ADC Reset Pin
 
@@ -85,18 +86,21 @@ static void StartConversion(void);
   * Read an A/D channel. The function will set the channel, wait for a conversion, and read the result back.
   * A number of averages can be requested. That many values will be read back and averaged.
   * Parameters:
-  *     Channel
-  *     Pos (true is the positive input select, false is negative input select)
+  *     Positive Channel
+  *     Negative Channel
   *     Averages
   *
   * Return Value:
-  *    None
+  *    Measured Value
   */
-int32_t ads1256_ReadChannel( ads1256_channel_t channel, bool pos, uint16_t averages)
+int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel, uint16_t averages)
 {
     bool Continue = false;
-    uint8_t buf;
+    int32_t ret = 0;
+    uint8_t buf[3];
+    uint8_t * rxbuf;
 
+    // Initialize
     // Make sure DRDY is high
     Continue = WaitForDataReady(1);
 
@@ -107,52 +111,50 @@ int32_t ads1256_ReadChannel( ads1256_channel_t channel, bool pos, uint16_t avera
 
     if (!Continue)
     {
-        Return(0);
+        return(0);
     }
 
-    // Configure the appropriate channel and polarity. The opposing channel remains unchanged.
-    buf = 0;
-    if (pos)
-    {
-        buf = set_ADS1256_MUX_PSEL(channel);
-    }
-    else
-    {
-        buf = set_ADS1256_MUX_NSEL(channel);
-    }
+    // Configure the appropriate channel
+    buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_MUX_REGISTER);
+    buf[1] = 0;  // Number of registers - 1
+    buf[2] = set_ADS1256_MUX_PSEL(Pchannel) | set_ADS1256_MUX_PSEL(Nchannel);
 
+    SendReceiveSPI(buf, 3, &rxbuf, 0);   // Send mux select expecting no response.
 
     // Start conversion.
+    StartConversion();
 
     // Wait for DRDY to go low.
+    Continue = WaitForDataReady(0);
 
     // Read data.
+    if (Continue)
+    {
+        uint32_t temp;
 
-    return(0);
+        buf[0] = ADS1256_READ_DATA;
+
+        SendReceiveSPI(buf, 1, &rxbuf, 3);   // Send Read Data expecting a 3 byte response.
+
+        temp = ( ((uint32_t)buf[0]) << 16) | ( ((uint32_t)buf[1]) << 8) | (uint32_t)(buf[0]);
+
+        // Convert to positive / negative
+        if (temp & 0x0080000)
+        {
+            // Negative number
+            ret = (int32_t)temp - 0x1000000;
+        }
+        else
+        {
+            ret = (int32_t)temp;
+        }
+
+        ret = (int32_t)temp;
+    }
+
+    return(ret);
 }
 
-
- /*
-  * ReadChannelPair
-  *
-  * Read an A/D channel Pair. Typical for differential measurements.
-  * The function will set the channels, wait for a conversion, and read the result back.
-  * A number of averages can be requested. That many values will be read back and averaged.
-  * Parameters:
-  *     Channel 1 - First Channel
-  *     Pos 1 (true is the positive input select, false is negative input select) for first channel
-  *     Channel 2 - Second Channel
-  *     Pos 2 (true is the positive input select, false is negative input select) for second channel
-  *     Averages
-  *     Samples - Return buffer array with length 2 containing both measurements (channel1, channel2)
-  *
-  * Return Value:
-  *     Result.
-  */
-int32_t ads1256_ReadChannelPair( ads1256_channel_t channel1, bool pos1, ads1256_channel_t channel2, bool pos2, uint16_t averages)
-{
-    return(0);
-}
 
  /*
   * SelfTest
@@ -189,7 +191,7 @@ int32_t ads1256_ReadChannelPair( ads1256_channel_t channel1, bool pos1, ads1256_
   * Return Value:
   *    Number of bytes received
   */
- uint16_t SendReceiveSPI( int Address, uint8_t * TxData, uint16_t TxLength, uint8_t **RxData, uint16_t RxLength)
+ uint16_t SendReceiveSPI( uint8_t * TxData, uint16_t TxLength, uint8_t **RxData, uint16_t RxLength)
  {
      uint16_t ret = 0;
      Message_t Msg;
@@ -230,8 +232,7 @@ int32_t ads1256_ReadChannelPair( ads1256_channel_t channel1, bool pos1, ads1256_
   */
  bool WaitForDataReady(GPIO_PinState value)
  {
-     bool ret = false;
-     GPIO_PinState drdy;
+     volatile GPIO_PinState drdy;
 
      drdy = HAL_GPIO_ReadPin(ADC_DRDYn_GPIO_Port, ADC_DRDYn_Pin);    // ADC DRDY
      if (drdy != value)
@@ -254,6 +255,10 @@ int32_t ads1256_ReadChannelPair( ads1256_channel_t channel1, bool pos1, ads1256_
          }
 
      }
+     else
+     {
+         return(true);
+     }
 
      return(false);
  }
@@ -270,16 +275,10 @@ int32_t ads1256_ReadChannelPair( ads1256_channel_t channel1, bool pos1, ads1256_
   */
  static void StartConversion(void)
  {
-     volatile GPIO_PinState drdy;
-     int i;
-
      HAL_GPIO_WritePin(ADC_PDN_GPIO_Port, ADC_PDN_Pin, GPIO_PIN_RESET);    // ADC SYNC/PDN
 
-     // Should be over 500 ns in length. Timing diagram indicates the
-     for (i=0; i<512; i++)
-     {
-         drdy = HAL_GPIO_ReadPin(ADC_DRDYn_GPIO_Port, ADC_DRDYn_Pin);    // ADC SYNC/PDN
-     }
+     // Should be over 500 ns in length. Timing diagram indicates the second PDN transition should be +/- 25 ns from Clock edge..
+     TimDelayMicroSeconds(2);
 
      HAL_GPIO_WritePin(ADC_PDN_GPIO_Port, ADC_PDN_Pin, GPIO_PIN_SET);    // ADC SYNC/PDN
  }

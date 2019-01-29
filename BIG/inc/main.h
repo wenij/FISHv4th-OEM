@@ -57,8 +57,10 @@ extern QueueHandle_t SpiSendQueue;  // Queue for SPI Driver using container
 extern QueueHandle_t CliDataQueue;  // Queue for CLI task
 extern QueueHandle_t SifQueue;  	// Second Queue for the SmartIO task for general messaging.
 
-extern QueueHandle_t ADC_Queue;		// Reply Queue for ADC
-//extern QueueHandle_t DAC_Queue;		// Reply Queue for DAC
+extern QueueHandle_t ADC_Queue;		// Reply Queue for ADC driver
+extern QueueHandle_t DAC_Queue;		// Reply Queue for DAC driver
+
+extern QueueHandle_t pstat_Queue;   // General pstat task queue
 
 // Global message type definitions, Unique ids for all messages makes identification and tracing of messages easier.
 typedef enum
@@ -69,6 +71,7 @@ typedef enum
 	SPI_READ_MESSAGE,
     CLI_TEXT_MESSAGE,
     CLI_COMMAND_MESSAGE,
+    CLI_COMMAND_RESP,
 	SIF_MESSAGE,
 	MEASUREMENT_MESSAGE
 } MessageType;
@@ -143,6 +146,12 @@ typedef struct
 #define SW2_GPIO_Port GPIOC
 #define SW1_Pin GPIO_PIN_9
 #define SW1_GPIO_Port GPIOC
+#define G_S0_Pin GPIO_PIN_0
+#define G_S0_GPIO_Port GPIOC
+#define G_S1_Pin GPIO_PIN_1
+#define G_S1_GPIO_Port GPIOC
+#define G_S2_Pin GPIO_PIN_2
+#define G_S2_GPIO_Port GPIOC
 
 
 /* ########################## Assert Selection ############################## */
