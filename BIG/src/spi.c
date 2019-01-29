@@ -39,8 +39,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gpio.h"
-#include <gpio.h>
-#include <spi.h>
+#include "spi.h"
+#include "tim.h"
 #include <string.h>
 
 #include "smartio_if.h"
@@ -339,7 +339,6 @@ void SPI_driver_task( void * params )
             HAL_GPIO_WritePin(DAC_CSn_GPIO_Port, DAC_CSn_Pin, GPIO_PIN_RESET);    // DAC Chip select
 
 
-
             HAL_GPIO_WritePin(DAC_CSn_GPIO_Port, DAC_CSn_Pin, GPIO_PIN_SET);  // DAC Chip select
             break;
         }
@@ -355,6 +354,7 @@ void SPI_driver_task( void * params )
             }
 
             //The command and data read should be spaced t6 (50 ADC clocks, min = 6.6 us).
+            TimDelayMicroSeconds(8);
 
             if (Msg->Response)
             {

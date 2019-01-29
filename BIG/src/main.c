@@ -52,7 +52,7 @@
 #include "usart.h"
 #include "gpio.h"
 #include "isr.h"
-
+#include "tim.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -114,12 +114,18 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SPI3_Init();
-  //MX_USART3_UART_Init();
+#ifdef STM32F205xx
+  MX_USART3_UART_Init();
+#endif
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  MX_TIM2_Init();
 
-
+#ifdef STM32F205xx
+  USART3_ISR_ENABLE();
+#else
   USART2_ISR_ENABLE();
+#endif
 
   /* USER CODE END 2 */
 
@@ -130,14 +136,20 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
 
-	/* Create a queue used by a task.  Messages are received via this queue. */
+  /* Create a queue used by a task.  Messages are received via this queue. */
 
   SpiSendQueue = xQueueCreate( 4 /*Queue size */, sizeof( Message_t ) );
   SpiSmartIoQueue = xQueueCreate( 1 /*Queue size */, sizeof( Message_t ) );
   CliDataQueue = xQueueCreate( 4 /*Queue size */, sizeof( Message_t ) );
   SifQueue = xQueueCreate( 4 /*Queue size */, sizeof( Message_t ) );
+  ADC_Queue = xQueueCreate( 1 /*Queue size */, sizeof( Message_t ) );
+
+  DAC_Queue = xQueueCreate( 1 /*Queue size */, sizeof( Message_t ) );
+  pstat_Queue = xQueueCreate( 4 /*Queue size */, sizeof( Message_t ) );
 
   xTaskCreate( SPI_driver_task, "SpiDriver", configMINIMAL_STACK_SIZE+100, NULL, 0, NULL );	// Highest Priority
+
+  xTaskCreate( pstat_task, "pstat", configMINIMAL_STACK_SIZE+100, NULL, 1, NULL ); // second highest Priority
 
   xTaskCreate( cli_task, "CLI", configMINIMAL_STACK_SIZE+100, NULL, 4, NULL );	// middle Priority
 
@@ -159,7 +171,6 @@ int main(void)
 #ifdef STM32F205xx
 void SystemClock_Config(void)
 {
-
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
 

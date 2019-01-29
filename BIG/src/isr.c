@@ -27,7 +27,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 }
 
-
+void USART3_ISR_ENABLE(void)
+{
+    HAL_NVIC_SetPriority(USART3_IRQn, 1, 1);
+    HAL_NVIC_EnableIRQ(USART3_IRQn);
+}
 
 void USART2_ISR_ENABLE(void)
 {

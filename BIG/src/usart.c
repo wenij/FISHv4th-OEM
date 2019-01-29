@@ -46,8 +46,12 @@
 
 /* USER CODE END 0 */
 
-UART_HandleTypeDef huart2;
-UART_HandleTypeDef huart3;
+ UART_HandleTypeDef huart2;
+ UART_HandleTypeDef huart3;
+
+UART_HandleTypeDef * cli_uart = NULL;
+UART_HandleTypeDef * data_uart = NULL;
+
 
 /* USART2 init function */
 
@@ -66,6 +70,12 @@ void MX_USART2_UART_Init(void)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
+
+#ifdef STM32F205xx
+  data_uart = &huart2;
+#else
+  cli_uart = &huart2;
+#endif
 
 }
 /* USART3 init function */
@@ -86,6 +96,12 @@ void MX_USART3_UART_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
+
+#ifdef STM32F205xx
+  cli_uart = &huart3;
+#else
+  data_uart = &huart3;
+#endif
 }
 
 void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)

@@ -55,8 +55,13 @@
 
 /* USER CODE END Includes */
 
+extern UART_HandleTypeDef * cli_uart;
+extern UART_HandleTypeDef * data_uart;
+
+
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
+
 
 /* USER CODE BEGIN Private defines */
 
