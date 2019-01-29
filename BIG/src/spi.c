@@ -340,6 +340,10 @@ void SPI_driver_task( void * params )
 
 
             HAL_GPIO_WritePin(DAC_CSn_GPIO_Port, DAC_CSn_Pin, GPIO_PIN_SET);  // DAC Chip select
+
+            vPortFree(Msg->data);
+            vPortFree(Msg);
+
             break;
         }
         case SPI_ADC_IO_MESSAGE:

@@ -15,6 +15,7 @@
 
 #include <string.h>
 
+#include "gpio.h"
 #include "main.h"
 #include "cli.h"
 #include "spi.h"
@@ -46,22 +47,28 @@ void pstat_task(void * parm)
         {
             if (PortMsg.Type == CLI_COMMAND_MESSAGE)
             {
+
                 CliMsgContainer *cmd = (CliMsgContainer*)PortMsg.data;
 
-                switch (cmd->Cmd.Id)
+                switch (cmd->CLI_COMMAND_data.Id)
                 {
                 case PSTAT_MEASUREMENT_REQ:
                 {
-                    cmd->Cmd.Id = PSTAT_MEASUREMENT_RESP;
+                    pstatMeasurement_t measurement;
 
-                    MakeMeasurement(0, (pstatMeasurement_t*)&cmd->pstat_measurements);
+                    PortMsg.Type = CLI_MEASUREMENT_RESP;
 
-                    xQueueSend( CliDataQueue, &PortMsg, 0 );
+                    vPortFree(cmd);
+
+                    MakeMeasurement(0, &measurement);
+
+                    CliSendMeasurementResp(&measurement);
+
                 }
                     break;
 
                 default:
-                    vPortFree(PortMsg.data);
+                    vPortFree(cmd);
                     break;
                 }
 

@@ -17,5 +17,6 @@ extern void USART2_IRQHandler(void);
 
 extern void USART2_ISR_ENABLE(void);
 
+extern void USART3_ISR_ENABLE(void);
 
 #endif /* ISR_H_ */
