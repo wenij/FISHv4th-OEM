@@ -5,12 +5,16 @@
  *      Author: carstenh
  */
 
+#include <stdint.h>
+#include <stdbool.h>
+
 #ifndef DAC_AD5662_H_
 #define DAC_AD5662_H_
 #ifdef __cplusplus
  extern "C" {
 #endif
 
+ extern bool AD5662_Set(uint16_t DacValue);
 
 #ifdef __cplusplus
 }
