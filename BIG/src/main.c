@@ -113,7 +113,13 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+
+#ifdef USE_SPI1
+  MX_SPI1_Init();
+#else
   MX_SPI3_Init();
+#endif
+
 #ifdef STM32F205xx
   MX_USART3_UART_Init();
 #endif

@@ -43,6 +43,8 @@
  extern "C" {
 #endif
 
+//#define USE_SPI1
+
 /* Includes ------------------------------------------------------------------*/
 #ifdef STM32F205xx
 #include "stm32f2xx_hal.h"
