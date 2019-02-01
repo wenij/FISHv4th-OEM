@@ -42,22 +42,22 @@ void NumToDecimalString( uint32_t value, int numbytes, char * output, uint32_t b
 
     if (digits <= 2)
     {
-        digits = 3;
+        digits = 4;
         value &= 0xFF;
     }
     else if (digits <= 4)
     {
-        digits = 5;
+        digits = 6;
         value &= 0xFFFF;
     }
     else
     {
-        digits = 10;
+        digits = 11;
     }
 
     if (buffer_size >= digits * 2 + 1)
     {
-        itoa( value, output, buffer_size);
+        itoa( value, output, 10);
     }
 
 }
