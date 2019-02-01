@@ -136,20 +136,17 @@ int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchan
 
         SendReceiveSPI(buf, 1, &rxbuf, 3);   // Send Read Data expecting a 3 byte response.
 
-        temp = ( ((uint32_t)buf[0]) << 16) | ( ((uint32_t)buf[1]) << 8) | (uint32_t)(buf[0]);
+        if (rxbuf != NULL)
+        {
+            // The extra byte shift gets the sign bit in the right position
+            temp = ( ((uint32_t)rxbuf[0]) << 24) | ( ((uint32_t)rxbuf[1]) << 16) | ((uint32_t)(rxbuf[0]) << 8);
 
-        // Convert to positive / negative
-        if (temp & 0x0080000)
-        {
-            // Negative number
-            ret = (int32_t)temp - 0x1000000;
-        }
-        else
-        {
-            ret = (int32_t)temp;
+            ret = (int32_t)temp / 256;
+
+            vPortFree(rxbuf);
         }
 
-        ret = (int32_t)temp;
+
     }
 
     return(ret);

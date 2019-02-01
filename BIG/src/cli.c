@@ -85,31 +85,31 @@ void cli_task(void * parm)
                 *outp = 0;
 
                 strcat(outp, "  ADC_WE: ");
-                NumToHexString( msg->ADC_CONV_RESP_data.ADC_WE, 8, temp, 24);
+                NumToDecimalString( msg->ADC_CONV_RESP_data.ADC_WE, 8, temp, 24);
                 strcat(outp, temp);
 
                 strcat(outp, ", ADC_RE: ");
-                NumToHexString( msg->ADC_CONV_RESP_data.ADC_RE, 8, temp, 24);
+                NumToDecimalString( msg->ADC_CONV_RESP_data.ADC_RE, 8, temp, 24);
                 strcat(outp, temp);
 
                 strcat(outp, ", ADC_DAC_RE: ");
-                NumToHexString( msg->ADC_CONV_RESP_data.ADC_DAC_RE, 8, temp, 24);
+                NumToDecimalString( msg->ADC_CONV_RESP_data.ADC_DAC_RE, 8, temp, 24);
                 strcat(outp, temp);
 
                 strcat(outp, ", REF_1_3rd: ");
-                NumToHexString( msg->ADC_CONV_RESP_data.VREF_1_3rd, 8, temp, 24);
+                NumToDecimalString( msg->ADC_CONV_RESP_data.VREF_1_3rd, 8, temp, 24);
                 strcat(outp, temp);
 
                 strcat(outp, ", REF_2_3rd: ");
-                NumToHexString( msg->ADC_CONV_RESP_data.VREF_2_3rd, 8, temp, 24);
+                NumToDecimalString( msg->ADC_CONV_RESP_data.VREF_2_3rd, 8, temp, 24);
                 strcat(outp, temp);
 
                 strcat(outp, ", Scale: ");
-                NumToHexString( msg->ADC_CONV_RESP_data.WE_Scale, 8, temp, 24);
+                NumToDecimalString( msg->ADC_CONV_RESP_data.WE_Scale, 8, temp, 24);
                 strcat(outp, temp);
 
                 strcat(outp, ", DAC: ");
-                NumToHexString( msg->ADC_CONV_RESP_data.DAC_Setting, 8, temp, 24);
+                NumToDecimalString( msg->ADC_CONV_RESP_data.DAC_Setting, 8, temp, 24);
                 strcat(outp, temp);
 
                 strcat(outp, "\n\r");

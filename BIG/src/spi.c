@@ -199,7 +199,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
         GPIO_InitStruct.Pin = GPIO_PIN_3;
         GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
         GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
         GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
         HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -207,7 +207,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
         GPIO_InitStruct.Pin = GPIO_PIN_4;
         GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
         GPIO_InitStruct.Pull = GPIO_NOPULL;
-        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
         GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
         HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -215,7 +215,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
         GPIO_InitStruct.Pin = GPIO_PIN_5;
         GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
         GPIO_InitStruct.Pull = GPIO_PULLUP;
-        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
         GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
         HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
@@ -338,11 +338,14 @@ void SPI_driver_task( void * params )
 
             HAL_GPIO_WritePin(DAC_CSn_GPIO_Port, DAC_CSn_Pin, GPIO_PIN_RESET);    // DAC Chip select
 
+            if (Msg->length > 0)
+            {
+                HAL_SPI_Transmit(ActiveSPI, Msg->data, Msg->length, HAL_MAX_DELAY);
+            }
 
             HAL_GPIO_WritePin(DAC_CSn_GPIO_Port, DAC_CSn_Pin, GPIO_PIN_SET);  // DAC Chip select
 
-            vPortFree(Msg->data);
-            vPortFree(Msg);
+            xQueueSend( DAC_Queue, &PortMsg, 0U );
 
             break;
         }
@@ -399,16 +402,18 @@ void SPI_driver_task( void * params )
             Msg->RxError = RxError;
             PortMsg.Type = SPI_READ_MESSAGE;
 
-            xQueueSend( SpiSmartIoQueue, &PortMsg, 0U );
+            xQueueSend( ADC_Queue, &PortMsg, 0U );
 
-
-
-
-            HAL_GPIO_WritePin(ADC_CSn_GPIO_Port, ADC_CSn_Pin, GPIO_PIN_SET);  // ADC Chip select
             break;
         }
         default:
-            break;
+            {
+                SpiMsgContainer* Msg = (SpiMsgContainer*)PortMsg.data;
+
+                vPortFree(Msg->data);
+                vPortFree(Msg);
+                break;
+            }
         }
 
     }
