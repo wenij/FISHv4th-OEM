@@ -24,7 +24,6 @@ static void CliParseCommand(void);
 
 static void CliSendCmd(CliCommandId CmdId, uint32_t data, QueueHandle_t Destination);
 
-
 void cli_task(void * parm)
 {
     Message_t PortMsg;
@@ -217,20 +216,16 @@ void CliInfoPending(void)
 
 static const char * OkMsg = "OK\n\r";
 
-static uint8_t CliParseParameterString(char * src, uint8_t *params, uint8_t buf_length )
-{
-    int count;
-    uint8_t val;
+#define MAX_NUM_PARAMS 8
+static uint32_t parameter_list[MAX_NUM_PARAMS];
 
-    while (*src != 0)
-    {
-        src++;
-    }
-}
+
+static int CliParseParameterString(int offset);
 
 void CliParseCommand(void)
 {
     int length = cli_uart->RxXferCount;
+    int num_args = 0;
 
     if (length <= 0)  return;
 
@@ -239,6 +234,7 @@ void CliParseCommand(void)
         // Parse commands.
         if (strcmp("meas", (const char*)&UartRxBuffer[1]) == 0)
         {
+            //num_args = CliParseParameterString(5);
             // ADC Read
             CliSendCmd(PSTAT_MEASUREMENT_REQ, 0, pstat_Queue);
         }
@@ -254,4 +250,12 @@ void CliParseCommand(void)
         HAL_UART_Transmit(cli_uart, (uint8_t*)OkMsg, length, 100);
     }
 
+}
+
+int CliParseParameterString(int offset)
+{
+    int count = 0;
+
+
+    return(count);
 }
