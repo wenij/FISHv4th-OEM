@@ -64,7 +64,7 @@
         SECTION .intvec: CODE:ROOT(2)
 
         EXTERN  __iar_program_start // For reaching main()
-        EXTERN  __cmain             // From cstartup.s
+//        EXTERN  __cmain             // From cstartup.s
         EXTERN  STM32Fx_COLD_FISH   // For booting fish native mode
         EXTERN  FMx_SYSTICK_ISR
 #ifdef CMSIS_C        
@@ -189,9 +189,9 @@ AFT_INTVEC:
 Reset_Handler
 // not sure how main is called at the end of startup,
 // since I do my own init.
-         B       __cmain
+//         B       __cmain
         
-//        B     __iar_program_start  // = B      STM32Fx_COLD_FISH
+        B     __iar_program_start  // = B      STM32Fx_COLD_FISH
 /*  // FROM CUBE PROJECT
 Reset_Handler
         LDR     R0, =SystemInit 

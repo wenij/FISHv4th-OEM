@@ -1,6 +1,16 @@
 /*
 Should an error processed by EHON, ater its has gotten CO do a EHOFF?
 
+PSTAT Jumper settings:
+JU1,2 grounds BOOT0 & BOOT1 and both should be jumpered.
+JU3 I2C jumpered puts 5v on Pin 3 of the J2 I2C connector.
+JU5,6,7 USB1 (UART3) Power and signal routing are all jumpered.
+JU8,9 USB2 (UART2) all are jumpered.
+JU10 JTAG Target Power, Jumpered = 3.3v on  Pin 1 of the JTAG Header.
+JU11 jumpered is 3.3v nRST. JU3 is ground so it should be unjumpered. 
+JU12 JTAG Dual use TDO or SCLK unjumpered for SWD.
+  -Factory Has this jumpered as they have used JTAG instead or SWD.
+JU13 is Battery - and should be jumpered.
 Fixes in versions comments:
 
 Cloned OEM and doing test pstat in that:
