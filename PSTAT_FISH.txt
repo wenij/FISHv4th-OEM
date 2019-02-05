@@ -255,14 +255,6 @@ CR
 \ GPIOB-ODR 3 13d LSL SETBITS \ DAC and BT CS HIGH PB13 & PB14
 ;
 
-\ 1RST TRY DOCS HARD TO FIND~! CUBE DOES THIS.
-(
-typedef enum gpio_af {
-    GPIO_AF_SPI_1_2              = 5,
-    GPIO_AF_USART_1_2_3          = 7,
-} gpio_af;
-)
-
 (
 \ --------------------------------PORTB-----------------------------------------
 \ Intialize PORTB_MODER pins this way.
@@ -285,8 +277,8 @@ PB5   SPI3-MOSI         is AF, SPI3_MOSI 0x2
 PB4   SPI3-MISO         is AF, SPI3_MISO 0x2
 PB3   JTDO/SPI3-SCLK    is AF, SPI3_SCLK 0x2
 PB2   BOOT0             Do not program	 0x0
-PB1   ADC-PDN           is active low. 	 0x1
-PB0   ADC-RSTn          is active high.	 0x1
+PB1   ADC-PDNn          is active low. 	 0x1
+PB0   ADC-RSTn          is active LOW.	 0x1
 )
 
 (

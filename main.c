@@ -41,13 +41,14 @@ void C_CMSIS_REV(unsigned long word)
 
 
 #ifdef USE_CMAIN // defined in FISH_STM32F4_CONFIG_DEFINES.h
-// May use this to prototype Smart-IO board attached to the fishy disco~!
+// SMALL STACK AND HEAP ALLOCATED IN LINKER SECTION FOR SMALL CALLS TO C
+// IF LIBRARIES ARE NEEDED ALLOCATE FISH IN C DYNAMICALLY ON LARGER HEAP
 int main(void) {
 
- extern void FM3_COLD();
+ extern void STM32Fx_COLD_FISH();
 	volatile static int i = 0 ;
 	while(1) {
-		FM3_COLD();		// FISH_return2c returns here
+		STM32Fx_COLD_FISH();		// FISH_return2c returns here
 		i++ ;
 	}
 	return 0 ;

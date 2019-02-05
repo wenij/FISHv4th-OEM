@@ -6,16 +6,14 @@
 
 // this define must keep RESET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #define USE_CMAIN     // Affects cstartup_M.c FM0_COLD and FISH_return2c
+// SMALL STACK AND HEAP ALLOCATED IN LINKER SECTION FOR SMALL CALLS TO C
+// IF LIBRARIES ARE NEEDED ALLOCATE FISH IN C DYNAMICALLY ON LARGER HEAP
 
 // pstat BASIS BEING ADDED HERE TO REPLACE pstat branch.
 // Disco Boots
 // PSTAT I expect swd errs
 
-// #define PSTAT_SPI1_TEST // works on DISCO
-// THIS IS CAUSING ST-LINK TO FAIL, MESSING WITH THE JTAG SWD SEETIINGS?
-// and I have to UNPLUG TARGET chip before SWD WILL WORK AGAIN,
-// Including unplugging target just to gain access to erase or download~!
-
+// #define PSTAT_SPI1_TEST // works on DISCO and not on PSTAT
 #define PSTAT_SPI3_TEST // CREATES SWD ERR?
 //#define PSTAT_BB_NOINIT_TEST  // SPI init in SOC_INIT
 //#define PSTAT_BB_TEST         // To change SPI init to BB

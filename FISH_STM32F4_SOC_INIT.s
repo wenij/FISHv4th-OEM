@@ -57,7 +57,7 @@ SoCinit:
 #endif
 
 //---------------------------XRC HCLK PCLK1 AND PCLK2---------------------------
-#if STM32F4_XRC08_168MHZ | STM32F205RC_XRC10_118MHZ
+#if defined(STM32F4_XRC08_168MHZ) | defined(STM32F205RC_XRC10_118MHZ)
 ; 168MHz SYSCLK, 84MHz PCLK2, 42MHz PCLK1 for USB and RNG, 38.4MHz for I2S
   DC32	atk,RCC_CR, ork,1, strk,RCC_CR			; Set HSION bit
   DC32	strva,0,RCC_CFGR				            ; Reset CFGR register

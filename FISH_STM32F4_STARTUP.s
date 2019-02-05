@@ -2,6 +2,8 @@
 //Valid thru v1.8
 //----------------------------------------------------------------------
 #ifdef USE_CMAIN
+// SMALL STACK AND HEAP ALLOCATED IN LINKER SECTION FOR SMALL CALLS TO C
+// IF LIBRARIES ARE NEEDED ALLOCATE FISH IN C DYNAMICALLY ON LARGER HEAP
  PUBLIC FISH_return2c
 #endif
 
@@ -9,11 +11,25 @@
  ALIGNROM 2,0xFFFFFFFF
  PUBLIC STM32Fx_COLD_FISH
  PUBLIC  __iar_program_start
+// MAIN() entry point defined by 
+//#define USE_CMAIN     // Affects cstartup_M.c STM32Fx_COLD_FISH and FISH_return2c
+// To call FISH use the  STM32Fx_COLD_FISH: entry point
+// If USE_CMAIN not defined should fall thru to STM32Fx_COLD_FISH: entry point
+
+// SMALL STACK AND HEAP ALLOCATED IN LINKER SECTION FOR SMALL CALLS TO C
+// IF LIBRARIES ARE NEEDED ALLOCATE FISH IN C DYNAMICALLY ON LARGER HEAP
 __iar_program_start
-// MAIN() entry point defined by #Defines in FISH_STM32F4_CONFIG_DEFINES.h
-// means you can have c main() call FISH or not~!
-// #define USE_CMAIN     // Affects cstartup_M.c STM32Fx_COLD_FISH and FISH_return2c
-// :NONAME FM0_COLD ( -- ) Reset Vector entry point. Setup FISH Virtual Machine.
+#ifdef USE_CMAIN
+// cmainfix
+//	PUSH lr to sp for BYE
+	SUB	sp, sp, #4
+	MOV	t, lr
+	STR	t, [sp]
+#endif
+
+//Need to call main here somehow
+
+// Enter here for FISH standalone boot
 STM32Fx_COLD_FISH:
 // Initialize DICT RAM segment
 #ifdef TESTRAM
@@ -27,15 +43,7 @@ _fillRAM:
 	cmp	t, y
 	blo	_fillRAM
 #endif
-
-#ifdef USE_CMAIN
-// cmainfix
-//	PUSH lr to sp for BYE
-	SUB	sp, sp, #4
-	MOV	t, lr
-	STR	t, [sp]
-#endif
-
+// Launch Standalone FISH
 	LDR  	p, =PINIT	// my parameters
 	LDR  	r, =RINIT	// p and r = FISH operating enviorment,
 // r = return stack.
@@ -78,7 +86,10 @@ FWARM_STARTING_UP:
 	DC32	CR
 	DC32	COLD            // WARM ABORT THEN QUIT
 
-#ifdef USE_CMAIN
+//#ifdef USE_CMAIN
+#if defined(USE_CMAIN)
+// SMALL STACK AND HEAP ALLOCATED IN LINKER SECTION FOR SMALL CALLS TO C
+// IF LIBRARIES ARE NEEDED ALLOCATE FISH IN C DYNAMICALLY ON LARGER HEAP
 	DC32	FISH_return2c   // shouldnt get here, return to c main and restart
 #endif
 //------------------------ for meta-single-stepping ----------------------------

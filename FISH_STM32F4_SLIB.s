@@ -836,7 +836,7 @@ DOCON:
 	LDM	w!, {t_r0}
 	TPUSH_r0
 
-//:NONAME LIT:        ( -- n ) The primitive that pushes a number in a definition.
+//:NONAME LIT:  ( -- n ) The primitive that pushes a number in a definition.
 //      Within a colon-definition, LIT is automatically compiled before each
 //      32 bit literal number encountered in input text. Later execution of
 //      LIT causes the contents of the next dictionary address ( the LITERAL #)
@@ -899,6 +899,7 @@ CREATE_DOES_GOTO:
 	NEXT
 
 //:NONAME DICTSPACE:  ( -- n ) Calculate and push dictionary space available
+// Use .DS
  SECTION .text : CONST (2)
  ALIGNROM 2,0xFFFFFFFF
 DICTSPACE:
@@ -912,6 +913,7 @@ DICTSPACE:
 // LTORG
 
 //:NONAME VARSPACE:    ( -- n ) Calculate and push VAR space available
+// Use .VS
  SECTION .text : CONST (2)
  ALIGNROM 2,0xFFFFFFFF
 VARSPACE:

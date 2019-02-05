@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-#     IAR Assembler V8.22.1.15669/W32 for ARM 06/Nov/2018  17:15:01           #
+#     IAR Assembler V8.22.1.15669/W32 for ARM 02/Feb/2019  13:11:41           #
 #     Copyright 1999-2018 IAR Systems AB.                                     #
 #                                                                             #
 #           Source file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\startup_stm32f4xx.s#
 #           List file     =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List\startup_stm32f4xx.lst#
 #           Object file   =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj\startup_stm32f4xx.o#
 #           Command line  =  -f                                               #
-#                            C:\Users\CLYDEW~1\AppData\Local\Temp\EWBB72.tmp  #
+#                            C:\Users\CLYDEW~1\AppData\Local\Temp\EWA744.tmp  #
 #                            (C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\startup_stm32f4xx.s #
 #                            -OC:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\Obj #
 #                            -s+ -M<> -w+ -r -DSTM32F4_XRC08_168MHZ           #
@@ -22,637 +22,637 @@
                                 Reset_Handler
                                 ------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",188  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",189  Warning[25]: Label
                         'Reset_Handler' is defined 
                                 pubweak in a section implicitly declared
                         root
                                 NMI_Handler
                                 ----------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",194  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",204  Warning[25]: Label
                         'NMI_Handler' is defined pu
                                 bweak in a section implicitly declared
                         root
                                 MemManage_Handler
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",208  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",218  Warning[25]: Label
                         'MemManage_Handler' is defi
                                 ned pubweak in a section implicitly declared
                         root
                                 BusFault_Handler
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",213  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",223  Warning[25]: Label
                         'BusFault_Handler' is defin
                                 ed pubweak in a section implicitly declared
                         root
                                 UsageFault_Handler
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",218  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",228  Warning[25]: Label
                         'UsageFault_Handler' is def
                                 ined pubweak in a section implicitly declared
                         root
                                 SVC_Handler
                                 ----------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",223  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",233  Warning[25]: Label
                         'SVC_Handler' is defined pu
                                 bweak in a section implicitly declared
                         root
                                 DebugMon_Handler
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",228  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",238  Warning[25]: Label
                         'DebugMon_Handler' is defin
                                 ed pubweak in a section implicitly declared
                         root
                                 PendSV_Handler
                                 -------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",233  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",243  Warning[25]: Label
                         'PendSV_Handler' is defined
                                  pubweak in a section implicitly declared
                         root
                                 SysTick_Handler
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",238  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",248  Warning[25]: Label
                         'SysTick_Handler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 WWDG_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",245  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",255  Warning[25]: Label
                         'WWDG_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 PVD_IRQHandler  
                                 -------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",250  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",260  Warning[25]: Label
                         'PVD_IRQHandler' is defined
                                  pubweak in a section implicitly declared
                         root
                                 TAMP_STAMP_IRQHandler  
                                 --------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",255  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",265  Warning[25]: Label
                         'TAMP_STAMP_IRQHandler' is 
                                 defined pubweak in a section implicitly
                         declared root
                                 RTC_WKUP_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",260  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",270  Warning[25]: Label
                         'RTC_WKUP_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
                                 FLASH_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",265  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",275  Warning[25]: Label
                         'FLASH_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
                                 RCC_IRQHandler  
                                 -------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",270  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",280  Warning[25]: Label
                         'RCC_IRQHandler' is defined
                                  pubweak in a section implicitly declared
                         root
                                 EXTI0_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",275  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",285  Warning[25]: Label
                         'EXTI0_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
                                 EXTI1_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",280  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",290  Warning[25]: Label
                         'EXTI1_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
                                 EXTI2_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",285  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",295  Warning[25]: Label
                         'EXTI2_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
                                 EXTI3_IRQHandler
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",290  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",300  Warning[25]: Label
                         'EXTI3_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
                                 EXTI4_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",295  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",305  Warning[25]: Label
                         'EXTI4_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
                                 DMA1_Stream0_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",300  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",310  Warning[25]: Label
                         'DMA1_Stream0_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 DMA1_Stream1_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",305  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",315  Warning[25]: Label
                         'DMA1_Stream1_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 DMA1_Stream2_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",310  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",320  Warning[25]: Label
                         'DMA1_Stream2_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 DMA1_Stream3_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",315  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",325  Warning[25]: Label
                         'DMA1_Stream3_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 DMA1_Stream4_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",320  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",330  Warning[25]: Label
                         'DMA1_Stream4_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 DMA1_Stream5_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",325  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",335  Warning[25]: Label
                         'DMA1_Stream5_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 DMA1_Stream6_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",330  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",340  Warning[25]: Label
                         'DMA1_Stream6_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 ADC_IRQHandler  
                                 -------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",335  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",345  Warning[25]: Label
                         'ADC_IRQHandler' is defined
                                  pubweak in a section implicitly declared
                         root
                                 CAN1_TX_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",340  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",350  Warning[25]: Label
                         'CAN1_TX_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
                                 CAN1_RX0_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",345  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",355  Warning[25]: Label
                         'CAN1_RX0_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
                                 CAN1_RX1_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",350  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",360  Warning[25]: Label
                         'CAN1_RX1_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
                                 CAN1_SCE_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",355  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",365  Warning[25]: Label
                         'CAN1_SCE_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
                                 EXTI9_5_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",360  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",370  Warning[25]: Label
                         'EXTI9_5_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
                                 TIM1_BRK_TIM9_IRQHandler  
                                 -----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",365  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",375  Warning[25]: Label
                         'TIM1_BRK_TIM9_IRQHandler' 
                                 is defined pubweak in a section implicitly
                         declared root
                                 TIM1_UP_TIM10_IRQHandler  
                                 -----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",370  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",380  Warning[25]: Label
                         'TIM1_UP_TIM10_IRQHandler' 
                                 is defined pubweak in a section implicitly
                         declared root
                                 TIM1_TRG_COM_TIM11_IRQHandler  
                                 ----------------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",375  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",385  Warning[25]: Label
                         'TIM1_TRG_COM_TIM11_IRQHand
                                 ler' is defined pubweak in a section
                         implicitly declared root
                                 TIM1_CC_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",380  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",390  Warning[25]: Label
                         'TIM1_CC_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
                                 TIM2_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",385  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",395  Warning[25]: Label
                         'TIM2_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 TIM3_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",390  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",400  Warning[25]: Label
                         'TIM3_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 TIM4_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",395  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",405  Warning[25]: Label
                         'TIM4_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 I2C1_EV_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",400  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",410  Warning[25]: Label
                         'I2C1_EV_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
                                 I2C1_ER_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",405  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",415  Warning[25]: Label
                         'I2C1_ER_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
                                 I2C2_EV_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",410  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",420  Warning[25]: Label
                         'I2C2_EV_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
                                 I2C2_ER_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",415  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",425  Warning[25]: Label
                         'I2C2_ER_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
                                 SPI1_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",420  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",430  Warning[25]: Label
                         'SPI1_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 SPI2_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",425  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",435  Warning[25]: Label
                         'SPI2_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 USART1_IRQHandler  
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",430  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",440  Warning[25]: Label
                         'USART1_IRQHandler' is defi
                                 ned pubweak in a section implicitly declared
                         root
                                 USART2_IRQHandler  
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",435  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",445  Warning[25]: Label
                         'USART2_IRQHandler' is defi
                                 ned pubweak in a section implicitly declared
                         root
                                 USART3_IRQHandler  
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",440  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",450  Warning[25]: Label
                         'USART3_IRQHandler' is defi
                                 ned pubweak in a section implicitly declared
                         root
                                 EXTI15_10_IRQHandler  
                                 -------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",445  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",455  Warning[25]: Label
                         'EXTI15_10_IRQHandler' is d
                                 efined pubweak in a section implicitly
                         declared root
                                 RTC_Alarm_IRQHandler  
                                 -------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",450  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",460  Warning[25]: Label
                         'RTC_Alarm_IRQHandler' is d
                                 efined pubweak in a section implicitly
                         declared root
                                 OTG_FS_WKUP_IRQHandler  
                                 ---------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",455  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",465  Warning[25]: Label
                         'OTG_FS_WKUP_IRQHandler' is
                                  defined pubweak in a section implicitly
                         declared root
                                 TIM8_BRK_TIM12_IRQHandler  
                                 ------------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",460  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",470  Warning[25]: Label
                         'TIM8_BRK_TIM12_IRQHandler' 
                                 is defined pubweak in a section implicitly
                         declared root
                                 TIM8_UP_TIM13_IRQHandler  
                                 -----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",465  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",475  Warning[25]: Label
                         'TIM8_UP_TIM13_IRQHandler' 
                                 is defined pubweak in a section implicitly
                         declared root
                                 TIM8_TRG_COM_TIM14_IRQHandler  
                                 ----------------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",470  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",480  Warning[25]: Label
                         'TIM8_TRG_COM_TIM14_IRQHand
                                 ler' is defined pubweak in a section
                         implicitly declared root
                                 TIM8_CC_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",475  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",485  Warning[25]: Label
                         'TIM8_CC_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
                                 DMA1_Stream7_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",480  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",490  Warning[25]: Label
                         'DMA1_Stream7_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 FSMC_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",485  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",495  Warning[25]: Label
                         'FSMC_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 SDIO_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",490  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",500  Warning[25]: Label
                         'SDIO_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 TIM5_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",495  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",505  Warning[25]: Label
                         'TIM5_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 SPI3_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",500  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",510  Warning[25]: Label
                         'SPI3_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 UART4_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",505  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",515  Warning[25]: Label
                         'UART4_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
                                 UART5_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",510  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",520  Warning[25]: Label
                         'UART5_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
                                 TIM6_DAC_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",515  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",525  Warning[25]: Label
                         'TIM6_DAC_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
                                 TIM7_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",520  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",530  Warning[25]: Label
                         'TIM7_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 DMA2_Stream0_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",525  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",535  Warning[25]: Label
                         'DMA2_Stream0_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 DMA2_Stream1_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",530  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",540  Warning[25]: Label
                         'DMA2_Stream1_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 DMA2_Stream2_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",535  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",545  Warning[25]: Label
                         'DMA2_Stream2_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 DMA2_Stream3_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",540  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",550  Warning[25]: Label
                         'DMA2_Stream3_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 DMA2_Stream4_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",545  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",555  Warning[25]: Label
                         'DMA2_Stream4_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 ETH_IRQHandler  
                                 -------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",550  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",560  Warning[25]: Label
                         'ETH_IRQHandler' is defined
                                  pubweak in a section implicitly declared
                         root
                                 ETH_WKUP_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",555  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",565  Warning[25]: Label
                         'ETH_WKUP_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
                                 CAN2_TX_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",560  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",570  Warning[25]: Label
                         'CAN2_TX_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
                                 CAN2_RX0_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",565  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",575  Warning[25]: Label
                         'CAN2_RX0_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
                                 CAN2_RX1_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",570  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",580  Warning[25]: Label
                         'CAN2_RX1_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
                                 CAN2_SCE_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",575  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",585  Warning[25]: Label
                         'CAN2_SCE_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
                                 OTG_FS_IRQHandler  
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",580  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",590  Warning[25]: Label
                         'OTG_FS_IRQHandler' is defi
                                 ned pubweak in a section implicitly declared
                         root
                                 DMA2_Stream5_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",585  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",595  Warning[25]: Label
                         'DMA2_Stream5_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 DMA2_Stream6_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",590  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",600  Warning[25]: Label
                         'DMA2_Stream6_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 DMA2_Stream7_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",595  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",605  Warning[25]: Label
                         'DMA2_Stream7_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
                                 USART6_IRQHandler  
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",600  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",610  Warning[25]: Label
                         'USART6_IRQHandler' is defi
                                 ned pubweak in a section implicitly declared
                         root
                                 I2C3_EV_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",605  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",615  Warning[25]: Label
                         'I2C3_EV_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
                                 I2C3_ER_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",610  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",620  Warning[25]: Label
                         'I2C3_ER_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
                                 OTG_HS_EP1_OUT_IRQHandler  
                                 ------------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",615  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",625  Warning[25]: Label
                         'OTG_HS_EP1_OUT_IRQHandler' 
                                 is defined pubweak in a section implicitly
                         declared root
                                 OTG_HS_EP1_IN_IRQHandler  
                                 -----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",620  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",630  Warning[25]: Label
                         'OTG_HS_EP1_IN_IRQHandler' 
                                 is defined pubweak in a section implicitly
                         declared root
                                 OTG_HS_WKUP_IRQHandler  
                                 ---------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",625  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",635  Warning[25]: Label
                         'OTG_HS_WKUP_IRQHandler' is
                                  defined pubweak in a section implicitly
                         declared root
                                 OTG_HS_IRQHandler  
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",630  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",640  Warning[25]: Label
                         'OTG_HS_IRQHandler' is defi
                                 ned pubweak in a section implicitly declared
                         root
                                 DCMI_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",635  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",645  Warning[25]: Label
                         'DCMI_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 CRYP_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",640  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",650  Warning[25]: Label
                         'CRYP_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
                                 HASH_RNG_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",645  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",655  Warning[25]: Label
                         'HASH_RNG_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
                                 FPU_IRQHandler  
                                 -------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",650  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",660  Warning[25]: Label
                         'FPU_IRQHandler' is defined
                                  pubweak in a section implicitly declared
                         root
@@ -757,1379 +757,1394 @@
    63                           //        SECTION .intvec:CODE:NOROOT(2)
    64                                   SECTION .intvec: CODE:ROOT(2)
    65                           
-   66                                   EXTERN  __iar_program_start
-   67                                   EXTERN  STM32Fx_COLD_FISH
-   68                                   EXTERN  FMx_SYSTICK_ISR
-   69                           #ifdef CMSIS_C        
-   70                                   EXTERN  HardFault_Handler
-   71                           #endif
-   72                                   EXTERN  NVIC_SystemReset
-   73                                   
-   74                                   PUBLIC  __vector_table
-   75                           
-   76                                   DATA
-   77                           __vector_table
-   78    00000000 ........              DCD     sfe(CSTACK)
-   79                           ; Change to STM32Fx_COLD_FISH bypasses run to
+   66                                   EXTERN  __iar_program_start // For
+                                 reaching main()
+   67                                   EXTERN  __cmain             // From
+                                 cstartup.s
+   68                                   EXTERN  STM32Fx_COLD_FISH   // For
+                                 booting fish native mode
+   69                                   EXTERN  FMx_SYSTICK_ISR
+   70                           #ifdef CMSIS_C        
+   71                                   EXTERN  HardFault_Handler
+   72                           #endif
+   73                                   EXTERN  NVIC_SystemReset
+   74                                   
+   75                                   PUBLIC  __vector_table
+   76                           
+   77                                   DATA
+   78                           __vector_table
+   79    00000000 ........              DCD     sfe(CSTACK)
+   80                           ; Change to STM32Fx_COLD_FISH bypasses run to
                                  STM32Fx_COLD_FISH function in debugger
-   80                           ; Reset_Handler B STM32Fx_COLD_FISH allows
+   81                           ; Reset_Handler B STM32Fx_COLD_FISH allows
                                  debugger to stop there.
-   81    00000004 ........              DCD     Reset_Handler             ;
+   82    00000004 ........              DCD     Reset_Handler             ;
   Reset Handler ; STM32Fx_COLD_FISH
-   82    00000008 ........              DCD     NMI_Handler               ; NMI
+   83    00000008 ........              DCD     NMI_Handler               ; NMI
   Handler
-   83    0000000C ........              DCD     HardFault_Handler         ;
+   84    0000000C ........              DCD     HardFault_Handler         ;
   Hard Fault Handler
-   84    00000010 ........              DCD     MemManage_Handler         ; MPU
+   85    00000010 ........              DCD     MemManage_Handler         ; MPU
   Fault Handler
-   85    00000014 ........              DCD     BusFault_Handler          ; Bus
+   86    00000014 ........              DCD     BusFault_Handler          ; Bus
   Fault Handler
-   86    00000018 ........              DCD     UsageFault_Handler        ;
+   87    00000018 ........              DCD     UsageFault_Handler        ;
   Usage Fault Handler
-   87    0000001C 00000000              DCD     0                         ;
+   88    0000001C 00000000              DCD     0                         ;
   Reserved
-   88    00000020 00000000              DCD     0                         ;
+   89    00000020 00000000              DCD     0                         ;
   Reserved
-   89    00000024 00000000              DCD     0                         ;
+   90    00000024 00000000              DCD     0                         ;
   Reserved
-   90    00000028 00000000              DCD     0                         ;
+   91    00000028 00000000              DCD     0                         ;
   Reserved
-   91    0000002C ........              DCD     SVC_Handler               ;
+   92    0000002C ........              DCD     SVC_Handler               ;
   SVCall Handler
-   92    00000030 ........              DCD     DebugMon_Handler          ;
+   93    00000030 ........              DCD     DebugMon_Handler          ;
   Debug Monitor Handler
-   93    00000034 00000000              DCD     0                         ;
+   94    00000034 00000000              DCD     0                         ;
   Reserved
-   94    00000038 ........              DCD     PendSV_Handler            ;
+   95    00000038 ........              DCD     PendSV_Handler            ;
   PendSV Handler
-   95    0000003C ........              DCD     SysTick_Handler           ;
+   96    0000003C ........              DCD     SysTick_Handler           ;
   SysTick Handler
-   96                           
-   97                                    ; External(?) Interrupts
-   98    00000040 ........              DCD     WWDG_IRQHandler                
+   97                           
+   98                                    ; External(?) Interrupts
+   99    00000040 ........              DCD     WWDG_IRQHandler                
     ; Window WatchDog                                        
-   99    00000044 ........              DCD     PVD_IRQHandler                 
+  100    00000044 ........              DCD     PVD_IRQHandler                 
     ; PVD through EXTI Line detection                        
-  100    00000048 ........              DCD     TAMP_STAMP_IRQHandler          
+  101    00000048 ........              DCD     TAMP_STAMP_IRQHandler          
     ; Tamper and TimeStamps through the EXTI line            
-  101    0000004C ........              DCD     RTC_WKUP_IRQHandler            
+  102    0000004C ........              DCD     RTC_WKUP_IRQHandler            
     ; RTC Wakeup through the EXTI line                       
-  102    00000050 ........              DCD     FLASH_IRQHandler               
+  103    00000050 ........              DCD     FLASH_IRQHandler               
     ; FLASH                                           
-  103    00000054 ........              DCD     RCC_IRQHandler                 
+  104    00000054 ........              DCD     RCC_IRQHandler                 
     ; RCC                                             
-  104    00000058 ........              DCD     EXTI0_IRQHandler               
+  105    00000058 ........              DCD     EXTI0_IRQHandler               
     ; EXTI Line0                                             
-  105    0000005C ........              DCD     EXTI1_IRQHandler               
+  106    0000005C ........              DCD     EXTI1_IRQHandler               
     ; EXTI Line1                                             
-  106    00000060 ........              DCD     EXTI2_IRQHandler               
+  107    00000060 ........              DCD     EXTI2_IRQHandler               
     ; EXTI Line2                                             
-  107    00000064 ........              DCD     EXTI3_IRQHandler               
+  108    00000064 ........              DCD     EXTI3_IRQHandler               
     ; EXTI Line3                                             
-  108    00000068 ........              DCD     EXTI4_IRQHandler               
+  109    00000068 ........              DCD     EXTI4_IRQHandler               
     ; EXTI Line4                                             
-  109    0000006C ........              DCD     DMA1_Stream0_IRQHandler        
+  110    0000006C ........              DCD     DMA1_Stream0_IRQHandler        
     ; DMA1 Stream 0                                   
-  110    00000070 ........              DCD     DMA1_Stream1_IRQHandler        
+  111    00000070 ........              DCD     DMA1_Stream1_IRQHandler        
     ; DMA1 Stream 1                                   
-  111    00000074 ........              DCD     DMA1_Stream2_IRQHandler        
+  112    00000074 ........              DCD     DMA1_Stream2_IRQHandler        
     ; DMA1 Stream 2                                   
-  112    00000078 ........              DCD     DMA1_Stream3_IRQHandler        
+  113    00000078 ........              DCD     DMA1_Stream3_IRQHandler        
     ; DMA1 Stream 3                                   
-  113    0000007C ........              DCD     DMA1_Stream4_IRQHandler        
+  114    0000007C ........              DCD     DMA1_Stream4_IRQHandler        
     ; DMA1 Stream 4                                   
-  114    00000080 ........              DCD     DMA1_Stream5_IRQHandler        
+  115    00000080 ........              DCD     DMA1_Stream5_IRQHandler        
     ; DMA1 Stream 5                                   
-  115    00000084 ........              DCD     DMA1_Stream6_IRQHandler        
+  116    00000084 ........              DCD     DMA1_Stream6_IRQHandler        
     ; DMA1 Stream 6                                   
-  116    00000088 ........              DCD     ADC_IRQHandler                 
+  117    00000088 ........              DCD     ADC_IRQHandler                 
     ; ADC1, ADC2 and ADC3s                            
-  117    0000008C ........              DCD     CAN1_TX_IRQHandler             
+  118    0000008C ........              DCD     CAN1_TX_IRQHandler             
     ; CAN1 TX                                                
-  118    00000090 ........              DCD     CAN1_RX0_IRQHandler            
+  119    00000090 ........              DCD     CAN1_RX0_IRQHandler            
     ; CAN1 RX0                                               
-  119    00000094 ........              DCD     CAN1_RX1_IRQHandler            
+  120    00000094 ........              DCD     CAN1_RX1_IRQHandler            
     ; CAN1 RX1                                               
-  120    00000098 ........              DCD     CAN1_SCE_IRQHandler            
+  121    00000098 ........              DCD     CAN1_SCE_IRQHandler            
     ; CAN1 SCE                                               
-  121    0000009C ........              DCD     EXTI9_5_IRQHandler             
+  122    0000009C ........              DCD     EXTI9_5_IRQHandler             
     ; External Line[9:5]s                                    
-  122    000000A0 ........              DCD     TIM1_BRK_TIM9_IRQHandler       
+  123    000000A0 ........              DCD     TIM1_BRK_TIM9_IRQHandler       
     ; TIM1 Break and TIM9                   
-  123    000000A4 ........              DCD     TIM1_UP_TIM10_IRQHandler       
+  124    000000A4 ........              DCD     TIM1_UP_TIM10_IRQHandler       
     ; TIM1 Update and TIM10                 
-  124    000000A8 ........              DCD     TIM1_TRG_COM_TIM11_IRQHandler  
+  125    000000A8 ........              DCD     TIM1_TRG_COM_TIM11_IRQHandler  
     ; TIM1 Trigger and Commutation and TIM11
-  125    000000AC ........              DCD     TIM1_CC_IRQHandler             
+  126    000000AC ........              DCD     TIM1_CC_IRQHandler             
     ; TIM1 Capture Compare                                   
-  126    000000B0 ........              DCD     TIM2_IRQHandler                
+  127    000000B0 ........              DCD     TIM2_IRQHandler                
     ; TIM2                                            
-  127    000000B4 ........              DCD     TIM3_IRQHandler                
+  128    000000B4 ........              DCD     TIM3_IRQHandler                
     ; TIM3                                            
-  128    000000B8 ........              DCD     TIM4_IRQHandler                
+  129    000000B8 ........              DCD     TIM4_IRQHandler                
     ; TIM4                                            
-  129    000000BC ........              DCD     I2C1_EV_IRQHandler             
+  130    000000BC ........              DCD     I2C1_EV_IRQHandler             
     ; I2C1 Event                                             
-  130    000000C0 ........              DCD     I2C1_ER_IRQHandler             
+  131    000000C0 ........              DCD     I2C1_ER_IRQHandler             
     ; I2C1 Error                                             
-  131    000000C4 ........              DCD     I2C2_EV_IRQHandler             
+  132    000000C4 ........              DCD     I2C2_EV_IRQHandler             
     ; I2C2 Event                                             
-  132    000000C8 ........              DCD     I2C2_ER_IRQHandler             
+  133    000000C8 ........              DCD     I2C2_ER_IRQHandler             
     ; I2C2 Error                                               
-  133    000000CC ........              DCD     SPI1_IRQHandler                
+  134    000000CC ........              DCD     SPI1_IRQHandler                
     ; SPI1                                            
-  134    000000D0 ........              DCD     SPI2_IRQHandler                
+  135    000000D0 ........              DCD     SPI2_IRQHandler                
     ; SPI2                                            
-  135    000000D4 ........              DCD     USART1_IRQHandler              
+  136    000000D4 ........              DCD     USART1_IRQHandler              
     ; USART1                                          
-  136    000000D8 ........              DCD     USART2_IRQHandler              
+  137    000000D8 ........              DCD     USART2_IRQHandler              
     ; USART2                                          
-  137    000000DC ........              DCD     USART3_IRQHandler              
+  138    000000DC ........              DCD     USART3_IRQHandler              
     ; USART3                                          
-  138    000000E0 ........              DCD     EXTI15_10_IRQHandler           
+  139    000000E0 ........              DCD     EXTI15_10_IRQHandler           
     ; External Line[15:10]s                                  
-  139    000000E4 ........              DCD     RTC_Alarm_IRQHandler           
+  140    000000E4 ........              DCD     RTC_Alarm_IRQHandler           
     ; RTC Alarm (A and B) through EXTI Line                  
-  140    000000E8 ........              DCD     OTG_FS_WKUP_IRQHandler         
+  141    000000E8 ........              DCD     OTG_FS_WKUP_IRQHandler         
     ; USB OTG FS Wakeup through EXTI line                        
-  141    000000EC ........              DCD     TIM8_BRK_TIM12_IRQHandler      
+  142    000000EC ........              DCD     TIM8_BRK_TIM12_IRQHandler      
     ; TIM8 Break and TIM12                  
-  142    000000F0 ........              DCD     TIM8_UP_TIM13_IRQHandler       
+  143    000000F0 ........              DCD     TIM8_UP_TIM13_IRQHandler       
     ; TIM8 Update and TIM13                 
-  143    000000F4 ........              DCD     TIM8_TRG_COM_TIM14_IRQHandler  
+  144    000000F4 ........              DCD     TIM8_TRG_COM_TIM14_IRQHandler  
     ; TIM8 Trigger and Commutation and TIM14
-  144    000000F8 ........              DCD     TIM8_CC_IRQHandler             
+  145    000000F8 ........              DCD     TIM8_CC_IRQHandler             
     ; TIM8 Capture Compare                                   
-  145    000000FC ........              DCD     DMA1_Stream7_IRQHandler        
+  146    000000FC ........              DCD     DMA1_Stream7_IRQHandler        
     ; DMA1 Stream7                                           
-  146    00000100 ........              DCD     FSMC_IRQHandler                
+  147    00000100 ........              DCD     FSMC_IRQHandler                
     ; FSMC                                            
-  147    00000104 ........              DCD     SDIO_IRQHandler                
+  148    00000104 ........              DCD     SDIO_IRQHandler                
     ; SDIO                                            
-  148    00000108 ........              DCD     TIM5_IRQHandler                
+  149    00000108 ........              DCD     TIM5_IRQHandler                
     ; TIM5                                            
-  149    0000010C ........              DCD     SPI3_IRQHandler                
+  150    0000010C ........              DCD     SPI3_IRQHandler                
     ; SPI3                                            
-  150    00000110 ........              DCD     UART4_IRQHandler               
+  151    00000110 ........              DCD     UART4_IRQHandler               
     ; UART4                                           
-  151    00000114 ........              DCD     UART5_IRQHandler               
+  152    00000114 ........              DCD     UART5_IRQHandler               
     ; UART5                                           
-  152    00000118 ........              DCD     TIM6_DAC_IRQHandler            
+  153    00000118 ........              DCD     TIM6_DAC_IRQHandler            
     ; TIM6 and DAC1&2 underrun errors                   
-  153    0000011C ........              DCD     TIM7_IRQHandler                
+  154    0000011C ........              DCD     TIM7_IRQHandler                
     ; TIM7                   
-  154    00000120 ........              DCD     DMA2_Stream0_IRQHandler        
+  155    00000120 ........              DCD     DMA2_Stream0_IRQHandler        
     ; DMA2 Stream 0                                   
-  155    00000124 ........              DCD     DMA2_Stream1_IRQHandler        
+  156    00000124 ........              DCD     DMA2_Stream1_IRQHandler        
     ; DMA2 Stream 1                                   
-  156    00000128 ........              DCD     DMA2_Stream2_IRQHandler        
+  157    00000128 ........              DCD     DMA2_Stream2_IRQHandler        
     ; DMA2 Stream 2                                   
-  157    0000012C ........              DCD     DMA2_Stream3_IRQHandler        
+  158    0000012C ........              DCD     DMA2_Stream3_IRQHandler        
     ; DMA2 Stream 3                                   
-  158    00000130 ........              DCD     DMA2_Stream4_IRQHandler        
+  159    00000130 ........              DCD     DMA2_Stream4_IRQHandler        
     ; DMA2 Stream 4                                   
-  159    00000134 ........              DCD     ETH_IRQHandler                 
+  160    00000134 ........              DCD     ETH_IRQHandler                 
     ; Ethernet                                        
-  160    00000138 ........              DCD     ETH_WKUP_IRQHandler            
+  161    00000138 ........              DCD     ETH_WKUP_IRQHandler            
     ; Ethernet Wakeup through EXTI line                      
-  161    0000013C ........              DCD     CAN2_TX_IRQHandler             
+  162    0000013C ........              DCD     CAN2_TX_IRQHandler             
     ; CAN2 TX                                                
-  162    00000140 ........              DCD     CAN2_RX0_IRQHandler            
+  163    00000140 ........              DCD     CAN2_RX0_IRQHandler            
     ; CAN2 RX0                                               
-  163    00000144 ........              DCD     CAN2_RX1_IRQHandler            
+  164    00000144 ........              DCD     CAN2_RX1_IRQHandler            
     ; CAN2 RX1                                               
-  164    00000148 ........              DCD     CAN2_SCE_IRQHandler            
+  165    00000148 ........              DCD     CAN2_SCE_IRQHandler            
     ; CAN2 SCE                                               
-  165    0000014C ........              DCD     OTG_FS_IRQHandler              
+  166    0000014C ........              DCD     OTG_FS_IRQHandler              
     ; USB OTG FS                                      
-  166    00000150 ........              DCD     DMA2_Stream5_IRQHandler        
+  167    00000150 ........              DCD     DMA2_Stream5_IRQHandler        
     ; DMA2 Stream 5                                   
-  167    00000154 ........              DCD     DMA2_Stream6_IRQHandler        
+  168    00000154 ........              DCD     DMA2_Stream6_IRQHandler        
     ; DMA2 Stream 6                                   
-  168    00000158 ........              DCD     DMA2_Stream7_IRQHandler        
+  169    00000158 ........              DCD     DMA2_Stream7_IRQHandler        
     ; DMA2 Stream 7                                   
-  169    0000015C ........              DCD     USART6_IRQHandler              
+  170    0000015C ........              DCD     USART6_IRQHandler              
     ; USART6                                           
-  170    00000160 ........              DCD     I2C3_EV_IRQHandler             
+  171    00000160 ........              DCD     I2C3_EV_IRQHandler             
     ; I2C3 event                                             
-  171    00000164 ........              DCD     I2C3_ER_IRQHandler             
+  172    00000164 ........              DCD     I2C3_ER_IRQHandler             
     ; I2C3 error                                             
-  172    00000168 ........              DCD     OTG_HS_EP1_OUT_IRQHandler      
+  173    00000168 ........              DCD     OTG_HS_EP1_OUT_IRQHandler      
     ; USB OTG HS End Point 1 Out                      
-  173    0000016C ........              DCD     OTG_HS_EP1_IN_IRQHandler       
+  174    0000016C ........              DCD     OTG_HS_EP1_IN_IRQHandler       
     ; USB OTG HS End Point 1 In                       
-  174    00000170 ........              DCD     OTG_HS_WKUP_IRQHandler         
+  175    00000170 ........              DCD     OTG_HS_WKUP_IRQHandler         
     ; USB OTG HS Wakeup through EXTI                         
-  175    00000174 ........              DCD     OTG_HS_IRQHandler              
+  176    00000174 ........              DCD     OTG_HS_IRQHandler              
     ; USB OTG HS                                      
-  176    00000178 ........              DCD     DCMI_IRQHandler                
+  177    00000178 ........              DCD     DCMI_IRQHandler                
     ; DCMI                                            
-  177    0000017C ........              DCD     CRYP_IRQHandler                
+  178    0000017C ........              DCD     CRYP_IRQHandler                
     ; CRYP crypto                                     
-  178    00000180 ........              DCD     HASH_RNG_IRQHandler            
+  179    00000180 ........              DCD     HASH_RNG_IRQHandler            
     ; Hash and Rng
-  179    00000184 ........              DCD     FPU_IRQHandler                 
+  180    00000184 ........              DCD     FPU_IRQHandler                 
     ; FPU
-  180                           AFT_INTVEC:
-  181                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  181                           AFT_INTVEC:
+  182                           ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                                 ;;;;;;
-  182                           ;;
-  183                           ;; Default interrupt handlers.
-  184                           ;;
-  185                                   THUMB
-  186                                   PUBWEAK Reset_Handler
-  187                                   SECTION .text:CODE:REORDER(2)
-  188                           Reset_Handler
+  183                           ;;
+  184                           ;; Default interrupt handlers.
+  185                           ;;
+  186                                   THUMB
+  187                                   PUBWEAK Reset_Handler
+  188                                   SECTION .text:CODE:REORDER(2)
+  189                           Reset_Handler
                                 Reset_Handler
                                 ------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",188  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",189  Warning[25]: Label
                         'Reset_Handler' is defined 
                                 pubweak in a section implicitly declared
                         root
-  189                           
-  190    00000000 ........              B      STM32Fx_COLD_FISH
-  191                           
-  192                                   PUBWEAK NMI_Handler
-  193                                   SECTION .text:CODE:REORDER(1)
-  194                           NMI_Handler
+  190                           // not sure how main is called at the end of
+                                 startup,
+  191                           // since I do my own init.
+  192    00000000 ........               B       __cmain
+  193                                   
+  194                           //        B     __iar_program_start  // = B   
+                                   STM32Fx_COLD_FISH
+  195                           /*  // FROM CUBE PROJECT
+  196                           Reset_Handler
+  197                                   LDR     R0, =SystemInit 
+  198                                   BLX     R0
+  199                                   LDR     R0, =__iar_program_start
+  200                                   BX      R0
+  201                           */
+  202                                   PUBWEAK NMI_Handler
+  203                                   SECTION .text:CODE:REORDER(1)
+  204                           NMI_Handler
                                 NMI_Handler
                                 ----------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",194  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",204  Warning[25]: Label
                         'NMI_Handler' is defined pu
                                 bweak in a section implicitly declared
                         root
-  195    00000000 ........              B NMI_Handler
-  196                           
-  197                           #ifdef CMSIS_ASM
-  204                           #endif
-  205                           
-  206                                   PUBWEAK MemManage_Handler
-  207                                   SECTION .text:CODE:REORDER(1)
-  208                           MemManage_Handler
+  205    00000000 ........              B NMI_Handler
+  206                           
+  207                           #ifdef CMSIS_ASM
+  214                           #endif
+  215                           
+  216                                   PUBWEAK MemManage_Handler
+  217                                   SECTION .text:CODE:REORDER(1)
+  218                           MemManage_Handler
                                 MemManage_Handler
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",208  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",218  Warning[25]: Label
                         'MemManage_Handler' is defi
                                 ned pubweak in a section implicitly declared
                         root
-  209    00000000 ........              B MemManage_Handler
-  210                           
-  211                                   PUBWEAK BusFault_Handler
-  212                                   SECTION .text:CODE:REORDER(1)
-  213                           BusFault_Handler
+  219    00000000 ........              B MemManage_Handler
+  220                           
+  221                                   PUBWEAK BusFault_Handler
+  222                                   SECTION .text:CODE:REORDER(1)
+  223                           BusFault_Handler
                                 BusFault_Handler
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",213  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",223  Warning[25]: Label
                         'BusFault_Handler' is defin
                                 ed pubweak in a section implicitly declared
                         root
-  214    00000000 ........              B BusFault_Handler
-  215                           
-  216                                   PUBWEAK UsageFault_Handler
-  217                                   SECTION .text:CODE:REORDER(1)
-  218                           UsageFault_Handler
+  224    00000000 ........              B BusFault_Handler
+  225                           
+  226                                   PUBWEAK UsageFault_Handler
+  227                                   SECTION .text:CODE:REORDER(1)
+  228                           UsageFault_Handler
                                 UsageFault_Handler
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",218  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",228  Warning[25]: Label
                         'UsageFault_Handler' is def
                                 ined pubweak in a section implicitly declared
                         root
-  219    00000000 ........              B UsageFault_Handler
-  220                           
-  221                                   PUBWEAK SVC_Handler
-  222                                   SECTION .text:CODE:REORDER(1)
-  223                           SVC_Handler
+  229    00000000 ........              B UsageFault_Handler
+  230                           
+  231                                   PUBWEAK SVC_Handler
+  232                                   SECTION .text:CODE:REORDER(1)
+  233                           SVC_Handler
                                 SVC_Handler
                                 ----------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",223  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",233  Warning[25]: Label
                         'SVC_Handler' is defined pu
                                 bweak in a section implicitly declared
                         root
-  224    00000000 ........              B SVC_Handler
-  225                           
-  226                                   PUBWEAK DebugMon_Handler
-  227                                   SECTION .text:CODE:REORDER(1)
-  228                           DebugMon_Handler
+  234    00000000 ........              B SVC_Handler
+  235                           
+  236                                   PUBWEAK DebugMon_Handler
+  237                                   SECTION .text:CODE:REORDER(1)
+  238                           DebugMon_Handler
                                 DebugMon_Handler
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",228  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",238  Warning[25]: Label
                         'DebugMon_Handler' is defin
                                 ed pubweak in a section implicitly declared
                         root
-  229    00000000 ........              B DebugMon_Handler
-  230                           
-  231                                   PUBWEAK PendSV_Handler
-  232                                   SECTION .text:CODE:REORDER(1)
-  233                           PendSV_Handler
+  239    00000000 ........              B DebugMon_Handler
+  240                           
+  241                                   PUBWEAK PendSV_Handler
+  242                                   SECTION .text:CODE:REORDER(1)
+  243                           PendSV_Handler
                                 PendSV_Handler
                                 -------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",233  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",243  Warning[25]: Label
                         'PendSV_Handler' is defined
                                  pubweak in a section implicitly declared
                         root
-  234    00000000 ........              B PendSV_Handler
-  235                           
-  236                                   PUBWEAK SysTick_Handler
-  237                                   SECTION .text:CODE:REORDER(1)
-  238                           SysTick_Handler
+  244    00000000 ........              B PendSV_Handler
+  245                           
+  246                                   PUBWEAK SysTick_Handler
+  247                                   SECTION .text:CODE:REORDER(1)
+  248                           SysTick_Handler
                                 SysTick_Handler
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",238  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",248  Warning[25]: Label
                         'SysTick_Handler' is define
                                 d pubweak in a section implicitly declared
                         root
-  239                           ;{ FM0_SYSTICK_ISR(); /* while (0) {} */
+  249                           ;{ FM0_SYSTICK_ISR(); /* while (0) {} */
                                  }
-  240                           ;        B SysTick_Handler
-  241    00000000 ........              B FMx_SYSTICK_ISR
-  242                           
-  243                                   PUBWEAK WWDG_IRQHandler
-  244                                   SECTION .text:CODE:REORDER(1)
-  245                           WWDG_IRQHandler  
+  250                           ;        B SysTick_Handler
+  251    00000000 ........              B FMx_SYSTICK_ISR
+  252                           
+  253                                   PUBWEAK WWDG_IRQHandler
+  254                                   SECTION .text:CODE:REORDER(1)
+  255                           WWDG_IRQHandler  
                                 WWDG_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",245  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",255  Warning[25]: Label
                         'WWDG_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  246    00000000 ........              B WWDG_IRQHandler
-  247                           
-  248                                   PUBWEAK PVD_IRQHandler
-  249                                   SECTION .text:CODE:REORDER(1)
-  250                           PVD_IRQHandler  
+  256    00000000 ........              B WWDG_IRQHandler
+  257                           
+  258                                   PUBWEAK PVD_IRQHandler
+  259                                   SECTION .text:CODE:REORDER(1)
+  260                           PVD_IRQHandler  
                                 PVD_IRQHandler  
                                 -------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",250  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",260  Warning[25]: Label
                         'PVD_IRQHandler' is defined
                                  pubweak in a section implicitly declared
                         root
-  251    00000000 ........              B PVD_IRQHandler
-  252                           
-  253                                   PUBWEAK TAMP_STAMP_IRQHandler
-  254                                   SECTION .text:CODE:REORDER(1)   
+  261    00000000 ........              B PVD_IRQHandler
+  262                           
+  263                                   PUBWEAK TAMP_STAMP_IRQHandler
+  264                                   SECTION .text:CODE:REORDER(1)   
                                  
-  255                           TAMP_STAMP_IRQHandler  
+  265                           TAMP_STAMP_IRQHandler  
                                 TAMP_STAMP_IRQHandler  
                                 --------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",255  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",265  Warning[25]: Label
                         'TAMP_STAMP_IRQHandler' is 
                                 defined pubweak in a section implicitly
                         declared root
-  256    00000000 ........              B TAMP_STAMP_IRQHandler
-  257                           
-  258                                   PUBWEAK RTC_WKUP_IRQHandler
-  259                                   SECTION .text:CODE:REORDER(1) 
+  266    00000000 ........              B TAMP_STAMP_IRQHandler
+  267                           
+  268                                   PUBWEAK RTC_WKUP_IRQHandler
+  269                                   SECTION .text:CODE:REORDER(1) 
                                  
-  260                           RTC_WKUP_IRQHandler  
+  270                           RTC_WKUP_IRQHandler  
                                 RTC_WKUP_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",260  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",270  Warning[25]: Label
                         'RTC_WKUP_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
-  261    00000000 ........              B RTC_WKUP_IRQHandler
-  262                           
-  263                                   PUBWEAK FLASH_IRQHandler
-  264                                   SECTION .text:CODE:REORDER(1)
-  265                           FLASH_IRQHandler  
+  271    00000000 ........              B RTC_WKUP_IRQHandler
+  272                           
+  273                                   PUBWEAK FLASH_IRQHandler
+  274                                   SECTION .text:CODE:REORDER(1)
+  275                           FLASH_IRQHandler  
                                 FLASH_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",265  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",275  Warning[25]: Label
                         'FLASH_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
-  266    00000000 ........              B FLASH_IRQHandler
-  267                           
-  268                                   PUBWEAK RCC_IRQHandler
-  269                                   SECTION .text:CODE:REORDER(1)
-  270                           RCC_IRQHandler  
+  276    00000000 ........              B FLASH_IRQHandler
+  277                           
+  278                                   PUBWEAK RCC_IRQHandler
+  279                                   SECTION .text:CODE:REORDER(1)
+  280                           RCC_IRQHandler  
                                 RCC_IRQHandler  
                                 -------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",270  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",280  Warning[25]: Label
                         'RCC_IRQHandler' is defined
                                  pubweak in a section implicitly declared
                         root
-  271    00000000 ........              B RCC_IRQHandler
-  272                           
-  273                                   PUBWEAK EXTI0_IRQHandler
-  274                                   SECTION .text:CODE:REORDER(1)
-  275                           EXTI0_IRQHandler  
+  281    00000000 ........              B RCC_IRQHandler
+  282                           
+  283                                   PUBWEAK EXTI0_IRQHandler
+  284                                   SECTION .text:CODE:REORDER(1)
+  285                           EXTI0_IRQHandler  
                                 EXTI0_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",275  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",285  Warning[25]: Label
                         'EXTI0_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
-  276    00000000 ........              B EXTI0_IRQHandler
-  277                           
-  278                                   PUBWEAK EXTI1_IRQHandler
-  279                                   SECTION .text:CODE:REORDER(1)
-  280                           EXTI1_IRQHandler  
+  286    00000000 ........              B EXTI0_IRQHandler
+  287                           
+  288                                   PUBWEAK EXTI1_IRQHandler
+  289                                   SECTION .text:CODE:REORDER(1)
+  290                           EXTI1_IRQHandler  
                                 EXTI1_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",280  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",290  Warning[25]: Label
                         'EXTI1_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
-  281    00000000 ........              B EXTI1_IRQHandler
-  282                           
-  283                                   PUBWEAK EXTI2_IRQHandler
-  284                                   SECTION .text:CODE:REORDER(1)
-  285                           EXTI2_IRQHandler  
+  291    00000000 ........              B EXTI1_IRQHandler
+  292                           
+  293                                   PUBWEAK EXTI2_IRQHandler
+  294                                   SECTION .text:CODE:REORDER(1)
+  295                           EXTI2_IRQHandler  
                                 EXTI2_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",285  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",295  Warning[25]: Label
                         'EXTI2_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
-  286    00000000 ........              B EXTI2_IRQHandler
-  287                           
-  288                                   PUBWEAK EXTI3_IRQHandler
-  289                                   SECTION .text:CODE:REORDER(1)
-  290                           EXTI3_IRQHandler
+  296    00000000 ........              B EXTI2_IRQHandler
+  297                           
+  298                                   PUBWEAK EXTI3_IRQHandler
+  299                                   SECTION .text:CODE:REORDER(1)
+  300                           EXTI3_IRQHandler
                                 EXTI3_IRQHandler
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",290  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",300  Warning[25]: Label
                         'EXTI3_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
-  291    00000000 ........              B EXTI3_IRQHandler
-  292                           
-  293                                   PUBWEAK EXTI4_IRQHandler
-  294                                   SECTION .text:CODE:REORDER(1)   
+  301    00000000 ........              B EXTI3_IRQHandler
+  302                           
+  303                                   PUBWEAK EXTI4_IRQHandler
+  304                                   SECTION .text:CODE:REORDER(1)   
                                  
-  295                           EXTI4_IRQHandler  
+  305                           EXTI4_IRQHandler  
                                 EXTI4_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",295  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",305  Warning[25]: Label
                         'EXTI4_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
-  296    00000000 ........              B EXTI4_IRQHandler
-  297                           
-  298                                   PUBWEAK DMA1_Stream0_IRQHandler
-  299                                   SECTION .text:CODE:REORDER(1)   
+  306    00000000 ........              B EXTI4_IRQHandler
+  307                           
+  308                                   PUBWEAK DMA1_Stream0_IRQHandler
+  309                                   SECTION .text:CODE:REORDER(1)   
                                  
-  300                           DMA1_Stream0_IRQHandler  
+  310                           DMA1_Stream0_IRQHandler  
                                 DMA1_Stream0_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",300  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",310  Warning[25]: Label
                         'DMA1_Stream0_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  301    00000000 ........              B DMA1_Stream0_IRQHandler
-  302                           
-  303                                   PUBWEAK DMA1_Stream1_IRQHandler
-  304                                   SECTION .text:CODE:REORDER(1)   
+  311    00000000 ........              B DMA1_Stream0_IRQHandler
+  312                           
+  313                                   PUBWEAK DMA1_Stream1_IRQHandler
+  314                                   SECTION .text:CODE:REORDER(1)   
                                  
-  305                           DMA1_Stream1_IRQHandler  
+  315                           DMA1_Stream1_IRQHandler  
                                 DMA1_Stream1_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",305  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",315  Warning[25]: Label
                         'DMA1_Stream1_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  306    00000000 ........              B DMA1_Stream1_IRQHandler
-  307                           
-  308                                   PUBWEAK DMA1_Stream2_IRQHandler
-  309                                   SECTION .text:CODE:REORDER(1)   
+  316    00000000 ........              B DMA1_Stream1_IRQHandler
+  317                           
+  318                                   PUBWEAK DMA1_Stream2_IRQHandler
+  319                                   SECTION .text:CODE:REORDER(1)   
                                  
-  310                           DMA1_Stream2_IRQHandler  
+  320                           DMA1_Stream2_IRQHandler  
                                 DMA1_Stream2_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",310  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",320  Warning[25]: Label
                         'DMA1_Stream2_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  311    00000000 ........              B DMA1_Stream2_IRQHandler
-  312                           
-  313                                   PUBWEAK DMA1_Stream3_IRQHandler
-  314                                   SECTION .text:CODE:REORDER(1)   
+  321    00000000 ........              B DMA1_Stream2_IRQHandler
+  322                           
+  323                                   PUBWEAK DMA1_Stream3_IRQHandler
+  324                                   SECTION .text:CODE:REORDER(1)   
                                  
-  315                           DMA1_Stream3_IRQHandler  
+  325                           DMA1_Stream3_IRQHandler  
                                 DMA1_Stream3_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",315  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",325  Warning[25]: Label
                         'DMA1_Stream3_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  316    00000000 ........              B DMA1_Stream3_IRQHandler
-  317                           
-  318                                   PUBWEAK DMA1_Stream4_IRQHandler
-  319                                   SECTION .text:CODE:REORDER(1)   
+  326    00000000 ........              B DMA1_Stream3_IRQHandler
+  327                           
+  328                                   PUBWEAK DMA1_Stream4_IRQHandler
+  329                                   SECTION .text:CODE:REORDER(1)   
                                  
-  320                           DMA1_Stream4_IRQHandler  
+  330                           DMA1_Stream4_IRQHandler  
                                 DMA1_Stream4_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",320  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",330  Warning[25]: Label
                         'DMA1_Stream4_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  321    00000000 ........              B DMA1_Stream4_IRQHandler
-  322                           
-  323                                   PUBWEAK DMA1_Stream5_IRQHandler
-  324                                   SECTION .text:CODE:REORDER(1)   
+  331    00000000 ........              B DMA1_Stream4_IRQHandler
+  332                           
+  333                                   PUBWEAK DMA1_Stream5_IRQHandler
+  334                                   SECTION .text:CODE:REORDER(1)   
                                  
-  325                           DMA1_Stream5_IRQHandler  
+  335                           DMA1_Stream5_IRQHandler  
                                 DMA1_Stream5_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",325  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",335  Warning[25]: Label
                         'DMA1_Stream5_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  326    00000000 ........              B DMA1_Stream5_IRQHandler
-  327                           
-  328                                   PUBWEAK DMA1_Stream6_IRQHandler
-  329                                   SECTION .text:CODE:REORDER(1)   
+  336    00000000 ........              B DMA1_Stream5_IRQHandler
+  337                           
+  338                                   PUBWEAK DMA1_Stream6_IRQHandler
+  339                                   SECTION .text:CODE:REORDER(1)   
                                  
-  330                           DMA1_Stream6_IRQHandler  
+  340                           DMA1_Stream6_IRQHandler  
                                 DMA1_Stream6_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",330  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",340  Warning[25]: Label
                         'DMA1_Stream6_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  331    00000000 ........              B DMA1_Stream6_IRQHandler
-  332                           
-  333                                   PUBWEAK ADC_IRQHandler
-  334                                   SECTION .text:CODE:REORDER(1)
-  335                           ADC_IRQHandler  
+  341    00000000 ........              B DMA1_Stream6_IRQHandler
+  342                           
+  343                                   PUBWEAK ADC_IRQHandler
+  344                                   SECTION .text:CODE:REORDER(1)
+  345                           ADC_IRQHandler  
                                 ADC_IRQHandler  
                                 -------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",335  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",345  Warning[25]: Label
                         'ADC_IRQHandler' is defined
                                  pubweak in a section implicitly declared
                         root
-  336    00000000 ........              B ADC_IRQHandler
-  337                           
-  338                                   PUBWEAK CAN1_TX_IRQHandler
-  339                                   SECTION .text:CODE:REORDER(1)
+  346    00000000 ........              B ADC_IRQHandler
+  347                           
+  348                                   PUBWEAK CAN1_TX_IRQHandler
+  349                                   SECTION .text:CODE:REORDER(1)
                                  
-  340                           CAN1_TX_IRQHandler  
+  350                           CAN1_TX_IRQHandler  
                                 CAN1_TX_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",340  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",350  Warning[25]: Label
                         'CAN1_TX_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
-  341    00000000 ........              B CAN1_TX_IRQHandler
-  342                           
-  343                                   PUBWEAK CAN1_RX0_IRQHandler
-  344                                   SECTION .text:CODE:REORDER(1) 
+  351    00000000 ........              B CAN1_TX_IRQHandler
+  352                           
+  353                                   PUBWEAK CAN1_RX0_IRQHandler
+  354                                   SECTION .text:CODE:REORDER(1) 
                                  
-  345                           CAN1_RX0_IRQHandler  
+  355                           CAN1_RX0_IRQHandler  
                                 CAN1_RX0_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",345  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",355  Warning[25]: Label
                         'CAN1_RX0_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
-  346    00000000 ........              B CAN1_RX0_IRQHandler
-  347                           
-  348                                   PUBWEAK CAN1_RX1_IRQHandler
-  349                                   SECTION .text:CODE:REORDER(1) 
+  356    00000000 ........              B CAN1_RX0_IRQHandler
+  357                           
+  358                                   PUBWEAK CAN1_RX1_IRQHandler
+  359                                   SECTION .text:CODE:REORDER(1) 
                                  
-  350                           CAN1_RX1_IRQHandler  
+  360                           CAN1_RX1_IRQHandler  
                                 CAN1_RX1_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",350  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",360  Warning[25]: Label
                         'CAN1_RX1_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
-  351    00000000 ........              B CAN1_RX1_IRQHandler
-  352                           
-  353                                   PUBWEAK CAN1_SCE_IRQHandler
-  354                                   SECTION .text:CODE:REORDER(1) 
+  361    00000000 ........              B CAN1_RX1_IRQHandler
+  362                           
+  363                                   PUBWEAK CAN1_SCE_IRQHandler
+  364                                   SECTION .text:CODE:REORDER(1) 
                                  
-  355                           CAN1_SCE_IRQHandler  
+  365                           CAN1_SCE_IRQHandler  
                                 CAN1_SCE_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",355  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",365  Warning[25]: Label
                         'CAN1_SCE_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
-  356    00000000 ........              B CAN1_SCE_IRQHandler
-  357                           
-  358                                   PUBWEAK EXTI9_5_IRQHandler
-  359                                   SECTION .text:CODE:REORDER(1)
+  366    00000000 ........              B CAN1_SCE_IRQHandler
+  367                           
+  368                                   PUBWEAK EXTI9_5_IRQHandler
+  369                                   SECTION .text:CODE:REORDER(1)
                                  
-  360                           EXTI9_5_IRQHandler  
+  370                           EXTI9_5_IRQHandler  
                                 EXTI9_5_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",360  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",370  Warning[25]: Label
                         'EXTI9_5_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
-  361    00000000 ........              B EXTI9_5_IRQHandler
-  362                           
-  363                                   PUBWEAK TIM1_BRK_TIM9_IRQHandler
-  364                                   SECTION .text:CODE:REORDER(1)   
+  371    00000000 ........              B EXTI9_5_IRQHandler
+  372                           
+  373                                   PUBWEAK TIM1_BRK_TIM9_IRQHandler
+  374                                   SECTION .text:CODE:REORDER(1)   
                                  
-  365                           TIM1_BRK_TIM9_IRQHandler  
+  375                           TIM1_BRK_TIM9_IRQHandler  
                                 TIM1_BRK_TIM9_IRQHandler  
                                 -----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",365  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",375  Warning[25]: Label
                         'TIM1_BRK_TIM9_IRQHandler' 
                                 is defined pubweak in a section implicitly
                         declared root
-  366    00000000 ........              B TIM1_BRK_TIM9_IRQHandler
-  367                           
-  368                                   PUBWEAK TIM1_UP_TIM10_IRQHandler
-  369                                   SECTION .text:CODE:REORDER(1)   
+  376    00000000 ........              B TIM1_BRK_TIM9_IRQHandler
+  377                           
+  378                                   PUBWEAK TIM1_UP_TIM10_IRQHandler
+  379                                   SECTION .text:CODE:REORDER(1)   
                                  
-  370                           TIM1_UP_TIM10_IRQHandler  
+  380                           TIM1_UP_TIM10_IRQHandler  
                                 TIM1_UP_TIM10_IRQHandler  
                                 -----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",370  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",380  Warning[25]: Label
                         'TIM1_UP_TIM10_IRQHandler' 
                                 is defined pubweak in a section implicitly
                         declared root
-  371    00000000 ........              B TIM1_UP_TIM10_IRQHandler
-  372                           
-  373                                   PUBWEAK TIM1_TRG_COM_TIM11_IRQHandler
-  374                                   SECTION .text:CODE:REORDER(1)   
+  381    00000000 ........              B TIM1_UP_TIM10_IRQHandler
+  382                           
+  383                                   PUBWEAK TIM1_TRG_COM_TIM11_IRQHandler
+  384                                   SECTION .text:CODE:REORDER(1)   
                                  
-  375                           TIM1_TRG_COM_TIM11_IRQHandler  
+  385                           TIM1_TRG_COM_TIM11_IRQHandler  
                                 TIM1_TRG_COM_TIM11_IRQHandler  
                                 ----------------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",375  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",385  Warning[25]: Label
                         'TIM1_TRG_COM_TIM11_IRQHand
                                 ler' is defined pubweak in a section
                         implicitly declared root
-  376    00000000 ........              B TIM1_TRG_COM_TIM11_IRQHandler
-  377                                   
-  378                                   PUBWEAK TIM1_CC_IRQHandler
-  379                                   SECTION .text:CODE:REORDER(1)   
+  386    00000000 ........              B TIM1_TRG_COM_TIM11_IRQHandler
+  387                                   
+  388                                   PUBWEAK TIM1_CC_IRQHandler
+  389                                   SECTION .text:CODE:REORDER(1)   
                                  
-  380                           TIM1_CC_IRQHandler  
+  390                           TIM1_CC_IRQHandler  
                                 TIM1_CC_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",380  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",390  Warning[25]: Label
                         'TIM1_CC_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
-  381    00000000 ........              B TIM1_CC_IRQHandler
-  382                           
-  383                                   PUBWEAK TIM2_IRQHandler
-  384                                   SECTION .text:CODE:REORDER(1)
-  385                           TIM2_IRQHandler  
+  391    00000000 ........              B TIM1_CC_IRQHandler
+  392                           
+  393                                   PUBWEAK TIM2_IRQHandler
+  394                                   SECTION .text:CODE:REORDER(1)
+  395                           TIM2_IRQHandler  
                                 TIM2_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",385  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",395  Warning[25]: Label
                         'TIM2_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  386    00000000 ........              B TIM2_IRQHandler
-  387                           
-  388                                   PUBWEAK TIM3_IRQHandler
-  389                                   SECTION .text:CODE:REORDER(1)
-  390                           TIM3_IRQHandler  
+  396    00000000 ........              B TIM2_IRQHandler
+  397                           
+  398                                   PUBWEAK TIM3_IRQHandler
+  399                                   SECTION .text:CODE:REORDER(1)
+  400                           TIM3_IRQHandler  
                                 TIM3_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",390  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",400  Warning[25]: Label
                         'TIM3_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  391    00000000 ........              B TIM3_IRQHandler
-  392                           
-  393                                   PUBWEAK TIM4_IRQHandler
-  394                                   SECTION .text:CODE:REORDER(1)
-  395                           TIM4_IRQHandler  
+  401    00000000 ........              B TIM3_IRQHandler
+  402                           
+  403                                   PUBWEAK TIM4_IRQHandler
+  404                                   SECTION .text:CODE:REORDER(1)
+  405                           TIM4_IRQHandler  
                                 TIM4_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",395  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",405  Warning[25]: Label
                         'TIM4_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  396    00000000 ........              B TIM4_IRQHandler
-  397                           
-  398                                   PUBWEAK I2C1_EV_IRQHandler
-  399                                   SECTION .text:CODE:REORDER(1)
+  406    00000000 ........              B TIM4_IRQHandler
+  407                           
+  408                                   PUBWEAK I2C1_EV_IRQHandler
+  409                                   SECTION .text:CODE:REORDER(1)
                                  
-  400                           I2C1_EV_IRQHandler  
+  410                           I2C1_EV_IRQHandler  
                                 I2C1_EV_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",400  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",410  Warning[25]: Label
                         'I2C1_EV_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
-  401    00000000 ........              B I2C1_EV_IRQHandler
-  402                           
-  403                                   PUBWEAK I2C1_ER_IRQHandler
-  404                                   SECTION .text:CODE:REORDER(1)
+  411    00000000 ........              B I2C1_EV_IRQHandler
+  412                           
+  413                                   PUBWEAK I2C1_ER_IRQHandler
+  414                                   SECTION .text:CODE:REORDER(1)
                                  
-  405                           I2C1_ER_IRQHandler  
+  415                           I2C1_ER_IRQHandler  
                                 I2C1_ER_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",405  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",415  Warning[25]: Label
                         'I2C1_ER_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
-  406    00000000 ........              B I2C1_ER_IRQHandler
-  407                           
-  408                                   PUBWEAK I2C2_EV_IRQHandler
-  409                                   SECTION .text:CODE:REORDER(1)
+  416    00000000 ........              B I2C1_ER_IRQHandler
+  417                           
+  418                                   PUBWEAK I2C2_EV_IRQHandler
+  419                                   SECTION .text:CODE:REORDER(1)
                                  
-  410                           I2C2_EV_IRQHandler  
+  420                           I2C2_EV_IRQHandler  
                                 I2C2_EV_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",410  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",420  Warning[25]: Label
                         'I2C2_EV_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
-  411    00000000 ........              B I2C2_EV_IRQHandler
-  412                           
-  413                                   PUBWEAK I2C2_ER_IRQHandler
-  414                                   SECTION .text:CODE:REORDER(1)
+  421    00000000 ........              B I2C2_EV_IRQHandler
+  422                           
+  423                                   PUBWEAK I2C2_ER_IRQHandler
+  424                                   SECTION .text:CODE:REORDER(1)
                                  
-  415                           I2C2_ER_IRQHandler  
+  425                           I2C2_ER_IRQHandler  
                                 I2C2_ER_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",415  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",425  Warning[25]: Label
                         'I2C2_ER_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
-  416    00000000 ........              B I2C2_ER_IRQHandler
-  417                           
-  418                                   PUBWEAK SPI1_IRQHandler
-  419                                   SECTION .text:CODE:REORDER(1)
-  420                           SPI1_IRQHandler  
+  426    00000000 ........              B I2C2_ER_IRQHandler
+  427                           
+  428                                   PUBWEAK SPI1_IRQHandler
+  429                                   SECTION .text:CODE:REORDER(1)
+  430                           SPI1_IRQHandler  
                                 SPI1_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",420  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",430  Warning[25]: Label
                         'SPI1_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  421    00000000 ........              B SPI1_IRQHandler
-  422                           
-  423                                   PUBWEAK SPI2_IRQHandler
-  424                                   SECTION .text:CODE:REORDER(1)
-  425                           SPI2_IRQHandler  
+  431    00000000 ........              B SPI1_IRQHandler
+  432                           
+  433                                   PUBWEAK SPI2_IRQHandler
+  434                                   SECTION .text:CODE:REORDER(1)
+  435                           SPI2_IRQHandler  
                                 SPI2_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",425  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",435  Warning[25]: Label
                         'SPI2_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  426    00000000 ........              B SPI2_IRQHandler
-  427                           
-  428                                   PUBWEAK USART1_IRQHandler
-  429                                   SECTION .text:CODE:REORDER(1)
-  430                           USART1_IRQHandler  
+  436    00000000 ........              B SPI2_IRQHandler
+  437                           
+  438                                   PUBWEAK USART1_IRQHandler
+  439                                   SECTION .text:CODE:REORDER(1)
+  440                           USART1_IRQHandler  
                                 USART1_IRQHandler  
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",430  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",440  Warning[25]: Label
                         'USART1_IRQHandler' is defi
                                 ned pubweak in a section implicitly declared
                         root
-  431    00000000 ........              B USART1_IRQHandler
-  432                           
-  433                                   PUBWEAK USART2_IRQHandler
-  434                                   SECTION .text:CODE:REORDER(1)
-  435                           USART2_IRQHandler  
+  441    00000000 ........              B USART1_IRQHandler
+  442                           
+  443                                   PUBWEAK USART2_IRQHandler
+  444                                   SECTION .text:CODE:REORDER(1)
+  445                           USART2_IRQHandler  
                                 USART2_IRQHandler  
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",435  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",445  Warning[25]: Label
                         'USART2_IRQHandler' is defi
                                 ned pubweak in a section implicitly declared
                         root
-  436    00000000 ........              B USART2_IRQHandler
-  437                           
-  438                                   PUBWEAK USART3_IRQHandler
-  439                                   SECTION .text:CODE:REORDER(1)
-  440                           USART3_IRQHandler  
+  446    00000000 ........              B USART2_IRQHandler
+  447                           
+  448                                   PUBWEAK USART3_IRQHandler
+  449                                   SECTION .text:CODE:REORDER(1)
+  450                           USART3_IRQHandler  
                                 USART3_IRQHandler  
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",440  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",450  Warning[25]: Label
                         'USART3_IRQHandler' is defi
                                 ned pubweak in a section implicitly declared
                         root
-  441    00000000 ........              B USART3_IRQHandler
-  442                           
-  443                                   PUBWEAK EXTI15_10_IRQHandler
-  444                                   SECTION .text:CODE:REORDER(1)  
+  451    00000000 ........              B USART3_IRQHandler
+  452                           
+  453                                   PUBWEAK EXTI15_10_IRQHandler
+  454                                   SECTION .text:CODE:REORDER(1)  
                                  
-  445                           EXTI15_10_IRQHandler  
+  455                           EXTI15_10_IRQHandler  
                                 EXTI15_10_IRQHandler  
                                 -------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",445  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",455  Warning[25]: Label
                         'EXTI15_10_IRQHandler' is d
                                 efined pubweak in a section implicitly
                         declared root
-  446    00000000 ........              B EXTI15_10_IRQHandler
-  447                           
-  448                                   PUBWEAK RTC_Alarm_IRQHandler
-  449                                   SECTION .text:CODE:REORDER(1)  
+  456    00000000 ........              B EXTI15_10_IRQHandler
+  457                           
+  458                                   PUBWEAK RTC_Alarm_IRQHandler
+  459                                   SECTION .text:CODE:REORDER(1)  
                                  
-  450                           RTC_Alarm_IRQHandler  
+  460                           RTC_Alarm_IRQHandler  
                                 RTC_Alarm_IRQHandler  
                                 -------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",450  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",460  Warning[25]: Label
                         'RTC_Alarm_IRQHandler' is d
                                 efined pubweak in a section implicitly
                         declared root
-  451    00000000 ........              B RTC_Alarm_IRQHandler
-  452                           
-  453                                   PUBWEAK OTG_FS_WKUP_IRQHandler
-  454                                   SECTION .text:CODE:REORDER(1)   
+  461    00000000 ........              B RTC_Alarm_IRQHandler
+  462                           
+  463                                   PUBWEAK OTG_FS_WKUP_IRQHandler
+  464                                   SECTION .text:CODE:REORDER(1)   
                                  
-  455                           OTG_FS_WKUP_IRQHandler  
+  465                           OTG_FS_WKUP_IRQHandler  
                                 OTG_FS_WKUP_IRQHandler  
                                 ---------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",455  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",465  Warning[25]: Label
                         'OTG_FS_WKUP_IRQHandler' is
                                  defined pubweak in a section implicitly
                         declared root
-  456    00000000 ........              B OTG_FS_WKUP_IRQHandler
-  457                                 
-  458                                   PUBWEAK TIM8_BRK_TIM12_IRQHandler
-  459                                   SECTION .text:CODE:REORDER(1)   
+  466    00000000 ........              B OTG_FS_WKUP_IRQHandler
+  467                                 
+  468                                   PUBWEAK TIM8_BRK_TIM12_IRQHandler
+  469                                   SECTION .text:CODE:REORDER(1)   
                                  
-  460                           TIM8_BRK_TIM12_IRQHandler  
+  470                           TIM8_BRK_TIM12_IRQHandler  
                                 TIM8_BRK_TIM12_IRQHandler  
                                 ------------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",460  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",470  Warning[25]: Label
                         'TIM8_BRK_TIM12_IRQHandler' 
                                 is defined pubweak in a section implicitly
                         declared root
-  461    00000000 ........              B TIM8_BRK_TIM12_IRQHandler
-  462                           
-  463                                   PUBWEAK TIM8_UP_TIM13_IRQHandler
-  464                                   SECTION .text:CODE:REORDER(1)   
+  471    00000000 ........              B TIM8_BRK_TIM12_IRQHandler
+  472                           
+  473                                   PUBWEAK TIM8_UP_TIM13_IRQHandler
+  474                                   SECTION .text:CODE:REORDER(1)   
                                  
-  465                           TIM8_UP_TIM13_IRQHandler  
+  475                           TIM8_UP_TIM13_IRQHandler  
                                 TIM8_UP_TIM13_IRQHandler  
                                 -----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",465  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",475  Warning[25]: Label
                         'TIM8_UP_TIM13_IRQHandler' 
                                 is defined pubweak in a section implicitly
                         declared root
-  466    00000000 ........              B TIM8_UP_TIM13_IRQHandler
-  467                           
-  468                                   PUBWEAK TIM8_TRG_COM_TIM14_IRQHandler
-  469                                   SECTION .text:CODE:REORDER(1)   
+  476    00000000 ........              B TIM8_UP_TIM13_IRQHandler
+  477                           
+  478                                   PUBWEAK TIM8_TRG_COM_TIM14_IRQHandler
+  479                                   SECTION .text:CODE:REORDER(1)   
                                  
-  470                           TIM8_TRG_COM_TIM14_IRQHandler  
+  480                           TIM8_TRG_COM_TIM14_IRQHandler  
                                 TIM8_TRG_COM_TIM14_IRQHandler  
                                 ----------------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",470  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",480  Warning[25]: Label
                         'TIM8_TRG_COM_TIM14_IRQHand
                                 ler' is defined pubweak in a section
                         implicitly declared root
-  471    00000000 ........              B TIM8_TRG_COM_TIM14_IRQHandler
-  472                           
-  473                                   PUBWEAK TIM8_CC_IRQHandler
-  474                                   SECTION .text:CODE:REORDER(1)
+  481    00000000 ........              B TIM8_TRG_COM_TIM14_IRQHandler
+  482                           
+  483                                   PUBWEAK TIM8_CC_IRQHandler
+  484                                   SECTION .text:CODE:REORDER(1)
                                  
-  475                           TIM8_CC_IRQHandler  
+  485                           TIM8_CC_IRQHandler  
                                 TIM8_CC_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",475  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",485  Warning[25]: Label
                         'TIM8_CC_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
-  476    00000000 ........              B TIM8_CC_IRQHandler
-  477                           
-  478                                   PUBWEAK DMA1_Stream7_IRQHandler
-  479                                   SECTION .text:CODE:REORDER(1)   
+  486    00000000 ........              B TIM8_CC_IRQHandler
+  487                           
+  488                                   PUBWEAK DMA1_Stream7_IRQHandler
+  489                                   SECTION .text:CODE:REORDER(1)   
                                  
-  480                           DMA1_Stream7_IRQHandler  
+  490                           DMA1_Stream7_IRQHandler  
                                 DMA1_Stream7_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",480  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",490  Warning[25]: Label
                         'DMA1_Stream7_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  481    00000000 ........              B DMA1_Stream7_IRQHandler
-  482                           
-  483                                   PUBWEAK FSMC_IRQHandler
-  484                                   SECTION .text:CODE:REORDER(1)
-  485                           FSMC_IRQHandler  
+  491    00000000 ........              B DMA1_Stream7_IRQHandler
+  492                           
+  493                                   PUBWEAK FSMC_IRQHandler
+  494                                   SECTION .text:CODE:REORDER(1)
+  495                           FSMC_IRQHandler  
                                 FSMC_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",485  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",495  Warning[25]: Label
                         'FSMC_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  486    00000000 ........              B FSMC_IRQHandler
-  487                           
-  488                                   PUBWEAK SDIO_IRQHandler
-  489                                   SECTION .text:CODE:REORDER(1)
-  490                           SDIO_IRQHandler  
+  496    00000000 ........              B FSMC_IRQHandler
+  497                           
+  498                                   PUBWEAK SDIO_IRQHandler
+  499                                   SECTION .text:CODE:REORDER(1)
+  500                           SDIO_IRQHandler  
                                 SDIO_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",490  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",500  Warning[25]: Label
                         'SDIO_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  491    00000000 ........              B SDIO_IRQHandler
-  492                           
-  493                                   PUBWEAK TIM5_IRQHandler
-  494                                   SECTION .text:CODE:REORDER(1)
-  495                           TIM5_IRQHandler  
+  501    00000000 ........              B SDIO_IRQHandler
+  502                           
+  503                                   PUBWEAK TIM5_IRQHandler
+  504                                   SECTION .text:CODE:REORDER(1)
+  505                           TIM5_IRQHandler  
                                 TIM5_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",495  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",505  Warning[25]: Label
                         'TIM5_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  496    00000000 ........              B TIM5_IRQHandler
-  497                           
-  498                                   PUBWEAK SPI3_IRQHandler
-  499                                   SECTION .text:CODE:REORDER(1)
-  500                           SPI3_IRQHandler  
+  506    00000000 ........              B TIM5_IRQHandler
+  507                           
+  508                                   PUBWEAK SPI3_IRQHandler
+  509                                   SECTION .text:CODE:REORDER(1)
+  510                           SPI3_IRQHandler  
                                 SPI3_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",500  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",510  Warning[25]: Label
                         'SPI3_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  501    00000000 ........              B SPI3_IRQHandler
-  502                           
-  503                                   PUBWEAK UART4_IRQHandler
-  504                                   SECTION .text:CODE:REORDER(1)
-  505                           UART4_IRQHandler  
+  511    00000000 ........              B SPI3_IRQHandler
+  512                           
+  513                                   PUBWEAK UART4_IRQHandler
+  514                                   SECTION .text:CODE:REORDER(1)
+  515                           UART4_IRQHandler  
                                 UART4_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",505  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",515  Warning[25]: Label
                         'UART4_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
-  506    00000000 ........              B UART4_IRQHandler
-  507                           
-  508                                   PUBWEAK UART5_IRQHandler
-  509                                   SECTION .text:CODE:REORDER(1)
-  510                           UART5_IRQHandler  
+  516    00000000 ........              B UART4_IRQHandler
+  517                           
+  518                                   PUBWEAK UART5_IRQHandler
+  519                                   SECTION .text:CODE:REORDER(1)
+  520                           UART5_IRQHandler  
                                 UART5_IRQHandler  
                                 ---------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",510  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",520  Warning[25]: Label
                         'UART5_IRQHandler' is defin
                                 ed pubweak in a section implicitly declared
                         root
-  511    00000000 ........              B UART5_IRQHandler
-  512                           
-  513                                   PUBWEAK TIM6_DAC_IRQHandler
-  514                                   SECTION .text:CODE:REORDER(1)  
+  521    00000000 ........              B UART5_IRQHandler
+  522                           
+  523                                   PUBWEAK TIM6_DAC_IRQHandler
+  524                                   SECTION .text:CODE:REORDER(1)  
                                  
-  515                           TIM6_DAC_IRQHandler  
+  525                           TIM6_DAC_IRQHandler  
                                 TIM6_DAC_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",515  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",525  Warning[25]: Label
                         'TIM6_DAC_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
-  516    00000000 ........              B TIM6_DAC_IRQHandler
-  517                           
-  518                                   PUBWEAK TIM7_IRQHandler
-  519                                   SECTION .text:CODE:REORDER(1)  
+  526    00000000 ........              B TIM6_DAC_IRQHandler
+  527                           
+  528                                   PUBWEAK TIM7_IRQHandler
+  529                                   SECTION .text:CODE:REORDER(1)  
                                  
-  520                           TIM7_IRQHandler  
+  530                           TIM7_IRQHandler  
                                 TIM7_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",520  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",530  Warning[25]: Label
                         'TIM7_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  521    00000000 ........              B TIM7_IRQHandler
-  522                           
-  523                                   PUBWEAK DMA2_Stream0_IRQHandler
-  524                                   SECTION .text:CODE:REORDER(1)   
+  531    00000000 ........              B TIM7_IRQHandler
+  532                           
+  533                                   PUBWEAK DMA2_Stream0_IRQHandler
+  534                                   SECTION .text:CODE:REORDER(1)   
                                  
-  525                           DMA2_Stream0_IRQHandler  
+  535                           DMA2_Stream0_IRQHandler  
                                 DMA2_Stream0_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",525  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",535  Warning[25]: Label
                         'DMA2_Stream0_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  526    00000000 ........              B DMA2_Stream0_IRQHandler
-  527                           
-  528                                   PUBWEAK DMA2_Stream1_IRQHandler
-  529                                   SECTION .text:CODE:REORDER(1)   
+  536    00000000 ........              B DMA2_Stream0_IRQHandler
+  537                           
+  538                                   PUBWEAK DMA2_Stream1_IRQHandler
+  539                                   SECTION .text:CODE:REORDER(1)   
                                  
-  530                           DMA2_Stream1_IRQHandler  
+  540                           DMA2_Stream1_IRQHandler  
                                 DMA2_Stream1_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",530  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",540  Warning[25]: Label
                         'DMA2_Stream1_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  531    00000000 ........              B DMA2_Stream1_IRQHandler
-  532                           
-  533                                   PUBWEAK DMA2_Stream2_IRQHandler
-  534                                   SECTION .text:CODE:REORDER(1)   
+  541    00000000 ........              B DMA2_Stream1_IRQHandler
+  542                           
+  543                                   PUBWEAK DMA2_Stream2_IRQHandler
+  544                                   SECTION .text:CODE:REORDER(1)   
                                  
-  535                           DMA2_Stream2_IRQHandler  
+  545                           DMA2_Stream2_IRQHandler  
                                 DMA2_Stream2_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",535  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",545  Warning[25]: Label
                         'DMA2_Stream2_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  536    00000000 ........              B DMA2_Stream2_IRQHandler
-  537                           
-  538                                   PUBWEAK DMA2_Stream3_IRQHandler
-  539                                   SECTION .text:CODE:REORDER(1)   
+  546    00000000 ........              B DMA2_Stream2_IRQHandler
+  547                           
+  548                                   PUBWEAK DMA2_Stream3_IRQHandler
+  549                                   SECTION .text:CODE:REORDER(1)   
                                  
-  540                           DMA2_Stream3_IRQHandler  
+  550                           DMA2_Stream3_IRQHandler  
                                 DMA2_Stream3_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",540  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",550  Warning[25]: Label
                         'DMA2_Stream3_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  541    00000000 ........              B DMA2_Stream3_IRQHandler
-  542                           
-  543                                   PUBWEAK DMA2_Stream4_IRQHandler
-  544                                   SECTION .text:CODE:REORDER(1)   
+  551    00000000 ........              B DMA2_Stream3_IRQHandler
+  552                           
+  553                                   PUBWEAK DMA2_Stream4_IRQHandler
+  554                                   SECTION .text:CODE:REORDER(1)   
                                  
-  545                           DMA2_Stream4_IRQHandler  
+  555                           DMA2_Stream4_IRQHandler  
                                 DMA2_Stream4_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",545  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",555  Warning[25]: Label
                         'DMA2_Stream4_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  546    00000000 ........              B DMA2_Stream4_IRQHandler
-  547                           
-  548                                   PUBWEAK ETH_IRQHandler
-  549                                   SECTION .text:CODE:REORDER(1)
-  550                           ETH_IRQHandler  
+  556    00000000 ........              B DMA2_Stream4_IRQHandler
+  557                           
+  558                                   PUBWEAK ETH_IRQHandler
+  559                                   SECTION .text:CODE:REORDER(1)
+  560                           ETH_IRQHandler  
                                 ETH_IRQHandler  
                                 -------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",550  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",560  Warning[25]: Label
                         'ETH_IRQHandler' is defined
                                  pubweak in a section implicitly declared
                         root
-  551    00000000 ........              B ETH_IRQHandler
-  552                           
-  553                                   PUBWEAK ETH_WKUP_IRQHandler
-  554                                   SECTION .text:CODE:REORDER(1) 
+  561    00000000 ........              B ETH_IRQHandler
+  562                           
+  563                                   PUBWEAK ETH_WKUP_IRQHandler
+  564                                   SECTION .text:CODE:REORDER(1) 
                                  
-  555                           ETH_WKUP_IRQHandler  
+  565                           ETH_WKUP_IRQHandler  
                                 ETH_WKUP_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",555  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",565  Warning[25]: Label
                         'ETH_WKUP_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
-  556    00000000 ........              B ETH_WKUP_IRQHandler
-  557                           
-  558                                   PUBWEAK CAN2_TX_IRQHandler
-  559                                   SECTION .text:CODE:REORDER(1)
+  566    00000000 ........              B ETH_WKUP_IRQHandler
+  567                           
+  568                                   PUBWEAK CAN2_TX_IRQHandler
+  569                                   SECTION .text:CODE:REORDER(1)
                                  
-  560                           CAN2_TX_IRQHandler  
+  570                           CAN2_TX_IRQHandler  
                                 CAN2_TX_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",560  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",570  Warning[25]: Label
                         'CAN2_TX_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
-  561    00000000 ........              B CAN2_TX_IRQHandler
-  562                           
-  563                                   PUBWEAK CAN2_RX0_IRQHandler
-  564                                   SECTION .text:CODE:REORDER(1) 
+  571    00000000 ........              B CAN2_TX_IRQHandler
+  572                           
+  573                                   PUBWEAK CAN2_RX0_IRQHandler
+  574                                   SECTION .text:CODE:REORDER(1) 
                                  
-  565                           CAN2_RX0_IRQHandler  
+  575                           CAN2_RX0_IRQHandler  
                                 CAN2_RX0_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",565  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",575  Warning[25]: Label
                         'CAN2_RX0_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
-  566    00000000 ........              B CAN2_RX0_IRQHandler
-  567                           
-  568                                   PUBWEAK CAN2_RX1_IRQHandler
-  569                                   SECTION .text:CODE:REORDER(1) 
+  576    00000000 ........              B CAN2_RX0_IRQHandler
+  577                           
+  578                                   PUBWEAK CAN2_RX1_IRQHandler
+  579                                   SECTION .text:CODE:REORDER(1) 
                                  
-  570                           CAN2_RX1_IRQHandler  
+  580                           CAN2_RX1_IRQHandler  
                                 CAN2_RX1_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",570  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",580  Warning[25]: Label
                         'CAN2_RX1_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
-  571    00000000 ........              B CAN2_RX1_IRQHandler
-  572                           
-  573                                   PUBWEAK CAN2_SCE_IRQHandler
-  574                                   SECTION .text:CODE:REORDER(1) 
+  581    00000000 ........              B CAN2_RX1_IRQHandler
+  582                           
+  583                                   PUBWEAK CAN2_SCE_IRQHandler
+  584                                   SECTION .text:CODE:REORDER(1) 
                                  
-  575                           CAN2_SCE_IRQHandler  
+  585                           CAN2_SCE_IRQHandler  
                                 CAN2_SCE_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",575  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",585  Warning[25]: Label
                         'CAN2_SCE_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
-  576    00000000 ........              B CAN2_SCE_IRQHandler
-  577                           
-  578                                   PUBWEAK OTG_FS_IRQHandler
-  579                                   SECTION .text:CODE:REORDER(1)
-  580                           OTG_FS_IRQHandler  
+  586    00000000 ........              B CAN2_SCE_IRQHandler
+  587                           
+  588                                   PUBWEAK OTG_FS_IRQHandler
+  589                                   SECTION .text:CODE:REORDER(1)
+  590                           OTG_FS_IRQHandler  
                                 OTG_FS_IRQHandler  
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",580  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",590  Warning[25]: Label
                         'OTG_FS_IRQHandler' is defi
                                 ned pubweak in a section implicitly declared
                         root
-  581    00000000 ........              B OTG_FS_IRQHandler
-  582                           
-  583                                   PUBWEAK DMA2_Stream5_IRQHandler
-  584                                   SECTION .text:CODE:REORDER(1)   
+  591    00000000 ........              B OTG_FS_IRQHandler
+  592                           
+  593                                   PUBWEAK DMA2_Stream5_IRQHandler
+  594                                   SECTION .text:CODE:REORDER(1)   
                                  
-  585                           DMA2_Stream5_IRQHandler  
+  595                           DMA2_Stream5_IRQHandler  
                                 DMA2_Stream5_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",585  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",595  Warning[25]: Label
                         'DMA2_Stream5_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  586    00000000 ........              B DMA2_Stream5_IRQHandler
-  587                           
-  588                                   PUBWEAK DMA2_Stream6_IRQHandler
-  589                                   SECTION .text:CODE:REORDER(1)   
+  596    00000000 ........              B DMA2_Stream5_IRQHandler
+  597                           
+  598                                   PUBWEAK DMA2_Stream6_IRQHandler
+  599                                   SECTION .text:CODE:REORDER(1)   
                                  
-  590                           DMA2_Stream6_IRQHandler  
+  600                           DMA2_Stream6_IRQHandler  
                                 DMA2_Stream6_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",590  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",600  Warning[25]: Label
                         'DMA2_Stream6_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  591    00000000 ........              B DMA2_Stream6_IRQHandler
-  592                           
-  593                                   PUBWEAK DMA2_Stream7_IRQHandler
-  594                                   SECTION .text:CODE:REORDER(1)   
+  601    00000000 ........              B DMA2_Stream6_IRQHandler
+  602                           
+  603                                   PUBWEAK DMA2_Stream7_IRQHandler
+  604                                   SECTION .text:CODE:REORDER(1)   
                                  
-  595                           DMA2_Stream7_IRQHandler  
+  605                           DMA2_Stream7_IRQHandler  
                                 DMA2_Stream7_IRQHandler  
                                 ----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",595  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",605  Warning[25]: Label
                         'DMA2_Stream7_IRQHandler' i
                                 s defined pubweak in a section implicitly
                         declared root
-  596    00000000 ........              B DMA2_Stream7_IRQHandler
-  597                           
-  598                                   PUBWEAK USART6_IRQHandler
-  599                                   SECTION .text:CODE:REORDER(1)
-  600                           USART6_IRQHandler  
+  606    00000000 ........              B DMA2_Stream7_IRQHandler
+  607                           
+  608                                   PUBWEAK USART6_IRQHandler
+  609                                   SECTION .text:CODE:REORDER(1)
+  610                           USART6_IRQHandler  
                                 USART6_IRQHandler  
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",600  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",610  Warning[25]: Label
                         'USART6_IRQHandler' is defi
                                 ned pubweak in a section implicitly declared
                         root
-  601    00000000 ........              B USART6_IRQHandler
-  602                           
-  603                                   PUBWEAK I2C3_EV_IRQHandler
-  604                                   SECTION .text:CODE:REORDER(1)
+  611    00000000 ........              B USART6_IRQHandler
+  612                           
+  613                                   PUBWEAK I2C3_EV_IRQHandler
+  614                                   SECTION .text:CODE:REORDER(1)
                                  
-  605                           I2C3_EV_IRQHandler  
+  615                           I2C3_EV_IRQHandler  
                                 I2C3_EV_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",605  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",615  Warning[25]: Label
                         'I2C3_EV_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
-  606    00000000 ........              B I2C3_EV_IRQHandler
-  607                           
-  608                                   PUBWEAK I2C3_ER_IRQHandler
-  609                                   SECTION .text:CODE:REORDER(1)
+  616    00000000 ........              B I2C3_EV_IRQHandler
+  617                           
+  618                                   PUBWEAK I2C3_ER_IRQHandler
+  619                                   SECTION .text:CODE:REORDER(1)
                                  
-  610                           I2C3_ER_IRQHandler  
+  620                           I2C3_ER_IRQHandler  
                                 I2C3_ER_IRQHandler  
                                 -----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",610  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",620  Warning[25]: Label
                         'I2C3_ER_IRQHandler' is def
                                 ined pubweak in a section implicitly declared
                         root
-  611    00000000 ........              B I2C3_ER_IRQHandler
-  612                           
-  613                                   PUBWEAK OTG_HS_EP1_OUT_IRQHandler
-  614                                   SECTION .text:CODE:REORDER(1)   
+  621    00000000 ........              B I2C3_ER_IRQHandler
+  622                           
+  623                                   PUBWEAK OTG_HS_EP1_OUT_IRQHandler
+  624                                   SECTION .text:CODE:REORDER(1)   
                                  
-  615                           OTG_HS_EP1_OUT_IRQHandler  
+  625                           OTG_HS_EP1_OUT_IRQHandler  
                                 OTG_HS_EP1_OUT_IRQHandler  
                                 ------------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",615  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",625  Warning[25]: Label
                         'OTG_HS_EP1_OUT_IRQHandler' 
                                 is defined pubweak in a section implicitly
                         declared root
-  616    00000000 ........              B OTG_HS_EP1_OUT_IRQHandler
-  617                           
-  618                                   PUBWEAK OTG_HS_EP1_IN_IRQHandler
-  619                                   SECTION .text:CODE:REORDER(1)   
+  626    00000000 ........              B OTG_HS_EP1_OUT_IRQHandler
+  627                           
+  628                                   PUBWEAK OTG_HS_EP1_IN_IRQHandler
+  629                                   SECTION .text:CODE:REORDER(1)   
                                  
-  620                           OTG_HS_EP1_IN_IRQHandler  
+  630                           OTG_HS_EP1_IN_IRQHandler  
                                 OTG_HS_EP1_IN_IRQHandler  
                                 -----------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",620  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",630  Warning[25]: Label
                         'OTG_HS_EP1_IN_IRQHandler' 
                                 is defined pubweak in a section implicitly
                         declared root
-  621    00000000 ........              B OTG_HS_EP1_IN_IRQHandler
-  622                           
-  623                                   PUBWEAK OTG_HS_WKUP_IRQHandler
-  624                                   SECTION .text:CODE:REORDER(1)   
+  631    00000000 ........              B OTG_HS_EP1_IN_IRQHandler
+  632                           
+  633                                   PUBWEAK OTG_HS_WKUP_IRQHandler
+  634                                   SECTION .text:CODE:REORDER(1)   
                                  
-  625                           OTG_HS_WKUP_IRQHandler  
+  635                           OTG_HS_WKUP_IRQHandler  
                                 OTG_HS_WKUP_IRQHandler  
                                 ---------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",625  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",635  Warning[25]: Label
                         'OTG_HS_WKUP_IRQHandler' is
                                  defined pubweak in a section implicitly
                         declared root
-  626    00000000 ........              B OTG_HS_WKUP_IRQHandler
-  627                           
-  628                                   PUBWEAK OTG_HS_IRQHandler
-  629                                   SECTION .text:CODE:REORDER(1)
-  630                           OTG_HS_IRQHandler  
+  636    00000000 ........              B OTG_HS_WKUP_IRQHandler
+  637                           
+  638                                   PUBWEAK OTG_HS_IRQHandler
+  639                                   SECTION .text:CODE:REORDER(1)
+  640                           OTG_HS_IRQHandler  
                                 OTG_HS_IRQHandler  
                                 ----------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",630  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",640  Warning[25]: Label
                         'OTG_HS_IRQHandler' is defi
                                 ned pubweak in a section implicitly declared
                         root
-  631    00000000 ........              B OTG_HS_IRQHandler
-  632                           
-  633                                   PUBWEAK DCMI_IRQHandler
-  634                                   SECTION .text:CODE:REORDER(1)
-  635                           DCMI_IRQHandler  
+  641    00000000 ........              B OTG_HS_IRQHandler
+  642                           
+  643                                   PUBWEAK DCMI_IRQHandler
+  644                                   SECTION .text:CODE:REORDER(1)
+  645                           DCMI_IRQHandler  
                                 DCMI_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",635  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",645  Warning[25]: Label
                         'DCMI_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  636    00000000 ........              B DCMI_IRQHandler
-  637                           
-  638                                   PUBWEAK CRYP_IRQHandler
-  639                                   SECTION .text:CODE:REORDER(1)
-  640                           CRYP_IRQHandler  
+  646    00000000 ........              B DCMI_IRQHandler
+  647                           
+  648                                   PUBWEAK CRYP_IRQHandler
+  649                                   SECTION .text:CODE:REORDER(1)
+  650                           CRYP_IRQHandler  
                                 CRYP_IRQHandler  
                                 --------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",640  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",650  Warning[25]: Label
                         'CRYP_IRQHandler' is define
                                 d pubweak in a section implicitly declared
                         root
-  641    00000000 ........              B CRYP_IRQHandler
-  642                           
-  643                                   PUBWEAK HASH_RNG_IRQHandler
-  644                                   SECTION .text:CODE:REORDER(1) 
+  651    00000000 ........              B CRYP_IRQHandler
+  652                           
+  653                                   PUBWEAK HASH_RNG_IRQHandler
+  654                                   SECTION .text:CODE:REORDER(1) 
                                  
-  645                           HASH_RNG_IRQHandler  
+  655                           HASH_RNG_IRQHandler  
                                 HASH_RNG_IRQHandler  
                                 ------------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",645  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",655  Warning[25]: Label
                         'HASH_RNG_IRQHandler' is de
                                 fined pubweak in a section implicitly declared
                         root
-  646    00000000 ........              B HASH_RNG_IRQHandler
-  647                           
-  648                                   PUBWEAK FPU_IRQHandler
-  649                                   SECTION .text:CODE:REORDER(1) 
+  656    00000000 ........              B HASH_RNG_IRQHandler
+  657                           
+  658                                   PUBWEAK FPU_IRQHandler
+  659                                   SECTION .text:CODE:REORDER(1) 
                                  
-  650                           FPU_IRQHandler  
+  660                           FPU_IRQHandler  
                                 FPU_IRQHandler  
                                 -------------^
                                 "C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th
-                       -OEM\startup_stm32f4xx.s",650  Warning[25]: Label
+                       -OEM\startup_stm32f4xx.s",660  Warning[25]: Label
                         'FPU_IRQHandler' is defined
                                  pubweak in a section implicitly declared
                         root
-  651    00000000 ........              B FPU_IRQHandler
-  652                           
-  653                                   END
+  661    00000000 ........              B FPU_IRQHandler
+  662                           
+  663                                   END
 
 
 CMSIS_C              #define, value: , line:        53  
@@ -2260,7 +2275,7 @@ SDIO_IRQHandler     REL    CONST EXT [061] UNTYP. .intvec    Solved Extern
 SPI1_IRQHandler     REL    CONST EXT [047] UNTYP. .intvec    Solved Extern 
 SPI2_IRQHandler     REL    CONST EXT [048] UNTYP. .intvec    Solved Extern 
 SPI3_IRQHandler     REL    CONST EXT [063] UNTYP. .intvec    Solved Extern 
-STM32Fx_COLD_FISH   ABS    CONST EXT [000] UNTYP. __EXTERNS  Solved Extern 
+STM32Fx_COLD_FISH   ABS    CONST EXT [-001] UNTYP. __EXTERNS  Solved Extern 
 SVC_Handler         REL    CONST EXT [008] UNTYP. .intvec    Solved Extern 
 SysTick_Handler     REL    CONST EXT [011] UNTYP. .intvec    Solved Extern 
 TAMP_STAMP_IRQHandlerREL    CONST EXT [014] UNTYP. .intvec    Solved Extern 
@@ -2287,6 +2302,7 @@ USART6_IRQHandler   REL    CONST EXT [083] UNTYP. .intvec    Solved Extern
 UsageFault_Handler  REL    CONST EXT [007] UNTYP. .intvec    Solved Extern 
 VFP_COMPATIBLE      ABS    CONST UNTYP.           ASEG       Not solved 
 WWDG_IRQHandler     REL    CONST EXT [012] UNTYP. .intvec    Solved Extern 
+__cmain             ABS    CONST EXT [000] UNTYP. __EXTERNS  Solved Extern 
 __iar_program_start ABS    CONST EXT [-001] UNTYP. __EXTERNS  Solved Extern 
 __vector_table      REL    CONST PUB UNTYP.       .intvec    0 
 

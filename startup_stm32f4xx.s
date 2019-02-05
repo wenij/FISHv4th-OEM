@@ -63,8 +63,9 @@
 //        SECTION .intvec:CODE:NOROOT(2)
         SECTION .intvec: CODE:ROOT(2)
 
-        EXTERN  __iar_program_start
-        EXTERN  STM32Fx_COLD_FISH
+        EXTERN  __iar_program_start // For reaching main()
+        EXTERN  __cmain             // From cstartup.s
+        EXTERN  STM32Fx_COLD_FISH   // For booting fish native mode
         EXTERN  FMx_SYSTICK_ISR
 #ifdef CMSIS_C        
         EXTERN  HardFault_Handler
@@ -186,10 +187,18 @@ AFT_INTVEC:
         PUBWEAK Reset_Handler
         SECTION .text:CODE:REORDER(2)
 Reset_Handler
-
-        B      STM32Fx_COLD_FISH
-// fix        B      main
-
+// not sure how main is called at the end of startup,
+// since I do my own init.
+         B       __cmain
+        
+//        B     __iar_program_start  // = B      STM32Fx_COLD_FISH
+/*  // FROM CUBE PROJECT
+Reset_Handler
+        LDR     R0, =SystemInit 
+        BLX     R0
+        LDR     R0, =__iar_program_start
+        BX      R0
+*/
         PUBWEAK NMI_Handler
         SECTION .text:CODE:REORDER(1)
 NMI_Handler

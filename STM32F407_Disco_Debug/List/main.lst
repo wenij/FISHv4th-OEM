@@ -1,13 +1,13 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.22.1.15669/W32 for ARM       06/Nov/2018  17:15:02
+# IAR ANSI C/C++ Compiler V8.22.1.15669/W32 for ARM       31/Jan/2019  15:46:55
 # Copyright 1999-2018 IAR Systems AB.
 #
 #    Cpu mode     =  thumb
 #    Endian       =  little
 #    Source file  =  C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\main.c
 #    Command line =  
-#        -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWC0D3.tmp ("C:\Users\Clyde W
+#        -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWEC1.tmp ("C:\Users\Clyde W
 #        Phillips Jr\Desktop\FISHv4th-OEM\main.c" -lCN "C:\Users\Clyde W
 #        Phillips Jr\Desktop\FISHv4th-OEM\STM32F407_Disco_Debug\List" -o
 #        "C:\Users\Clyde W Phillips
@@ -32,7 +32,7 @@
 ###############################################################################
 
 C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\main.c
-      1          // FISH STM32F4 DISCO
+      1          // FISH STM32F3-4
       2          
       3          // for stm32f4xx.h usage
       4          #define STM32F40XX
@@ -114,18 +114,19 @@ C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\main.c
      41          
      42          
      43          #ifdef USE_CMAIN // defined in FISH_STM32F4_CONFIG_DEFINES.h
-     44          // May use this to prototype Smart-IO board attached to the fishy disco~!
-     45          int main(void) {
-     46          
-     47           extern void FM3_COLD();
-     48          	volatile static int i = 0 ;
-     49          	while(1) {
-     50          		FM3_COLD();		// FISH_return2c returns here
-     51          		i++ ;
-     52          	}
-     53          	return 0 ;
-     54          }
-     55          #endif
+     44          // SMALL STACK AND HEAP ALLOCATED IN LINKER SECTION FOR SMALL CALLS TO C
+     45          // IF LIBRARIES ARE NEEDED ALLOCATE FISH IN C DYNAMICALLY ON LARGER HEAP
+     46          int main(void) {
+     47          
+     48           extern void STM32Fx_COLD_FISH();
+     49          	volatile static int i = 0 ;
+     50          	while(1) {
+     51          		STM32Fx_COLD_FISH();		// FISH_return2c returns here
+     52          		i++ ;
+     53          	}
+     54          	return 0 ;
+     55          }
+     56          #endif
 
    Maximum stack usage in bytes:
 
