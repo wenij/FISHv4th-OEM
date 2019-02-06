@@ -29,15 +29,15 @@
  typedef enum
  {
      PSTAT_MEASUREMENT_REQ,
-     ADC_CAL_REQ,
-     DAC_SET_REQ,
-     DAC_CAL_REQ
+     PSTAT_CAL_REQ,
+     PSTAT_ON_REQ,
  } CliCommandId;
 
  typedef struct
  {
      CliCommandId Id;
-     uint32_t Param;
+     uint32_t Param1;
+     uint32_t Param2;
  } CliCmd_t;
 
 // CLI message container

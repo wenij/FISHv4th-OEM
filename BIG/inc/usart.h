@@ -55,6 +55,7 @@
 
 /* USER CODE END Includes */
 
+
 extern UART_HandleTypeDef * cli_uart;
 extern UART_HandleTypeDef * data_uart;
 

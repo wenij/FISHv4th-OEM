@@ -5,7 +5,7 @@
  *      Author: carstenh
  */
 #include <string.h>
-
+#include <stdlib.h>
 #include "main.h"
 #include "cli.h"
 #include "usart.h"
@@ -130,7 +130,7 @@ void cli_task(void * parm)
 		{
 			InfoPending = false;
 
-			// Parse and distribute incoming messages
+			// Parse and distribute incoming messages. It is assumed that the UartRxBuffer is disposed of in this call.
 			CliParseCommand();
 
 			// Ready for another message
@@ -178,7 +178,7 @@ void CliSendCmdResp(CliCommandId CmdId, uint32_t data)
     Msg.data = (uint8_t*)payload;
 	Msg.Type = CLI_COMMAND_RESP;
 	payload->CLI_COMMAND_data.Id = CmdId;
-    payload->CLI_COMMAND_data.Param = data;
+    payload->CLI_COMMAND_data.Param1 = data;
 
 	xQueueSend( CliDataQueue, &Msg, 0 );
 }
@@ -191,7 +191,7 @@ void CliSendCmd(CliCommandId CmdId, uint32_t data, QueueHandle_t Destination)
     Msg.data = (uint8_t*)payload;
     Msg.Type = CLI_COMMAND_MESSAGE;
     payload->CLI_COMMAND_data.Id = CmdId;
-    payload->CLI_COMMAND_data.Param = data;
+    payload->CLI_COMMAND_data.Param1 = data;
 
     xQueueSend( Destination, &Msg, 0 );
 }
@@ -229,25 +229,58 @@ void CliParseCommand(void)
 
     if (length <= 0)  return;
 
-    if (UartRxBuffer[0] == '*')
+    // Parse commands.
+    if (strncmp("meas", (const char*)UartRxBuffer, 4) == 0)
     {
-        // Parse commands.
-        if (strcmp("meas", (const char*)&UartRxBuffer[1]) == 0)
+        uint32_t parm = 0;
+
+        num_args = CliParseParameterString(4);
+
+        if (num_args >= 1)
         {
-            //num_args = CliParseParameterString(5);
-            // ADC Read
-            CliSendCmd(PSTAT_MEASUREMENT_REQ, 0, pstat_Queue);
+            parm = parameter_list[0];
         }
+        // Perform a measurement
+        CliSendCmd(PSTAT_MEASUREMENT_REQ, parm, pstat_Queue);
 
         vPortFree(UartRxBuffer);
     }
-    else
+    else if (strncmp("pson", (const char*)UartRxBuffer, 4) == 0)
     {
-        /// All text just send to the smartIO interface
-        CliSendTextMsgNoCopy( (char*)UartRxBuffer, SifQueue);
+        uint32_t parm = 1;  // Default value is 1 = "on"
 
-        // Send OK
-        HAL_UART_Transmit(cli_uart, (uint8_t*)OkMsg, length, 100);
+        num_args = CliParseParameterString(4);
+
+        if (num_args >= 1)
+        {
+            parm = parameter_list[0];
+        }
+
+        // Turn pstat on or off according to parm (0 = off, 1 = on)
+        CliSendCmd(PSTAT_ON_REQ, parm, pstat_Queue);
+
+        vPortFree(UartRxBuffer);
+    }
+    else if (strncmp("sio", (const char*)UartRxBuffer, 3) == 0)
+    {
+        char * p;
+        int i = 3;  // Length of "sio"
+
+        p = (char*)UartRxBuffer + i;
+
+        while ( p[i] == ' ')
+        {
+            i++;
+        }
+
+        if (p[i] != 0)
+        {
+            /// Send All text just received to the smartIO interface
+            CliSendTextMsgNoCopy( &p[i], SifQueue);
+
+            // Send OK
+            HAL_UART_Transmit(cli_uart, (uint8_t*)OkMsg, length, 100);
+        }
     }
 
 }
@@ -255,7 +288,72 @@ void CliParseCommand(void)
 int CliParseParameterString(int offset)
 {
     int count = 0;
+    char *p;
+    char temp[16];
+    int idx;
+    char *tp;
+    bool HexMode = false;
 
+    p = (char*)UartRxBuffer + offset;
+    tp = temp;
+    *tp = 0;
+    idx = 0;
+    while (1)
+    {
+        if (*p <= ' ')
+        {
+            *tp = 0;
+            // See what is in the temp buffer
+            if (idx > 0)
+            {
+                if (HexMode)
+                {
+                    parameter_list[count] = strtol(temp, NULL, 16);
+                }
+                else
+                {
+                    parameter_list[count] = strtol(temp, NULL, 10);
+                }
 
+                count++;
+
+            }
+
+            if ( (*p != 0) && (count < MAX_NUM_PARAMS))
+            {
+                // Start again if there is more to do
+                HexMode = false;
+                idx = 0;
+                tp = temp;
+            }
+            else
+            {
+                // Done
+                break;
+            }
+        }
+        else if (idx < sizeof(temp)-1)
+        {
+            if ( (*p >= '0') && (*p <= '9'))
+            {
+                *tp++ = *p;
+                idx++;
+            }
+            else if ( ((*p >= 'a') && (*p <= 'f')) || ((*p>='A') && (*p <='F')))
+            {
+                *tp++ = *p;
+                idx++;
+                HexMode = true;
+            }
+            else if ( (*p == 'x') || (*p == 'X') )
+            {
+                HexMode = true;
+                // All leading values discarded
+                tp = temp;
+                idx = 0;
+            }
+        }
+        p++;
+    }
     return(count);
 }

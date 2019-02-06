@@ -164,7 +164,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/smartio}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/CMSIS_RTOS}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/portable/GCC/ARM_CM4F}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/portable/GCC/ARM_CM3}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.dialect.std.1118861583" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1304071184" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c"/>
@@ -263,7 +263,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/CMSIS_RTOS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/smartio}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/portable/GCC/ARM_CM4F}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/big_fw/FreeRTOS/Source/portable/GCC/ARM_CM3}&quot;"/>
 								</option>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.1408653395" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c"/>
 								<inputType id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s.1336369747" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.s"/>
