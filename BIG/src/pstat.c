@@ -31,6 +31,9 @@ QueueHandle_t pstat_Queue = NULL;
 
 static bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement);
 static bool SetCurrentScale( WE_Scale_t scale);
+static void EnablePstat(void);
+static void DisablePstat(void);
+static bool CalibratePstat(void);
 
 static WE_Scale_t CurrentScale=WE_SCALE_100_uA;
 
@@ -48,32 +51,43 @@ void pstat_task(void * parm)
             if (PortMsg.Type == CLI_COMMAND_MESSAGE)
             {
 
+                // Commands for basic tasks like measure, enable and disable circuit, and calibration.
                 CliMsgContainer *cmd = (CliMsgContainer*)PortMsg.data;
 
                 switch (cmd->CLI_COMMAND_data.Id)
                 {
                 case PSTAT_MEASUREMENT_REQ:
-                {
-                    pstatMeasurement_t measurement;
+                    {
+                        pstatMeasurement_t measurement;
 
-                    PortMsg.Type = CLI_MEASUREMENT_RESP;
+                        PortMsg.Type = CLI_MEASUREMENT_RESP;
 
-                    vPortFree(cmd);
+                        MakeMeasurement(cmd->CLI_COMMAND_data.Param1, &measurement);
 
-                    MakeMeasurement(0, &measurement);
+                        CliSendMeasurementResp(&measurement);
 
-                    CliSendMeasurementResp(&measurement);
+                    }
+                    break;
 
-                }
+                case PSTAT_CAL_REQ:
+                    break;
+
+                case PSTAT_ON_REQ:
+                    if (cmd->CLI_COMMAND_data.Param1)
+                    {
+                        EnablePstat();
+                    }
+                    else
+                    {
+                        DisablePstat();
+                    }
                     break;
 
                 default:
-                    vPortFree(cmd);
                     break;
                 }
 
-                // Free memory
-
+                vPortFree(cmd);
             }
 
         }
@@ -110,6 +124,12 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
     return(ret);
 }
 
+bool CalibratePstat(void)
+{
+
+}
+
+
 bool SetCurrentScale( WE_Scale_t scale)
 {
     bool ret = true;
@@ -122,4 +142,20 @@ bool SetCurrentScale( WE_Scale_t scale)
 
 
     return(ret);
+}
+
+void EnablePstat(void)
+{
+    HAL_GPIO_WritePin(SW1_GPIO_Port, SW1_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(SW2_GPIO_Port, SW2_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(SW3_GPIO_Port, SW3_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(SW4_GPIO_Port, SW4_Pin, GPIO_PIN_SET);
+}
+
+void DisablePstat(void)
+{
+    HAL_GPIO_WritePin(SW1_GPIO_Port, SW1_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(SW2_GPIO_Port, SW2_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(SW3_GPIO_Port, SW3_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(SW4_GPIO_Port, SW4_Pin, GPIO_PIN_RESET);
 }
