@@ -154,8 +154,8 @@ extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_
 
  // MUX selections
 #define ADS1256_MUX_SEL_AIN0 0
-#define ADS1256_MUX_SEL_AIN1 2
-#define ADS1256_MUX_SEL_AIN2 3
+#define ADS1256_MUX_SEL_AIN1 1
+#define ADS1256_MUX_SEL_AIN2 2
 #define ADS1256_MUX_SEL_AIN3 3
 #define ADS1256_MUX_SEL_AIN4 4
 #define ADS1256_MUX_SEL_AIN5 5
@@ -164,10 +164,10 @@ extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_
 #define ADS1256_MUX_SEL_AINCOM 8
 
 #define set_ADS1256_MUX_PSEL(_val) ( ((_val)<<4) & ADS1256_MUX_PSEL)
-#define get_ADS1256_MUX_PSEL(_val) ( ((_val)& ADS1256_MUX_PSEL) >> 4)
+#define get_ADS1256_MUX_PSEL(_val) ( ((_val) & ADS1256_MUX_PSEL) >> 4)
 
-#define set_ADS1256_MUX_NSEL(_val) ( (_val) & ADS1256_MUX_PSEL)
-#define get_ADS1256_MUX_NSEL(_val) ( (_val) & ADS1256_MUX_PSEL)
+#define set_ADS1256_MUX_NSEL(_val) ( (_val) & ADS1256_MUX_NSEL)
+#define get_ADS1256_MUX_NSEL(_val) ( (_val) & ADS1256_MUX_NSEL)
 
  // Register 2 AD Control Register
 #define ADS1256_ADCON_REGISTER 2

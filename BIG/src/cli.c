@@ -81,7 +81,7 @@ void cli_task(void * parm)
                 char * outp = (char*)pvPortMalloc(bufSize);
                 char * temp = (char*)pvPortMalloc(24);
 
-                *outp = 0;
+                *outp = 0;  // Null terminating the buffer
 
                 strcat(outp, "  ADC_WE: ");
                 NumToDecimalString( msg->ADC_CONV_RESP_data.ADC_WE, 8, temp, 24);

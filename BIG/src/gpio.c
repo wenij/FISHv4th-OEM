@@ -78,7 +78,7 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, SW1_Pin|SW2_Pin|SW3_Pin|SW4_Pin, GPIO_PIN_RESET);
-  //HAL_GPIO_WritePin(GPIOC, G_S0_Pin|G_S1_Pin|G_S2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, G_S0_Pin|G_S1_Pin|G_S2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = BT_IRQ_Pin;
@@ -131,7 +131,7 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  GPIO_InitStruct.Pin = /*G_S0_Pin|G_S1_Pin|G_S2_Pin|*/SW1_Pin|SW2_Pin|SW3_Pin | SW4_Pin;
+  GPIO_InitStruct.Pin = G_S0_Pin|G_S1_Pin|G_S2_Pin|SW1_Pin|SW2_Pin|SW3_Pin | SW4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
