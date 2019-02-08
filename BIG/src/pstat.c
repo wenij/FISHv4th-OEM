@@ -110,7 +110,7 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
 
     AD5662_Set(DACvalue);
 
-    measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_0, 1);
+    measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_1, 1);
 
     measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_3, 1);
 

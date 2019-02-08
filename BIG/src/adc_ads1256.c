@@ -117,7 +117,7 @@ int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchan
     // Configure the appropriate channel
     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_MUX_REGISTER);
     buf[1] = 0;  // Number of registers - 1
-    buf[2] = set_ADS1256_MUX_PSEL(Pchannel) | set_ADS1256_MUX_PSEL(Nchannel);
+    buf[2] = set_ADS1256_MUX_PSEL(Pchannel) | set_ADS1256_MUX_NSEL(Nchannel);
 
     SendReceiveSPI(buf, 3, &rxbuf, 0);   // Send mux select expecting no response.
 

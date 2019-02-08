@@ -203,6 +203,15 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
         GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
         HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+#ifdef CARSTENS_BOARD
+        // MISO - rerouted to PC # 11
+        GPIO_InitStruct.Pin = GPIO_PIN_11;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
+        HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+#else
         // MISO
         GPIO_InitStruct.Pin = GPIO_PIN_4;
         GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -210,7 +219,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
         GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
         HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
+#endif
         // MOSI
         GPIO_InitStruct.Pin = GPIO_PIN_5;
         GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
