@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ELF Linker V8.22.1.15669/W32 for ARM                05/Feb/2019  14:32:01
+# IAR ELF Linker V8.22.1.15669/W32 for ARM                09/Feb/2019  14:42:16
 # Copyright 2007-2018 IAR Systems AB.
 #
 #    Output file  =  
@@ -10,7 +10,7 @@
 #        C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th 205
 #        PSTAT\List\FISH_STM32F205RC_STM_118mhz_FISHv4th-OEM.map
 #    Command line =  
-#        -f C:\Users\CLYDEW~1\AppData\Local\Temp\EWCAAF.tmp ("C:\Users\Clyde W
+#        -f C:\Users\CLYDEW~1\AppData\Local\Temp\EW7BA6.tmp ("C:\Users\Clyde W
 #        Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th 205
 #        PSTAT\Obj\FISH_STM32F4_IAR.o" "C:\Users\Clyde W Phillips
 #        Jr\Desktop\FISHv4th-OEM\FISHv4th 205 PSTAT\Obj\Fixes in versions
@@ -65,9 +65,21 @@ do not initialize {
   .intvec                 ro code  0x08000000   0x188  startup_stm32f4xx.o [1]
                                  - 0x08000188   0x188
 
-"P1":                                          0x49e4
-  .text                   ro code  0x08000188  0x4844  FISH_STM32F4_IAR.o [1]
-  .text                   ro code  0x080049cc    0x34  main.o [1]
+"P1":                                          0x49b4
+  .text                   ro code  0x08000188  0x4814  FISH_STM32F4_IAR.o [1]
+  .text                   ro code  0x0800499c    0x34  main.o [1]
+  .text                   ro code  0x080049d0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080049d4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080049d8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080049dc     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080049e0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080049e4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080049e8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080049ec     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080049f0     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080049f4     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080049f8     0x4  startup_stm32f4xx.o [1]
+  .text                   ro code  0x080049fc     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004a00     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004a04     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004a08     0x4  startup_stm32f4xx.o [1]
@@ -147,19 +159,7 @@ do not initialize {
   .text                   ro code  0x08004b30     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004b34     0x4  startup_stm32f4xx.o [1]
   .text                   ro code  0x08004b38     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b3c     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b40     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b44     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b48     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b4c     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b50     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b54     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b58     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b5c     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b60     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b64     0x4  startup_stm32f4xx.o [1]
-  .text                   ro code  0x08004b68     0x4  startup_stm32f4xx.o [1]
-                                 - 0x08004b6c  0x49e4
+                                 - 0x08004b3c  0x49b4
 
 "P2":                                          0xff18
   .sram_1rst_dict_stdio_bufs
@@ -190,15 +190,15 @@ do not initialize {
     Module               ro code  rw data
     ------               -------  -------
 C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th 205 PSTAT\Obj: [1]
-    FISH_STM32F4_IAR.o    18 500   67 208
+    FISH_STM32F4_IAR.o    18 452   67 208
     main.o                    52
     startup_stm32f4xx.o      756
     -------------------------------------
-    Total:                19 308   67 208
+    Total:                19 260   67 208
 
     Linker created                  8 192
 -----------------------------------------
-    Grand Total:          19 308   75 400
+    Grand Total:          19 260   75 400
 
 
 *******************************************************************************
@@ -209,12 +209,12 @@ Entry                      Address  Size  Type      Object
 -----                      -------  ----  ----      ------
 CSTACK$$Base            0x2001e000         --   Gb  - Linker created -
 CSTACK$$Limit           0x20020000         --   Gb  - Linker created -
-C_CMSIS_DISABLE_IRQS    0x080049f1   0x4  Code  Gb  main.o [1]
-C_CMSIS_ENABLE_IRQS     0x080049f5   0x4  Code  Gb  main.o [1]
-FISH_return2c           0x08004484        Data  Gb  FISH_STM32F4_IAR.o [1]
+C_CMSIS_DISABLE_IRQS    0x080049c1   0x4  Code  Gb  main.o [1]
+C_CMSIS_ENABLE_IRQS     0x080049c5   0x4  Code  Gb  main.o [1]
+FISH_return2c           0x08004454        Data  Gb  FISH_STM32F4_IAR.o [1]
 FMx_SYSTICK_ISR         0x08000db1        Code  Gb  FISH_STM32F4_IAR.o [1]
-HardFault_Handler       0x080049f9   0x8  Code  Wk  main.o [1]
-NVIC_SystemReset        0x080049cd  0x1a  Code  Lc  main.o [1]
+HardFault_Handler       0x080049c9   0x8  Code  Wk  main.o [1]
+NVIC_SystemReset        0x0800499d  0x1a  Code  Lc  main.o [1]
 STM32Fx_COLD_FISH       0x08000d57        Code  Gb  FISH_STM32F4_IAR.o [1]
 __iar_program_start     0x08000d51        Code  Gb  FISH_STM32F4_IAR.o [1]
 __iar_systems$$module {Abs}
@@ -225,7 +225,7 @@ __vector_table          0x08000000        Data  Gb  startup_stm32f4xx.o [1]
 [1] = C:\Users\Clyde W Phillips Jr\Desktop\FISHv4th-OEM\FISHv4th 205 PSTAT\Obj
 [2] = command line
 
-  19 308 bytes of readonly  code memory
+  19 260 bytes of readonly  code memory
   75 400 bytes of readwrite data memory
 
 Errors: none
