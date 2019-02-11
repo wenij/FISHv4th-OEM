@@ -37,6 +37,9 @@ static void StartConversion(void);
   */
  void ads1256_PowerUpInit( void )
  {
+     uint8_t buf[3];
+     uint8_t * rxbuf;
+
      // Reset the ADC by pulsing the Reset Line.
      HAL_GPIO_WritePin(ADC_RSTn_GPIO_Port, ADC_RSTn_Pin, GPIO_PIN_RESET);    // ADC Reset Pin
 
@@ -44,6 +47,20 @@ static void StartConversion(void);
      TimDelayMicroSeconds( 4 );
 
      HAL_GPIO_WritePin(ADC_RSTn_GPIO_Port, ADC_RSTn_Pin, GPIO_PIN_SET);    // ADC Reset Pin
+
+     // Enable input buffer
+     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_STATUS_REGISTER);
+     buf[1] = 0;  // Number of registers - 1
+     buf[2] = ADS1256_STATUS_BUFEN;
+
+     SendReceiveSPI(buf, 3, &rxbuf, 0);   // Send status register expecting no response.
+
+     // Set PGA to 2
+     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_ADCON_REGISTER);
+     buf[1] = 0;  // Number of registers - 1
+     buf[2] = set_ADS1256_PGA(1);   // PGA=2
+
+     SendReceiveSPI(buf, 3, &rxbuf, 0);   // Send ad control register expecting no response.
 
  }
 
@@ -93,7 +110,7 @@ static void StartConversion(void);
   * Return Value:
   *    Measured Value
   */
-int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel, uint16_t averages)
+int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, uint16_t averages)
 {
     bool Continue = false;
     int32_t ret = 0;
@@ -117,7 +134,8 @@ int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchan
     // Configure the appropriate channel
     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_MUX_REGISTER);
     buf[1] = 0;  // Number of registers - 1
-    buf[2] = set_ADS1256_MUX_PSEL(Pchannel) | set_ADS1256_MUX_NSEL(Nchannel);
+    //buf[2] = set_ADS1256_MUX_PSEL(Pchannel) | set_ADS1256_MUX_NSEL(ADS1256_CHANNEL_AINCOM);
+    buf[2] = set_ADS1256_MUX_PSEL(ADS1256_CHANNEL_AINCOM) | set_ADS1256_MUX_NSEL(Pchannel);
 
     SendReceiveSPI(buf, 3, &rxbuf, 0);   // Send mux select expecting no response.
 
@@ -141,7 +159,9 @@ int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchan
             // The extra byte shift gets the sign bit in the right position
             temp = ( ((uint32_t)rxbuf[0]) << 24) | ( ((uint32_t)rxbuf[1]) << 16) | ((uint32_t)(rxbuf[0]) << 8);
 
-            ret = (int32_t)temp / 256;
+            ret = (int32_t)temp / 256;   // takes care of sign extension
+
+            ret = -ret; // Flip the sign because if I measure with the reference in the Neg spot, it
 
             vPortFree(rxbuf);
         }
@@ -153,21 +173,21 @@ int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchan
 }
 
 
- /*
-  * SelfTest
-  *
-  * Perform Self Test (TBD what exactly that is)
-  * Parameters:
-  *    None
-  *
-  * Return Value:
-  *    true if test passes
-  *    false if test failed
-  */
- bool ads1256_SelfTest( void )
- {
-     return(false);
- }
+/*
+ * SelfCal
+ *
+ * Perform Self Calibration
+ * Parameters:
+ *    None
+ *
+ * Return Value:
+ *    true if test passes
+ *    false if test failed
+ */
+bool ads1256_SelfCal( void )
+{
+ return(false);
+}
 
  /****************************************
   *   Local Functions

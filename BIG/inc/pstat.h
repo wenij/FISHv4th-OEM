@@ -25,6 +25,16 @@
      WE_SCALE_UNITY = 8
  } WE_Scale_t;
 
+ // Switch Settings
+ typedef enum
+ {
+     SW_1_ENABLE = 1,
+     SW_2_ENABLE = 2,
+     SW_3_ENABLE = 4,
+     SW_4_ENABLE = 8,
+     SW_INVALID = 0x10
+ } SW_State_t;
+
  /* Structure containing one data point */
  typedef struct
  {
@@ -36,6 +46,8 @@
      int32_t VREF_1_3rd;
      int32_t VREF_2_3rd;
  } pstatMeasurement_t;
+
+#define DAC_INVALID_VALUE 0x10000
 
 extern void pstat_task(void * parm);
 

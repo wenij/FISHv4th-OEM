@@ -232,7 +232,7 @@ void CliParseCommand(void)
     // Parse commands.
     if (strncmp("meas", (const char*)UartRxBuffer, 4) == 0)
     {
-        uint32_t parm = 0;
+        uint32_t parm = DAC_INVALID_VALUE;
 
         num_args = CliParseParameterString(4);
 
@@ -247,7 +247,7 @@ void CliParseCommand(void)
     }
     else if (strncmp("pson", (const char*)UartRxBuffer, 4) == 0)
     {
-        uint32_t parm = 1;  // Default value is 1 = "on"
+        uint32_t parm = SW_INVALID;
 
         num_args = CliParseParameterString(4);
 
@@ -256,8 +256,15 @@ void CliParseCommand(void)
             parm = parameter_list[0];
         }
 
-        // Turn pstat on or off according to parm (0 = off, 1 = on)
+        // Set PSTAT switches according to parm
         CliSendCmd(PSTAT_ON_REQ, parm, pstat_Queue);
+
+        vPortFree(UartRxBuffer);
+    }
+    else if (strncmp("cal", (const char*)UartRxBuffer, 4) == 0)
+    {
+        // Run self calibration
+        CliSendCmd(PSTAT_CAL_REQ, 0, pstat_Queue);
 
         vPortFree(UartRxBuffer);
     }
