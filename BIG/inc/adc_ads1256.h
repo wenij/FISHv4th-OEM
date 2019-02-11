@@ -96,13 +96,13 @@ extern void ads1256_SetPGA( ads1256_pga_t gain );
      ADS1256_CHANNEL_AINCOM = 8
  } ads1256_channel_t;
 
-extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel, uint16_t averages);
+extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, uint16_t averages);
 
 
  /*
-  * SelfTest
+  * SelfCal
   *
-  * Perform Self Test (TBD what exactly that is)
+  * Perform Self Calibration
   * Parameters:
   *    None
   *
@@ -110,7 +110,7 @@ extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_
   *    true if test passes
   *    false if test failed
   */
- extern bool ads1256_SelfTest( void );
+ extern bool ads1256_SelfCal( void );
 
 /*
  * Device Commands
@@ -197,8 +197,8 @@ extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_
  // PGA selection
 
 
-#define set_ADS1256_PGA (_val) ( (_val) & ADS1256_ADCON_PGA)
-#define get_ADS1256_PGA (_val) ( (_val) & ADS1256_ADCON_PGA)
+#define set_ADS1256_PGA(_val) ( (_val) & ADS1256_ADCON_PGA)
+#define get_ADS1256_PGA(_val) ( (_val) & ADS1256_ADCON_PGA)
 
  // Register 3 A/D Data Rate
 #define ADS1256_DRATE_REGISTER 3

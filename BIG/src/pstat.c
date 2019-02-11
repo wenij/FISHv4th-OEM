@@ -22,7 +22,7 @@
 #include "pstat.h"
 #include "adc_ads1256.h"
 #include "dac_ad5662.h"
-
+#include "tim.h"
 
 QueueHandle_t ADC_Queue = NULL;
 QueueHandle_t DAC_Queue = NULL;
@@ -31,12 +31,16 @@ QueueHandle_t pstat_Queue = NULL;
 
 static bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement);
 static bool SetCurrentScale( WE_Scale_t scale);
-static void EnablePstat(void);
-static void DisablePstat(void);
+
+static void SetPstatSwitches(uint16_t SW);
+
 static bool CalibratePstat(void);
 
 static WE_Scale_t CurrentScale=WE_SCALE_100_uA;
 
+static uint16_t LastDAC = 0;
+
+static uint16_t LastSW = 0;
 
 void pstat_task(void * parm)
 {
@@ -58,11 +62,17 @@ void pstat_task(void * parm)
                 {
                 case PSTAT_MEASUREMENT_REQ:
                     {
+
                         pstatMeasurement_t measurement;
 
                         PortMsg.Type = CLI_MEASUREMENT_RESP;
 
-                        MakeMeasurement(cmd->CLI_COMMAND_data.Param1, &measurement);
+                        if (cmd->CLI_COMMAND_data.Param1 < DAC_INVALID_VALUE)
+                        {
+                            LastDAC = (uint16_t)cmd->CLI_COMMAND_data.Param1;
+                        }
+
+                        MakeMeasurement(LastDAC, &measurement);
 
                         CliSendMeasurementResp(&measurement);
 
@@ -70,17 +80,16 @@ void pstat_task(void * parm)
                     break;
 
                 case PSTAT_CAL_REQ:
+                    CalibratePstat();
                     break;
 
                 case PSTAT_ON_REQ:
-                    if (cmd->CLI_COMMAND_data.Param1)
+                    if (cmd->CLI_COMMAND_data.Param1 < SW_INVALID)
                     {
-                        EnablePstat();
+                        LastSW = cmd->CLI_COMMAND_data.Param1;
                     }
-                    else
-                    {
-                        DisablePstat();
-                    }
+
+                    SetPstatSwitches(LastSW);
                     break;
 
                 default:
@@ -110,15 +119,17 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
 
     AD5662_Set(DACvalue);
 
-    measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_1, 1);
+    TimDelayMicroSeconds(1000);  // Allow dac to settle
 
-    measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_3, 1);
+    measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, 1);
 
-    measurement->ADC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_4, ADS1256_CHANNEL_3, 1);  // Neg is same as above.
+    measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, 1);
 
-    measurement->VREF_2_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_5, ADS1256_CHANNEL_7, 1);
+    measurement->ADC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_4, 1);  // Neg is same as above.
 
-    measurement->VREF_1_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_6, ADS1256_CHANNEL_7, 1);
+    measurement->VREF_2_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_5, 1);
+
+    measurement->VREF_1_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_6, 1);
 
 
     return(ret);
@@ -127,6 +138,11 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
 bool CalibratePstat(void)
 {
 
+    // Set switches and DAC
+    ads1256_SelfCal();
+
+    //
+    return(true);
 }
 
 
@@ -144,18 +160,12 @@ bool SetCurrentScale( WE_Scale_t scale)
     return(ret);
 }
 
-void EnablePstat(void)
+void SetPstatSwitches(uint16_t SW)
 {
-    HAL_GPIO_WritePin(SW1_GPIO_Port, SW1_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(SW2_GPIO_Port, SW2_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(SW3_GPIO_Port, SW3_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(SW4_GPIO_Port, SW4_Pin, GPIO_PIN_SET);
+
+    HAL_GPIO_WritePin(SW1_GPIO_Port, SW1_Pin, (SW & SW_1_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(SW2_GPIO_Port, SW2_Pin, (SW & SW_2_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(SW3_GPIO_Port, SW3_Pin, (SW & SW_3_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(SW4_GPIO_Port, SW4_Pin, (SW & SW_4_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
-void DisablePstat(void)
-{
-    HAL_GPIO_WritePin(SW1_GPIO_Port, SW1_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(SW2_GPIO_Port, SW2_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(SW3_GPIO_Port, SW3_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(SW4_GPIO_Port, SW4_Pin, GPIO_PIN_RESET);
-}
