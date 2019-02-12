@@ -3064,12 +3064,16 @@
         </settings>
     </configuration>
     <file>
+        <name>$PROJ_DIR$\FISH_SPI_WC.h</name>
+    </file>
+    <file>
         <name>$PROJ_DIR$\FISH_STM32F4_IAR.s</name>
     </file>
     <file>
         <name>$PROJ_DIR$\Fixes in versions comments.c</name>
         <excluded>
             <configuration>STM32F407vg_Disco_Debug</configuration>
+            <configuration>FISHv4th 205 PSTAT</configuration>
         </excluded>
     </file>
     <file>
@@ -3077,11 +3081,23 @@
     </file>
     <file>
         <name>$PROJ_DIR$\PSTAT_FISH.txt</name>
+        <excluded>
+            <configuration>FISHv4th 205 PSTAT</configuration>
+        </excluded>
     </file>
     <file>
         <name>$PROJ_DIR$\PSTAT_FISH_ADC_RREG.txt</name>
+        <excluded>
+            <configuration>FISHv4th 205 PSTAT</configuration>
+        </excluded>
     </file>
     <file>
         <name>$PROJ_DIR$\startup_stm32f4xx.s</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\WORDCAT HowTo.txt</name>
+        <excluded>
+            <configuration>FISHv4th 205 PSTAT</configuration>
+        </excluded>
     </file>
 </project>

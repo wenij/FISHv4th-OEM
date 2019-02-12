@@ -1,7 +1,7 @@
 /*
 Should an error processed by EHON, ater its has gotten CO do a EHOFF?
 
-PSTAT Jumper settings:
+EMAC PSTAT1 Jumper settings:
 JU1,2 grounds BOOT0 & BOOT1 and both should be jumpered.
 JU3 I2C jumpered puts 5v on Pin 3 of the J2 I2C connector.
 JU5,6,7 USB1 (UART3) Power and signal routing are all jumpered.
@@ -11,6 +11,16 @@ JU11 jumpered is 3.3v nRST. JU3 is ground so it should be unjumpered.
 JU12 JTAG Dual use TDO or SCLK unjumpered for SWD.
   -Factory Has this jumpered as they have used JTAG instead or SWD.
 JU13 is Battery - and should be jumpered.
+
+080FFh DAC WRITE IS CLOSE TO 2.048V WITH ALL SWITCHES ON.
+  - Should be 07FFFh
+  - Need to calibrate meter.
+
+Ready for an SPI WORDCAT for ? and ~ words.
+Replicate DACWORD write.
+Then implement ADC calibration routines.
+
+
 Fixes in versions comments:
 
 Cloned OEM and doing test pstat in that:
@@ -27,8 +37,6 @@ SPI3_CR1    = 033Dh + SPIEN
 
 DISCO Check
 PSTAT 
-
-SOC_INIT SPI1: 
 
 
 The old issues are PSTAT branch hangs in SOC_INIT
@@ -208,41 +216,5 @@ QA_YN_BEGIN:    // DROP KEY EVERY UNTIL LOOP OR EMIT WHEN DONE
     DC32      QA_YN_BEGIN-.
     DC32    EMIT
     DC32    SEMIS
-
-
-// SPI1-DAC-BB   ( n IS IN THE DACWORD ALLOCATION IN (MEMMAP) -- )
-// MSB OF THE 24BITS FOR THE DAC IS IN THE MSB OF DACWORD
-// SHIFT OUT LEFT 24X
-// THIS PRIMITIVE WORD NEEDS "ON DAC-CS" PREAMBLE, AND 24 (OR22) CALLS...
- SECTION .text : CONST (2)
-SPI1_DAC_BB_NFA:
-  DC8	0x80 + 11d
-  DC8	'SPI1-DAC-B'
-	DC8	'B'+0x80
- ALIGNROM 2,0xFFFFFFFF
-  DC32  PSTATDACDATA_NFA
-SPI1_DAC_BB:
-	DC32	.+5
- SECTION .text : CODE (2)
-// READ DACWORD WHICH HAS MSB IN LSB ORDER
-// SHIFT AND PRESERVE BETWEEN CALLS
-// BY WRITING VALUE BACK TO DACWORD (MEMMAP)
-	LDR n_r1, = PSTAT_DAC_DATA	// read DACWORD [val]
-  LDR t_r0, [n]
-// SHIFT OUT A BIT AT A TIME, MSB FIRST
-  LSLS  t_r0, t_r0, #1  // modify val, AFFECTS ASPR-CARRY FLAG
-STORE_BB_BIT:
-  STR t_r0, [n_r1]     	// modify val, AFFECT ALU FLAG ~ 
-
-  BCC OFF_BB_BIT        // FALL THRU IF CARRY SET
-// PRODUCE an 0d OR FFh on tos
-ON_BB_BIT:
-  MOVS	t_r0, #-1  // TRUE -1 ON
-	TPUSH_r0
-
-OFF_BB_BIT:
-	EORS	t_r0, t_r0	// OFF
-	TPUSH_r0
-
 
 */

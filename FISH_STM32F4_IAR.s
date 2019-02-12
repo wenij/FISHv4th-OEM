@@ -907,7 +907,7 @@ NUMBER:
 	DC32	ZERO, ZERO
 	DC32	ROT		// ( 0 0 addr -- )
 
-// SETUP: reeturn stack with sign flag
+// SETUP: return stack with sign flag
 // NONAME CANDIDATE!
 // START: Handle minus sign by saving status on Return Stack.
 // and incrementing to addr after it.
@@ -3135,7 +3135,7 @@ DPLUS:
 	POP2n_r1        //    ldr     n_r1, [p_r7],#4      // LS
 	POP2x	        //    ldr     x_r3, [p_r7],#4      // MS
 	POP2w_r2        //    ldr     w_r2, [p_r7],#4      // LS
-	ADDS	w_r2, w_r2, n_r1        // LS sum, set status flags
+	ADDS	w_r2, w_r2, n_r1        // LS sum, set condition flags
 	ADCS    t_r0, t_r0, x_r3        // MS sum + carry
 	DPUSH_r0_then_r1               //  --  LSW MSW )
 
@@ -3715,7 +3715,7 @@ ZLESS:
 #else
 	MOVS	t_r0, #1	// TRUE
 #endif
-	ORRS	n, n, n	// SET FLAGS
+	ORRS	n, n, n	// Set condition flags
 	BMI	ZLESS1	  // JS	ZLESS1
 
 	EORS	t_r0, t_r0	// FALSE
@@ -5273,7 +5273,7 @@ WORDS1:  // ADD nfa length to current out_uv & verify it doesn't violate csll.
   DC32  ZERO, OVER      // -- nfa zero nfa
   DC32  ONEP, CAT       // If wc_ header skip
   DC32  LIT, 0x0D       // -- nfa zero (c@) 0x0D
-  DC32  EQUAL, ZEQU     // -- nfa zerro flag
+  DC32  EQUAL, ZEQU     // -- nfa zero flag
   DC32  ZBRAN           // -- nfa zero
   DC32  WORDS2-.       // wc_ goto
 
@@ -5397,7 +5397,8 @@ In IAR FISH_ONLY:
 // https://www.st.com/en/development-tools/flasher-stm32.html
 
 */
-  LDR     n, = WC_FISH_GPIO_NFA
+//  LDR     n, = WC_FISH_GPIO_NFA
+  LDR     n, = WC_FISH_SPI_NFA
 
 	LDR	y, = CURRENT 	              // CURRENT SETTING
 	STR	n, [y]
@@ -5457,8 +5458,9 @@ IN FLASH RAMWORDS:
 In IAR FISH_ONLY:
 //        LDR     n, = WC_FISH_PubRel_NFA
 */
-//======================== B.I.G.PSTAT GPIO WORDCAT ==========================//
+//======================== WORDCAT FILE INCLUDES ==========================//
 $FISH_GPIO_WC.h
+$FISH_SPI_WC.h
 // If included link below will point to the GPIO WORDCAT
 //#endif
 // FIRST WORDCAT

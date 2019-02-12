@@ -1,8 +1,17 @@
+( WORDS AVAILABLE:
+PSTAT SPI:
+~TXE   ~RXNE   ?OVR   DACWORD
+PSTAT GPIO:
+DACWB   ?TRUE   CS-ADC   CS-BT   CS-DAC   SW1   SW2   SW3   SW4   GS2
+GS1   GS0   CLRBITS   SETBITS   ANDBITS   CLRBIT   SETBIT   SEEBIT
+GPIOB-MODER   GPIOB-IDR   GPIOB-ODR   GPIOC-MODER   GPIOC-IDR
+GPIOC-ODR
+)
+
+\ requires ?TRUE ( n -- f ) IF VALUE IS NONZERO RETURN -1 ELSE 0
 
 POFF    \ TURN PROMPT OFF
 EHON    \ STOP ON 1RST ERROR
-
-\ requires ?TRUE ( n -- f ) IF VALUE IS NONZERO RETURN -1 ELSE 0
 
 \ The spi3 register addresses.
 040003C00h CONSTANT	SPI3-CR1
@@ -78,8 +87,8 @@ TXE: Transmit buffer empty
 0: Tx buffer not empty
 1: Tx buffer empty
 )
-: ~TXE ( -- ) \ Until spi3 TXE ok.
- BEGIN SPI3-SR @ 2 AND UNTIL ;
+\ : ~TXE ( -- ) \ Until spi3 TXE ok.
+\ BEGIN SPI3-SR @ 2 AND UNTIL ;
 
 : TXE? ( -- ON/OFF ) \ push on or off = TXE
  SPI3-SR @ 2 AND IF ON ELSE OFF THEN ;
@@ -89,8 +98,8 @@ RXNE: Receive buffer not empty
 0: Rx buffer empty
 1: Rx buffer not empty
 )
-: ~RXNE	( -- )
- BEGIN SPI3-SR @ 1 AND UNTIL ;
+\ : ~RXNE	( -- )
+\ BEGIN SPI3-SR @ 1 AND UNTIL ;
 
 : RXNE?	( -- ON/OFF )	\ push on or off = RXNE
  SPI3-SR @ 1 AND IF ON ELSE OFF THEN ;

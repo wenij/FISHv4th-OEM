@@ -768,8 +768,8 @@ In IAR FISH_ONLY:
         LDR     n, = WC_FISH_GPIO_NFA
 
 */
-        DC32    WC_FISH_GPIO_NFA      // CURRENT
-
+//        DC32    WC_FISH_GPIO_NFA      // CURRENT
+        DC32    WC_FISH_SPI_NFA      // CURRENT
         DC32    msg_MY_OK               // 13d PROMPT
         DC32    0                       // 14d ERROR_HALT
 //------------------------------------------------------------------------------

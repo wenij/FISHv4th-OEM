@@ -404,7 +404,8 @@ RAMWORDS:
 The top of the dictionary is defined in these places
 In SLIBS SV_INIT_VALUES:
 //        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
-        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+//        DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here
+        DC32    WC_FISH_SPI_NFA      // CURRENT
 IN FLASH RAMWORDS:
 //        DC32    LIT, WC_FISH_PubRel_NFA // FISH in flash starts here
         DC32    LIT, WC_FISH_GPIO_NFA // FISH in flash starts here

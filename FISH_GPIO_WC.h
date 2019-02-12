@@ -1,25 +1,22 @@
 // FISH_GPIO.h
 
 // FISH_GPIO_WC.h
-
-// All spi1 chip selects are active low, INIT'D HIGH in SOC_INIT.
-//
-// DC32	WC_FISH_PubRel_NFA  // Links THIS CODE into THE BASE FISH WORDCAT.
-
+/* Update SET, CLR and ANDBIT(S):
+BFC R4, #8, #12 ; Clear bit 8 to bit 19 (12 bits) of R4 to 0
+BFI R9, R2, #8, #12 ; Replace bit 8 to bit 19 (12 bits) of R9 with
+; bit 0 to bit 11 from R2
+*/
 /* File include explains how to make a new WORDCAT:
 How to make it the current TOP of the Dictionary:
-$Wordcats_HowTo.c
+WORDCAT hOtO.TXT
 // THe wordcat is at the end of the file.
 // The words are defined ahead of the wordcat.
-
-// BTW the flashloader demo is here:
-// https://www.st.com/en/development-tools/flasher-stm32.html
 */
 //=============================== GPIO WORDs =================================//
 
 // IMPLEMENT THE PORT B AND PORTC CONSTANTS
 
-//	GPIOB_ODR: ( -- addr )
+//	GPIOC_ODR: ( -- addr )
  SECTION .text : CONST (2)
 GPIOC_ODR_NFA:
 	DC8	0x80 +09d
@@ -30,7 +27,7 @@ GPIOC_ODR_NFA:
 RM_GPIOC_ODR:
   DC32  DOCON, GPIOC_ODR
 
-//	GPIOB_IDR: ( -- addr )
+//	GPIOC_IDR: ( -- addr )
  SECTION .text : CONST (2)
 GPIOC_IDR_NFA:
 	DC8	0x80 +09d
@@ -492,8 +489,8 @@ CS_ADC_OFF:
     DC32    LIT, GPIOB_ODR, LIT, 01000h, SETBITS // SET CS-ADC TO 1
     DC32    SEMIS
 
-
-//	DACWORD: ( -- addr ) A SYSTEM VAR BEING BIT BANGED TO SPI1 ON THE PSTAT BOARD
+/* MOVED TO SPI WC - DELETE AFTER TESTED
+//	DACWORD: ( -- addr ) A SYSTEM VAR - USE WITH C@'S THRU THE WORD
  SECTION .text : CONST (2)
 PSTATDACDATA_NFA:
 	DC8	0x80 +07d
@@ -503,7 +500,7 @@ PSTATDACDATA_NFA:
 	DC32	CS_ADC_NFA
 PSTATDACDATA:
   DC32    DOCON, PSTAT_DAC_DATA
-
+*/
 // ?TRUE ( n -- f ) IF VALUE IS NONZERO RETURN -1 ELSE 0
  SECTION .text : CONST (2)
 QTRUE_NFA:
@@ -511,7 +508,7 @@ QTRUE_NFA:
 	DC8	'?TRU'
 	DC8	'E'+0x80
  ALIGNROM 2,0xFFFFFFFF
-	DC32	PSTATDACDATA_NFA
+	DC32	CS_ADC_NFA
 QTRUE:
 	DC32	.+5
  SECTION .text : CODE (2)
