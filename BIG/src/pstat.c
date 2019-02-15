@@ -84,12 +84,7 @@ void pstat_task(void * parm)
                     break;
 
                 case PSTAT_ON_REQ:
-                    if (cmd->CLI_COMMAND_data.Param1 < SW_INVALID)
-                    {
-                        LastSW = cmd->CLI_COMMAND_data.Param1;
-                    }
-
-                    SetPstatSwitches(LastSW);
+                    SetPstatSwitches(cmd->CLI_COMMAND_data.Param1);
                     break;
 
                 default:
@@ -114,6 +109,8 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
     ads1256_PowerUpInit();
 
     measurement->WE_Scale = CurrentScale;
+
+    measurement->SwitchState = LastSW;
 
     SetCurrentScale(measurement->WE_Scale);
 
@@ -163,9 +160,14 @@ bool SetCurrentScale( WE_Scale_t scale)
 void SetPstatSwitches(uint16_t SW)
 {
 
-    HAL_GPIO_WritePin(SW1_GPIO_Port, SW1_Pin, (SW & SW_1_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(SW2_GPIO_Port, SW2_Pin, (SW & SW_2_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(SW3_GPIO_Port, SW3_Pin, (SW & SW_3_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(SW4_GPIO_Port, SW4_Pin, (SW & SW_4_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    if (SW < SW_INVALID)
+    {
+        LastSW = SW;
+    }
+
+    HAL_GPIO_WritePin(SW1_GPIO_Port, SW1_Pin, (LastSW & SW_1_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(SW2_GPIO_Port, SW2_Pin, (LastSW & SW_2_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(SW3_GPIO_Port, SW3_Pin, (LastSW & SW_3_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(SW4_GPIO_Port, SW4_Pin, (LastSW & SW_4_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
