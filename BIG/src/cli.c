@@ -111,6 +111,10 @@ void cli_task(void * parm)
                 NumToDecimalString( msg->ADC_CONV_RESP_data.DAC_Setting, 8, temp, 24);
                 strcat(outp, temp);
 
+                strcat(outp, ", SW: ");
+                NumToDecimalString( msg->ADC_CONV_RESP_data.SwitchState, 8, temp, 24);
+                strcat(outp, temp);
+
                 strcat(outp, "\n\r");
 
                 vPortFree(PortMsg.data);
