@@ -1,11 +1,14 @@
 /*
 Should an error processed by EHON, ater its has gotten CO do a EHOFF?
 
+**Convert all stack comments to \ n --   \ comment, cause ( comment) conflicts**
+
+
 EMAC PSTAT1 Jumper settings:
 JU1,2 grounds BOOT0 & BOOT1 and both should be jumpered.
 JU3 I2C jumpered puts 5v on Pin 3 of the J2 I2C connector.
-JU5,6,7 USB1 (UART3) Power and signal routing are all jumpered.
-JU8,9 USB2 (UART2) all are jumpered.
+JU5,6,7 USB1  \UART3 Power and signal routing are all jumpered.
+JU8,9 USB2    \UART2 all are jumpered.
 JU10 JTAG Target Power, Jumpered = 3.3v on  Pin 1 of the JTAG Header.
 JU11 jumpered is 3.3v nRST. JU3 is ground so it should be unjumpered. 
 JU12 JTAG Dual use TDO or SCLK unjumpered for SWD.
@@ -48,7 +51,7 @@ not the repository. My local commits must be PUSH'd~!
 So I saved the old repo and will repopulate from there with care~!
 
 FIRST~!:
-Verifying all files match (old LOCAL repo and new clone)
+Verifying all files match \old LOCAL repo and new clone
 IN THE big-pstat branch I cloned.
 FISHv4th-OEM_branch_BIG-PSTAT in my Desktop.
 It is not where my copied directory of the last good is...
@@ -62,7 +65,7 @@ FUART_BRR_BAUD  //where FUART denotes FISH word vs user UART words.
 
 Deleted SOC_INIT test code that shows some of the bugs in 1.8 and OEM:
 /*
-//      SPI1_LED_TEST_BANNER:	( -- )
+//      SPI1_LED_TEST_BANNER:	\ --  \ 
  SECTION .text : CONST (2)
 SPI1_LED_TEST_BANNER_NFA:
     DC8	0x80 + 20
@@ -76,7 +79,7 @@ SPI1_LED_TEST_BANNER:
     DC32    SEMIS
 */
 /*
-//	?_SPI_LEDS_OFF:	( -- )
+//	?_SPI_LEDS_OFF:	\ --  \
  SECTION .text : CONST (2)
 ?_SPI1_LEDS_OFF_NFA:
     DC8	0x80 + 14
@@ -88,7 +91,7 @@ SPI1_LED_TEST_BANNER:
     DC32    DOCOL
     DC32    LIT, ?_SPI1_LEDS_OFF_$, NULLSTRLEN, TYPE
     DC32    SEMIS
-//  ?_SPI_DAC_LED_ON: ( -- )
+//  ?_SPI_DAC_LED_ON: \ --  \
  SECTION .text : CONST (2)
 ?_SPI1_DAC_LED_ON_NFA:
     DC8	0x80 + 16
@@ -101,7 +104,7 @@ Q_SPI_DAC_LED_ON:
     DC32    LIT, ?_SPI1_CS_DAC_LED_ON_$, NULLSTRLEN, TYPE
     DC32    SEMIS
 
-//  ?_SPI_BT_LED_ON: ( -- )
+//  ?_SPI_BT_LED_ON: \ --   \
  SECTION .text : CONST (2)
 ?_SPI1_BT_LED_ON_NFA:
     DC8	0x80 + 15
@@ -114,7 +117,7 @@ Q_SPI_BT_LED_ON:
     DC32    LIT, ?_SPI1_CS_BT_LED_ON_$, NULLSTRLEN, TYPE
     DC32    SEMIS
 
-//  ?_SPI_ADC_LED_ON: ( -- )
+//  ?_SPI_ADC_LED_ON: \ --  \
  SECTION .text : CONST (2)
 ?_SPI1_ADC_LED_ON_NFA:
     DC8	0x80 + 16
@@ -127,7 +130,7 @@ Q_SPI_ADC_LED_ON:
     DC32    LIT, ?_SPI1_CS_ADC_LED_ON_$, NULLSTRLEN, TYPE
     DC32    SEMIS
 
-//  ?_SPI_DAC_GND_INPUT_$: ( -- )
+//  ?_SPI_DAC_GND_INPUT_$: \ --   \
  SECTION .text : CONST (2)
 ?_SPI1_DAC_GND_INPUT_NFA:
     DC8	0x80 + 19
@@ -141,7 +144,7 @@ Q_SPI_DAC_GND_INPUT:
     DC32    SEMIS
 
 // ?YN ~ CONTROL THE key AND FLAG STACK RETURN
-// ?YN   ( key -- FLAG key FLAG: 0 FOR N AND -1 FOR Y key)
+// ?YN   \ key -- FLAG key FLAG: 0 FOR N AND -1 FOR Y key \
  SECTION .text : CONST (2)
 ?YN_NFA:
     DC8	0x80 + 3
@@ -151,7 +154,7 @@ Q_SPI_DAC_GND_INPUT:
     DC32	SPI1_LED_TEST_BANNER_NFA
 ?YN:
     DC32    DOCOL
-//    DC32    DUP                         // ( key -- )
+//    DC32    DUP                         // \ key --   \
     DC32    DUP, TOR                    // ( key -- )
     DC32    LIT, 0059h, EQUAL           // ( key FLAG -- )
     DC32    RFROM, LIT, 004Eh, EQUAL    // ( key FLAG FLAG -- )

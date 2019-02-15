@@ -11,6 +11,9 @@
  ALIGNROM 2,0xFFFFFFFF
  PUBLIC STM32Fx_COLD_FISH
  PUBLIC  __iar_program_start
+ 
+ // cspi 1 disable interrupts until system init done.
+ 
 // MAIN() entry point defined by 
 //#define USE_CMAIN     // Affects cstartup_M.c STM32Fx_COLD_FISH and FISH_return2c
 // To call FISH use the  STM32Fx_COLD_FISH: entry point
@@ -110,6 +113,8 @@ ssNEXT1:
 FMx_SYSTICK_ISR:
 // Start of the working asm isr-------------------------------------------------
 // save what you use
+// All asm ISR's should be .weak, and a c version can be named the same~!
+// and all isr's should use DMB to maintaing atomic access.
   PUSH  { t, n, lr}
   LDR   n, = STICKER
   LDR   t, [n]

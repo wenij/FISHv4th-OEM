@@ -1,6 +1,7 @@
 // FISH_SPI_WC.h
-/* File include explains how to make a new WORDCAT:
-How to make it the current TOP of the Dictionary:
+/* 
+How to make a new WORDCAT:
+Make it the current TOP of the Dictionary:
 $WORDCAT HowTo.txt
 */
 //=============================== SPI WORDs =================================//
@@ -85,7 +86,7 @@ PSTATDACDATA_NFA:
 PSTATDACDATA:
   DC32    DOCON, PSTAT_DAC_DATA
 
-/*  MOVE DACWORD AND  DACW ABOVE HERE~!
+/*  MOVE DACWORD AND DACW ABOVE HERE~!
 OVR?	( -- ON|OFF ) return flag 0N = overflow true
  SPI3-SR @ 080h AND ?TRUE
 */
@@ -102,9 +103,11 @@ OVR_QUSTION:									//
         LDR     n, =SPI3_SR     // n_r1
         LDR     t, [n]          // t_r0,
 // CMP IS NOT ALWAYS GONNA WORK~! SHIFT OUT TO FLAG OR BIT TEST~!
-//        CMP     t, #80h         // OVR = 1  = Bit 6
-        ANDS    t, t, #80h        // RXNE = 1 RCV BUFFER FULL = Bit 0
-        BEQ     OVR_TRUE
+//        CMP     t, #40h         // OVR = 1  = Bit 6
+        ANDS    t, t, #40h        // RXNE = 1 RCV BUFFER FULL = Bit 0
+        BNE     OVR_TRUE
+//        LSRS    t, t, #7
+//        BCS     OVR_TRUE
 // ULTIMATELY WANT COUNTED OR TIMED OUTS
         EORS	t, t, t         // t_r0, XERO T
         TPUSH_r0
@@ -138,7 +141,7 @@ BEGIN_TILDA_RXNE:
 // CMP IS NOT ALWAYS GONNA WORK~! SHIFT OUT TO FLAG OR BIT TEST~!
 //        CMP     t, #1           // RXNE = 1 RCV BUFFER FULL = Bit 0
         ANDS    t, t, #1        // RXNE = 1 RCV BUFFER FULL = Bit 0
-        BNE     BEGIN_TILDA_RXNE
+        BEQ     BEGIN_TILDA_RXNE
         NEXT
 
 // Commit literal constants to pool to be copied!
@@ -164,7 +167,7 @@ BEGIN_TILDA_TXE:
 // CMP IS NOT ALWAYS GONNA WORK~! SHIFT OUT TO FLAG OR BIT TEST~!
 //        CMP     t, #2           // TXE = 1 TX BUFFER EMPTY = Bit 1
         ANDS    t, t, #2        // RXNE = 1 RCV BUFFER FULL = Bit 0
-        BNE     BEGIN_TILDA_TXE
+        BEQ     BEGIN_TILDA_TXE
         NEXT
 
 // Commit literal constants to pool to be copied!
