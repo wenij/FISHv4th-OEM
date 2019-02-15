@@ -9,8 +9,10 @@
 
 #ifdef STM32F205xx
 #include "stm32f2xx_hal.h"
+#include "stm32f2xx_hal_gpio.h"
 #else
 #include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_gpio.h"
 #endif
 
 #include <string.h>
