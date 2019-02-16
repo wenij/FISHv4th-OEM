@@ -218,7 +218,6 @@ void CliInfoPending(void)
 	InfoPending = true;
 }
 
-static const char * OkMsg = "OK\n\r";
 
 #define MAX_NUM_PARAMS 8
 static uint32_t parameter_list[MAX_NUM_PARAMS];
@@ -226,10 +225,25 @@ static uint32_t parameter_list[MAX_NUM_PARAMS];
 
 static int CliParseParameterString(int offset);
 
+static void SendOK(void)
+{
+    static const char * OkMsg = "OK\n\r";
+
+    HAL_UART_Transmit(cli_uart, (uint8_t*)OkMsg, strlen(OkMsg), 100);
+}
+
+static void SendErr(void)
+{
+    static const char * ErrMsg = "ERR\n\r";
+
+    HAL_UART_Transmit(cli_uart, (uint8_t*)ErrMsg, strlen(ErrMsg), 100);
+}
+
 void CliParseCommand(void)
 {
     int length = cli_uart->RxXferCount;
     int num_args = 0;
+    bool OK = false;
 
     if (length <= 0)  return;
 
@@ -248,6 +262,8 @@ void CliParseCommand(void)
         CliSendCmd(PSTAT_MEASUREMENT_REQ, parm, pstat_Queue);
 
         vPortFree(UartRxBuffer);
+
+        OK = true;
     }
     else if (strncmp("pson", (const char*)UartRxBuffer, 4) == 0)
     {
@@ -264,34 +280,43 @@ void CliParseCommand(void)
         CliSendCmd(PSTAT_ON_REQ, parm, pstat_Queue);
 
         vPortFree(UartRxBuffer);
+
+        OK = true;
     }
-    else if (strncmp("cal", (const char*)UartRxBuffer, 4) == 0)
+    else if (strncmp("cal", (const char*)UartRxBuffer, 3) == 0)
     {
         // Run self calibration
         CliSendCmd(PSTAT_CAL_REQ, 0, pstat_Queue);
 
         vPortFree(UartRxBuffer);
+
+        OK = true;
     }
-    else if (strncmp("sio", (const char*)UartRxBuffer, 3) == 0)
+    else if (strncmp("sio ", (const char*)UartRxBuffer, 4) == 0)
     {
-        char * p;
-        int i = 3;  // Length of "sio"
+        int i = 4;  // Length of "sio"
 
-        p = (char*)UartRxBuffer + i;
-
-        while ( p[i] == ' ')
+        while ( UartRxBuffer[i] == ' ')
         {
             i++;
         }
 
-        if (p[i] != 0)
+        if (UartRxBuffer[i] != 0)
         {
             /// Send All text just received to the smartIO interface
-            CliSendTextMsgNoCopy( &p[i], SifQueue);
+            CliSendTextMsg( (char*)&UartRxBuffer[i], SifQueue);
 
-            // Send OK
-            HAL_UART_Transmit(cli_uart, (uint8_t*)OkMsg, length, 100);
+            OK = true;
         }
+    }
+
+    if (OK)
+    {
+        SendOK();
+    }
+    else
+    {
+        SendErr();
     }
 
 }
