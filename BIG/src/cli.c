@@ -18,6 +18,8 @@ QueueHandle_t CliDataQueue;
 static uint8_t * UartRxBuffer;
 #define UART_RX_BUF_SIZE 128
 
+static bool HexOutput = true;  // output mode
+
 static bool InfoPending=false;
 
 static void CliParseCommand(void);
@@ -76,43 +78,44 @@ void cli_task(void * parm)
             else if (PortMsg.Type == CLI_MEASUREMENT_RESP)
             {
                 int bufSize = 300;
+                int tempSize = 24;
                 CliMsgContainer* msg = (CliMsgContainer*)PortMsg.data;
 
                 char * outp = (char*)pvPortMalloc(bufSize);
-                char * temp = (char*)pvPortMalloc(24);
+                char * temp = (char*)pvPortMalloc(tempSize);
 
                 *outp = 0;  // Null terminating the buffer
 
                 strcat(outp, "  ADC_WE: ");
-                NumToDecimalString( msg->ADC_CONV_RESP_data.ADC_WE, 8, temp, 24);
+                NumToString( msg->ADC_CONV_RESP_data.ADC_WE, 8, temp, tempSize, HexOutput);
                 strcat(outp, temp);
 
                 strcat(outp, ", ADC_RE: ");
-                NumToDecimalString( msg->ADC_CONV_RESP_data.ADC_RE, 8, temp, 24);
+                NumToString( msg->ADC_CONV_RESP_data.ADC_RE, 8, temp, tempSize, HexOutput);
                 strcat(outp, temp);
 
                 strcat(outp, ", ADC_DAC_RE: ");
-                NumToDecimalString( msg->ADC_CONV_RESP_data.ADC_DAC_RE, 8, temp, 24);
+                NumToString( msg->ADC_CONV_RESP_data.ADC_DAC_RE, 8, temp, tempSize, HexOutput);
                 strcat(outp, temp);
 
                 strcat(outp, ", REF_1_3rd: ");
-                NumToDecimalString( msg->ADC_CONV_RESP_data.VREF_1_3rd, 8, temp, 24);
+                NumToString( msg->ADC_CONV_RESP_data.VREF_1_3rd, 8, temp, tempSize, HexOutput);
                 strcat(outp, temp);
 
                 strcat(outp, ", REF_2_3rd: ");
-                NumToDecimalString( msg->ADC_CONV_RESP_data.VREF_2_3rd, 8, temp, 24);
+                NumToString( msg->ADC_CONV_RESP_data.VREF_2_3rd, 8, temp, tempSize, HexOutput);
                 strcat(outp, temp);
 
                 strcat(outp, ", Scale: ");
-                NumToDecimalString( msg->ADC_CONV_RESP_data.WE_Scale, 8, temp, 24);
+                NumToString( msg->ADC_CONV_RESP_data.WE_Scale, 8, temp, tempSize, HexOutput);
                 strcat(outp, temp);
 
                 strcat(outp, ", DAC: ");
-                NumToDecimalString( msg->ADC_CONV_RESP_data.DAC_Setting, 8, temp, 24);
+                NumToString( msg->ADC_CONV_RESP_data.DAC_Setting, 8, temp, tempSize, HexOutput);
                 strcat(outp, temp);
 
                 strcat(outp, ", SW: ");
-                NumToDecimalString( msg->ADC_CONV_RESP_data.SwitchState, 8, temp, 24);
+                NumToString( msg->ADC_CONV_RESP_data.SwitchState, 8, temp, tempSize, HexOutput);
                 strcat(outp, temp);
 
                 strcat(outp, "\n\r");
@@ -308,6 +311,41 @@ void CliParseCommand(void)
 
             OK = true;
         }
+    }
+    else if (strncmp("dec", (const char*)UartRxBuffer, 3) == 0)
+    {
+        // output format is decimal
+        HexOutput = false;
+
+        vPortFree(UartRxBuffer);
+
+        OK = true;
+    }
+    else if (strncmp("hex", (const char*)UartRxBuffer, 3) == 0)
+    {
+        // output format is hex
+        HexOutput = true;
+
+        vPortFree(UartRxBuffer);
+
+        OK = true;
+    }
+    else if (strncmp("ver", (const char*)UartRxBuffer, 3) == 0)
+    {
+        // Version number
+        char * temp = (char*)pvPortMalloc(32);
+
+        temp[0] = 0;
+
+        strcat(temp, "Version: ");
+        strcat(temp, VERSION);
+        strcat(temp, "\n\r");
+        HAL_UART_Transmit(cli_uart, (uint8_t*)temp, strlen(temp), 100);
+
+        vPortFree(UartRxBuffer);
+        vPortFree(temp);
+
+        OK = true;
     }
 
     if (OK)

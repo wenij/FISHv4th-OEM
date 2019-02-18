@@ -5,9 +5,26 @@
  *      Author: carstenh
  */
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include "util.h"
+
+
+static void NumToHexString( uint32_t value, int numbytes, char * output, uint32_t buffer_size);
+static void NumToDecimalString( uint32_t value, int numbytes, char * output, uint32_t buffer_size);
+
+void NumToString( uint32_t value, int numbytes, char * output, uint32_t buffer_size, bool Hex)
+{
+    if (Hex)
+    {
+        NumToHexString(value, numbytes, output, buffer_size);
+    }
+    else
+    {
+        NumToDecimalString(value, numbytes, output, buffer_size);
+    }
+}
 
 void NumToHexString( uint32_t value, int numbytes, char * output, uint32_t buffer_size)
 {

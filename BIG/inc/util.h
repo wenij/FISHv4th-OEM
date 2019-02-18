@@ -14,37 +14,23 @@
  extern "C" {
 #endif
 
-/*
- *  NumToHexString
- *    Converts a numeric value to a hexadecimal string
- *
- *  Parameters
- *    input value
- *    numbytes Number of bytes
- *    Pointer to buffer in which the output should be placed
- *    Size of buffer
- *
- *  Returns
- *    Nothing
- */
 
-extern void NumToHexString( uint32_t value, int numbytes, char * output, uint32_t buffer_size);
+ /*
+  *  NumToString
+  *    Converts a numeric value to a string
+  *
+  *  Parameters
+  *    input value
+  *    numbytes Number of bytes
+  *    Pointer to buffer in which the output should be placed
+  *    Size of buffer
+  *    Hex - true if output should be hexadecimal. false will result in a decimal conversion
+  *
+  *  Returns
+  *    Nothing
+  */
 
-
-/*
- *  NumToDecimalString
- *    Converts a numeric value to a decimal string
- *
- *  Parameters
- *    input value
- *    numbytes size in bytes
- *    Pointer to buffer in which the output should be placed
- *    Size of buffer
- *
- *  Returns
- *    Nothing
- */
-extern void NumToDecimalString( uint32_t value, int numbytes, char * output, uint32_t buffer_size);
+ extern void NumToString( uint32_t value, int numbytes, char * output, uint32_t buffer_size, bool Hex);
 
 
 
