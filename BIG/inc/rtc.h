@@ -54,7 +54,12 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#ifdef STM32F205xx
 #include "stm32f2xx_hal.h"
+#else
+#include "stm32f4xx_hal.h"
+#endif
+
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
