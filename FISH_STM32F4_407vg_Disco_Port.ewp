@@ -3064,6 +3064,12 @@
         </settings>
     </configuration>
     <file>
+        <name>$PROJ_DIR$\Cartens adc code.c</name>
+        <excluded>
+            <configuration>FISHv4th 205 PSTAT</configuration>
+        </excluded>
+    </file>
+    <file>
         <name>$PROJ_DIR$\FISH_STM32F4_IAR.s</name>
     </file>
     <file>
@@ -3083,7 +3089,19 @@
         </excluded>
     </file>
     <file>
+        <name>$PROJ_DIR$\PSTAT_FISH_UNIT_TEST.txt</name>
+        <excluded>
+            <configuration>FISHv4th 205 PSTAT</configuration>
+        </excluded>
+    </file>
+    <file>
         <name>$PROJ_DIR$\startup_stm32f4xx.s</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\Switch Settings.txt</name>
+        <excluded>
+            <configuration>FISHv4th 205 PSTAT</configuration>
+        </excluded>
     </file>
     <file>
         <name>$PROJ_DIR$\WORDCAT HowTo.txt</name>
