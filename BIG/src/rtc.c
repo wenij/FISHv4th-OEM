@@ -47,6 +47,8 @@
   ******************************************************************************
   */
 
+#ifdef STM32F205xx
+
 /* Includes ------------------------------------------------------------------*/
 #include "rtc.h"
 
@@ -119,5 +121,7 @@ void HAL_RTC_MspDeInit(RTC_HandleTypeDef* rtcHandle)
 /**
   * @}
   */
+
+#endif
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
