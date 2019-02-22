@@ -377,7 +377,7 @@ PC9     SWITCH4         is active high.
 PC8     SWITCH3         is active high.
 PC7     SWITCH2         is active high.
 PC6     SWITCH1         is active high.
-PC5     ADC_DATA_READY  is actve high.
+PC5     ADC_DATA_READY  is actve high, AND IS A INPUT.
 PC4
 PC3
 PC2     GAIN_SWITCH2    is active low.
@@ -394,7 +394,9 @@ FOR PSTAT init add pc0-pc9 init here
 
 // Good MODER sets GAIN-S0-S2 and SW1-SW4 high AND LEAVES UART3 (PC10/11) ALONE
 // This MODER ONLY sets GAIN-S0-S2 and SW1-SW4 high: 055415h
-  DC32  LIT, GPIOC_MODER, LIT, 055415h, SETBITS
+//  DC32  LIT, GPIOC_MODER, LIT, 055415h, SETBITS
+// 055015 MAKES ADC DRDYn AN INPUT.
+  DC32  LIT, GPIOC_MODER, LIT, 055015h, SETBITS
 
 // CUBE SET THIS
   DC32  LIT, GPIOC_OSPEEDR, LIT, 00F00000h, SETBITS

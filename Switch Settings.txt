@@ -11,6 +11,8 @@ SW3 ON ADDS ADC-RE TO DAC-OUT AND IS GATED BY SW1 TO CE
 SW3 OFF
 
 SW4 ON ROUTES WE TO ADC-WE THRU THE GAIN SWITCH MATRIX
+  - ADC Reset is non differential input into AIN0 with AIN 1 grounded.
+  - A default power test can be derived.
 SW4 OFF WE IS NOT CONNECTED THRU THE GAIN SWITCH MATRIX
 
 
