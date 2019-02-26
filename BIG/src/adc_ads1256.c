@@ -62,6 +62,11 @@ static void StartConversion(void);
 
      SendReceiveSPI(buf, 3, &rxbuf, 0);   // Send ad control register expecting no response.
 
+     // Set Sample rate to 1000 SPS.
+     //buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_DRATE_REGISTER);
+     //buf[1] = 0;  // Number of registers - 1
+     //buf[2] = set_ADS1256_DRATE(ADS1256_DRATE_1000);   // 1000 SPS
+
  }
 
 
