@@ -118,7 +118,7 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
 
     AD5662_Set(DACvalue);
 
-    TimDelayMicroSeconds(1000);  // Allow dac to settle
+    TimDelayMicroSeconds(2000);  // Allow dac to settle
 
     measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, 1);
 
@@ -129,6 +129,8 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
     measurement->VREF_2_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_5, 1);
 
     measurement->VREF_1_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_6, 1);
+
+    //measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, 1);
 
 
     return(ret);

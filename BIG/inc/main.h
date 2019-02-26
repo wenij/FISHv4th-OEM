@@ -52,7 +52,7 @@
 /* USER CODE BEGIN Includes */
 
 //#define CARSTENS_BOARD      // Hacked up board with MISO re-routed and USART3 disabled
-#define VERSION "cah_v1.6"
+#define VERSION "cah_v1.7"
 
 // OS Messaging Queues. They are defined in the respective task source files but references are collated here for simplicity
 extern QueueHandle_t SpiSmartIoQueue;	// Queue for SmartIO task SPI interface (separate from others)

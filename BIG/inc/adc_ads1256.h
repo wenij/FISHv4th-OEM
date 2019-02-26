@@ -220,8 +220,8 @@ extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, uint16_t average
 #define ADS1256_DRATE_5      0x13
 #define ADS1256_DRATE_2p5    0x03
 
-#define set_ADS1256_DRATE (_val) (_val)
-#define get_ADS1256_DRATE (_val) (_val)
+#define set_ADS1256_DRATE(_val) (_val)
+#define get_ADS1256_DRATE(_val) (_val)
 
  // Register 4 GPIO Control Register
 #define ADS1256_GPIO_REGISTER 4
