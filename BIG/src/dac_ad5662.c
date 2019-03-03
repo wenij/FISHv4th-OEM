@@ -48,6 +48,11 @@ bool SendSPI(AD5662_MODE mode, uint16_t dac)
      if (xQueueReceive( DAC_Queue, (void*)&Msg, 100 ))
      {
          ret= true;
+
+         if (Msg.data != NULL)
+         {
+             vPortFree(Msg.data);
+         }
      }
 
      return(ret);

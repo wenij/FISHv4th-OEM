@@ -124,7 +124,7 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
 
     measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, 1);
 
-    measurement->ADC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_4, 1);  // Neg is same as above.
+    measurement->ADC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_4, 1);
 
     measurement->VREF_2_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_5, 1);
 
@@ -138,12 +138,27 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
 
 bool CalibratePstat(void)
 {
+    bool ret = true;
+
+    ads1256_PowerUpInit();
+
+    // Set switches
+    SetPstatSwitches(SW_2_ENABLE | SW_3_ENABLE);
+
+    ret &= AD5662_Set(0x8000); // 0 reading
+
+    TimDelayMicroSeconds (2000);  // Allow dac to settle
 
     // Set switches and DAC
-    ads1256_SelfCal();
+    ret &= ads1256_Cal(CAL_OFFSET);
 
-    //
-    return(true);
+    ret &= AD5662_Set(0xFFFF); // Max
+
+    TimDelayMicroSeconds (2000);  // Allow dac to settle
+
+    ret &= ads1256_Cal(CAL_GAIN);
+
+    return(ret);
 }
 
 

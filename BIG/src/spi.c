@@ -455,6 +455,9 @@ void SPI_SendData(MessageType Id, uint16_t length,  uint16_t reply_length, uint8
         if (length > 0)
         {
             msg_p->data = pvPortMalloc(msg_p->buf_size);
+
+            configASSERT(msg_p->data != NULL);
+
             memcpy(msg_p->data, data, length);
         }
         else

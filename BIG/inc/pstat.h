@@ -15,14 +15,14 @@
  /* WE scale settings */
  typedef enum
  {
-     WE_SCALE_316_nA = 1,
-     WE_SCALE_1_uA = 2,
-     WE_SCALE_3p16_uA = 3,
-     WE_SCALE_10_uA = 4,
-     WE_SCALE_31p6_uA = 5,
-     WE_SCALE_100_uA = 6,
-     WE_SCALE_316_uA = 7,
-     WE_SCALE_UNITY = 8
+     WE_SCALE_316_nA = 0,
+     WE_SCALE_1_uA = 1,
+     WE_SCALE_3p16_uA = 2,
+     WE_SCALE_10_uA = 3,
+     WE_SCALE_31p6_uA = 4,
+     WE_SCALE_100_uA = 5,
+     WE_SCALE_316_uA = 6,
+     WE_SCALE_UNITY = 7
  } WE_Scale_t;
 
  // Switch Settings

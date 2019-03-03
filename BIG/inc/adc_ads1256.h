@@ -99,18 +99,24 @@ extern void ads1256_SetPGA( ads1256_pga_t gain );
 extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, uint16_t averages);
 
 
+typedef enum
+{
+    CAL_OFFSET,
+    CAL_GAIN
+} ads1256_cal_type_t;
+
  /*
-  * SelfCal
+  * ads1256_Cal
   *
-  * Perform Self Calibration
+  * Perform Calibration
   * Parameters:
   *    None
   *
   * Return Value:
-  *    true if test passes
-  *    false if test failed
+  *    true if calibration succeeds
+  *    false if calibration failed
   */
- extern bool ads1256_SelfCal( void );
+ extern bool ads1256_Cal( ads1256_cal_type_t );
 
 /*
  * Device Commands

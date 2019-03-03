@@ -17,7 +17,7 @@
  * Local Functions and type definitions
  */
 
-static uint16_t SendReceiveSPI( uint8_t * TxData, uint16_t TxLength, uint8_t **RxData, uint16_t RxLength);
+static uint16_t SendReceiveSPI( uint8_t * TxData, uint16_t TxLength, uint8_t *RxData, uint16_t RxLength);
 static bool WaitForDataReady(GPIO_PinState value);
 static void StartConversion(void);
 
@@ -38,7 +38,7 @@ static void StartConversion(void);
  void ads1256_PowerUpInit( void )
  {
      uint8_t buf[3];
-     uint8_t * rxbuf;
+     uint8_t rxbuf[4];
 
      // Reset the ADC by pulsing the Reset Line.
      HAL_GPIO_WritePin(ADC_RSTn_GPIO_Port, ADC_RSTn_Pin, GPIO_PIN_RESET);    // ADC Reset Pin
@@ -53,19 +53,16 @@ static void StartConversion(void);
      buf[1] = 0;  // Number of registers - 1
      buf[2] = ADS1256_STATUS_BUFEN;
 
-     SendReceiveSPI(buf, 3, &rxbuf, 0);   // Send status register expecting no response.
+     SendReceiveSPI(buf, 3, rxbuf, 0);   // Send status register expecting no response.
 
      // Set PGA to 2
-     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_ADCON_REGISTER);
+     ads1256_SetPGA(ADS1256_PGA_2);
+
+
+     // Set Sample rate to 1000 SPS. Reduces noise vs 30 kSPS which is the default
+     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_DRATE_REGISTER);
      buf[1] = 0;  // Number of registers - 1
-     buf[2] = set_ADS1256_PGA(1);   // PGA=2
-
-     SendReceiveSPI(buf, 3, &rxbuf, 0);   // Send ad control register expecting no response.
-
-     // Set Sample rate to 1000 SPS.
-     //buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_DRATE_REGISTER);
-     //buf[1] = 0;  // Number of registers - 1
-     //buf[2] = set_ADS1256_DRATE(ADS1256_DRATE_1000);   // 1000 SPS
+     buf[2] = set_ADS1256_DRATE(ADS1256_DRATE_1000);   // 1000 SPS
 
  }
 
@@ -99,7 +96,14 @@ static void StartConversion(void);
 
  void ads1256_SetPGA( ads1256_pga_t gain )
  {
-     // TBD
+     uint8_t buf[3];
+     uint8_t rxbuf[4];
+
+     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_ADCON_REGISTER);
+     buf[1] = 0;  // Number of registers - 1
+     buf[2] = set_ADS1256_PGA(1);   // PGA=2
+
+     SendReceiveSPI(buf, 3, rxbuf, 0);   // Send ad control register expecting no response.
  }
 
  /*
@@ -120,7 +124,7 @@ int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, uint16_t averages)
     bool Continue = false;
     int32_t ret = 0;
     uint8_t buf[3];
-    uint8_t * rxbuf;
+    uint8_t rxbuf[4];
 
     // Initialize
     // Make sure DRDY is high
@@ -142,7 +146,7 @@ int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, uint16_t averages)
     //buf[2] = set_ADS1256_MUX_PSEL(Pchannel) | set_ADS1256_MUX_NSEL(ADS1256_CHANNEL_AINCOM);
     buf[2] = set_ADS1256_MUX_PSEL(ADS1256_CHANNEL_AINCOM) | set_ADS1256_MUX_NSEL(Pchannel);
 
-    SendReceiveSPI(buf, 3, &rxbuf, 0);   // Send mux select expecting no response.
+    SendReceiveSPI(buf, 3, rxbuf, 0);   // Send mux select expecting no response.
 
     // Start conversion.
     StartConversion();
@@ -154,24 +158,21 @@ int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, uint16_t averages)
     if (Continue)
     {
         uint32_t temp;
+        int rxlen;
 
         buf[0] = ADS1256_READ_DATA;
 
-        SendReceiveSPI(buf, 1, &rxbuf, 3);   // Send Read Data expecting a 3 byte response.
+        rxlen = SendReceiveSPI(buf, 1, rxbuf, 3);   // Send Read Data expecting a 3 byte response.
 
-        if (rxbuf != NULL)
+        if (rxlen == 3)
         {
             // The extra byte shift gets the sign bit in the right position
             temp = ( ((uint32_t)rxbuf[0]) << 24) | ( ((uint32_t)rxbuf[1]) << 16) | ((uint32_t)(rxbuf[0]) << 8);
 
             ret = (int32_t)temp / 256;   // takes care of sign extension
 
-            ret = -ret; // Flip the sign because if I measure with the reference in the Neg spot, it
-
-            vPortFree(rxbuf);
+            ret = -ret; // Flip the sign because if I measure with the reference in the Neg spot, it produces strange results.
         }
-
-
     }
 
     return(ret);
@@ -179,19 +180,53 @@ int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, uint16_t averages)
 
 
 /*
- * SelfCal
+ * ads1256_Cal
  *
- * Perform Self Calibration
+ * Perform Calibration
  * Parameters:
- *    None
+ *    Offset or Gain
  *
  * Return Value:
- *    true if test passes
- *    false if test failed
+ *    true if calibration succeeds
+ *    false if calibration failed
  */
-bool ads1256_SelfCal( void )
+bool ads1256_Cal( ads1256_cal_type_t calType)
 {
- return(false);
+    bool ret;
+    uint8_t buf[3];
+    uint8_t rxbuf[4];
+
+    ret = WaitForDataReady(1);
+
+    if (ret)
+    {
+        // Configure the appropriate channel
+        buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_MUX_REGISTER);
+        buf[1] = 0;  // Number of registers - 1
+        buf[2] = set_ADS1256_MUX_PSEL(ADS1256_CHANNEL_AINCOM) | set_ADS1256_MUX_NSEL(ADS1256_CHANNEL_0);
+
+        SendReceiveSPI(buf, 3, rxbuf, 0);   // Send ad control register expecting no response.
+
+        // Issue the calibration command
+        if (calType == CAL_OFFSET)
+        {
+            buf[0] = ADS1256_SELFCAL_SYSTEMOFFSET;
+        }
+        else
+        {
+            buf[0] = ADS1256_SELFCAL_SYSTEMGAIN;
+        }
+        SendReceiveSPI(buf, 1, rxbuf, 0);   // Send ad control register expecting no response.
+
+
+        TimDelayMicroSeconds(200);
+
+        ret = WaitForDataReady(10);
+
+    }
+
+    return(ret);
+
 }
 
  /****************************************
@@ -213,7 +248,7 @@ bool ads1256_SelfCal( void )
   * Return Value:
   *    Number of bytes received
   */
- uint16_t SendReceiveSPI( uint8_t * TxData, uint16_t TxLength, uint8_t **RxData, uint16_t RxLength)
+ uint16_t SendReceiveSPI( uint8_t * TxData, uint16_t TxLength, uint8_t *RxData, uint16_t RxLength)
  {
      uint16_t ret = 0;
      Message_t Msg;
@@ -227,15 +262,21 @@ bool ads1256_SelfCal( void )
 
          if (SpiMsg->rx_length > 0)
          {
-             *RxData = SpiMsg->data;
              ret = RxLength;
-         }
-         else
-         {
-             *RxData = NULL;
+             if (SpiMsg->rx_length < RxLength)
+             {
+                 ret = SpiMsg->rx_length;
+             }
+             memcpy( RxData, SpiMsg->data, ret);
+
          }
 
+         if (SpiMsg->data != NULL)
+         {
+             vPortFree(SpiMsg->data);
+         }
          vPortFree(SpiMsg);
+
      }
 
      return(ret);
