@@ -164,18 +164,6 @@ void CliSendTextMsg(char * text, QueueHandle_t * queue)
 	xQueueSend( queue, &Msg, 0 );
 }
 
-void CliSendTextMsgNoCopy(char * text, QueueHandle_t * queue)
-{
-    Message_t Msg;
-    CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
-
-    Msg.data = (uint8_t*)payload;
-    Msg.Type = CLI_TEXT_MESSAGE;
-
-    payload->CLI_MESSAGE_data = text;
-
-    xQueueSend( queue, &Msg, 0 );
-}
 
 void CliSendCmdResp(CliCommandId CmdId, uint32_t data)
 {
@@ -264,8 +252,6 @@ void CliParseCommand(void)
         // Perform a measurement
         CliSendCmd(PSTAT_MEASUREMENT_REQ, parm, pstat_Queue);
 
-        vPortFree(UartRxBuffer);
-
         OK = true;
     }
     else if (strncmp("pson", (const char*)UartRxBuffer, 4) == 0)
@@ -282,16 +268,12 @@ void CliParseCommand(void)
         // Set PSTAT switches according to parm
         CliSendCmd(PSTAT_ON_REQ, parm, pstat_Queue);
 
-        vPortFree(UartRxBuffer);
-
         OK = true;
     }
     else if (strncmp("cal", (const char*)UartRxBuffer, 3) == 0)
     {
         // Run self calibration
         CliSendCmd(PSTAT_CAL_REQ, 0, pstat_Queue);
-
-        vPortFree(UartRxBuffer);
 
         OK = true;
     }
@@ -317,8 +299,6 @@ void CliParseCommand(void)
         // output format is decimal
         HexOutput = false;
 
-        vPortFree(UartRxBuffer);
-
         OK = true;
     }
     else if (strncmp("hex", (const char*)UartRxBuffer, 3) == 0)
@@ -326,9 +306,24 @@ void CliParseCommand(void)
         // output format is hex
         HexOutput = true;
 
-        vPortFree(UartRxBuffer);
-
         OK = true;
+    }
+    else if (strncmp("run ", (const char*)UartRxBuffer, 4) == 0)
+    {
+        num_args = CliParseParameterString(4);
+
+        if (num_args >= 1)
+        {
+            OK = true;
+
+            CliSendCmd(PSTAT_RUN_REQ, parameter_list[0], pstat_Queue);
+        }
+    }
+    else if (strncmp("end", (const char*)UartRxBuffer, 3) == 0)
+    {
+        OK = true;
+
+        CliSendCmd(PSTAT_CANCEL_REQ, 0, pstat_Queue);
     }
     else if (strncmp("ver", (const char*)UartRxBuffer, 3) == 0)
     {
@@ -342,11 +337,12 @@ void CliParseCommand(void)
         strcat(temp, "\n\r");
         HAL_UART_Transmit(cli_uart, (uint8_t*)temp, strlen(temp), 100);
 
-        vPortFree(UartRxBuffer);
         vPortFree(temp);
 
         OK = true;
     }
+
+    vPortFree(UartRxBuffer);
 
     if (OK)
     {
