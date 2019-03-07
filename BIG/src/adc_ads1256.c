@@ -10,6 +10,7 @@
 #include "stm32f4xx_hal.h"
 #endif
 #include "adc_ads1256.h"
+#include <string.h>
 
 #include "spi.h"
 #include "tim.h"
@@ -30,12 +31,12 @@ static void StartConversion(void);
   *
   * Reset and power up the ADC
   * Parameters:
-  *    None
+  *    Input buffer enabled
   *
   * Return Value:
   *    None
   */
- void ads1256_PowerUpInit( void )
+ void ads1256_PowerUpInit( bool buffer_enable )
  {
      uint8_t buf[3];
      uint8_t rxbuf[4];
@@ -51,7 +52,7 @@ static void StartConversion(void);
      // Enable input buffer
      buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_STATUS_REGISTER);
      buf[1] = 0;  // Number of registers - 1
-     buf[2] = ADS1256_STATUS_BUFEN;
+     buf[2] = buffer_enable ? ADS1256_STATUS_BUFEN : 0;
 
      SendReceiveSPI(buf, 3, rxbuf, 0);   // Send status register expecting no response.
 
@@ -119,7 +120,7 @@ static void StartConversion(void);
   * Return Value:
   *    Measured Value
   */
-int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, uint16_t averages)
+int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel, uint16_t averages)
 {
     bool Continue = false;
     int32_t ret = 0;
@@ -143,8 +144,8 @@ int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, uint16_t averages)
     // Configure the appropriate channel
     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_MUX_REGISTER);
     buf[1] = 0;  // Number of registers - 1
-    //buf[2] = set_ADS1256_MUX_PSEL(Pchannel) | set_ADS1256_MUX_NSEL(ADS1256_CHANNEL_AINCOM);
-    buf[2] = set_ADS1256_MUX_PSEL(ADS1256_CHANNEL_AINCOM) | set_ADS1256_MUX_NSEL(Pchannel);
+    buf[2] = set_ADS1256_MUX_PSEL(Pchannel) | set_ADS1256_MUX_NSEL(Nchannel);
+    //buf[2] = set_ADS1256_MUX_PSEL(ADS1256_CHANNEL_AINCOM) | set_ADS1256_MUX_NSEL(Pchannel);
 
     SendReceiveSPI(buf, 3, rxbuf, 0);   // Send mux select expecting no response.
 
@@ -171,7 +172,6 @@ int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, uint16_t averages)
 
             ret = (int32_t)temp / 256;   // takes care of sign extension
 
-            ret = -ret; // Flip the sign because if I measure with the reference in the Neg spot, it produces strange results.
         }
     }
 

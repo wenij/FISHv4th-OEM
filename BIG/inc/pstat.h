@@ -35,6 +35,8 @@
      SW_INVALID = 0x10
  } SW_State_t;
 
+#define ADC_NOT_PRESENT 0x08000000
+
  /* Structure containing one data point */
  typedef struct
  {
@@ -46,7 +48,40 @@
      int32_t ADC_RE;
      int32_t VREF_1_3rd;
      int32_t VREF_2_3rd;
+     int32_t TestMeasurement;
  } pstatMeasurement_t;
+
+#define SET_PSTAT_COMMAND(_dest,_val) (_dest) = (((_dest) & 0x0000FFFF) | ((uint32_t)((_val) << 16)))
+#define GET_PSTAT_COMMAND(_val) ((_val) >> 16)
+
+ // Test command structure for meas test command PSTAT_MEASUREMENT_REQ
+ // 0000xxxx 00000000   // Set DAC and measure all data
+ // 00010000 00000000   // Measure all data using existing settings
+ // 0002xxxx ppnnbb00   // Set DAC and measure only channels designated by P and N (AINP and AINN) using input buffer state B
+#define PSTAT_MEASURE_ALL 0
+#define PSTAT_MEASURE_REPEAT 1
+#define PSTAT_MEASURE_CHANNELS 2
+
+#define GET_PSTAT_MEAS_DAC(_val) (((_val) & 0xFFFF))
+#define GET_PSTAT_MEAS_PCHAN(_val) (((_val) & 0xFF000000) >> 24)
+#define GET_PSTAT_MEAS_NCHAN(_val) (((_val) & 0x00FF0000) >> 16)
+#define GET_PSTAT_MEAS_BUFFER(_val) (((_val) & 0x0000FF00) >> 8)
+
+#define SET_PSTAT_MEASURE_DAC(_dest,_val) (_dest) = (((_dest) & 0xFFFF0000) | ((uint32_t)((_val) & 0xFFFF)))
+#define SET_PSTAT_MEASURE_CHANNELS(_dest,_p,_n,_b) (_dest) = (((_dest) & 0x0000FFFF) | ((uint32_t)((_p) & 0xFF) << 24) | ((uint32_t)((_n) & 0xFF) << 16) | ((uint32_t)((_b) & 0xFF) << 8) )
+
+ // Test command structure for pson test command PSTAT_ON_REQ
+ // 000000ss 00000000  // Set Switch State
+ // 0001ggss 00000000  // Set gain State
+ //
+#define PSTAT_ON_SWITCH  0
+#define PSTAT_ON_SWITCH_GAIN 1
+#define GET_PSTAT_PSON_GAIN(_val) (((_val) & 0x0000FF00) >> 8)
+#define GET_PSTAT_PSON_SWITCH(_val) (((_val) & 0x000000FF))
+
+#define SET_PSTAT_PSON_SW(_dest,_sw) (_dest) = (((_dest) & 0xFFFFFF00) | ((uint32_t)((_sw) & 0xFF)))
+#define SET_PSTAT_PSON_SW_SG(_dest,_sw,_sg) (_dest) = (((_dest) & 0xFFFF0000) | ((uint32_t)((_sg) & 0xFF) << 8) | ((uint32_t)((_sw) & 0xFF)) )
+
 
 #define DAC_INVALID_VALUE 0x10000
 

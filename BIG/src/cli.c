@@ -24,7 +24,7 @@ static bool InfoPending=false;
 
 static void CliParseCommand(void);
 
-static void CliSendCmd(CliCommandId CmdId, uint32_t data, QueueHandle_t Destination);
+static void CliSendCmd(CliCommandId CmdId, uint32_t data, uint32_t data2, QueueHandle_t Destination);
 
 void cli_task(void * parm)
 {
@@ -86,25 +86,47 @@ void cli_task(void * parm)
 
                 *outp = 0;  // Null terminating the buffer
 
-                strcat(outp, "  ADC_WE: ");
-                NumToString( msg->ADC_CONV_RESP_data.ADC_WE, 8, temp, tempSize, HexOutput);
-                strcat(outp, temp);
+                if (msg->ADC_CONV_RESP_data.ADC_WE != ADC_NOT_PRESENT)
+                {
+                    strcat(outp, "  ADC_WE: ");
+                    NumToString( msg->ADC_CONV_RESP_data.ADC_WE, 8, temp, tempSize, HexOutput);
+                    strcat(outp, temp);
+                }
 
-                strcat(outp, ", ADC_RE: ");
-                NumToString( msg->ADC_CONV_RESP_data.ADC_RE, 8, temp, tempSize, HexOutput);
-                strcat(outp, temp);
+                if (msg->ADC_CONV_RESP_data.ADC_RE != ADC_NOT_PRESENT)
+                {
+                    strcat(outp, ", ADC_RE: ");
+                    NumToString( msg->ADC_CONV_RESP_data.ADC_RE, 8, temp, tempSize, HexOutput);
+                    strcat(outp, temp);
+                }
 
-                strcat(outp, ", ADC_DAC_RE: ");
-                NumToString( msg->ADC_CONV_RESP_data.ADC_DAC_RE, 8, temp, tempSize, HexOutput);
-                strcat(outp, temp);
+                if (msg->ADC_CONV_RESP_data.ADC_DAC_RE != ADC_NOT_PRESENT)
+                {
+                    strcat(outp, ", ADC_DAC_RE: ");
+                    NumToString( msg->ADC_CONV_RESP_data.ADC_DAC_RE, 8, temp, tempSize, HexOutput);
+                    strcat(outp, temp);
+                }
 
-                strcat(outp, ", REF_1_3rd: ");
-                NumToString( msg->ADC_CONV_RESP_data.VREF_1_3rd, 8, temp, tempSize, HexOutput);
-                strcat(outp, temp);
+                if (msg->ADC_CONV_RESP_data.VREF_1_3rd != ADC_NOT_PRESENT)
+                {
+                    strcat(outp, ", REF_1_3rd: ");
+                    NumToString( msg->ADC_CONV_RESP_data.VREF_1_3rd, 8, temp, tempSize, HexOutput);
+                    strcat(outp, temp);
+                }
 
-                strcat(outp, ", REF_2_3rd: ");
-                NumToString( msg->ADC_CONV_RESP_data.VREF_2_3rd, 8, temp, tempSize, HexOutput);
-                strcat(outp, temp);
+                if (msg->ADC_CONV_RESP_data.VREF_2_3rd != ADC_NOT_PRESENT)
+                {
+                    strcat(outp, ", REF_2_3rd: ");
+                    NumToString( msg->ADC_CONV_RESP_data.VREF_2_3rd, 8, temp, tempSize, HexOutput);
+                    strcat(outp, temp);
+                }
+
+                if (msg->ADC_CONV_RESP_data.TestMeasurement != ADC_NOT_PRESENT)
+                {
+                    strcat(outp, ", TM: ");
+                    NumToString( msg->ADC_CONV_RESP_data.TestMeasurement, 8, temp, tempSize, HexOutput);
+                    strcat(outp, temp);
+                }
 
                 strcat(outp, ", Scale: ");
                 NumToString( msg->ADC_CONV_RESP_data.WE_Scale, 8, temp, tempSize, HexOutput);
@@ -178,7 +200,7 @@ void CliSendCmdResp(CliCommandId CmdId, uint32_t data)
 	xQueueSend( CliDataQueue, &Msg, 0 );
 }
 
-void CliSendCmd(CliCommandId CmdId, uint32_t data, QueueHandle_t Destination)
+void CliSendCmd(CliCommandId CmdId, uint32_t data, uint32_t data2,  QueueHandle_t Destination)
 {
     Message_t Msg;
     CliMsgContainer *payload = (CliMsgContainer*)pvPortMalloc(sizeof(CliMsgContainer));
@@ -187,6 +209,7 @@ void CliSendCmd(CliCommandId CmdId, uint32_t data, QueueHandle_t Destination)
     Msg.Type = CLI_COMMAND_MESSAGE;
     payload->CLI_COMMAND_data.Id = CmdId;
     payload->CLI_COMMAND_data.Param1 = data;
+    payload->CLI_COMMAND_data.Param2 = data2;
 
     xQueueSend( Destination, &Msg, 0 );
 }
@@ -241,39 +264,77 @@ void CliParseCommand(void)
     // Parse commands.
     if (strncmp("meas", (const char*)UartRxBuffer, 4) == 0)
     {
-        uint32_t parm = DAC_INVALID_VALUE;
+        uint32_t parm = 0;
+        uint32_t parm2 = 0;
 
         num_args = CliParseParameterString(4);
 
-        if (num_args >= 1)
-        {
-            parm = parameter_list[0];
-        }
-        // Perform a measurement
-        CliSendCmd(PSTAT_MEASUREMENT_REQ, parm, pstat_Queue);
-
         OK = true;
+
+        switch (num_args)
+        {
+        case 0:
+            SET_PSTAT_COMMAND(parm, PSTAT_MEASURE_REPEAT);
+            break;
+
+        case 1:
+            SET_PSTAT_COMMAND(parm, PSTAT_MEASURE_ALL);
+            SET_PSTAT_MEASURE_DAC(parm, parameter_list[0]);
+            break;
+
+        case 4:
+            SET_PSTAT_COMMAND(parm, PSTAT_MEASURE_CHANNELS);
+            SET_PSTAT_MEASURE_DAC(parm, parameter_list[0]);
+            SET_PSTAT_MEASURE_CHANNELS(parm2, parameter_list[1], parameter_list[2], parameter_list[3]);
+            break;
+        default:
+            OK = false; // Command is not OK
+            break;
+        }
+
+        if (OK)
+        {
+            // Perform a measurement
+            CliSendCmd(PSTAT_MEASUREMENT_REQ, parm, parm2, pstat_Queue);
+        }
+
     }
     else if (strncmp("pson", (const char*)UartRxBuffer, 4) == 0)
     {
-        uint32_t parm = SW_INVALID;
+        uint32_t parm = 0;
 
         num_args = CliParseParameterString(4);
 
-        if (num_args >= 1)
+        OK = true;
+
+        switch (num_args)
         {
-            parm = parameter_list[0];
+        case 1:
+            SET_PSTAT_COMMAND(parm, PSTAT_ON_SWITCH);
+            SET_PSTAT_PSON_SW(parm, parameter_list[0]);
+            break;
+
+        case 2:
+            SET_PSTAT_COMMAND(parm, PSTAT_ON_SWITCH_GAIN);
+            SET_PSTAT_PSON_SW_SG(parm, parameter_list[0], parameter_list[1]);
+            break;
+
+        default:
+            OK = false;
+            break;
         }
 
-        // Set PSTAT switches according to parm
-        CliSendCmd(PSTAT_ON_REQ, parm, pstat_Queue);
+        if (OK)
+        {
+            // Set PSTAT switches according to parm
+            CliSendCmd(PSTAT_ON_REQ, parm, 0, pstat_Queue);
+        }
 
-        OK = true;
     }
     else if (strncmp("cal", (const char*)UartRxBuffer, 3) == 0)
     {
         // Run self calibration
-        CliSendCmd(PSTAT_CAL_REQ, 0, pstat_Queue);
+        CliSendCmd(PSTAT_CAL_REQ, 0, 0, pstat_Queue);
 
         OK = true;
     }
@@ -316,14 +377,14 @@ void CliParseCommand(void)
         {
             OK = true;
 
-            CliSendCmd(PSTAT_RUN_REQ, parameter_list[0], pstat_Queue);
+            CliSendCmd(PSTAT_RUN_REQ, parameter_list[0], 0, pstat_Queue);
         }
     }
     else if (strncmp("end", (const char*)UartRxBuffer, 3) == 0)
     {
         OK = true;
 
-        CliSendCmd(PSTAT_CANCEL_REQ, 0, pstat_Queue);
+        CliSendCmd(PSTAT_CANCEL_REQ, 0, 0, pstat_Queue);
     }
     else if (strncmp("ver", (const char*)UartRxBuffer, 3) == 0)
     {

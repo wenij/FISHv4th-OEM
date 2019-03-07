@@ -31,7 +31,7 @@
   * Return Value:
   *    None
   */
- extern void ads1256_PowerUpInit( void );
+ extern void ads1256_PowerUpInit( bool buffer_enable );
 
 
  /*
@@ -96,7 +96,7 @@ extern void ads1256_SetPGA( ads1256_pga_t gain );
      ADS1256_CHANNEL_AINCOM = 8
  } ads1256_channel_t;
 
-extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, uint16_t averages);
+extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel, uint16_t averages);
 
 
 typedef enum
