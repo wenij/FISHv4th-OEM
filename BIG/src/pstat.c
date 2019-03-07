@@ -32,6 +32,8 @@ QueueHandle_t DAC_Queue = NULL;
 QueueHandle_t pstat_Queue = NULL;
 
 static bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement);
+static bool MakeSingleTestMeasurement( uint16_t DACvalue, uint8_t Pchannel, uint8_t Nchannel, uint8_t buffer_state, pstatMeasurement_t * measurement);
+
 static bool SetCurrentScale( WE_Scale_t scale);
 
 static void SetPstatSwitches(uint16_t SW);
@@ -64,19 +66,36 @@ void pstat_task(void * parm)
                 {
                 case PSTAT_MEASUREMENT_REQ:
                     {
-
                         pstatMeasurement_t measurement;
+                        bool MadeTheMeasurement = true;
 
-                        PortMsg.Type = CLI_MEASUREMENT_RESP;
-
-                        if (cmd->CLI_COMMAND_data.Param1 < DAC_INVALID_VALUE)
+                        switch( GET_PSTAT_COMMAND(cmd->CLI_COMMAND_data.Param1) )
                         {
-                            LastDAC = (uint16_t)cmd->CLI_COMMAND_data.Param1;
+                        case PSTAT_MEASURE_ALL:
+                            LastDAC = (uint16_t)GET_PSTAT_MEAS_DAC(cmd->CLI_COMMAND_data.Param1);
+                            MakeMeasurement(LastDAC, &measurement);
+                            break;
+                        case PSTAT_MEASURE_REPEAT:
+                            MakeMeasurement(LastDAC, &measurement);
+                            break;
+                        case PSTAT_MEASURE_CHANNELS:
+                            LastDAC = (uint16_t)GET_PSTAT_MEAS_DAC(cmd->CLI_COMMAND_data.Param1);
+                            MakeSingleTestMeasurement( LastDAC,
+                                    GET_PSTAT_MEAS_PCHAN(cmd->CLI_COMMAND_data.Param2),
+                                    GET_PSTAT_MEAS_NCHAN(cmd->CLI_COMMAND_data.Param2),
+                                    GET_PSTAT_MEAS_BUFFER(cmd->CLI_COMMAND_data.Param2),
+                                    &measurement);
+
+                            break;
+                        default:
+                            MadeTheMeasurement = false;
+                            break;
                         }
 
-                        MakeMeasurement(LastDAC, &measurement);
-
-                        CliSendMeasurementResp(&measurement);
+                        if (MadeTheMeasurement)
+                        {
+                            CliSendMeasurementResp(&measurement);
+                        }
 
                     }
                     break;
@@ -86,7 +105,17 @@ void pstat_task(void * parm)
                     break;
 
                 case PSTAT_ON_REQ:
-                    SetPstatSwitches(cmd->CLI_COMMAND_data.Param1);
+                    switch (GET_PSTAT_COMMAND(cmd->CLI_COMMAND_data.Param1))
+                    {
+                    case PSTAT_ON_SWITCH:
+                        SetPstatSwitches( GET_PSTAT_PSON_SWITCH(cmd->CLI_COMMAND_data.Param1));
+                        break;
+
+                    case PSTAT_ON_SWITCH_GAIN:
+                        SetPstatSwitches( GET_PSTAT_PSON_SWITCH(cmd->CLI_COMMAND_data.Param1));
+                        SetCurrentScale( GET_PSTAT_PSON_GAIN(cmd->CLI_COMMAND_data.Param1));
+                        break;
+                    }
                     break;
 
                 default:
@@ -108,7 +137,7 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
 
     measurement->DAC_Setting = DACvalue;
 
-    ads1256_PowerUpInit();
+    ads1256_PowerUpInit(true);
 
     measurement->WE_Scale = CurrentScale;
 
@@ -118,20 +147,67 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
 
     AD5662_Set(DACvalue);
 
-    TimDelayMicroSeconds(2000);  // Allow dac to settle
+    TimDelayMicroSeconds(200);  // Allow dac to settle
 
-    measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, 1);
+    measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM, 1);
 
-    measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, 1);
+    measurement->ADC_DAC_RE = ADC_NOT_PRESENT;
 
-    measurement->ADC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_4, 1);
+    measurement->ADC_RE = ADC_NOT_PRESENT;
 
-    measurement->VREF_2_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_5, 1);
+    measurement->VREF_2_3rd = ADC_NOT_PRESENT;
 
-    measurement->VREF_1_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_6, 1);
+    measurement->VREF_1_3rd = ADC_NOT_PRESENT;
 
-    //measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, 1);
+   // ads1256_PowerUpInit(true);
 
+   // measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM, 1);
+
+    /*
+    measurement->ADC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_4, ADS1256_CHANNEL_AINCOM, 1);
+
+    measurement->VREF_2_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_5, ADS1256_CHANNEL_AINCOM, 1);
+
+    measurement->VREF_1_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_6, ADS1256_CHANNEL_AINCOM, 1);
+
+    */
+
+    measurement->TestMeasurement = ADC_NOT_PRESENT;
+
+
+    return(ret);
+}
+
+// This function makes a single measurement on a specific set of channels and fills in the Measurement *
+bool MakeSingleTestMeasurement( uint16_t DACvalue, uint8_t Pchannel, uint8_t Nchannel, uint8_t buffer_state, pstatMeasurement_t * measurement)
+{
+    bool ret = true;
+
+    measurement->DAC_Setting = DACvalue;
+
+    ads1256_PowerUpInit(buffer_state);
+
+    measurement->WE_Scale = CurrentScale;
+
+    measurement->SwitchState = LastSW;
+
+    SetCurrentScale(measurement->WE_Scale);
+
+    AD5662_Set(DACvalue);
+
+    TimDelayMicroSeconds(200);  // Allow dac to settle
+
+    measurement->TestMeasurement = ads1256_ReadChannel(Pchannel, Nchannel, 1);
+
+    measurement->ADC_WE = ADC_NOT_PRESENT;
+
+    measurement->ADC_DAC_RE = ADC_NOT_PRESENT;
+
+    measurement->ADC_RE = ADC_NOT_PRESENT;
+
+    measurement->VREF_2_3rd = ADC_NOT_PRESENT;
+
+    measurement->VREF_1_3rd = ADC_NOT_PRESENT;
 
     return(ret);
 }
@@ -140,7 +216,7 @@ bool CalibratePstat(void)
 {
     bool ret = true;
 
-    ads1256_PowerUpInit();
+    ads1256_PowerUpInit(true);
 
     // Set switches
     SetPstatSwitches(SW_2_ENABLE | SW_3_ENABLE);
@@ -166,12 +242,13 @@ bool SetCurrentScale( WE_Scale_t scale)
 {
     bool ret = true;
 
+    CurrentScale = scale;
+
     HAL_GPIO_WritePin(G_S0_GPIO_Port, G_S0_Pin, (scale & 0x01) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 
     HAL_GPIO_WritePin(G_S1_GPIO_Port, G_S1_Pin, (scale & 0x02) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 
     HAL_GPIO_WritePin(G_S2_GPIO_Port, G_S2_Pin, (scale & 0x04) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-
 
     return(ret);
 }
@@ -179,10 +256,7 @@ bool SetCurrentScale( WE_Scale_t scale)
 void SetPstatSwitches(uint16_t SW)
 {
 
-    if (SW < SW_INVALID)
-    {
-        LastSW = SW;
-    }
+    LastSW = SW;
 
     HAL_GPIO_WritePin(SW1_GPIO_Port, SW1_Pin, (LastSW & SW_1_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
     HAL_GPIO_WritePin(SW2_GPIO_Port, SW2_Pin, (LastSW & SW_2_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
