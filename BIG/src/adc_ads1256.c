@@ -60,10 +60,15 @@ static void StartConversion(void);
      ads1256_SetPGA(ADS1256_PGA_2);
 
 
-     // Set Sample rate to 1000 SPS. Reduces noise vs 30 kSPS which is the default
+     // Set Sample rate to 1000 SPS. Reduces noise vs 30 kSPS which is the default. It's painfully slow...
+
      buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_DRATE_REGISTER);
      buf[1] = 0;  // Number of registers - 1
      buf[2] = set_ADS1256_DRATE(ADS1256_DRATE_1000);   // 1000 SPS
+
+     // Leaving it at 30 kSPS
+     //SendReceiveSPI(buf, 3, rxbuf, 0);   // Send data rate register expecting no response.
+
 
  }
 
@@ -216,7 +221,7 @@ bool ads1256_Cal( ads1256_cal_type_t calType)
         {
             buf[0] = ADS1256_SELFCAL_SYSTEMGAIN;
         }
-        SendReceiveSPI(buf, 1, rxbuf, 0);   // Send ad control register expecting no response.
+        SendReceiveSPI(buf, 1, rxbuf, 0);   // Send Cal command expecting no response.
 
 
         TimDelayMicroSeconds(200);
@@ -295,35 +300,20 @@ bool ads1256_Cal( ads1256_cal_type_t calType)
   */
  bool WaitForDataReady(GPIO_PinState value)
  {
-     volatile GPIO_PinState drdy;
+     volatile int tmo = 100000;
+     bool ret = true;
 
-     drdy = HAL_GPIO_ReadPin(ADC_DRDYn_GPIO_Port, ADC_DRDYn_Pin);    // ADC DRDY
-     if (drdy != value)
+     while ( HAL_GPIO_ReadPin(ADC_DRDYn_GPIO_Port, ADC_DRDYn_Pin) != value)
      {
-         int i;
-         int tmo = 0;
-         while (tmo < 10)
+         tmo -= 1;
+         if (tmo < 0)
          {
-             for (i=0; i<256; i++)
-             {
-                 drdy = HAL_GPIO_ReadPin(ADC_DRDYn_GPIO_Port, ADC_DRDYn_Pin);    // ADC DRDY
-                 if (drdy == value)
-                 {
-                     return(true);
-                 }
-             }
-
-             vTaskDelay(  pdMS_TO_TICKS(2) );   // Allow others to run
-             tmo += 2;
+             ret = false;
+             break;
          }
-
-     }
-     else
-     {
-         return(true);
      }
 
-     return(false);
+     return(ret);
  }
 
  /*
@@ -338,11 +328,20 @@ bool ads1256_Cal( ads1256_cal_type_t calType)
   */
  static void StartConversion(void)
  {
-     HAL_GPIO_WritePin(ADC_PDN_GPIO_Port, ADC_PDN_Pin, GPIO_PIN_RESET);    // ADC SYNC/PDN
 
-     // Should be over 500 ns in length. Timing diagram indicates the second PDN transition should be +/- 25 ns from Clock edge..
-     TimDelayMicroSeconds(2);
+     uint8_t buf[3];
+     uint8_t rxbuf[4];
 
-     HAL_GPIO_WritePin(ADC_PDN_GPIO_Port, ADC_PDN_Pin, GPIO_PIN_SET);    // ADC SYNC/PDN
+     // Send SYNC and WAKEUP
+     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_SYNC_AD_CONVERSION);
+     SendReceiveSPI(buf, 1, rxbuf, 0);   // SYNC Command
+
+     //TimDelayMicroSeconds(5);  // Gap T11, 24 clocks, before next command
+
+     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_WAKEUP);
+     SendReceiveSPI(buf, 1, rxbuf, 0);   // WAKEUP Command
+
+     //TimDelayMicroSeconds(5);  // Gap T11, 24 clocks, before next command
+
  }
 

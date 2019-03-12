@@ -43,6 +43,7 @@
      WE_Scale_t WE_Scale;;
      uint16_t DAC_Setting;
      uint16_t SwitchState;
+     uint32_t TimeStamp;    // Timestamp 1 ms tick
      int32_t ADC_WE;
      int32_t ADC_DAC_RE;
      int32_t ADC_RE;

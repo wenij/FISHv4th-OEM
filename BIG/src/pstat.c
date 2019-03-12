@@ -147,30 +147,19 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
 
     AD5662_Set(DACvalue);
 
-    TimDelayMicroSeconds(200);  // Allow dac to settle
+    //TimDelayMicroSeconds(200);  // Allow dac to settle. Not necessary.
+
+    measurement->TimeStamp = xTaskGetTickCount();   // Get Time Stamp
 
     measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM, 1);
 
-    measurement->ADC_DAC_RE = ADC_NOT_PRESENT;
+    measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM, 1);
 
-    measurement->ADC_RE = ADC_NOT_PRESENT;
-
-    measurement->VREF_2_3rd = ADC_NOT_PRESENT;
-
-    measurement->VREF_1_3rd = ADC_NOT_PRESENT;
-
-   // ads1256_PowerUpInit(true);
-
-   // measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM, 1);
-
-    /*
     measurement->ADC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_4, ADS1256_CHANNEL_AINCOM, 1);
 
     measurement->VREF_2_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_5, ADS1256_CHANNEL_AINCOM, 1);
 
     measurement->VREF_1_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_6, ADS1256_CHANNEL_AINCOM, 1);
-
-    */
 
     measurement->TestMeasurement = ADC_NOT_PRESENT;
 
@@ -195,7 +184,9 @@ bool MakeSingleTestMeasurement( uint16_t DACvalue, uint8_t Pchannel, uint8_t Nch
 
     AD5662_Set(DACvalue);
 
-    TimDelayMicroSeconds(200);  // Allow dac to settle
+    measurement->TimeStamp = xTaskGetTickCount();   // Get Time Stamp
+
+    //TimDelayMicroSeconds(200);  // Allow dac to settle. Not necessary.
 
     measurement->TestMeasurement = ads1256_ReadChannel(Pchannel, Nchannel, 1);
 

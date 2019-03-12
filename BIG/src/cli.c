@@ -86,9 +86,13 @@ void cli_task(void * parm)
 
                 *outp = 0;  // Null terminating the buffer
 
+                strcat(outp, " TS: ");
+                NumToString( msg->ADC_CONV_RESP_data.TimeStamp, 8, temp, tempSize, HexOutput);
+                strcat(outp, temp);
+
                 if (msg->ADC_CONV_RESP_data.ADC_WE != ADC_NOT_PRESENT)
                 {
-                    strcat(outp, "  ADC_WE: ");
+                    strcat(outp, ", ADC_WE: ");
                     NumToString( msg->ADC_CONV_RESP_data.ADC_WE, 8, temp, tempSize, HexOutput);
                     strcat(outp, temp);
                 }
