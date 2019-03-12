@@ -403,6 +403,9 @@ void SPI_driver_task( void * params )
                 Msg->rx_length = 0;
             }
 
+            TimDelayMicroSeconds(3);    // t10: 1.1 us, 8 clk cycles
+
+
             HAL_GPIO_WritePin(ADC_CSn_GPIO_Port, ADC_CSn_Pin, GPIO_PIN_SET);    // ADC Chip select
 
 
