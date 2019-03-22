@@ -51,7 +51,8 @@
 
 /* USER CODE BEGIN Includes */
 
-//#define CARSTENS_BOARD      // Hacked up board with MISO re-routed and USART3 disabled
+#define USE_SPI1
+#define CARSTENS_BOARD      // Hacked up board with MISO re-routed and USART3 disabled
 #define VERSION "cah_v1.11"
 
 // OS Messaging Queues. They are defined in the respective task source files but references are collated here for simplicity

@@ -72,9 +72,6 @@ void MX_USART2_UART_Init(void)
   }
 
 #ifdef STM32F205xx
-#ifdef CARSTENS_BOARD
-  cli_uart = &huart2;  // I broke UART 3 to re-route MISO
-#endif
   data_uart = &huart2;
 #else
   cli_uart = &huart2;
