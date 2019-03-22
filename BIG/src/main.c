@@ -122,18 +122,12 @@ int main(void)
 
 
 #ifdef STM32F205xx
-#ifndef CARSTENS_BOARD
   MX_USART3_UART_Init();
-#endif
 #endif
   MX_USART2_UART_Init();
 
 #ifdef STM32F205xx
-#ifdef CARSTENS_BOARD
-  USART2_ISR_ENABLE();  // Back to USART2 cause I'm using USART3 for something else
-#else
   USART3_ISR_ENABLE();
-#endif
 #else
   USART2_ISR_ENABLE();
 #endif
