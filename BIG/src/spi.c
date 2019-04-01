@@ -53,6 +53,7 @@ SPI_HandleTypeDef* ActiveSPI;
 
 SPI_HandleTypeDef hspi1;
 
+
 #ifdef USE_SPI1
 
 /* SPI1 init function */
@@ -274,6 +275,20 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
 QueueHandle_t SpiSendQueue = NULL;
 QueueHandle_t SpiSmartIoQueue = NULL;
 
+
+static bool DirectSPI = false;
+
+static void SetSpiIntMode(bool direct)
+{
+    DirectSPI = direct;
+}
+
+bool GetSpiIntMode(void)
+{
+    return(DirectSPI);
+}
+
+
 void SPI_driver_task( void * params )
 {
     Message_t PortMsg;
@@ -354,14 +369,13 @@ void SPI_driver_task( void * params )
         {
             SpiMsgContainer* Msg = (SpiMsgContainer*)PortMsg.data;
 
-            HAL_GPIO_WritePin(DAC_CSn_GPIO_Port, DAC_CSn_Pin, GPIO_PIN_RESET);    // DAC Chip select
-
             if (Msg->length > 0)
             {
-                HAL_SPI_Transmit(ActiveSPI, Msg->data, Msg->length, HAL_MAX_DELAY);
+                TxError = !SPI_MsgDAC(Msg->length, Msg->data);
             }
 
-            HAL_GPIO_WritePin(DAC_CSn_GPIO_Port, DAC_CSn_Pin, GPIO_PIN_SET);  // DAC Chip select
+            Msg->TxError = TxError;
+            Msg->RxError = false;
 
             xQueueSend( DAC_Queue, &PortMsg, 0U );
 
@@ -370,52 +384,30 @@ void SPI_driver_task( void * params )
         case SPI_ADC_IO_MESSAGE:
         {
             SpiMsgContainer* Msg = (SpiMsgContainer*)PortMsg.data;
-
-            HAL_GPIO_WritePin(ADC_CSn_GPIO_Port, ADC_CSn_Pin, GPIO_PIN_RESET);    // ADC Chip select
-
-            if (Msg->length > 0)
-            {
-                HAL_SPI_Transmit(ActiveSPI, Msg->data, Msg->length, HAL_MAX_DELAY);
-            }
-
-            //The command and data read should be spaced t6 (50 ADC clocks, min = 6.6 us).
-            TimDelayMicroSeconds(8);
+            uint16_t rxlen = 0;
+            uint8_t * rxp = NULL;
 
             if (Msg->Response)
             {
-                // Read
-
+                // Ensure we have memory for RX
                 if (Msg->rx_length > 0)
                 {
-                    if ((Msg->data != NULL) && (Msg->buf_size < Msg->rx_length))
-                    {
-                        vPortFree(Msg->data);   // Data buffer too small
-                        Msg->data = NULL;
-                    }
-
-                    if (Msg->data == NULL)
-                    {
-                        Msg->data = pvPortMalloc(Msg->rx_length);
-                        Msg->buf_size = Msg->rx_length;
-                    }
-
-                    RxError = (HAL_OK != HAL_SPI_Receive( ActiveSPI, Msg->data, Msg->rx_length, 100));
-
-                }
-                else
-                {
-                    RxError = true;
+                    rxp = pvPortMalloc(Msg->rx_length);
+                    rxlen = Msg->rx_length;
                 }
             }
-            else
+
+            TxError = RxError = (SPI_MsgADC( Msg->length, Msg->data, rxp, rxlen, Msg->Response) < 0);
+
+            if (Msg->Response)
             {
-                Msg->rx_length = 0;
+                if (Msg->data != NULL)
+                {
+                    vPortFree(Msg->data);
+                }
+                Msg->data = rxp;
+                Msg->rx_length = rxlen;
             }
-
-            TimDelayMicroSeconds(3);    // t10: 1.1 us, 8 clk cycles
-
-
-            HAL_GPIO_WritePin(ADC_CSn_GPIO_Port, ADC_CSn_Pin, GPIO_PIN_SET);    // ADC Chip select
 
 
             // Send the response
@@ -427,6 +419,17 @@ void SPI_driver_task( void * params )
 
             break;
         }
+
+        case SPI_INT_MODE_SET:
+            {
+                bool mode = (bool)PortMsg.data;
+
+                SetSpiIntMode(mode);
+
+                xQueueSendToFront( pstat_Queue, &PortMsg, 0U );
+            }
+            break;
+
         default:
             {
                 SpiMsgContainer* Msg = (SpiMsgContainer*)PortMsg.data;
@@ -442,7 +445,59 @@ void SPI_driver_task( void * params )
 
 }
 
-bool SpiHiPriorityOnly = false;
+
+int SPI_MsgADC( uint16_t TxLength, uint8_t * TxData, uint8_t * RxData, uint16_t RxLength, bool Response)
+{
+    int ret = -1;
+
+    HAL_GPIO_WritePin(ADC_CSn_GPIO_Port, ADC_CSn_Pin, GPIO_PIN_RESET);    // ADC Chip select
+
+    if (TxLength > 0)
+    {
+        HAL_SPI_Transmit(ActiveSPI, TxData,TxLength, HAL_MAX_DELAY);
+    }
+
+    //The command and data read should be spaced t6 (50 ADC clocks, min = 6.6 us).
+    TimDelayMicroSeconds(8);
+
+    if (Response)
+    {
+        // Read
+
+        if ( (RxLength > 0) && (RxData != NULL))
+        {
+
+            if (HAL_OK == HAL_SPI_Receive( ActiveSPI, RxData, RxLength, 100))
+            {
+                ret = RxLength;
+            }
+        }
+    }
+    else
+    {
+        ret = 0;
+    }
+
+    TimDelayMicroSeconds(3);    // t10: 1.1 us, 8 clk cycles
+
+    HAL_GPIO_WritePin(ADC_CSn_GPIO_Port, ADC_CSn_Pin, GPIO_PIN_SET);    // ADC Chip select
+
+    return(ret);
+}
+
+bool SPI_MsgDAC( uint16_t TxLength, uint8_t * TxData)
+{
+    bool ret;
+
+    HAL_GPIO_WritePin(DAC_CSn_GPIO_Port, DAC_CSn_Pin, GPIO_PIN_RESET);    // DAC Chip select
+
+    ret = (HAL_OK == HAL_SPI_Transmit(ActiveSPI, TxData, TxLength, HAL_MAX_DELAY));
+
+    HAL_GPIO_WritePin(DAC_CSn_GPIO_Port, DAC_CSn_Pin, GPIO_PIN_SET);  // DAC Chip select
+
+    return(ret);
+}
+
 
 void SPI_SendData(MessageType Id, uint16_t length,  uint16_t reply_length, uint8_t * data, bool Response)
 {
@@ -496,6 +551,25 @@ void SPI_ReadData(MessageType Id, uint8_t reply_length,  uint8_t * data)
     SPI_SendData(Id, 0, reply_length, data, true);
 }
 
+void SPI_SetIrqMode( bool mode)
+{
+    Message_t msg;
+
+    msg.Type = SPI_INT_MODE_SET;
+    msg.data = (uint8_t*)mode;
+
+    xQueueSendToBack( SpiSendQueue, &msg, 0 );
+}
+
+void SPI_SetIrqModeFromISR( bool mode)
+{
+    Message_t msg;
+
+    msg.Type = SPI_INT_MODE_SET;
+    msg.data = (uint8_t*)mode;
+
+    xQueueSendToBackFromISR( SpiSendQueue, &msg, 0 );
+}
 /* USER CODE END 1 */
 
 /**

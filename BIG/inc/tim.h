@@ -67,15 +67,20 @@
 /* USER CODE END Includes */
 
 extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim3;
+
 
 /* USER CODE BEGIN Private defines */
 extern void TimDelayMicroSeconds( uint16_t microseconds);
 
+extern void TimEnableMeasureTimer( uint32_t microseconds);
+extern void TimDisableMeasureTimer(void);
 /* USER CODE END Private defines */
 
 extern void _Error_Handler(char *, int);
 
 extern void MX_TIM2_Init(void);
+extern void MX_TIM3_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 

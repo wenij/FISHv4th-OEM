@@ -16,6 +16,9 @@
 
  extern bool AD5662_Set(uint16_t DacValue);
 
+ extern void SetSpiMode(bool direct);
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -22,6 +22,8 @@ static uint16_t SendReceiveSPI( uint8_t * TxData, uint16_t TxLength, uint8_t *Rx
 static bool WaitForDataReady(GPIO_PinState value);
 static void StartConversion(void);
 
+
+
  /*
   * Driver Functions for A/D Converter ADS 1256
   */
@@ -256,31 +258,39 @@ bool ads1256_Cal( ads1256_cal_type_t calType)
  uint16_t SendReceiveSPI( uint8_t * TxData, uint16_t TxLength, uint8_t *RxData, uint16_t RxLength)
  {
      uint16_t ret = 0;
-     Message_t Msg;
-     SpiMsgContainer * SpiMsg;
 
-     SPI_SendData( SPI_ADC_IO_MESSAGE, TxLength, RxLength, TxData, (RxLength > 0));
-
-     if (xQueueReceive( ADC_Queue, (void*)&Msg, 100 ))
+     if (!GetSpiIntMode())
      {
-         SpiMsg = (SpiMsgContainer*)Msg.data;
+         Message_t Msg;
+         SpiMsgContainer * SpiMsg;
 
-         if (SpiMsg->rx_length > 0)
+         SPI_SendData( SPI_ADC_IO_MESSAGE, TxLength, RxLength, TxData, (RxLength > 0));
+
+         if (xQueueReceive( ADC_Queue, (void*)&Msg, 100 ))
          {
-             ret = RxLength;
-             if (SpiMsg->rx_length < RxLength)
+             SpiMsg = (SpiMsgContainer*)Msg.data;
+
+             if (SpiMsg->rx_length > 0)
              {
-                 ret = SpiMsg->rx_length;
+                 ret = RxLength;
+                 if (SpiMsg->rx_length < RxLength)
+                 {
+                     ret = SpiMsg->rx_length;
+                 }
+                 memcpy( RxData, SpiMsg->data, ret);
+
              }
-             memcpy( RxData, SpiMsg->data, ret);
 
+             if (SpiMsg->data != NULL)
+             {
+                 vPortFree(SpiMsg->data);
+             }
+             vPortFree(SpiMsg);
          }
-
-         if (SpiMsg->data != NULL)
-         {
-             vPortFree(SpiMsg->data);
-         }
-         vPortFree(SpiMsg);
+     }
+     else
+     {
+         ret = SPI_MsgADC( TxLength, TxData, RxData, RxLength, (RxLength > 0));
 
      }
 

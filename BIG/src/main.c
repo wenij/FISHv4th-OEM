@@ -133,6 +133,7 @@ int main(void)
 #endif
 
   MX_TIM2_Init();
+  MX_TIM3_Init();
 
   //MX_RTC_Init();
 
@@ -155,7 +156,9 @@ int main(void)
   ADC_Queue = xQueueCreate( 1 /*Queue size */, sizeof( Message_t ) );
 
   DAC_Queue = xQueueCreate( 1 /*Queue size */, sizeof( Message_t ) );
+
   pstat_Queue = xQueueCreate( 4 /*Queue size */, sizeof( Message_t ) );
+  pstatMeasurement_Queue = xQueueCreate( 128, sizeof(pstatMeasurement_t));  // Large queue pumping results from interrupt to interface.
 
   xTaskCreate( SPI_driver_task, "SpiDriver", configMINIMAL_STACK_SIZE+100, NULL, 31, NULL );	// Highest Priority
 
@@ -307,6 +310,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM1) {
     HAL_IncTick();
+  }
+  else if (htim->Instance == TIM3)
+  {
+      pstat_measure_tick();
   }
   /* USER CODE BEGIN Callback 1 */
 

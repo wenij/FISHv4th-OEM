@@ -52,6 +52,42 @@
      int32_t TestMeasurement;
  } pstatMeasurement_t;
 
+
+ typedef enum
+ {
+      PSTAT_RUN_REQ,
+      PSTAT_CANCEL_REQ,
+ } PstatCmdId;
+
+// Command Structure for Run command
+typedef struct
+{
+    uint16_t InitialDAC;
+    uint16_t StartDAC;
+    uint16_t EndDAC;
+    uint16_t FinalDAC;
+    uint32_t TimeUs;
+    uint16_t MeasureDACStep;
+    uint8_t  Switch;
+} PstatRunReq_t;
+
+// Command container for Pstat commands. MessageType: PSTAT_COMMAND_MESSAGE
+typedef struct
+{
+    PstatCmdId PstatId;
+    union
+    {
+        PstatRunReq_t Run;
+    } Req;
+} PstatMsgContainer_t;
+
+extern void PstatSendRunReq( uint16_t Initial, uint16_t Start, uint16_t End, uint16_t Final, uint16_t MeasureDAC, uint32_t TimeUs, uint8_t Switch );
+
+  /*******************************
+   *
+   * CLI Test Command definitions encapsulated in the PSTAT_MEASUREMENT_REQ
+   */
+
 #define SET_PSTAT_COMMAND(_dest,_val) (_dest) = (((_dest) & 0x0000FFFF) | ((uint32_t)((_val) << 16)))
 #define GET_PSTAT_COMMAND(_val) ((_val) >> 16)
 
@@ -84,9 +120,14 @@
 #define SET_PSTAT_PSON_SW_SG(_dest,_sw,_sg) (_dest) = (((_dest) & 0xFFFF0000) | ((uint32_t)((_sg) & 0xFF) << 8) | ((uint32_t)((_sw) & 0xFF)) )
 
 
+
 #define DAC_INVALID_VALUE 0x10000
 
 extern void pstat_task(void * parm);
+
+extern void pstat_meas_start_run(PstatRunReq_t * cfg );
+
+extern void pstat_measure_tick(void);
 
 #ifdef __cplusplus
 }

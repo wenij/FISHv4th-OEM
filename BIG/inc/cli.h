@@ -30,9 +30,7 @@
  {
      PSTAT_MEASUREMENT_REQ,
      PSTAT_CAL_REQ,
-     PSTAT_ON_REQ,
-     PSTAT_RUN_REQ,
-     PSTAT_CANCEL_REQ
+     PSTAT_ON_REQ
  } CliCommandId;
 
  typedef struct
@@ -67,6 +65,19 @@ extern void CliSendMeasurementResp(pstatMeasurement_t * data);
 
 extern void CliInfoPending(void);
 
+extern void CliSendDataPortMeasurement( pstatMeasurement_t * data); // Specifically sends a measurement on the data port
+extern void CliSendDataPortMeasurementDone( void);
+
+// Binary CLI data port messages
+#define CLI_SYNC1 0x55
+#define CLI_SYNC2 0xAA
+
+#define CLI_CMD_BUFFER_LENGTH(_len) ((_len)+3)
+#define CLI_MEASURED_DATA_ID 1
+#define CLI_MEASURED_DATA_LENGTH 17
+
+#define CLI_MEASUREMENT_DONE_ID 2
+#define CLI_MEASUREMENT_DATA_LENGTH 1
 
 
 #ifdef __cplusplus

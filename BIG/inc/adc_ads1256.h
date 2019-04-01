@@ -16,6 +16,7 @@
 
 #include "main.h"
 
+ extern void SetSpiMode(bool direct);
 
  /*
   * Driver Functions for A/D Converter ADS 1256
