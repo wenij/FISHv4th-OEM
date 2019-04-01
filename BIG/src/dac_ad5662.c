@@ -20,9 +20,11 @@ typedef enum
 
 static bool SendSPI(AD5662_MODE mode, uint16_t dac);
 
+
 bool AD5662_Set(uint16_t DacValue)
 {
     bool ret = true;
+
 
     ret = SendSPI(AD5662_NORMAL_OPERATION, DacValue);
 
@@ -41,17 +43,26 @@ bool SendSPI(AD5662_MODE mode, uint16_t dac)
      TxData[1] = (uint8_t)(dac >> 8);
      TxData[2] = (uint8_t)dac;
 
+
      // Message format is 24 bits. 6 don't care, 2 mode bits, 16 dac bits.
 
-     SPI_SendDataNoResponse( SPI_DAC_IO_MESSAGE, 3, TxData);
-
-     if (xQueueReceive( DAC_Queue, (void*)&Msg, 100 ))
+     if (GetSpiIntMode())
      {
-         ret= true;
+         ret = SPI_MsgDAC( 3, TxData);
+     }
+     else
+     {
 
-         if (Msg.data != NULL)
+         SPI_SendDataNoResponse( SPI_DAC_IO_MESSAGE, 3, TxData);
+
+         if (xQueueReceive( DAC_Queue, (void*)&Msg, 100 ))
          {
-             vPortFree(Msg.data);
+             ret= true;
+
+             if (Msg.data != NULL)
+             {
+                 vPortFree(Msg.data);
+             }
          }
      }
 

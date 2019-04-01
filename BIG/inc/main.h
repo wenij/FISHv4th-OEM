@@ -53,7 +53,7 @@
 
 #define USE_SPI1
 #define CARSTENS_BOARD      // Hacked up board with MISO re-routed and USART3 disabled
-#define VERSION "cah_v1.11"
+#define VERSION "cah_v2.0"
 
 // OS Messaging Queues. They are defined in the respective task source files but references are collated here for simplicity
 extern QueueHandle_t SpiSmartIoQueue;	// Queue for SmartIO task SPI interface (separate from others)
@@ -65,6 +65,7 @@ extern QueueHandle_t ADC_Queue;		// Reply Queue for ADC driver
 extern QueueHandle_t DAC_Queue;		// Reply Queue for DAC driver
 
 extern QueueHandle_t pstat_Queue;   // General pstat task queue
+extern QueueHandle_t pstatMeasurement_Queue;    // Dedicated measurement result queue
 
 // Global message type definitions, Unique ids for all messages makes identification and tracing of messages easier.
 typedef enum
@@ -73,10 +74,14 @@ typedef enum
 	SPI_ADC_IO_MESSAGE,
 	SPI_DAC_IO_MESSAGE,
 	SPI_READ_MESSAGE,
+	SPI_INT_MODE_SET,
     CLI_TEXT_MESSAGE,
     CLI_COMMAND_MESSAGE,
     CLI_COMMAND_RESP,
     CLI_MEASUREMENT_RESP,
+    CLI_MEASUREMENT_DATA,
+    PSTAT_COMMAND_MESSAGE,
+    PSTAT_RUN_COMPLETE,
 	SIF_MESSAGE,
 	MEASUREMENT_MESSAGE
 } MessageType;

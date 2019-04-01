@@ -78,6 +78,7 @@ void MX_SPI3_Init(void);
 // SPI Driver
 extern void SPI_driver_task( void * params );
 
+
 typedef struct
 {
 	// Sends data. Responds with SpiRespData
@@ -91,12 +92,19 @@ typedef struct
 } SpiMsgContainer;
 
 
-extern bool SpiHiPriorityOnly;
-
+extern bool GetSpiIntMode(void);
+extern void SPI_SetIrqMode( bool mode);
+extern void SPI_SetIrqModeFromISR( bool mode);
 
 extern void SPI_SendData( MessageType Id, uint16_t length, uint16_t reply_length, uint8_t * data, bool Response);
 extern void SPI_SendDataNoResponse( MessageType Id, uint16_t length, uint8_t * data);
 extern void SPI_ReadData(MessageType Id, uint8_t reply_length,  uint8_t * data);
+
+// returns number of bytes received
+// These are direct to SPI messaging functions. Will block the SPI and the caller must have sole ownership of the SPI
+extern int SPI_MsgADC( uint16_t TxLength, uint8_t * TxData, uint8_t * RxData, uint16_t RxLength, bool Response);
+extern bool SPI_MsgDAC( uint16_t TxLength, uint8_t * TxData);
+
 
 /* USER CODE END Prototypes */
 

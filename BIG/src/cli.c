@@ -69,10 +69,14 @@ void cli_task(void * parm)
                 {
 
                 default:
-                    vPortFree(PortMsg.data);
                     break;
                 }
+
                 // Free memory
+                if (PortMsg.data != NULL)
+                {
+                    vPortFree(PortMsg.data);
+                }
 
             }
             else if (PortMsg.Type == CLI_MEASUREMENT_RESP)
@@ -237,6 +241,60 @@ void CliInfoPending(void)
 }
 
 
+void CliSendDataPortMeasurement( pstatMeasurement_t * data)
+{
+    // This is a binary message that goes straight to the UART
+    uint8_t msg[20];
+
+    msg[0] = 0x55; // Sync 1
+    msg[1] = 0xAA; // Sync 2
+    msg[2] = 17;    // Length
+    msg[3] = 0x01; // ID
+
+    // Timestamp 4 bytes
+    msg[4] = (uint8_t)(data->TimeStamp >> 24);
+    msg[5] = (uint8_t)(data->TimeStamp >> 16);
+    msg[6] = (uint8_t)(data->TimeStamp >> 8);
+    msg[7] = (uint8_t)(data->TimeStamp);
+
+    // WE 4 bytes
+    msg[8] = (uint8_t)(data->ADC_WE >> 24);
+    msg[9] = (uint8_t)(data->ADC_WE >> 16);
+    msg[10] = (uint8_t)(data->ADC_WE >> 8);
+    msg[11] = (uint8_t)(data->ADC_WE);
+
+    // CE voltage 4 bytes
+    msg[12] = (uint8_t)(data->ADC_DAC_RE >> 24);
+    msg[13] = (uint8_t)(data->ADC_DAC_RE >> 16);
+    msg[14] = (uint8_t)(data->ADC_DAC_RE >> 8);
+    msg[15] = (uint8_t)data->ADC_DAC_RE;
+
+    // DAC 2 bytes
+    msg[16] = (uint8_t)(data->DAC_Setting >> 8);
+    msg[17] = (uint8_t)(data->DAC_Setting);
+
+    // Gain Setting 1 byte
+    msg[18] = (uint8_t)data->WE_Scale;
+
+    // Switch setting 1 byte
+    msg[19] = (uint8_t)data->SwitchState;
+
+    HAL_UART_Transmit(data_uart, msg, 20, 100); // This is a blocking call.
+}
+
+void CliSendDataPortMeasurementDone( void)
+{
+    // This is a binary message that goes straight to the UART
+    uint8_t msg[4];
+
+    msg[0] = 0x55; // Sync 1
+    msg[1] = 0xAA; // Sync 2
+    msg[2] = 1;
+    msg[3] = 0x02; // ID
+
+    HAL_UART_Transmit(data_uart, msg, 3, 100); // This is a blocking call.
+}
+
 #define MAX_NUM_PARAMS 8
 static uint32_t parameter_list[MAX_NUM_PARAMS];
 
@@ -377,11 +435,11 @@ void CliParseCommand(void)
     {
         num_args = CliParseParameterString(4);
 
-        if (num_args >= 1)
+        if (num_args == 7)
         {
             OK = true;
 
-            CliSendCmd(PSTAT_RUN_REQ, parameter_list[0], 0, pstat_Queue);
+            PstatSendRunReq( parameter_list[0], parameter_list[1], parameter_list[2], parameter_list[3], parameter_list[4], parameter_list[5], parameter_list[6] );
         }
     }
     else if (strncmp("end", (const char*)UartRxBuffer, 3) == 0)
