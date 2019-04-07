@@ -292,7 +292,7 @@ void CliSendDataPortMeasurementDone( void)
     msg[2] = 1;
     msg[3] = 0x02; // ID
 
-    HAL_UART_Transmit(data_uart, msg, 3, 100); // This is a blocking call.
+    HAL_UART_Transmit(data_uart, msg, 4, 100); // This is a blocking call.
 }
 
 #define MAX_NUM_PARAMS 8

@@ -163,6 +163,12 @@ void pstat_task(void * parm)
             {
                 Message_t AckMsg;
 
+                // Empty the queue of data responses
+                while (xQueueReceive( pstatMeasurement_Queue, (void*)&DataMsg, 0))
+                {
+                    CliSendDataPortMeasurement( &DataMsg );
+                }
+
                 // Change SPI mode to unblocking
                 SPI_SetIrqMode(false);
                 xQueueReceive( pstat_Queue, (void*)&AckMsg, 10 );
@@ -365,8 +371,8 @@ static const WE_Scale_t scales[8] = {WE_SCALE_UNITY, WE_SCALE_316_uA, WE_SCALE_1
 bool MakeMeasurementFromISR(pstatMeasurement_t * measurement)
 {
     int i = 0;
-    int32_t value;
-    int32_t testValue;
+    volatile int32_t value;
+    volatile int32_t testValue;
 
     measurement->TimeStamp = xTaskGetTickCountFromISR();   // Get Time Stamp ISR
 
@@ -376,7 +382,7 @@ bool MakeMeasurementFromISR(pstatMeasurement_t * measurement)
 
         value = ads1256_ReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM, 1);
 
-        testValue = (value > 0) ? value : -value;
+        testValue = (value >= 0) ? value : -value;
 
         i++;
 
@@ -398,6 +404,8 @@ bool MakeMeasurementFromISR(pstatMeasurement_t * measurement)
     measurement->TestMeasurement = ADC_NOT_PRESENT;
 
     measurement->SwitchState = LastSW;
+
+    measurement->DAC_Setting = CurrentDAC;
 
     xQueueSendToBackFromISR( pstatMeasurement_Queue, measurement, NULL);
 
