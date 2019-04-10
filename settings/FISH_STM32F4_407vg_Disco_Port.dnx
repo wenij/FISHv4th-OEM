@@ -12,7 +12,7 @@
         <ByteLimit>50</ByteLimit>
     </Stack>
     <StLinkDriver>
-        <stlinkserialNo>21201687</stlinkserialNo>
+        <stlinkserialNo>33540487</stlinkserialNo>
         <stlinkfoundProbes />
         <stlinkResetStyle>0</stlinkResetStyle>
         <stlinkResetStrategy>1</stlinkResetStrategy>
@@ -20,14 +20,14 @@
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </StLinkDriver>
     <DebugChecksum>
-        <Checksum>902789879</Checksum>
+        <Checksum>4214882584</Checksum>
     </DebugChecksum>
     <CodeCoverage>
         <Enabled>_ 0</Enabled>
     </CodeCoverage>
     <Disassembly>
-        <MixedMode>1</MixedMode>
         <InstrCount>0</InstrCount>
+        <MixedMode>1</MixedMode>
     </Disassembly>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -73,6 +73,9 @@
         <FreqHi>0</FreqHi>
         <MultiCoreRunAll>1</MultiCoreRunAll>
     </Simulator>
+    <RecentFlashDownload>
+        <Path>C:\Users\Clyde W Phillips Jr\Desktop\BIG Smart-io Branch\FISHv4th-OEM\BIG\PSTAT_Debug\big_fw.elf</Path>
+    </RecentFlashDownload>
     <Trace1>
         <Enabled>0</Enabled>
         <ShowSource>1</ShowSource>
