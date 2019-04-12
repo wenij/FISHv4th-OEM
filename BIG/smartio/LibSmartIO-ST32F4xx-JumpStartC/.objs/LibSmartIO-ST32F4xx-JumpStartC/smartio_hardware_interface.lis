@@ -1,0 +1,374 @@
+                        .module smartio_hardware_interface.c
+                        .area text
+ 000000                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\LibSmartIO-ST32F4xx-JumpStartC\smartio_hardware_interface.c
+                        .area text
+ 000000                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\LibSmartIO-ST32F4xx-JumpStartC\smartio_hardware_interface.c
+ 000000                 .dbfunc e SmartIO_HardReset _SmartIO_HardReset#Fvv fV 31 -100589247
+ 000000         _SmartIO_HardReset#Fvv::
+ 000000                 .dbprevlr 0
+ 000000 00B5            push {LR}
+ 000002                 .dbblock 32
+ 000002                 .dbline 33
+ 000002 0648            ldr R0,LIT_SmartIO_HardReset+0
+ 000004 0721            movs R1,#7
+ 000006 00F000F8        bl __Xm_10_JSAPI_GPIO5_Clear#FvPus10_JSAPI_GPIOj
+ 00000A                 .dbline 34
+ 00000A 0A20            movs R0,#10
+ 00000C 00F000F8        bl _DelayMilliSecs#Fvj
+ 000010                 .dbline 35
+ 000010 0248            ldr R0,LIT_SmartIO_HardReset+0
+ 000012 0721            movs R1,#7
+ 000014 00F000F8        bl __Xm_10_JSAPI_GPIO3_Set#FvPus10_JSAPI_GPIOj
+ 000018                 .dbblkend 36
+ 000018         L17:
+ 000018 00BD            pop {PC}
+ 00001A                 .dbfuncend
+                        .align4
+ 00001C                 .LITERAL
+ 00001C         LIT_SmartIO_HardReset:
+ 00001C 00000000        .long _portc#us10_JSAPI_GPIO
+ 000020         	.ENDLITERAL
+ 000020                 .dbstacksize 0
+ 000020                 .dbfunc e SmartIO_SPI_SendBytes _SmartIO_SPI_SendBytes#FvPhi fV 42 2489096
+ 000020         ;        sendlen -> R4
+ 000020         ;        sendbuf -> R5
+ 000020         _SmartIO_SPI_SendBytes#FvPhi::
+ 000020                 .dbprevlr 12
+ 000020 2DE93048        push {R4,R5,R11,LR}
+ 000024 EB46            mov R11,R13
+ 000026 0546            mov R5,R0
+ 000028 0C46            mov R4,R1
+ 00002A                 .dbblock 43
+ 00002A                 .dbline 44
+ 00002A 0B48            ldr R0,LIT_SmartIO_SPI_SendBytes+0
+ 00002C 00F000F8        bl __Xm_9_JSAPI_SPI10_ChipSelect#FvPus9_JSAPI_SPI
+ 000030                 .dbline 45
+ 000030 0948            ldr R0,LIT_SmartIO_SPI_SendBytes+0
+ 000032 2146            mov R1,R4
+ 000034 00F000F8        bl __Xm_9_JSAPI_SPI5_Write#FjPus9_JSAPI_SPIj
+ 000038                 .dbline 46
+ 000038 0748            ldr R0,LIT_SmartIO_SPI_SendBytes+0
+ 00003A 2112            asrs R1,R4,#8
+ 00003C 00F000F8        bl __Xm_9_JSAPI_SPI5_Write#FjPus9_JSAPI_SPIj
+ 000040                 .dbline 47
+ 000040 0548            ldr R0,LIT_SmartIO_SPI_SendBytes+0
+ 000042 0649            ldr R1,LIT_SmartIO_SPI_SendBytes+4
+ 000044 2A46            mov R2,R5
+ 000046 2346            mov R3,R4
+ 000048 00F000F8        bl __Xm_9_JSAPI_SPI14_WriteByteArray#FiPus9_JSAPI_SPIPhPhi
+ 00004C                 .dbline 48
+ 00004C 0248            ldr R0,LIT_SmartIO_SPI_SendBytes+0
+ 00004E 00F000F8        bl __Xm_9_JSAPI_SPI12_ChipDeselect#FvPus9_JSAPI_SPI
+ 000052                 .dbblkend 49
+ 000052         L18:
+ 000052 BDE83088        pop {R4,R5,R11,PC}
+ 000056                 .dbfuncend
+                        .align4
+ 000058                 .LITERAL
+ 000058         LIT_SmartIO_SPI_SendBytes:
+ 000058 00000000        .long _spi1#us9_JSAPI_SPI
+ 00005C 00000000        .long 0x0
+ 000060         	.ENDLITERAL
+ 000060                 .dbsym r sendlen 4 I p1
+ 000060                 .dbsym r sendbuf 5 pc p0
+ 000060                 .dbstacksize 0
+ 000060                 .dbfunc e SmartIO_SPI_ReadBytes _SmartIO_SPI_ReadBytes#FiPhi fI 55 2489096
+ 000060         ;            low -> R5
+ 000060         ;       replylen -> R5
+ 000060         ;         buflen -> R7
+ 000060         ;       replybuf -> R6
+ 000060         _SmartIO_SPI_ReadBytes#FiPhi::
+ 000060                 .dbprevlr 20
+ 000060 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 000064 EB46            mov R11,R13
+ 000066 0646            mov R6,R0
+ 000068 0F46            mov R7,R1
+ 00006A                 .dbblock 56
+ 00006A                 .dbline 57
+ 00006A 0E48            ldr R0,LIT_SmartIO_SPI_ReadBytes+0
+ 00006C 00F000F8        bl __Xm_9_JSAPI_SPI10_ChipSelect#FvPus9_JSAPI_SPI
+ 000070                 .dbblock 58
+ 000070                 .dbline 58
+ 000070 0C48            ldr R0,LIT_SmartIO_SPI_ReadBytes+0
+ 000072 00F000F8        bl __Xm_9_JSAPI_SPI4_Read#FjPus9_JSAPI_SPI
+ 000076 0546            mov R5,R0
+ 000078                 .dbline 59
+ 000078 0A48            ldr R0,LIT_SmartIO_SPI_ReadBytes+0
+ 00007A 00F000F8        bl __Xm_9_JSAPI_SPI4_Read#FjPus9_JSAPI_SPI
+ 00007E 0402            lsls R4,R0,#8
+ 000080 44EA0505        orr R5,R4,R5
+ 000084                 .dbline 62
+ 000084 BD42            cmp R5,R7
+ 000086 02DD            ble L20
+ 000088                 .dbline 63
+ 000088 7FF00005        mvns R5,#0
+ 00008C 04E0            b L21
+ 00008E         L20:
+ 00008E                 .dbline 65
+ 00008E 0548            ldr R0,LIT_SmartIO_SPI_ReadBytes+0
+ 000090 3146            mov R1,R6
+ 000092 2A46            mov R2,R5
+ 000094 00F000F8        bl __Xm_9_JSAPI_SPI9_ReadBytes#FiPus9_JSAPI_SPIPhi
+ 000098         L21:
+ 000098                 .dbline 67
+ 000098 0248            ldr R0,LIT_SmartIO_SPI_ReadBytes+0
+ 00009A 00F000F8        bl __Xm_9_JSAPI_SPI12_ChipDeselect#FvPus9_JSAPI_SPI
+ 00009E                 .dbline 68
+ 00009E 2846            mov R0,R5
+ 0000A0                 .dbblkend 69
+ 0000A0                 .dbblkend 69
+ 0000A0         L19:
+ 0000A0 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 0000A4                 .dbfuncend
+                        .align4
+ 0000A4                 .LITERAL
+ 0000A4         LIT_SmartIO_SPI_ReadBytes:
+ 0000A4 00000000        .long _spi1#us9_JSAPI_SPI
+ 0000A8         	.ENDLITERAL
+ 0000A8                 .dbsym r low 5 I
+ 0000A8                 .dbsym r replylen 5 I
+ 0000A8                 .dbsym r buflen 7 I p1
+ 0000A8                 .dbsym r replybuf 6 pc p0
+ 0000A8                 .dbstacksize 0
+ 0000A8                 .dbfunc e SmartIO_HardwareInit _SmartIO_HardwareInit#FvPFvvE fV 73 2489096
+ 0000A8         ;        IRQ_ISR -> R7
+ 0000A8         _SmartIO_HardwareInit#FvPFvvE::
+ 0000A8                 .dbprevlr 20
+ 0000A8 2DE9F048        push {R4,R5,R6,R7,R11,LR}
+ 0000AC EB46            mov R11,R13
+ 0000AE 89B0            sub R13,R13,#36
+ 0000B0 0746            mov R7,R0
+ 0000B2                 .dbblock 74
+ 0000B2                 .dbline 76
+ 0000B2 1D48            ldr R0,LIT_SmartIO_HardwareInit+12
+ 0000B4 1A4C            ldr R4,LIT_SmartIO_HardwareInit+4
+ 0000B6 2146            mov R1,R4
+ 0000B8 0525            movs R5,#5
+ 0000BA 2A46            mov R2,R5
+ 0000BC 2B46            mov R3,R5
+ 0000BE 0094            str R4,[R13,#0]
+ 0000C0 0726            movs R6,#7
+ 0000C2 0196            str R6,[R13,#+4]
+ 0000C4 0295            str R5,[R13,#+8]
+ 0000C6 0394            str R4,[R13,#+12]
+ 0000C8 0624            movs R4,#6
+ 0000CA 0494            str R4,[R13,#+16]
+ 0000CC 0595            str R5,[R13,#+20]
+ 0000CE 184D            ldr R5,LIT_SmartIO_HardwareInit+20
+ 0000D0 0695            str R5,[R13,#+24]
+ 0000D2 0794            str R4,[R13,#+28]
+ 0000D4 0124            movs R4,#1
+ 0000D6 0894            str R4,[R13,#+32]
+ 0000D8 00F000F8        bl __Xm_9_JSAPI_SPI7_SetPins#FvPus9_JSAPI_SPIPus10_JSAPI_GPIOjjPus10_JSAPI_GPIOjjPus10_JSAPI_GPIOjjPus10_JSAPI_GPIOji
+ 0000DC                 .dbline 85
+ 0000DC 1248            ldr R0,LIT_SmartIO_HardwareInit+12
+ 0000DE 0821            movs R1,#8
+ 0000E0 0122            movs R2,#1
+ 0000E2 124B            ldr R3,LIT_SmartIO_HardwareInit+16
+ 0000E4 00F000F8        bl __Xm_9_JSAPI_SPI7_MakeSPI#FiPus9_JSAPI_SPIjjj
+ 0000E8                 .dbline 86
+ 0000E8 0F48            ldr R0,LIT_SmartIO_HardwareInit+12
+ 0000EA 00F000F8        bl __Xm_9_JSAPI_SPI6_Enable#FvPus9_JSAPI_SPI
+ 0000EE                 .dbline 89
+ 0000EE 0C48            ldr R0,LIT_SmartIO_HardwareInit+4
+ 0000F0 0921            movs R1,#9
+ 0000F2 00F000F8        bl __Xm_10_JSAPI_GPIO9_MakeInput#FvPus10_JSAPI_GPIOj
+ 0000F6                 .dbline 92
+ 0000F6 0B48            ldr R0,LIT_SmartIO_HardwareInit+8
+ 0000F8 0949            ldr R1,LIT_SmartIO_HardwareInit+4
+ 0000FA 0022            movs R2,#0
+ 0000FC 0123            movs R3,#1
+ 0000FE 0024            movs R4,#0
+ 000100 0094            str R4,[R13,#0]
+ 000102 0197            str R7,[R13,#+4]
+ 000104 00F000F8        bl __Xm_10_JSAPI_EXTI8_MakeEXTI#FiPus10_JSAPI_EXTIPus10_JSAPI_GPIOhhiPFvvE
+ 000108                 .dbline 95
+ 000108 0448            ldr R0,LIT_SmartIO_HardwareInit+0
+ 00010A 0721            movs R1,#7
+ 00010C 0022            movs R2,#0
+ 00010E 00F000F8        bl __Xm_10_JSAPI_GPIO10_MakeOutput#FvPus10_JSAPI_GPIOjh
+ 000112                 .dbline 96
+ 000112 FFF775FF        bl _SmartIO_HardReset#Fvv
+ 000116                 .dbblkend 98
+ 000116         L22:
+ 000116 09B0            add R13,R13,#36
+ 000118 BDE8F088        pop {R4,R5,R6,R7,R11,PC}
+ 00011C                 .dbfuncend
+                        .align4
+ 00011C                 .LITERAL
+ 00011C         LIT_SmartIO_HardwareInit:
+ 00011C 00000000        .long _portc#us10_JSAPI_GPIO
+ 000120 00000000        .long _porta#us10_JSAPI_GPIO
+ 000124 00000000        .long _exti9#us10_JSAPI_EXTI
+ 000128 00000000        .long _spi1#us9_JSAPI_SPI
+ 00012C 40420F00        .long 0xf4240
+ 000130 00000000        .long _portb#us10_JSAPI_GPIO
+ 000134         	.ENDLITERAL
+ 000134                 .dbsym r IRQ_ISR 7 pfV p0
+ 000134                 .dbstacksize 36
+ 000134                 .dbfunc e SmartIO_SPI_FinishRead _SmartIO_SPI_FinishRead#Fvv fV 102 2489096
+ 000134         _SmartIO_SPI_FinishRead#Fvv::
+ 000134                 .dbprevlr 0
+ 000134 00B5            push {LR}
+ 000136                 .dbblock 103
+ 000136         L24:
+ 000136         L25:
+ 000136                 .dbline 104
+ 000136 0348            ldr R0,LIT_SmartIO_SPI_FinishRead+0
+ 000138 00F000F8        bl __Xm_10_JSAPI_GPIO4_Read#FjPus10_JSAPI_GPIO
+ 00013C 10F4007F        tst R0,#512
+ 000140 F9D1            bne L24
+ 000142                 .dbblkend 106
+ 000142         L23:
+ 000142 00BD            pop {PC}
+ 000144                 .dbfuncend
+                        .align4
+ 000144                 .LITERAL
+ 000144         LIT_SmartIO_SPI_FinishRead:
+ 000144 00000000        .long _porta#us10_JSAPI_GPIO
+ 000148         	.ENDLITERAL
+ 000148                 .dbstacksize 0
+ 000148                 .dbfunc e SmartIO_Error _SmartIO_Error#Fviz fV 110 2489096
+                        .area lit
+                        .align4
+ 000000         _47#A8_Pv:
+ 000000 6A010000        .long L31
+ 000004 72010000        .long L33
+ 000008 7A010000        .long L35
+ 00000C 82010000        .long L37
+ 000010 8A010000        .long L39
+ 000014 9C010000        .long L41
+ 000018 A4010000        .long L43
+ 00001C B2010000        .long L29
+ 000020 AC010000        .long L45
+                        .area text
+                ;              h -> R6
+                ;           args -> R6
+                ;              n -> R11,20
+ 000148         _SmartIO_Error#Fviz::
+ 000148                 .dbprevlr 16
+ 000148 0FB4            push {r0-r3}
+ 00014A 2DE97048        push {R4,R5,R6,R11,LR}
+ 00014E EB46            mov R11,R13
+ 000150                 .dbblock 111
+ 000150                 .dbline 115
+ 000150 0BF11806        add R6,R11,#0x18
+ 000154                 .dbline 117
+ 000154 DBF81440        ldr R4,[R11,#+20]
+ 000158 012C            cmp R4,#1
+ 00015A 2ADB            blt L29
+ 00015C 092C            cmp R4,#9
+ 00015E 28DC            bgt L29
+ 000160 1E4D            ldr R5,LIT_SmartIO_Error+32
+ 000162 641E            subs R4,R4,#1
+ 000164 A400            lsls R4,R4,#2
+ 000166 6459            ldr R4,[R4,R5]
+ 000168 A746            mov R15,R4
+ 00016A         X0:
+ 00016A                 .dbfile C:\Work\newtech\Smart.IO\MCU-App\Host_Interface_Layer\LibSmartIO-ST32F4xx-JumpStartC\smartio_hardware_interface.c
+ 00016A         L31:
+ 00016A                 .dbline 120
+ 00016A 1B48            ldr R0,LIT_SmartIO_Error+28
+ 00016C 00F000F8        bl _printf#FiPKcz
+ 000170                 .dbline 121
+ 000170 1FE0            b L30
+ 000172         L33:
+ 000172                 .dbline 123
+ 000172 1848            ldr R0,LIT_SmartIO_Error+24
+ 000174 00F000F8        bl _printf#FiPKcz
+ 000178                 .dbline 124
+ 000178 1BE0            b L30
+ 00017A         L35:
+ 00017A                 .dbline 126
+ 00017A 1548            ldr R0,LIT_SmartIO_Error+20
+ 00017C 00F000F8        bl _printf#FiPKcz
+ 000180                 .dbline 127
+ 000180 17E0            b L30
+ 000182         L37:
+ 000182                 .dbline 129
+ 000182 1248            ldr R0,LIT_SmartIO_Error+16
+ 000184 00F000F8        bl _printf#FiPKcz
+ 000188                 .dbline 130
+ 000188 13E0            b L30
+ 00018A         L39:
+ 00018A                 .dbline 132
+ 00018A 361D            adds R6,R6,#4
+ 00018C 7FF00304        mvns R4,#3
+ 000190 3659            ldr R6,[R6,R4]
+ 000192                 .dbline 133
+ 000192 0D48            ldr R0,LIT_SmartIO_Error+12
+ 000194 3146            mov R1,R6
+ 000196 00F000F8        bl _printf#FiPKcz
+ 00019A                 .dbline 134
+ 00019A 0AE0            b L30
+ 00019C         L41:
+ 00019C                 .dbline 136
+ 00019C 0948            ldr R0,LIT_SmartIO_Error+8
+ 00019E 00F000F8        bl _printf#FiPKcz
+ 0001A2                 .dbline 137
+ 0001A2 06E0            b L30
+ 0001A4         L43:
+ 0001A4                 .dbline 139
+ 0001A4 0648            ldr R0,LIT_SmartIO_Error+4
+ 0001A6 00F000F8        bl _printf#FiPKcz
+ 0001AA                 .dbline 140
+ 0001AA 02E0            b L30
+ 0001AC         L45:
+ 0001AC                 .dbline 142
+ 0001AC 0348            ldr R0,LIT_SmartIO_Error+0
+ 0001AE 00F000F8        bl _printf#FiPKcz
+ 0001B2         L29:
+ 0001B2         L30:
+ 0001B2                 .dbblkend 144
+ 0001B2         L27:
+ 0001B2 BDE87018        pop {R4,R5,R6,R11,R12}
+ 0001B6 04B0            add R13,R13,#16
+ 0001B8 6047            bx R12
+ 0001BA                 .dbfuncend
+                        .align4
+ 0001BC                 .LITERAL
+ 0001BC         LIT_SmartIO_Error:
+ 0001BC 24000000        .long _46#A39_c
+ 0001C0 4B000000        .long _44#A31_c
+ 0001C4 6A000000        .long _42#A31_c
+ 0001C8 89000000        .long _40#A51_c
+ 0001CC BC000000        .long _38#A40_c
+ 0001D0 E4000000        .long _36#A32_c
+ 0001D4 04010000        .long _34#A33_c
+ 0001D8 25010000        .long _32#A25_c
+ 0001DC 00000000        .long _47#A8_Pv
+ 0001E0         	.ENDLITERAL
+ 0001E0                 .dbsym r h 6 i
+ 0001E0                 .dbsym r args 6 pc
+ 0001E0                 .dbsym l n 20 I p0v
+ 0001E0                 .dbstacksize 0
+                        .area lit
+ 000024         _46#A39_c:
+ 000024 534D415254494F5F4552524F525F434F        .byte 'S,'M,'A,'R,'T,'I,'O,95,'E,'R,'R,'O,'R,95,'C,'O
+ 000034 4D4D414E445F4255464645525F4F5645        .byte 'M,'M,'A,'N,'D,95,'B,'U,'F,'F,'E,'R,95,'O,'V,'E
+ 000044 52464C4F570A00  .byte 'R,'F,'L,'O,'W,10,0
+ 00004B         _44#A31_c:
+ 00004B 534D415254494F5F4552524F525F494E        .byte 'S,'M,'A,'R,'T,'I,'O,95,'E,'R,'R,'O,'R,95,'I,'N
+ 00005B 56414C49445F48414E444C45320A00  .byte 'V,'A,'L,'I,'D,95,'H,'A,'N,'D,'L,'E,50,10,0
+ 00006A         _42#A31_c:
+ 00006A 534D415254494F5F4552524F525F4255        .byte 'S,'M,'A,'R,'T,'I,'O,95,'E,'R,'R,'O,'R,95,'B,'U
+ 00007A 464645525F544F4F534D414C4C0A00  .byte 'F,'F,'E,'R,95,'T,'O,'O,'S,'M,'A,'L,'L,10,0
+ 000089         _40#A51_c:
+ 000089 534D415254494F5F4552524F525F4341        .byte 'S,'M,'A,'R,'T,'I,'O,95,'E,'R,'R,'O,'R,95,'C,'A
+ 000099 4C4C4241434B5F48414E444C455F4E4F        .byte 'L,'L,'B,'A,'C,'K,95,'H,'A,'N,'D,'L,'E,95,'N,'O
+ 0000A9 545F464F554E442068616E646C652025        .byte 'T,95,'F,'O,'U,'N,'D,32,'h,'a,'n,'d,'l,'e,32,37
+ 0000B9 640A00          .byte 'd,10,0
+ 0000BC         _38#A40_c:
+ 0000BC 534D415254494F5F4552524F525F4341        .byte 'S,'M,'A,'R,'T,'I,'O,95,'E,'R,'R,'O,'R,95,'C,'A
+ 0000CC 4C4C4241434B5F5441424C455F544F4F        .byte 'L,'L,'B,'A,'C,'K,95,'T,'A,'B,'L,'E,95,'T,'O,'O
+ 0000DC 5F534D414C4C0A00        .byte 95,'S,'M,'A,'L,'L,10,0
+ 0000E4         _36#A32_c:
+ 0000E4 534D415254494F5F4552524F525F4241        .byte 'S,'M,'A,'R,'T,'I,'O,95,'E,'R,'R,'O,'R,95,'B,'A
+ 0000F4 445F4153594E435F48414E444C450A00        .byte 'D,95,'A,'S,'Y,'N,'C,95,'H,'A,'N,'D,'L,'E,10,0
+ 000104         _34#A33_c:
+ 000104 534D415254494F5F4552524F525F4241        .byte 'S,'M,'A,'R,'T,'I,'O,95,'E,'R,'R,'O,'R,95,'B,'A
+ 000114 445F52455455524E5F48414E444C450A        .byte 'D,95,'R,'E,'T,'U,'R,'N,95,'H,'A,'N,'D,'L,'E,10
+ 000124 00              .byte 0
+ 000125         _32#A25_c:
+ 000125 534D415254494F5F4552524F525F4241        .byte 'S,'M,'A,'R,'T,'I,'O,95,'E,'R,'R,'O,'R,95,'B,'A
+ 000135 4452455455524E0A00      .byte 'D,'R,'E,'T,'U,'R,'N,10,0

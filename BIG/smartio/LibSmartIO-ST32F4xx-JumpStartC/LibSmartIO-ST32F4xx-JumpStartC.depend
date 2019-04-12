@@ -1,0 +1,155 @@
+# depslib dependency file v1.0
+1505125601 source:c:\work\newtech\smart.io\mcu-app\host_interface_layer\smartio_api.c
+	<stdarg.h>
+	"smartio_api.h"
+	"smartio_interface.h"
+
+1510824690 c:\work\newtech\smart.io\mcu-app\host_interface_layer\smartio_api.h
+	<stdint.h>
+
+1504130326 c:\work\newtech\smart.io\mcu-app\host_interface_layer\smartio_interface.h
+	<stdint.h>
+
+1510642982 source:c:\work\newtech\smart.io\mcu-app\host_interface_layer\smartio_interface.c
+	<stdio.h>
+	<ctype.h>
+	<string.h>
+	<stdlib.h>
+	"smartio_api.h"
+	"smartio_interface.h"
+	"smartio_hardware_interface.h"
+
+1504344281 c:\work\newtech\smart.io\mcu-app\host_interface_layer\smartio_hardware_interface.h
+
+1504130326 source:c:\work\newtech\smart.io\mcu-app\host_interface_layer\libsmartio-st32f4xx-jumpstartc\handlers.c
+	<stm32f4xx.h>
+
+1462931686 c:\iccv8cortex\\include\jsapi\st.com-files\cmsis\device\st\stm32f4xx\include\stm32f4xx.h
+	"core_cm4.h"
+	"system_stm32f4xx.h"
+	<stdint.h>
+	"stm32f4xx_conf.h"
+
+1357815285 c:\iccv8cortex\\include\jsapi\st.com-files\cmsis\device\st\stm32f4xx\include\system_stm32f4xx.h
+
+1444421722 c:\iccv8cortex\\include\jsapi\st.com-files\cmsis\device\st\stm32f4xx\include\stm32f4xx_conf.h
+	"stm32f4xx_adc.h"
+	"stm32f4xx_can.h"
+	"stm32f4xx_crc.h"
+	"stm32f4xx_cryp.h"
+	"stm32f4xx_dac.h"
+	"stm32f4xx_dbgmcu.h"
+	"stm32f4xx_dcmi.h"
+	"stm32f4xx_dma.h"
+	"stm32f4xx_exti.h"
+	"stm32f4xx_flash.h"
+	"stm32f4xx_fsmc.h"
+	"stm32f4xx_hash.h"
+	"stm32f4xx_gpio.h"
+	"stm32f4xx_i2c.h"
+	"stm32f4xx_iwdg.h"
+	"stm32f4xx_pwr.h"
+	"stm32f4xx_rcc.h"
+	"stm32f4xx_rng.h"
+	"stm32f4xx_rtc.h"
+	"stm32f4xx_sdio.h"
+	"stm32f4xx_spi.h"
+	"stm32f4xx_syscfg.h"
+	"stm32f4xx_tim.h"
+	"stm32f4xx_usart.h"
+	"stm32f4xx_wwdg.h"
+	"misc.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_adc.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_can.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_crc.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_cryp.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_dac.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_dbgmcu.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_dcmi.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_dma.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_exti.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_flash.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_fsmc.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_hash.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_gpio.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_i2c.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_iwdg.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_pwr.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_rcc.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_rng.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_rtc.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_sdio.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_spi.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_syscfg.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_tim.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_usart.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\stm32f4xx_wwdg.h
+	"stm32f4xx.h"
+
+1432107377 c:\iccv8cortex\\include\jsapi\st.com-files\stdperiph_lib\stm32f4xx\inc\misc.h
+	"stm32f4xx.h"
+
+1510812122 source:c:\work\newtech\smart.io\mcu-app\host_interface_layer\libsmartio-st32f4xx-jumpstartc\smartio_hardware_interface.c
+	<stdio.h>
+	<stdarg.h>
+	<jsapi.h>
+	"smartio_interface.h"
+	"smartio_hardware_interface.h"
+
+1509562617 c:\iccv8cortex\\include\jsapi\stm32f4\jsapi.h
+	<stdbool.h>
+	<core_cminstr.h>
+	"..\Portable\jsapi_fifoqueue.h"
+
+1462213910 c:\iccv8cortex\\include\jsapi\portable\jsapi_fifoqueue.h
+	<stdbool.h>
+
