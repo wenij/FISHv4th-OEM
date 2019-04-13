@@ -213,6 +213,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FatFs"/>
 						<entry excluding="Source/portable/GCC/ARM_CM4F" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FreeRTOS"/>
 						<entry excluding="Drivers/STM32F2xx_HAL_Driver/Src/stm32f2xx_hal_uart.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ST32MF2"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="inc"/>
@@ -289,6 +290,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FatFs"/>
 						<entry excluding="Source/portable/GCC/ARM_CM4F" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="FreeRTOS"/>
 						<entry excluding="Drivers/STM32F2xx_HAL_Driver/Src/stm32f2xx_hal_uart.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="ST32MF2"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="inc"/>
