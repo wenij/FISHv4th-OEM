@@ -40,6 +40,8 @@
 #include <string.h>
 
 #include "main.h"
+#include "fatfs.h"
+
 #ifdef STM32F205xx
 #include "stm32f2xx_hal.h"
 #else
@@ -138,6 +140,7 @@ int main(void)
   //MX_RTC_Init();
 
   /* USER CODE BEGIN 2 */
+  MX_FATFS_Init();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
