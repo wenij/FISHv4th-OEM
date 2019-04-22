@@ -50,7 +50,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "tim.h"
 
-
 #ifdef STM32F205xx
 #define MICROSEC_TO_COUNT(_x)  ((_x) * 59)  // * APB1 Timer Clock in MHz
 #else
@@ -172,7 +171,11 @@ void MX_TIM3_Init(void)
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 0xffff;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+#ifdef  STM32F205xx
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+#else
+//  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+#endif
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
