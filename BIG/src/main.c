@@ -81,7 +81,7 @@ void MX_FREERTOS_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-
+static unsigned char USER_read_buffer[512];
 /* USER CODE END 0 */
 
 /**
@@ -140,6 +140,10 @@ int main(void)
   //MX_RTC_Init();
 
   /* USER CODE BEGIN 2 */
+  /*
+    * Unit test USER_read
+  */
+ 	  USER_read(	0,	USER_read_buffer,	1,	1); // Called in the main funcion.
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

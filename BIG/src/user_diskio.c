@@ -111,17 +111,34 @@ DSTATUS USER_status (
   * @retval DRESULT: Operation result
   */
 DRESULT USER_read (
-	BYTE pdrv,      /* Physical drive nmuber to identify the drive */
+	BYTE pdrv,      /* Physical drive number to identify the drive */
 	BYTE *buff,     /* Data buffer to store read data */
 	DWORD sector,   /* Sector address in LBA */
 	UINT count      /* Number of sectors to read */
 )
 {
   /* USER CODE BEGIN READ */
+	/*
+	 * I created static unsigned char USER_read_buffer[512];
+	 * Yet if this function also [returned] the source address, who needs the buffer?
+	 * any who using memcopy to buffer ~ to be declared in caller, later.
+	 */
+	// FLASH            0x08000000         0x00100000         xr TOP of Flash = 0x8100000
+	// using 0x80000 , 524288 bytes for flash at an offset of 0x8000, so 0x8080000 to 0x8100000
+	uint8_t *flashSource = 0x8080000;	// Set to the start of the flash *sector* addresses.
+
+
+	    /* Move to the start of the sector being read. */
+	    flashSource += ( 512 * sector );
+
+	    /* Hoping Flash data can be copied using memcpy(). */
+	    memcpy( ( void * ) buff,
+	            ( void * ) flashSource,
+	            ( size_t ) ( count * 512 ) );
+// does memcopy have a return value? Is this always a valid read?
     return RES_OK;
   /* USER CODE END READ */
 }
-
 /**
   * @brief  Writes Sector(s)  
   * @param  pdrv: Physical drive number (0..)

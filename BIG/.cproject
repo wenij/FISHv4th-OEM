@@ -310,7 +310,6 @@
 		<project id="big_fw_stm32f4.fr.ac6.managedbuild.target.gnu.cross.exe.1850734741" name="Executable" projectType="fr.ac6.managedbuild.target.gnu.cross.exe"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="DebugF2"/>
 		<configuration configurationName="PSTAT_Release"/>
@@ -345,5 +344,17 @@
 		<scannerConfigBuildInfo instanceId="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1746223310;fr.ac6.managedbuild.config.gnu.cross.exe.debug.1746223310.;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1397439380;fr.ac6.managedbuild.tool.gnu.cross.c.compiler.input.c.909507829">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets>
+			<target name="big_fw" path="src" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>make</buildCommand>
+				<buildArguments>-j4</buildArguments>
+				<buildTarget>big_fw</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>true</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+		</buildTargets>
 	</storageModule>
 </cproject>
