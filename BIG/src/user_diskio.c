@@ -157,6 +157,25 @@ DRESULT USER_write (
 { 
   /* USER CODE BEGIN WRITE */
   /* USER CODE HERE */
+	// FLASH            0x08000000         0x00100000         xr TOP of Flash = 0x8100000
+	// using 0x80000 , 524288 bytes for flash at an offset of 0x8000, so 0x8080000 to 0x8100000
+	uint8_t *FlashAddress = 0x8080000;	// Set to the start of the flash *sector* addresses.
+	uint64_t data = 0x5f;
+	uint8_t currentSector = sector;
+    /* Move to the start of the sector being read. */
+	FlashAddress += ( 512 * sector );
+
+    HAL_FLASH_Unlock();
+    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
+
+    //For loop here for sector(s) to erase
+//    FLASH_Erase_Sector(FLASH_SECTOR_6, VOLTAGE_RANGE_3);
+    FLASH_Erase_Sector(FlashAddress, VOLTAGE_RANGE_3);
+    //for loop here to write bytes/halfword or words in a sector.
+    // this is bombing
+    HAL_FLASH_Program(TYPEPROGRAM_WORD, FlashAddress, data);
+    HAL_FLASH_Lock();
+
     return RES_OK;
   /* USER CODE END WRITE */
 }

@@ -82,6 +82,7 @@ void MX_FREERTOS_Init(void);
 
 /* USER CODE BEGIN 0 */
 static unsigned char USER_read_buffer[512];
+static unsigned char USER_write_buffer[512] = { 0x5f, 0xc5 };
 /* USER CODE END 0 */
 
 /**
@@ -140,10 +141,12 @@ int main(void)
   //MX_RTC_Init();
 
   /* USER CODE BEGIN 2 */
-  /*
-    * Unit test USER_read
-  */
- 	  USER_read(	0,	USER_read_buffer,	1,	1); // Called in the main funcion.
+  /* Unit test USER_read */
+ 	  USER_read(	0,	USER_read_buffer,	1,	1); // Called in the main function.
+  /* Unit test USER_write */
+ 	 USER_write(	0,	USER_write_buffer,	1,	1);
+ 	 // this prototype writes the same sector this reads.
+// 	 USER_read(	0,	USER_read_buffer,	1,	1); // Called in the main function.
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
