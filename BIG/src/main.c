@@ -77,7 +77,8 @@ void MX_FREERTOS_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-
+extern DRESULT USER_read (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
+extern DRESULT USER_write (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
