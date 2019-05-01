@@ -142,12 +142,33 @@ int main(void)
   //MX_RTC_Init();
 
   /* USER CODE BEGIN 2 */
+  /* 1meg Flash sector allocation
+   * sector#	address		size	#512k sectors
+   * 0			0x8000000	16k
+   * 1			0x8004000	16k
+   * 2			0x8008000	16k
+   * 3			0x800C000	16k
+   * 4			0x8010000	64k
+   * 5			0x8020000	128k
+   * 6			0x8040000	128k
+   * 7			0x8060000	128k
+   * 8			0x8080000	128k	250 512k sectors
+   * 9			0x80A0000	128k	250 512k sectors
+   * 10			0x80C0000	128k	250 512k sectors
+   * 11			0x80E0000	128k	250 512k sectors
+   */
   /* Unit test USER_read */
- 	  USER_read(	0,	USER_read_buffer,	1,	1); // Called in the main function.
+  DRESULT readstatus = USER_read(	0,	USER_read_buffer,	0,	1); // Called in the main function.
+  if (readstatus)
+	  while(1);
   /* Unit test USER_write */
- 	 USER_write(	0,	USER_write_buffer,	1,	1);
+  DRESULT writestatus = USER_write(	0,	USER_write_buffer,	0,	1);
+  if (writestatus)
+	  while(1);
  	 // this prototype writes the same sector this reads.
-// 	 USER_read(	0,	USER_read_buffer,	1,	1); // Called in the main function.
+  readstatus = USER_read(	0,	USER_read_buffer,	0,	1); // Called in the main function.
+  if (readstatus)
+	  while(1);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

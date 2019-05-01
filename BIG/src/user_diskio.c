@@ -133,7 +133,7 @@ DRESULT USER_read (
 
 	    /* Hoping Flash data can be copied using memcpy(). */
 	    memcpy( ( void * ) buff,
-	            ( void * ) flashSource,
+	            ( void * ) &flashSource,
 	            ( size_t ) ( count * 512 ) );
 // does memcopy have a return value? Is this always a valid read?
     return RES_OK;
@@ -159,9 +159,9 @@ DRESULT USER_write (
   /* USER CODE HERE */
 	// FLASH            0x08000000         0x00100000         xr TOP of Flash = 0x8100000
 	// using 0x80000 , 524288 bytes for flash at an offset of 0x8000, so 0x8080000 to 0x8100000
-	uint8_t *FlashAddress = (uint8_t *) 0x8080000;	// Set to the start of the flash *sector* addresses.
+	uint32_t FlashAddress = (uint32_t) 0x8080000;	// Set to the start of the flash *sector* addresses.
 	uint64_t data = 0x5f;
-	uint8_t currentSector = sector;
+	uint8_t eraseSector = FLASH_SECTOR_8;
     /* Move to the start of the sector being read. */
 	FlashAddress += ( 512 * sector );
 
@@ -169,11 +169,13 @@ DRESULT USER_write (
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
 
     //For loop here for sector(s) to erase
-//    FLASH_Erase_Sector(FLASH_SECTOR_6, VOLTAGE_RANGE_3);
-    FLASH_Erase_Sector(FlashAddress[0], VOLTAGE_RANGE_3);
+//void FLASH_Erase_Sector(FLASH_SECTOR_6, VOLTAGE_RANGE_3);
+    FLASH_Erase_Sector(eraseSector, VOLTAGE_RANGE_3);
     //for loop here to write bytes/halfword or words in a sector.
-    // this is bombing
-    HAL_FLASH_Program(TYPEPROGRAM_WORD, FlashAddress[0], data);
+    			   // HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)
+    HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, FlashAddress, data);
+    if (flashprogstatus)
+    	while(1);
     HAL_FLASH_Lock();
 
     return RES_OK;
