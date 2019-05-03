@@ -132,8 +132,9 @@ DRESULT USER_read (
 	    flashSource += ( 512 * sector );
 
 	    /* Hoping Flash data can be copied using memcpy(). */
+//void * memcpy (void *__restrict, const void *__restrict, size_t);
 	    memcpy( ( void * ) buff,
-	            ( void * ) &flashSource,
+	            ( void * ) flashSource,
 	            ( size_t ) ( count * 512 ) );
 // does memcopy have a return value? Is this always a valid read?
     return RES_OK;
@@ -172,10 +173,17 @@ DRESULT USER_write (
 //void FLASH_Erase_Sector(FLASH_SECTOR_6, VOLTAGE_RANGE_3);
     FLASH_Erase_Sector(eraseSector, VOLTAGE_RANGE_3);
     //for loop here to write bytes/halfword or words in a sector.
-    			   // HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)
-    HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, FlashAddress, data);
-    if (flashprogstatus)
-    	while(1);
+    for(int i = 1; i <= (512 /4); i++)
+    {
+    	printf("i=%d\n",i);
+    				   // HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)
+        HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, FlashAddress, data);
+        if (flashprogstatus)
+        	while(1);
+    	FlashAddress += 4;
+
+    }
+
     HAL_FLASH_Lock();
 
     return RES_OK;
