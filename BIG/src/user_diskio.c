@@ -133,7 +133,7 @@ DRESULT USER_read (
 
 	    /* Hoping Flash data can be copied using memcpy(). */
 	    memcpy( ( void * ) buff,
-	            ( void * ) &flashSource,
+	            ( void * ) flashSource,
 	            ( size_t ) ( count * 512 ) );
 // does memcopy have a return value? Is this always a valid read?
     return RES_OK;
