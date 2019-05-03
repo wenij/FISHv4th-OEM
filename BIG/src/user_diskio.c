@@ -71,7 +71,7 @@ Diskio_drvTypeDef  USER_Driver =
 };
 
 /* Private functions ---------------------------------------------------------*/
-
+extern void initialise_monitor_handles(void);
 /**
   * @brief  Initializes a Drive
   * @param  pdrv: Physical drive number (0..)
