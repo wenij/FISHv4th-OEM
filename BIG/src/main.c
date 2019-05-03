@@ -160,13 +160,13 @@ int main(void)
   pstat_Queue = xQueueCreate( 4 /*Queue size */, sizeof( Message_t ) );
   pstatMeasurement_Queue = xQueueCreate( 128, sizeof(pstatMeasurement_t));  // Large queue pumping results from interrupt to interface.
 
-  xTaskCreate( SPI_driver_task, "SpiDriver", configMINIMAL_STACK_SIZE+100, NULL, 31, NULL );	// Highest Priority
+  xTaskCreate( SPI_driver_task, "SpiDriver", configMINIMAL_STACK_SIZE+256, NULL, 31, NULL );	// Highest Priority
 
-  xTaskCreate( pstat_task, "pstat", configMINIMAL_STACK_SIZE+100, NULL, 30, NULL ); // second highest Priority
+  xTaskCreate( pstat_task, "pstat", configMINIMAL_STACK_SIZE+256, NULL, 30, NULL ); // second highest Priority
 
-  xTaskCreate( cli_task, "CLI", configMINIMAL_STACK_SIZE+100, NULL, 15, NULL );	// middle Priority
+  xTaskCreate( cli_task, "CLI", configMINIMAL_STACK_SIZE+256, NULL, 15, NULL );	// middle Priority
 
-  xTaskCreate( SifTask, "SmartIO", configMINIMAL_STACK_SIZE+100, NULL, 1, NULL ); // Lowest Priority
+  xTaskCreate( SifTask, "SmartIO", configMINIMAL_STACK_SIZE+256, NULL, 1, NULL ); // Lowest Priority
 
   /* Start scheduler */
   osKernelStart();

@@ -295,7 +295,7 @@ void CliSendDataPortMeasurementDone( void)
     HAL_UART_Transmit(data_uart, msg, 4, 100); // This is a blocking call.
 }
 
-#define MAX_NUM_PARAMS 8
+#define MAX_NUM_PARAMS 16
 static uint32_t parameter_list[MAX_NUM_PARAMS];
 
 
@@ -437,9 +437,43 @@ void CliParseCommand(void)
 
         if (num_args == 7)
         {
-            OK = true;
+            // New Command
+            PstatRunReq_t cmd;
 
-            PstatSendRunReq( parameter_list[0], parameter_list[1], parameter_list[2], parameter_list[3], parameter_list[4], parameter_list[5], parameter_list[6] );
+            cmd.InitialDAC = parameter_list[0];
+            cmd.StartDAC = parameter_list[1];
+            cmd.EndDAC = parameter_list[2];
+            cmd.FinalDAC = parameter_list[3];
+            cmd.MeasureDACStep1 = parameter_list[4];
+            cmd.TimeUs1 = parameter_list[5];
+            cmd.MeasureDACStep2 = cmd.MeasureDACStep1;
+            cmd.TimeUs2 = cmd.TimeUs1;
+            cmd.Count = 1;
+            cmd.Switch = parameter_list[6];
+
+            PstatSendRunReq( &cmd );
+
+            OK = true;
+        }
+        else if (num_args == 10)
+        {
+            // New Command
+            PstatRunReq_t cmd;
+
+            cmd.InitialDAC = parameter_list[0];
+            cmd.StartDAC = parameter_list[1];
+            cmd.EndDAC = parameter_list[2];
+            cmd.FinalDAC = parameter_list[3];
+            cmd.MeasureDACStep1 = parameter_list[4];
+            cmd.TimeUs1 = parameter_list[5];
+            cmd.MeasureDACStep2 = parameter_list[6];
+            cmd.TimeUs2 = parameter_list[7];
+            cmd.Count = parameter_list[8];
+            cmd.Switch = parameter_list[9];
+
+            PstatSendRunReq( &cmd );
+
+            OK = true;
         }
     }
     else if (strncmp("end", (const char*)UartRxBuffer, 3) == 0)

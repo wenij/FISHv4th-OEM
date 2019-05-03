@@ -206,6 +206,7 @@ typedef enum
 {
     PSTAT_MEAS_INIT_TO_START,
     PSTAT_MEAS_START_TO_END,
+    PSTAT_MEAS_END_TO_START,
     PSTAT_MEAS_END_TO_FINAL,
     PSTAT_MEAS_DONE
 } PstatMeasState_t;
@@ -218,8 +219,10 @@ void pstat_meas_start_run(PstatRunReq_t * cfg)
     {
         return;
     }
-    // Copy the setup configuration
-    memcpy(&Config, cfg, sizeof(PstatRunReq_t));
+
+    // Save the setup configuration
+    Config = *cfg;
+    //memcpy(&Config, cfg, sizeof(PstatRunReq_t));
 
     // Initial values
     CurrentDAC = Config.InitialDAC;
@@ -243,7 +246,7 @@ void pstat_meas_start_run(PstatRunReq_t * cfg)
     ads1256_PowerUpInit(true);
 
     // Enable the timer
-    TimEnableMeasureTimer(Config.TimeUs);
+    TimEnableMeasureTimer(Config.TimeUs1);
 
 }
 
@@ -294,14 +297,35 @@ void pstat_measure_tick(void)
     case PSTAT_MEAS_START_TO_END:
         if (StateChange)
         {
-            MeasState = PSTAT_MEAS_END_TO_FINAL;
-
-            TargetDAC = Config.FinalDAC;
+            if (Config.Count <= 1)
+            {
+                MeasState = PSTAT_MEAS_END_TO_FINAL;
+                TargetDAC = Config.FinalDAC;
+            }
+            else
+            {
+                MeasState = PSTAT_MEAS_END_TO_START;
+                TargetDAC = Config.StartDAC;
+            }
 
             CountUp = (TargetDAC > CurrentDAC);
 
         }
         break;
+    case PSTAT_MEAS_END_TO_START:
+        if (StateChange)
+        {
+            Config.Count--;
+
+            MeasState = PSTAT_MEAS_START_TO_END;
+
+            TargetDAC = Config.EndDAC;
+
+            CountUp = (TargetDAC > CurrentDAC);
+
+        }
+        break;
+
     case PSTAT_MEAS_END_TO_FINAL:
         if (StateChange)
         {
@@ -330,11 +354,11 @@ void pstat_measure_tick(void)
         {
             if (CountUp)
             {
-                MeasureDAC += Config.MeasureDACStep;
+                MeasureDAC += Config.MeasureDACStep1;
             }
             else
             {
-                MeasureDAC -= Config.MeasureDACStep;
+                MeasureDAC -= Config.MeasureDACStep1;
             }
         }
 
@@ -540,7 +564,8 @@ void SetPstatSwitches(uint16_t SW)
     HAL_GPIO_WritePin(SW4_GPIO_Port, SW4_Pin, (LastSW & SW_4_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
-void PstatSendRunReq( uint16_t Initial, uint16_t Start, uint16_t End, uint16_t Final, uint16_t MeasureDAC, uint32_t TimeUs, uint8_t Switch )
+
+void PstatSendRunReq( PstatRunReq_t * Cmd)
 {
     Message_t Msg;
     PstatMsgContainer_t *payload = (PstatMsgContainer_t*)pvPortMalloc(sizeof(PstatMsgContainer_t));
@@ -549,13 +574,8 @@ void PstatSendRunReq( uint16_t Initial, uint16_t Start, uint16_t End, uint16_t F
     Msg.Type = PSTAT_COMMAND_MESSAGE;
 
     payload->PstatId = PSTAT_RUN_REQ;
-    payload->Req.Run.InitialDAC = Initial;
-    payload->Req.Run.StartDAC = Start;
-    payload->Req.Run.EndDAC = End;
-    payload->Req.Run.FinalDAC = Final;
-    payload->Req.Run.TimeUs = TimeUs;
-    payload->Req.Run.MeasureDACStep = MeasureDAC;
-    payload->Req.Run.Switch = Switch;
+    payload->Req.Run = *Cmd;
+
 
     xQueueSend( pstat_Queue, &Msg, 0 );
 }

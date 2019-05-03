@@ -66,8 +66,11 @@ typedef struct
     uint16_t StartDAC;
     uint16_t EndDAC;
     uint16_t FinalDAC;
-    uint32_t TimeUs;
-    uint16_t MeasureDACStep;
+    uint32_t TimeUs1;
+    uint16_t MeasureDACStep1;
+    uint32_t TimeUs2;
+    uint16_t MeasureDACStep2;
+    uint16_t Count;
     uint8_t  Switch;
 } PstatRunReq_t;
 
@@ -81,7 +84,7 @@ typedef struct
     } Req;
 } PstatMsgContainer_t;
 
-extern void PstatSendRunReq( uint16_t Initial, uint16_t Start, uint16_t End, uint16_t Final, uint16_t MeasureDAC, uint32_t TimeUs, uint8_t Switch );
+extern void PstatSendRunReq( PstatRunReq_t * );
 
   /*******************************
    *
