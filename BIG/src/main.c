@@ -79,6 +79,7 @@ void MX_FREERTOS_Init(void);
 /* Private function prototypes -----------------------------------------------*/
 extern DRESULT USER_read (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
 extern DRESULT USER_write (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
+extern void initialise_monitor_handles(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */

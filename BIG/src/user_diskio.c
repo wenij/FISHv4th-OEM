@@ -175,6 +175,7 @@ DRESULT USER_write (
     //for loop here to write bytes/halfword or words in a sector.
     for(int i = 1; i <= (512 /4); i++)
     {
+    	initialise_monitor_handles();
     	printf("i=%d\n",i);
     				   // HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)
         HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, FlashAddress, data);
