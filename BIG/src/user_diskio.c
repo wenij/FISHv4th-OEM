@@ -120,11 +120,13 @@ DRESULT USER_read (
   /* USER CODE BEGIN READ */
 	/*
 	 * I created static unsigned char USER_read_buffer[512];
-	 * Yet if this function also [returned] the source address, who needs the buffer?
-	 * any who using memcopy to buffer ~ to be declared in caller, later.
+	 * It can be sent thru a queue to the fatfs API managing task.
+	 * Yet a read function could also return the source address,
+	 * for the read function only, so who needs the buffer?
+	 * any who using memcpy to buffer ~ to be declared in caller, later.
 	 */
 	// FLASH            0x08000000         0x00100000         xr TOP of Flash = 0x8100000
-	// using 0x80000 , 524288 bytes for flash at an offset of 0x8000, so 0x8080000 to 0x8100000
+	// using 524288 bytes for flash at an offset of 0x0 to 0x8000, so 0x8080000 to 0x8100000
 	uint8_t *flashSource = (uint8_t *) 0x8080000;	// Set to the start of the flash *sector* addresses.
 
 
