@@ -1,4 +1,4 @@
-
+#include "ff_disk_t.h"
 /* The size of each sector on the disk. */
 #define ramSECTOR_SIZE                512UL
 

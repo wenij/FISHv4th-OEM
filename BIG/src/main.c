@@ -84,10 +84,11 @@ extern void initialise_monitor_handles(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-// have to put FF_Disk_t in an include file
-// and export this to the init function.
-//static FF_Disk_t pxDisk;
+// Move to file that initializes the structures
 static FATFS fatfs;
+static FIL fatfile;
+static DIR fatdir;
+static FILINFO fatfileinfo;
 static unsigned char USER_read_buffer[512];
 static unsigned char USER_write_buffer[512] = { 0x5f, 0xc5 };
 /* USER CODE END 0 */
