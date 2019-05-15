@@ -83,12 +83,6 @@ extern void initialise_monitor_handles(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-/* Working code inside a function Not in file scope
-	FATFS *fatfs = NULL;
-	fatfs  = ( FATFS * ) pvPortMalloc( sizeof( FATFS ) );
-// deallocate or does function do it?
-	vPortFree(fatfs);
- */
 // have to put FF_Disk_t in an include file
 // and export this to the init function.
 //static FF_Disk_t pxDisk;
