@@ -34,8 +34,10 @@
 /* USER CODE BEGIN DECL */
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdlib.h>
 #include <string.h>
 #include "ff_gen_drv.h"
+#include "ff.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -82,6 +84,11 @@ DSTATUS USER_initialize (
 )
 {
   /* USER CODE BEGIN INIT */
+/* Working code inside a function */
+	FATFS *fatfs = NULL;
+	fatfs  = ( FATFS * ) pvPortMalloc( sizeof( FATFS ) );
+// deallocate or does function do it?
+	vPortFree(fatfs);
     Stat = STA_NOINIT;
     return Stat;
   /* USER CODE END INIT */
@@ -133,12 +140,11 @@ DRESULT USER_read (
 	    /* Move to the start of the sector being read. */
 	    flashSource += ( 512 * sector );
 
-	    /* Hoping Flash data can be copied using memcpy(). */
 //void * memcpy (void *__restrict, const void *__restrict, size_t);
 	    memcpy( ( void * ) buff,
 	            ( void * ) flashSource,
 	            ( size_t ) ( count * 512 ) );
-// does memcopy have a return value? Is this always a valid read?
+// memcopy does not have a return value. A compare would be needed to verify a valid read?
     return RES_OK;
   /* USER CODE END READ */
 }
@@ -167,7 +173,7 @@ DRESULT USER_write (
 	uint8_t eraseSector = FLASH_SECTOR_8;
     /* Move to the start of the sector being read. */
 	FlashAddress += ( 512 * sector );
-
+/* Works, Save writes and erases
     HAL_FLASH_Unlock();
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
 
@@ -188,7 +194,7 @@ DRESULT USER_write (
     }
 
     HAL_FLASH_Lock();
-
+*/
     return RES_OK;
   /* USER CODE END WRITE */
 }
