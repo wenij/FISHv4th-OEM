@@ -40,7 +40,6 @@
 #include <string.h>
 
 #include "main.h"
-#include "fatfs.h"
 
 #ifdef STM32F205xx
 #include "stm32f2xx_hal.h"
@@ -61,7 +60,9 @@
 // Includes for other tasks
 #include "smartio_if.h"
 #include "cli.h"
-
+#include "fatfs.h"
+// THis gets included in the init function.
+//#include "ff_disk_t.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
