@@ -82,6 +82,10 @@ void TimDelayMicroSeconds( uint16_t microseconds)
 }
 
 static bool MeasTimerRunning;
+static uint16_t RollCount = 0;
+static uint16_t LastCount = 0;
+static uint16_t SavedRollCount = 0;
+static uint16_t SavedLastCount = 0;
 
 void TimEnableMeasureTimer( uint32_t microseconds)
 {
@@ -92,18 +96,30 @@ void TimEnableMeasureTimer( uint32_t microseconds)
         TimDisableMeasureTimer();
     }
 
-    if (timeout > 0xFFFF)
+    /*
+    SavedRollCount = RollCount = (uint16_t)(timeout >> 16);  // Max timeout value for RollCount number of interrupts, then followed by a lastcount;
+    SavedLastCount = LastCount = (uint16_t)timeout;
+
+    if (RollCount > 0)
     {
         timeout = 0xFFFF;
     }
-    HAL_TIM_Base_MspDeInit(&htim3);
+    else
+    {
+        timeout = LastCount;
+    }
+    */
 
-    // Set the timer period
-    htim3.Init.Period = timeout;
+    HAL_TIM_Base_DeInit(&htim5);
 
-    HAL_TIM_Base_MspInit(&htim3);
+    // Set the new timer period
+    htim5.Init.Period = timeout;
 
-    HAL_TIM_Base_Start_IT(&htim3);
+    HAL_TIM_Base_Init(&htim5);
+
+    HAL_TIM_Base_Start(&htim5);
+
+    HAL_TIM_Base_Start_IT(&htim5);
 
 }
 
@@ -111,13 +127,58 @@ void TimDisableMeasureTimer(void)
 {
     MeasTimerRunning = false;
 
-    HAL_TIM_Base_Stop_IT(&htim3);
+    HAL_TIM_Base_Stop_IT(&htim5);
 
 }
+
+bool TimCheckMeasureTimerTimeout(void)
+{
+    bool ret = false;;
+
+    if (MeasTimerRunning)
+    {
+        if (RollCount > 1)
+        {
+            RollCount--;
+        }
+        else if (RollCount == 1)
+        {
+            RollCount--;
+            if (LastCount > MICROSEC_TO_COUNT(50))
+            {
+                // Set counter to LastCount
+                htim3.Init.Period = LastCount;
+            }
+            else
+            {
+                ret = true;   // With less then 50 microseconds to timeout there is little point in reloading the timer
+            }
+
+        }
+        else
+        {
+            ret = true;
+        }
+    }
+
+    if (ret)
+    {
+        // When we time out we reload the timer counters
+        LastCount = SavedLastCount;
+        RollCount = SavedRollCount;
+        htim3.Init.Period = RollCount > 0 ? 0xFFFF : LastCount;
+    }
+
+    return(ret);
+}
+
+
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
+TIM_HandleTypeDef htim5;
+
 
 /* TIM2 init function */
 void MX_TIM2_Init(void)
@@ -193,6 +254,38 @@ void MX_TIM3_Init(void)
 
 }
 
+/* TIM5 init function */
+void MX_TIM5_Init(void)
+{
+  TIM_ClockConfigTypeDef sClockSourceConfig;
+  TIM_MasterConfigTypeDef sMasterConfig;
+
+  htim5.Instance = TIM5;
+  htim5.Init.Prescaler = 0;
+  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim5.Init.Period = 0xFFFFFFFF;
+  htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_ENABLE;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+}
+
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
 {
 
@@ -222,6 +315,22 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
   /* USER CODE BEGIN TIM3_MspInit 1 */
 
   /* USER CODE END TIM3_MspInit 1 */
+  }
+  else if(tim_baseHandle->Instance==TIM5)
+  {
+  /* USER CODE BEGIN TIM5_MspInit 0 */
+
+  /* USER CODE END TIM5_MspInit 0 */
+    /* TIM3 clock enable */
+    __HAL_RCC_TIM5_CLK_ENABLE();
+
+    /* TIM3 interrupt Init */
+    HAL_NVIC_SetPriority(TIM5_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(TIM5_IRQn);
+
+  /* USER CODE BEGIN TIM5_MspInit 1 */
+
+  /* USER CODE END TIM5_MspInit 1 */
   }
 }
 
@@ -254,6 +363,22 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
   /* USER CODE BEGIN TIM3_MspDeInit 1 */
 
   /* USER CODE END TIM3_MspDeInit 1 */
+  }
+  else if(tim_baseHandle->Instance==TIM5)
+  {
+  /* USER CODE BEGIN TIM5_MspDeInit 0 */
+
+      HAL_TIM_Base_Stop_IT(&htim5);
+
+  /* USER CODE END TIM5_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_TIM5_CLK_DISABLE();
+
+    /* TIM3 interrupt Deinit */
+    HAL_NVIC_DisableIRQ(TIM5_IRQn);
+  /* USER CODE BEGIN TIM5_MspDeInit 1 */
+
+  /* USER CODE END TIM5_MspDeInit 1 */
   }
 } 
 

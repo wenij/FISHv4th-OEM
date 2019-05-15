@@ -52,8 +52,8 @@
 /* USER CODE BEGIN Includes */
 
 #define USE_SPI1
-//#define CARSTENS_BOARD      // Hacked up board with MISO re-routed and USART3 disabled
-#define VERSION "BIG pstat 2.2"
+//#define CARSTENS_BOARD      // Hacked up board with MISO re-routed
+#define VERSION "BIG pstat 2.3"
 
 // OS Messaging Queues. They are defined in the respective task source files but references are collated here for simplicity
 extern QueueHandle_t SpiSmartIoQueue;	// Queue for SmartIO task SPI interface (separate from others)

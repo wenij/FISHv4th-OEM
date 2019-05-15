@@ -133,7 +133,7 @@ int main(void)
 #endif
 
   MX_TIM2_Init();
-  MX_TIM3_Init();
+  MX_TIM5_Init();
 
   //MX_RTC_Init();
 
@@ -311,7 +311,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   if (htim->Instance == TIM1) {
     HAL_IncTick();
   }
-  else if (htim->Instance == TIM3)
+  else if (htim->Instance == TIM5)
   {
       pstat_measure_tick();
   }

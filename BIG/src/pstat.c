@@ -49,6 +49,10 @@ static uint16_t LastDAC = 0;
 
 static uint16_t LastSW = 0;
 
+static uint32_t PstatGoodCount;
+static uint32_t PstatFailCount;
+
+
 void pstat_task(void * parm)
 {
     Message_t PortMsg;
@@ -178,7 +182,7 @@ void pstat_task(void * parm)
                 AckMsg.data = NULL;
                 xQueueSend(CliDataQueue, &AckMsg, 10);
 
-                CliSendDataPortMeasurementDone();
+                CliSendDataPortMeasurementDone(PstatGoodCount, PstatFailCount);
             }
 
         }
@@ -213,6 +217,8 @@ typedef enum
 
 static PstatMeasState_t MeasState;
 
+
+
 void pstat_meas_start_run(PstatRunReq_t * cfg)
 {
     if (!GetSpiIntMode())
@@ -222,7 +228,8 @@ void pstat_meas_start_run(PstatRunReq_t * cfg)
 
     // Save the setup configuration
     Config = *cfg;
-    //memcpy(&Config, cfg, sizeof(PstatRunReq_t));
+
+    PstatGoodCount = PstatFailCount = 0;
 
     // Initial values
     CurrentDAC = Config.InitialDAC;
@@ -299,8 +306,15 @@ void pstat_measure_tick(void)
         {
             if (Config.Count <= 1)
             {
-                MeasState = PSTAT_MEAS_END_TO_FINAL;
-                TargetDAC = Config.FinalDAC;
+                if (Config.FinalDAC != CurrentDAC)
+                {
+                    MeasState = PSTAT_MEAS_END_TO_FINAL;
+                    TargetDAC = Config.FinalDAC;
+                }
+                else
+                {
+                    MeasState = PSTAT_MEAS_DONE;
+                }
             }
             else
             {
@@ -355,10 +369,20 @@ void pstat_measure_tick(void)
             if (CountUp)
             {
                 MeasureDAC += Config.MeasureDACStep1;
+
+                if (MeasureDAC > TargetDAC)
+                {
+                    MeasureDAC = TargetDAC;
+                }
             }
             else
             {
                 MeasureDAC -= Config.MeasureDACStep1;
+
+                if (MeasureDAC < TargetDAC)
+                {
+                    MeasureDAC = TargetDAC;
+                }
             }
         }
 
@@ -376,6 +400,7 @@ void pstat_measure_tick(void)
         msg.data = NULL;
 
         xQueueSendToFrontFromISR( pstat_Queue, &msg, NULL);
+
 
     }
 
@@ -431,7 +456,14 @@ bool MakeMeasurementFromISR(pstatMeasurement_t * measurement)
 
     measurement->DAC_Setting = CurrentDAC;
 
-    xQueueSendToBackFromISR( pstatMeasurement_Queue, measurement, NULL);
+    if (xQueueSendToBackFromISR( pstatMeasurement_Queue, measurement, NULL))
+    {
+        PstatGoodCount++;
+    }
+    else
+    {
+        PstatFailCount++;
+    }
 
     return(true);
 

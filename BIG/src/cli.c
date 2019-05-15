@@ -282,17 +282,26 @@ void CliSendDataPortMeasurement( pstatMeasurement_t * data)
     HAL_UART_Transmit(data_uart, msg, 20, 100); // This is a blocking call.
 }
 
-void CliSendDataPortMeasurementDone( void)
+void CliSendDataPortMeasurementDone( uint32_t GoodMeasurementCount, uint32_t BadMeasurementCount)
 {
     // This is a binary message that goes straight to the UART
-    uint8_t msg[4];
+    uint8_t msg[13];
 
     msg[0] = 0x55; // Sync 1
     msg[1] = 0xAA; // Sync 2
-    msg[2] = 1;
+    msg[2] = 9;
     msg[3] = 0x02; // ID
+    msg[4] =(uint8_t)(GoodMeasurementCount >> 24);
+    msg[5] =(uint8_t)(GoodMeasurementCount >> 16);
+    msg[6] =(uint8_t)(GoodMeasurementCount >> 8);
+    msg[7] =(uint8_t)(GoodMeasurementCount);
+    msg[8] =(uint8_t)(BadMeasurementCount >> 24);
+    msg[9] =(uint8_t)(BadMeasurementCount >> 16);
+    msg[10] =(uint8_t)(BadMeasurementCount >> 8);
+    msg[11] =(uint8_t)(BadMeasurementCount);
+    msg[12] = 0x1A; // EOF marker
 
-    HAL_UART_Transmit(data_uart, msg, 4, 100); // This is a blocking call.
+    HAL_UART_Transmit(data_uart, msg, 13, 100); // This is a blocking call.
 }
 
 #define MAX_NUM_PARAMS 16
