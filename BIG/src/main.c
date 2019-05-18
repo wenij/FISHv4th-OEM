@@ -61,6 +61,8 @@
 #include "smartio_if.h"
 #include "cli.h"
 #include "fatfs.h"
+#include "FF_Disk_t.h"
+#include "ff_flashDisk_Init.h"
 // THis gets included in the init function.
 //#include "ff_disk_t.h"
 /* USER CODE END Includes */
@@ -148,7 +150,7 @@ int main(void)
 
   //MX_RTC_Init();
 
-  /* USER CODE BEGIN 2 */
+  /* USER CODE BEGIN 2  This is tested and works */
   /* 1meg Flash sector allocation
    * sector#	address		size	#512k sectors
    * 0			0x8000000	16k
@@ -165,17 +167,30 @@ int main(void)
    * 11			0x80E0000	128k	250 512k sectors
    */
   /* Unit test USER_read */
-  DRESULT readstatus = USER_read(	0,	USER_read_buffer,	0,	1); // Called in the main function.
-  if (readstatus)
-	  while(1);
+//DRESULT readstatus = USER_read(	0,	USER_read_buffer,	0,	1); // Called in the main function.
+//if (readstatus)
+//	  while(1);
   /* Unit test USER_write */
-  DRESULT writestatus = USER_write(	0,	USER_write_buffer,	0,	1);
-  if (writestatus)
-	  while(1);
- 	 // this prototype writes the same sector this reads.
-  readstatus = USER_read(	0,	USER_read_buffer,	0,	1); // Called in the main function.
-  if (readstatus)
-	  while(1);
+//  DRESULT writestatus = USER_write(	0,	USER_write_buffer,	0,	1);
+//  if (writestatus)
+//	  while(1);
+// this prototype writes the same sector this reads.
+//  readstatus = USER_read(	0,	USER_read_buffer,	0,	1); // Called in the main function.
+//  if (readstatus)
+//	  while(1);
+  FF_Disk_t * p0Disk;
+#define flashPARTITION_NUMBER            0
+  char diskName[] = {'p','F','L','A','S','H'};
+  char *pcName = diskName;
+
+  p0Disk = FF_FlashDiskInit( pcName,
+		  //uint8_t *pucDataBuffer,
+		  (uint8_t *) 0x8080000,	// beginning of 1000 sectors of flash disk
+          //uint32_t ulSectorCount,
+		  1000ul,
+          //size_t xIOManagerCacheSize )
+							  0);
+
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

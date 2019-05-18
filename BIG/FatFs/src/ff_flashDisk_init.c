@@ -1,9 +1,24 @@
 #include "ff_disk_t.h"
 /* The size of each sector on the disk. */
-#define ramSECTOR_SIZE                512UL
+#define flashSECTOR_SIZE                512UL
 
 /* Only a single partition is used.  Partition numbers start at 0. */
-#define ramPARTITION_NUMBER            0
+#define flashPARTITION_NUMBER            0
+  char diskName[] = {'p','S','T','A','T'};
+  char *pcName = diskName;
+  //make a const pointer of this?
+  //FF_Disk_t *
+ // FF_Disk_t *FF_FlashDiskInit
+ // FF_Disk_t * (void *) p0Disk;
+ // see if including FF_Disk_t header resolves
+  FF_Disk_t * p0Disk;
+  p0Disk = FF_FlashDiskInit( pcName,
+		  //uint8_t *pucDataBuffer,
+		  (uint8_t *) 0x8080000,	// beginning of 1000 sectors of flash disk
+          //uint32_t ulSectorCount,
+		  1000ul,
+          //size_t xIOManagerCacheSize )
+							  0);
 
 /*
 In this example:
@@ -13,7 +28,7 @@ In this example:
   - xIOManagerCacheSize is the size of the IO manager's cache, which must be a
    multiple of the sector size, and at least twice as big as the sector size.
 */
-FF_Disk_t *FF_RAMDiskInit( char *pcName,
+FF_Disk_t *FF_FlashDiskInit( char *pcName,
                           uint8_t *pucDataBuffer,
                           uint32_t ulSectorCount,
                           size_t xIOManagerCacheSize )
@@ -23,8 +38,8 @@ FF_Disk_t *pxDisk = NULL;
 FF_CreationParameters_t xParameters;
 
     /* Check the validity of the xIOManagerCacheSize parameter. */
-    configASSERT( ( xIOManagerCacheSize % ramSECTOR_SIZE ) == 0 );
-    configASSERT( ( xIOManagerCacheSize >= ( 2 * ramSECTOR_SIZE ) ) );
+    configASSERT( ( xIOManagerCacheSize % flashSECTOR_SIZE ) == 0 );
+    configASSERT( ( xIOManagerCacheSize >= ( 2 * flashSECTOR_SIZE ) ) );
 
     /* Attempt to allocated the FF_Disk_t structure. */
     pxDisk = ( FF_Disk_t * ) pvPortMalloc( sizeof( FF_Disk_t ) );
@@ -46,7 +61,7 @@ FF_CreationParameters_t xParameters;
 
         /* The signature is used by the disk read and disk write functions to
         ensure the disk being accessed is a RAM disk. */
-        pxDisk->ulSignature = ramSIGNATURE;
+        pxDisk->ulSignature = flashSIGNATURE;
 
         /* The number of sectors is recorded for bounds checking in the read and
         write functions. */
@@ -58,9 +73,9 @@ FF_CreationParameters_t xParameters;
         memset (&xParameters, '\0', sizeof xParameters);
         xParameters.pucCacheMemory = NULL;
         xParameters.ulMemorySize = xIOManagerCacheSize;
-        xParameters.ulSectorSize = ramSECTOR_SIZE;
-        xParameters.fnWriteBlocks = prvWriteRAM;
-        xParameters.fnReadBlocks = prvReadRAM;
+        xParameters.ulSectorSize = flashSECTOR_SIZE;
+        xParameters.fnWriteBlocks = prvWriteFLASH;
+        xParameters.fnReadBlocks = prvReadFLASH;
         xParameters.pxDisk = pxDisk;
 
         /* The driver is re-entrant as it just accesses RAM using memcpy(), so
@@ -90,10 +105,10 @@ FF_CreationParameters_t xParameters;
             {
                 /* Record the partition number the FF_Disk_t structure is, then
                 mount the partition. */
-                pxDisk->xStatus.bPartitionNumber = ramPARTITION_NUMBER;
+                pxDisk->xStatus.bPartitionNumber = flashPARTITION_NUMBER;
 
                 /* Mount the partition. */
-                xError = FF_Mount( pxDisk, ramPARTITION_NUMBER );
+                xError = FF_Mount( pxDisk, flashPARTITION_NUMBER );
             }
 
             if( FF_isERR( xError ) == pdFALSE )
@@ -108,7 +123,7 @@ FF_CreationParameters_t xParameters;
         {
             /* The disk structure was allocated, but the disk's IO manager could
             not be allocated, so free the disk again. */
-            FF_RAMDiskDelete( pxDisk );
+            FF_FLASHDiskDelete( pxDisk );
             pxDisk = NULL;
         }
     }
