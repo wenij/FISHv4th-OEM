@@ -40,7 +40,6 @@
 #include <string.h>
 
 #include "main.h"
-#include "fatfs.h"
 
 #ifdef STM32F205xx
 #include "stm32f2xx_hal.h"
@@ -61,7 +60,9 @@
 // Includes for other tasks
 #include "smartio_if.h"
 #include "cli.h"
-
+#include "fatfs.h"
+// THis gets included in the init function.
+//#include "ff_disk_t.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -79,9 +80,15 @@ void MX_FREERTOS_Init(void);
 /* Private function prototypes -----------------------------------------------*/
 extern DRESULT USER_read (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
 extern DRESULT USER_write (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
+extern void initialise_monitor_handles(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+// Move to file that initializes the structures
+static FATFS fatfs;
+static FIL fatfile;
+static DIR fatdir;
+static FILINFO fatfileinfo;
 static unsigned char USER_read_buffer[512];
 static unsigned char USER_write_buffer[512] = { 0x5f, 0xc5 };
 /* USER CODE END 0 */

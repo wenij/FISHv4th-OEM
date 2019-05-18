@@ -34,8 +34,10 @@
 /* USER CODE BEGIN DECL */
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdlib.h>
 #include <string.h>
 #include "ff_gen_drv.h"
+#include "ff.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -71,7 +73,7 @@ Diskio_drvTypeDef  USER_Driver =
 };
 
 /* Private functions ---------------------------------------------------------*/
-
+extern void initialise_monitor_handles(void);
 /**
   * @brief  Initializes a Drive
   * @param  pdrv: Physical drive number (0..)
@@ -82,6 +84,11 @@ DSTATUS USER_initialize (
 )
 {
   /* USER CODE BEGIN INIT */
+/* Working code inside a function */
+	FATFS *fatfs = NULL;
+	fatfs  = ( FATFS * ) pvPortMalloc( sizeof( FATFS ) );
+// deallocate or does function do it?
+	vPortFree(fatfs);
     Stat = STA_NOINIT;
     return Stat;
   /* USER CODE END INIT */
@@ -120,22 +127,24 @@ DRESULT USER_read (
   /* USER CODE BEGIN READ */
 	/*
 	 * I created static unsigned char USER_read_buffer[512];
-	 * Yet if this function also [returned] the source address, who needs the buffer?
-	 * any who using memcopy to buffer ~ to be declared in caller, later.
+	 * It can be sent thru a queue to the fatfs API managing task.
+	 * Yet a read function could also return the source address,
+	 * for the read function only, so who needs the buffer?
+	 * any who using memcpy to buffer ~ to be declared in caller, later.
 	 */
 	// FLASH            0x08000000         0x00100000         xr TOP of Flash = 0x8100000
-	// using 0x80000 , 524288 bytes for flash at an offset of 0x8000, so 0x8080000 to 0x8100000
+	// using 524288 bytes for flash at an offset of 0x0 to 0x8000, so 0x8080000 to 0x8100000
 	uint8_t *flashSource = (uint8_t *) 0x8080000;	// Set to the start of the flash *sector* addresses.
 
 
 	    /* Move to the start of the sector being read. */
 	    flashSource += ( 512 * sector );
 
-	    /* Hoping Flash data can be copied using memcpy(). */
+//void * memcpy (void *__restrict, const void *__restrict, size_t);
 	    memcpy( ( void * ) buff,
 	            ( void * ) flashSource,
 	            ( size_t ) ( count * 512 ) );
-// does memcopy have a return value? Is this always a valid read?
+// memcopy does not have a return value. A compare would be needed to verify a valid read?
     return RES_OK;
   /* USER CODE END READ */
 }
@@ -164,7 +173,7 @@ DRESULT USER_write (
 	uint8_t eraseSector = FLASH_SECTOR_8;
     /* Move to the start of the sector being read. */
 	FlashAddress += ( 512 * sector );
-
+/* Works, Save writes and erases
     HAL_FLASH_Unlock();
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
 
@@ -172,12 +181,20 @@ DRESULT USER_write (
 //void FLASH_Erase_Sector(FLASH_SECTOR_6, VOLTAGE_RANGE_3);
     FLASH_Erase_Sector(eraseSector, VOLTAGE_RANGE_3);
     //for loop here to write bytes/halfword or words in a sector.
-    			   // HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)
-    HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, FlashAddress, data);
-    if (flashprogstatus)
-    	while(1);
-    HAL_FLASH_Lock();
+    for(int i = 1; i <= (512 /4); i++)
+    {
+    	initialise_monitor_handles();
+    	printf("i=%d\n",i);
+    				   // HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)
+        HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, FlashAddress, data);
+        if (flashprogstatus)
+        	while(1);
+    	FlashAddress += 4;
 
+    }
+
+    HAL_FLASH_Lock();
+*/
     return RES_OK;
   /* USER CODE END WRITE */
 }
