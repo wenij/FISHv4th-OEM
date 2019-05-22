@@ -62,6 +62,7 @@
 #include "cli.h"
 #include "fatfs.h"
 #include "FF_Disk_t.h"
+#include "FF_ioman.h"
 #include "ff_flashDisk_Init.h"
 // THis gets included in the init function.
 //#include "ff_disk_t.h"
