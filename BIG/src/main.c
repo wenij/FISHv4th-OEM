@@ -61,11 +61,14 @@
 #include "smartio_if.h"
 #include "cli.h"
 #include "fatfs.h"
+/*
 #include "FF_Disk_t.h"
 #include "FF_ioman.h"
 #include "ff_flashDisk_Init.h"
 // THis gets included in the init function.
 //#include "ff_disk_t.h"
+ *
+ */
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -179,6 +182,7 @@ int main(void)
 //  readstatus = USER_read(	0,	USER_read_buffer,	0,	1); // Called in the main function.
 //  if (readstatus)
 //	  while(1);
+/*
   FF_Disk_t * p0Disk;
 #define flashPARTITION_NUMBER            0
   char diskName[] = {'p','F','L','A','S','H'};
@@ -191,7 +195,7 @@ int main(void)
 		  1000ul,
           //size_t xIOManagerCacheSize )
 							  0);
-
+*/
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
