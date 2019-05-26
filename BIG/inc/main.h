@@ -53,7 +53,7 @@
 
 #define USE_SPI1
 //#define CARSTENS_BOARD      // Hacked up board with MISO re-routed
-#define VERSION "BIG pstat 2.3"
+#define VERSION "BIG pstat 2.3" // Version rules: Any text you want NOT containing periods, followed by version number formatted as <major>.<minor> at the end
 
 // OS Messaging Queues. They are defined in the respective task source files but references are collated here for simplicity
 extern QueueHandle_t SpiSmartIoQueue;	// Queue for SmartIO task SPI interface (separate from others)
