@@ -60,7 +60,11 @@
 // Includes for other tasks
 #include "smartio_if.h"
 #include "cli.h"
+// Fatfs stuff
 #include "fatfs.h"
+
+// littlefs includes
+#include "lfs.h"
 /*
 #include "FF_Disk_t.h"
 #include "FF_ioman.h"
@@ -91,10 +95,19 @@ extern void initialise_monitor_handles(void);
 
 /* USER CODE BEGIN 0 */
 // Move to file that initializes the structures
+/* FatFs stuff
 static FATFS fatfs;
 static FIL fatfile;
 static DIR fatdir;
 static FILINFO fatfileinfo;
+*/
+// littlfs stuff
+static lfs_t lfs_internal_flash;
+/* this has no typedef
+static lfs_config lfs_cfg;
+*/
+// lfs will be feed these for the read and write cache
+// I hear tell they can be smaller.
 static unsigned char USER_read_buffer[512];
 static unsigned char USER_write_buffer[512] = { 0x5f, 0xc5 };
 /* USER CODE END 0 */
@@ -196,6 +209,9 @@ int main(void)
           //size_t xIOManagerCacheSize )
 							  0);
 */
+// The above is Fatfs - here is littlefs, lfs
+  // pv allot and set this 1rst	lfs_cache_t
+  // lfs_internal_flash.pcache = USER_write_buffer;
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

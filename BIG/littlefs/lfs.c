@@ -17,7 +17,11 @@
  */
 #include "lfs.h"
 #include "lfs_util.h"
-
+#ifdef STM32F205xx
+#include "stm32f2xx_hal.h"
+#else
+#include "stm32f4xx_hal.h"
+#endif
 
 /// Caching block device operations ///
 static inline void lfs_cache_drop(lfs_t *lfs, lfs_cache_t *rcache) {
