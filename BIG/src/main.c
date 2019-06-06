@@ -101,13 +101,20 @@ static FIL fatfile;
 static DIR fatdir;
 static FILINFO fatfileinfo;
 */
-// littlfs stuff
+// littlefs structs
+// This is the 1rst args for the init of the file system
 static lfs_t lfs_internal_flash;
+//It has numerous sub structs to deal with
+static lfs_cache_t lfs_read_cache;
+static lfs_cache_t lfs_write_cache;
+
 /* this has no typedef
 static lfs_config lfs_cfg;
 */
 // lfs will be feed these for the read and write cache
 // I hear tell they can be smaller.
+// The name can be changed if the fatfs dependency is resolved,
+// Either by duplicating them for fatfs or deleting fatfs references.
 static unsigned char USER_read_buffer[512];
 static unsigned char USER_write_buffer[512] = { 0x5f, 0xc5 };
 /* USER CODE END 0 */
@@ -210,8 +217,19 @@ int main(void)
 							  0);
 */
 // The above is Fatfs - here is littlefs, lfs
-  // pv allot and set this 1rst	lfs_cache_t
-  // lfs_internal_flash.pcache = USER_write_buffer;
+  // Configure the read cache
+  lfs_read_cache.block = 1; // fudge
+  lfs_read_cache.buffer = USER_read_buffer; // rename
+  lfs_read_cache.off = 0; // fudge
+  lfs_read_cache.size = 512; // All the 512's need to be a symbol
+  // Configure the write cache
+  lfs_read_cache.block = 1; // fudge
+  lfs_read_cache.buffer = USER_write_buffer; // rename
+  lfs_read_cache.off = 0; // fudge
+  lfs_read_cache.size = 512; // All the 512's need to be a symbol
+// Add the read and write cache to lfs_internal_flash struct
+  lfs_internal_flash.pcache = lfs_write_cache; // Verify this is write cache
+  lfs_internal_flash.rcache = lfs_read_cache;
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
