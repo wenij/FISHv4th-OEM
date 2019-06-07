@@ -52,8 +52,8 @@
 /* USER CODE BEGIN Includes */
 
 #define USE_SPI1
-//#define CARSTENS_BOARD      // Hacked up board with MISO re-routed
-#define VERSION "BIG pstat 2.3" // Version rules: Any text you want NOT containing periods, followed by version number formatted as <major>.<minor> at the end
+#define CARSTENS_BOARD      // Hacked up board with MISO re-routed
+#define VERSION "BIG pstat 2.4" // Version rules: Any text you want NOT containing periods, followed by version number formatted as <major>.<minor> at the end
 
 // OS Messaging Queues. They are defined in the respective task source files but references are collated here for simplicity
 extern QueueHandle_t SpiSmartIoQueue;	// Queue for SmartIO task SPI interface (separate from others)
@@ -65,7 +65,7 @@ extern QueueHandle_t ADC_Queue;		// Reply Queue for ADC driver
 extern QueueHandle_t DAC_Queue;		// Reply Queue for DAC driver
 
 extern QueueHandle_t pstat_Queue;   // General pstat task queue
-extern QueueHandle_t pstatMeasurement_Queue;    // Dedicated measurement result queue
+extern QueueHandle_t CliMeasurement_Queue;    // Dedicated measurement result queue
 
 // Global message type definitions, Unique ids for all messages makes identification and tracing of messages easier.
 typedef enum

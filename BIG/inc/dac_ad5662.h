@@ -14,6 +14,8 @@
  extern "C" {
 #endif
 
+#define DAC_MAX 0xFFFF
+
  extern bool AD5662_Set(uint16_t DacValue);
 
  extern void SetSpiMode(bool direct);

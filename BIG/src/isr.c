@@ -29,13 +29,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void USART3_ISR_ENABLE(void)
 {
-    HAL_NVIC_SetPriority(USART3_IRQn, 1, 1);
+    HAL_NVIC_SetPriority(USART3_IRQn, 1, 3);
     HAL_NVIC_EnableIRQ(USART3_IRQn);
 }
 
 void USART2_ISR_ENABLE(void)
 {
-	HAL_NVIC_SetPriority(USART2_IRQn, 1, 1);
+	HAL_NVIC_SetPriority(USART2_IRQn, 1, 2);
 	HAL_NVIC_EnableIRQ(USART2_IRQn);
 }
 
@@ -46,6 +46,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		huart->pRxBuffPtr[huart->RxXferCount] = 0;	// Making sure we are 0 terminated
 		CliInfoPending();
 	}
+}
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+    DataPortTxComplete = true;
 }
 
 

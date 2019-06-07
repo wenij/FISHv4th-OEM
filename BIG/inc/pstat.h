@@ -52,12 +52,52 @@
      int32_t TestMeasurement;
  } pstatMeasurement_t;
 
+ // Struct containing one dynamic measurement and status
+ typedef enum
+ {
+     PSTAT_DYN_RESULT,
+     PSTAT_DYN_STOP
+ } PstatDynMeasType_t;
+
+ typedef struct
+ {
+     WE_Scale_t WE_Scale;;
+     uint16_t DAC_Setting;
+     uint16_t SwitchState;
+     uint32_t TimeStamp;    // Timestamp 1 ms tick
+     int32_t ADC_WE;
+     int32_t ADC_DAC_RE;
+ } PstatDynMeasData_t;
+
+ typedef struct
+ {
+     uint32_t Good_Count;
+     uint32_t Fail_Count;
+ } PstatDynMeasStats_t;
+
+ union PstatDynInfo_u
+ {
+     PstatDynMeasData_t meas;    // Only with PSTAT_DYN_RESULT
+     PstatDynMeasStats_t stats;  // Only with PSTAT_DYN_STOP
+ };
+
+ typedef struct
+ {
+     PstatDynMeasType_t Type;
+     union PstatDynInfo_u data;
+ } pstatDynamicMeasurement_t;
 
  typedef enum
  {
       PSTAT_RUN_REQ,
       PSTAT_CANCEL_REQ,
  } PstatCmdId;
+
+ typedef enum
+ {
+     PSTAT_VOLTAMMETRY,
+     PSTAT_CHRONOVOLTAMMETRY
+ } PstatMeasurementType;
 
 // Command Structure for Run command
 typedef struct
@@ -66,12 +106,13 @@ typedef struct
     uint16_t StartDAC;
     uint16_t EndDAC;
     uint16_t FinalDAC;
-    uint32_t TimeUs1;
-    uint16_t MeasureDACStep1;
-    uint32_t TimeUs2;
-    uint16_t MeasureDACStep2;
+    uint32_t TimeSliceUs;
+    uint16_t DACStep;
+    uint32_t DACTime;
+    uint16_t MeasureTime;
     uint16_t Count;
     uint8_t  Switch;
+    PstatMeasurementType  MeasurementType;
 } PstatRunReq_t;
 
 // Command container for Pstat commands. MessageType: PSTAT_COMMAND_MESSAGE

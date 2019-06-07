@@ -31,11 +31,10 @@ QueueHandle_t ADC_Queue = NULL;
 QueueHandle_t DAC_Queue = NULL;
 
 QueueHandle_t pstat_Queue = NULL;
-QueueHandle_t pstatMeasurement_Queue = NULL;
 
 static bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement);
 static bool MakeSingleTestMeasurement( uint16_t DACvalue, uint8_t Pchannel, uint8_t Nchannel, uint8_t buffer_state, pstatMeasurement_t * measurement);
-static bool MakeMeasurementFromISR(pstatMeasurement_t * measurement);
+static bool MakeMeasurementFromISR(pstatDynamicMeasurement_t * measurement);
 
 static bool SetCurrentScale( WE_Scale_t scale);
 
@@ -56,7 +55,6 @@ static uint32_t PstatFailCount;
 void pstat_task(void * parm)
 {
     Message_t PortMsg;
-    pstatMeasurement_t DataMsg;
 
     for (;;)
     {
@@ -165,32 +163,20 @@ void pstat_task(void * parm)
             }
             else if (PortMsg.Type == PSTAT_RUN_COMPLETE)
             {
-                Message_t AckMsg;
-
-                // Empty the queue of data responses
-                while (xQueueReceive( pstatMeasurement_Queue, (void*)&DataMsg, 0))
-                {
-                    CliSendDataPortMeasurement( &DataMsg );
-                }
+                pstatDynamicMeasurement_t MsgComplete;
 
                 // Change SPI mode to unblocking
                 SPI_SetIrqMode(false);
-                xQueueReceive( pstat_Queue, (void*)&AckMsg, 10 );
 
                 // Tell CLI we're done
-                AckMsg.Type = PSTAT_RUN_COMPLETE;
-                AckMsg.data = NULL;
-                xQueueSend(CliDataQueue, &AckMsg, 10);
+                MsgComplete.Type = PSTAT_RUN_COMPLETE;
+                MsgComplete.data.stats.Good_Count = PstatGoodCount;
+                MsgComplete.data.stats.Fail_Count = PstatFailCount;
 
-                CliSendDataPortMeasurementDone(PstatGoodCount, PstatFailCount);
+                xQueueSend(CliMeasurement_Queue, &MsgComplete, 10);
+
             }
 
-        }
-
-        // Check for data responses
-        while (xQueueReceive( pstatMeasurement_Queue, (void*)&DataMsg, 0))
-        {
-            CliSendDataPortMeasurement( &DataMsg );
         }
 
     }
@@ -201,7 +187,8 @@ void pstat_task(void * parm)
  */
 static PstatRunReq_t Config;
 static uint16_t CurrentDAC;
-static uint16_t MeasureDAC;
+static int16_t MeasureCount;
+static int16_t ChangeDACCount;
 static uint16_t TargetDAC;
 
 static bool CountUp;
@@ -242,7 +229,8 @@ void pstat_meas_start_run(PstatRunReq_t * cfg)
     {
         CountUp = false;
     }
-    MeasureDAC = CurrentDAC;
+    MeasureCount = Config.MeasureTime;
+    ChangeDACCount = Config.DACStep;
 
     MeasState = PSTAT_MEAS_INIT_TO_START;
 
@@ -253,36 +241,32 @@ void pstat_meas_start_run(PstatRunReq_t * cfg)
     ads1256_PowerUpInit(true);
 
     // Enable the timer
-    TimEnableMeasureTimer(Config.TimeUs1);
+    TimEnableMeasureTimer(Config.TimeSliceUs);
 
 }
 
 
 void pstat_measure_tick(void)
 {
-    pstatMeasurement_t Measurement;
+    pstatDynamicMeasurement_t Measurement;
     bool StateChange = false;
-    bool Measured = false;
 
     if (!GetSpiIntMode())
     {
         return;
     }
 
-    if ( (MeasureDAC == CurrentDAC) || (CurrentDAC == TargetDAC))
+
+    if (--MeasureCount <= 0)
     {
+        // Time to measure.
         MakeMeasurementFromISR(&Measurement);
 
-        if (CurrentDAC == TargetDAC)
-        {
-            MeasureDAC = TargetDAC;
-        }
-
-        Measured = true;
-
+        MeasureCount = Config.MeasureTime;
     }
 
-    if (CurrentDAC == TargetDAC)
+
+    if ( (CountUp && (CurrentDAC >= TargetDAC)) || ((!CountUp) && (CurrentDAC <= TargetDAC)) )
     {
         StateChange = true;
     }
@@ -355,38 +339,34 @@ void pstat_measure_tick(void)
 
     if (MeasState != PSTAT_MEAS_DONE)
     {
-        if (CountUp)
-        {
-            CurrentDAC++;
-        }
-        else
-        {
-            CurrentDAC--;
-        }
-
-        if (Measured)
+        // Handle DAC stepping
+        if (--ChangeDACCount <= 0)
         {
             if (CountUp)
             {
-                MeasureDAC += Config.MeasureDACStep1;
-
-                if (MeasureDAC > TargetDAC)
+                if (CurrentDAC <= DAC_MAX - Config.DACStep)
                 {
-                    MeasureDAC = TargetDAC;
+                    CurrentDAC += Config.DACStep;
+                }
+                else
+                {
+                    CurrentDAC = DAC_MAX;
                 }
             }
             else
             {
-                MeasureDAC -= Config.MeasureDACStep1;
-
-                if (MeasureDAC < TargetDAC)
+                if (CurrentDAC >= Config.DACStep)
                 {
-                    MeasureDAC = TargetDAC;
+                    CurrentDAC -= Config.DACStep;
+                }
+                else
+                {
+                    CurrentDAC = 0;
                 }
             }
-        }
 
-        AD5662_Set(CurrentDAC);
+            AD5662_Set(CurrentDAC);
+        }
 
     }
     else
@@ -404,8 +384,6 @@ void pstat_measure_tick(void)
 
     }
 
-
-
 }
 
 /**************************************************************
@@ -417,13 +395,13 @@ static const WE_Scale_t scales[8] = {WE_SCALE_UNITY, WE_SCALE_316_uA, WE_SCALE_1
 #define DAC_SCALE_THRESHOLD (0x7FFFFF * 100 / 316)
 
 // This function makes a measurement from an ISR
-bool MakeMeasurementFromISR(pstatMeasurement_t * measurement)
+bool MakeMeasurementFromISR(pstatDynamicMeasurement_t * measurement)
 {
     int i = 0;
     volatile int32_t value;
     volatile int32_t testValue;
 
-    measurement->TimeStamp = xTaskGetTickCountFromISR();   // Get Time Stamp ISR
+    measurement->data.meas.TimeStamp = xTaskGetTickCountFromISR();   // Get Time Stamp ISR
 
     // Measure WE
     do {
@@ -437,26 +415,19 @@ bool MakeMeasurementFromISR(pstatMeasurement_t * measurement)
 
     } while ( (testValue < DAC_SCALE_THRESHOLD) && (i<8));
 
-    measurement->ADC_WE = value;
-    measurement->WE_Scale = CurrentScale;
+    measurement->Type = PSTAT_DYN_RESULT;
+    measurement->data.meas.ADC_WE = value;
+    measurement->data.meas.WE_Scale = CurrentScale;
 
     // Measure DAC+RE
 
-    measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM, 1);
+    measurement->data.meas.ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM, 1);
 
-    measurement->ADC_RE = ADC_NOT_PRESENT; //ads1256_ReadChannel(ADS1256_CHANNEL_4, ADS1256_CHANNEL_AINCOM, 1);
+    measurement->data.meas.SwitchState = LastSW;
 
-    measurement->VREF_2_3rd = ADC_NOT_PRESENT; //ads1256_ReadChannel(ADS1256_CHANNEL_5, ADS1256_CHANNEL_AINCOM, 1);
+    measurement->data.meas.DAC_Setting = CurrentDAC;
 
-    measurement->VREF_1_3rd = ADC_NOT_PRESENT; //ads1256_ReadChannel(ADS1256_CHANNEL_6, ADS1256_CHANNEL_AINCOM, 1);
-
-    measurement->TestMeasurement = ADC_NOT_PRESENT;
-
-    measurement->SwitchState = LastSW;
-
-    measurement->DAC_Setting = CurrentDAC;
-
-    if (xQueueSendToBackFromISR( pstatMeasurement_Queue, measurement, NULL))
+    if (xQueueSendToBackFromISR( CliMeasurement_Queue, measurement, NULL))
     {
         PstatGoodCount++;
     }

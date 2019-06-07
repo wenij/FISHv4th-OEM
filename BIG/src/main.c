@@ -53,6 +53,7 @@
 #include "gpio.h"
 #include "isr.h"
 #include "tim.h"
+#include "dma.h"
 
 /* USER CODE BEGIN Includes */
 
@@ -114,6 +115,8 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
 
+  MX_DMA_Init();
+
 #ifdef USE_SPI1
   MX_SPI1_Init();
 #else
@@ -128,9 +131,8 @@ int main(void)
 
 #ifdef STM32F205xx
   USART3_ISR_ENABLE();
-#else
-  USART2_ISR_ENABLE();
 #endif
+  USART2_ISR_ENABLE();
 
   MX_TIM2_Init();
   MX_TIM5_Init();
@@ -158,7 +160,7 @@ int main(void)
   DAC_Queue = xQueueCreate( 1 /*Queue size */, sizeof( Message_t ) );
 
   pstat_Queue = xQueueCreate( 4 /*Queue size */, sizeof( Message_t ) );
-  pstatMeasurement_Queue = xQueueCreate( 128, sizeof(pstatMeasurement_t));  // Large queue pumping results from interrupt to interface.
+  CliMeasurement_Queue = xQueueCreate( 128, sizeof(pstatDynamicMeasurement_t));  // Large queue pumping results from interrupt to interface.
 
   xTaskCreate( SPI_driver_task, "SpiDriver", configMINIMAL_STACK_SIZE+256, NULL, 31, NULL );	// Highest Priority
 

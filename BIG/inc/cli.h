@@ -26,6 +26,9 @@
 
 #define TXT_MESSAGE_BUF_SIZE 128
 
+extern volatile bool DataPortTxComplete;
+
+
  typedef enum
  {
      PSTAT_MEASUREMENT_REQ,
@@ -65,7 +68,7 @@ extern void CliSendMeasurementResp(pstatMeasurement_t * data);
 
 extern void CliInfoPending(void);
 
-extern void CliSendDataPortMeasurement( pstatMeasurement_t * data); // Specifically sends a measurement on the data port
+extern void CliSendDataPortMeasurement( PstatDynMeasData_t * data); // Specifically sends a measurement on the data port
 extern void CliSendDataPortMeasurementDone( uint32_t GoodMeasurementCount, uint32_t BadMeasurementCount);
 
 // Binary CLI data port messages

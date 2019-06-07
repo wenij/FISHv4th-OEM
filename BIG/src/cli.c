@@ -15,12 +15,18 @@
 #include "util.h"
 
 QueueHandle_t CliDataQueue;
+QueueHandle_t CliMeasurement_Queue = NULL;
+
+
 static uint8_t * UartRxBuffer;
 #define UART_RX_BUF_SIZE 128
 
 static bool HexOutput = true;  // output mode
 
 static bool InfoPending=false;
+
+volatile bool DataPortTxComplete;
+
 
 static void CliParseCommand(void);
 
@@ -29,6 +35,8 @@ static void CliSendCmd(CliCommandId CmdId, uint32_t data, uint32_t data2, QueueH
 void cli_task(void * parm)
 {
     Message_t PortMsg;
+    pstatDynamicMeasurement_t DataMsg;
+
 
 	{
 		char * msg = "B.I.G. - Bedbug Intelligence Group - PSTAT\n\r";
@@ -44,13 +52,29 @@ void cli_task(void * parm)
 
 	HAL_UART_Receive_IT( cli_uart, (uint8_t*)UartRxBuffer, UART_RX_BUF_SIZE);
 
+	DataPortTxComplete = true;
 
 	for (;;)
 	{
+	    // Handle Measurement Queue
+        // Check for data responses - we continuously pump out the data until the queue is empty.
+        while (xQueueReceive( CliMeasurement_Queue, (void*)&DataMsg, 10))
+        {
+            if (DataMsg.Type == PSTAT_DYN_RESULT)
+            {
+                CliSendDataPortMeasurement( &DataMsg.data.meas );
+            }
+            else
+            {
+                CliSendDataPortMeasurementDone( DataMsg.data.stats.Good_Count, DataMsg.data.stats.Fail_Count);
+            }
+        }
+
+
 		// Handle CLI Queue
 		if (xQueueReceive( CliDataQueue, (void*)&PortMsg, 10 ))
 		{
-			if (PortMsg.Type == CLI_TEXT_MESSAGE)
+		    if (PortMsg.Type == CLI_TEXT_MESSAGE)
 			{
 			    CliMsgContainer* msg = (CliMsgContainer*)PortMsg.data;
 
@@ -240,11 +264,15 @@ void CliInfoPending(void)
 	InfoPending = true;
 }
 
-
-void CliSendDataPortMeasurement( pstatMeasurement_t * data)
+static uint8_t msg_buf[20];
+void CliSendDataPortMeasurement( PstatDynMeasData_t * data)
 {
     // This is a binary message that goes straight to the UART
-    uint8_t msg[20];
+    uint8_t * msg = msg_buf;
+
+    do {
+        if (DataPortTxComplete) break;
+    } while (1);
 
     msg[0] = 0x55; // Sync 1
     msg[1] = 0xAA; // Sync 2
@@ -279,13 +307,19 @@ void CliSendDataPortMeasurement( pstatMeasurement_t * data)
     // Switch setting 1 byte
     msg[19] = (uint8_t)data->SwitchState;
 
-    HAL_UART_Transmit(data_uart, msg, 20, 100); // This is a blocking call.
+
+    DataPortTxComplete = false;
+    HAL_UART_Transmit_DMA(data_uart, msg, 20);   // Non-blocking Call
 }
 
 void CliSendDataPortMeasurementDone( uint32_t GoodMeasurementCount, uint32_t BadMeasurementCount)
 {
     // This is a binary message that goes straight to the UART
     uint8_t msg[13];
+
+    do {
+        if (DataPortTxComplete) break;
+    } while (1);
 
     msg[0] = 0x55; // Sync 1
     msg[1] = 0xAA; // Sync 2
@@ -301,7 +335,8 @@ void CliSendDataPortMeasurementDone( uint32_t GoodMeasurementCount, uint32_t Bad
     msg[11] =(uint8_t)(BadMeasurementCount);
     msg[12] = 0x1A; // EOF marker
 
-    HAL_UART_Transmit(data_uart, msg, 13, 100); // This is a blocking call.
+    DataPortTxComplete = false;
+    HAL_UART_Transmit_DMA(data_uart, msg, 13); // This is a blocking call.
 }
 
 #define MAX_NUM_PARAMS 16
@@ -444,7 +479,8 @@ void CliParseCommand(void)
     {
         num_args = CliParseParameterString(4);
 
-        if (num_args == 7)
+
+        if (num_args == 11)
         {
             // New Command
             PstatRunReq_t cmd;
@@ -453,32 +489,13 @@ void CliParseCommand(void)
             cmd.StartDAC = parameter_list[1];
             cmd.EndDAC = parameter_list[2];
             cmd.FinalDAC = parameter_list[3];
-            cmd.MeasureDACStep1 = parameter_list[4];
-            cmd.TimeUs1 = parameter_list[5];
-            cmd.MeasureDACStep2 = cmd.MeasureDACStep1;
-            cmd.TimeUs2 = cmd.TimeUs1;
-            cmd.Count = 1;
-            cmd.Switch = parameter_list[6];
-
-            PstatSendRunReq( &cmd );
-
-            OK = true;
-        }
-        else if (num_args == 10)
-        {
-            // New Command
-            PstatRunReq_t cmd;
-
-            cmd.InitialDAC = parameter_list[0];
-            cmd.StartDAC = parameter_list[1];
-            cmd.EndDAC = parameter_list[2];
-            cmd.FinalDAC = parameter_list[3];
-            cmd.MeasureDACStep1 = parameter_list[4];
-            cmd.TimeUs1 = parameter_list[5];
-            cmd.MeasureDACStep2 = parameter_list[6];
-            cmd.TimeUs2 = parameter_list[7];
+            cmd.DACStep = parameter_list[4];
+            cmd.DACTime = parameter_list[5];
+            cmd.TimeSliceUs = parameter_list[6];
+            cmd.MeasureTime = parameter_list[7];
             cmd.Count = parameter_list[8];
             cmd.Switch = parameter_list[9];
+            cmd.MeasurementType = (PstatMeasurementType)parameter_list[10];
 
             PstatSendRunReq( &cmd );
 
