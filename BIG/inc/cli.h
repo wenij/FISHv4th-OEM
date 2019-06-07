@@ -68,7 +68,7 @@ extern void CliSendMeasurementResp(pstatMeasurement_t * data);
 
 extern void CliInfoPending(void);
 
-extern void CliSendDataPortMeasurement( PstatDynMeasData_t * data); // Specifically sends a measurement on the data port
+extern void CliSendDataPortMeasurement( pstatDynamicMeasurement_t * data); // Specifically sends a measurement on the data port
 extern void CliSendDataPortMeasurementDone( uint32_t GoodMeasurementCount, uint32_t BadMeasurementCount);
 
 // Binary CLI data port messages

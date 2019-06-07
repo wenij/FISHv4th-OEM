@@ -161,19 +161,34 @@ void pstat_task(void * parm)
                 vPortFree(cmd);
 
             }
-            else if (PortMsg.Type == PSTAT_RUN_COMPLETE)
+            else if (PortMsg.Type == PSTAT_INFO_IND)
             {
-                pstatDynamicMeasurement_t MsgComplete;
+                PstatMsgContainer_t *payload = (PstatMsgContainer_t*)pvPortMalloc(sizeof(PstatMsgContainer_t));
+                pstatDynamicMeasurement_t QMsg;
 
                 // Change SPI mode to unblocking
                 SPI_SetIrqMode(false);
 
-                // Tell CLI we're done
-                MsgComplete.Type = PSTAT_RUN_COMPLETE;
-                MsgComplete.data.stats.Good_Count = PstatGoodCount;
-                MsgComplete.data.stats.Fail_Count = PstatFailCount;
+                // Unload the contents of the data queue
+                while (xQueueReceiveFromISR( CliMeasurement_Queue, (void*)&QMsg, NULL))
+                {
+                    while (1)
+                    {
+                        if (DataPortTxComplete) break;
+                    }
 
-                xQueueSend(CliMeasurement_Queue, &MsgComplete, 10);
+                    CliSendDataPortMeasurement( &QMsg );
+
+                }
+
+                // Tell CLI we're done
+                PortMsg.data = (uint8_t*)payload;
+
+                payload->PstatId = PSTAT_RUN_COMPLETE_IND;
+                payload->Req.RunStats.Good_Count = PstatGoodCount;
+                payload->Req.RunStats.Fail_Count = PstatFailCount;
+
+                xQueueSend(CliDataQueue, &PortMsg, 10);
 
             }
 
@@ -240,15 +255,18 @@ void pstat_meas_start_run(PstatRunReq_t * cfg)
 
     ads1256_PowerUpInit(true);
 
+    DataPortTxComplete = true;
+
     // Enable the timer
     TimEnableMeasureTimer(Config.TimeSliceUs);
 
 }
 
+static pstatDynamicMeasurement_t QMsg;
+static pstatDynamicMeasurement_t Measurement;
 
 void pstat_measure_tick(void)
 {
-    pstatDynamicMeasurement_t Measurement;
     bool StateChange = false;
 
     if (!GetSpiIntMode())
@@ -256,6 +274,13 @@ void pstat_measure_tick(void)
         return;
     }
 
+    if (DataPortTxComplete)
+    {
+        if (xQueueReceiveFromISR( CliMeasurement_Queue, (void*)&QMsg, NULL))
+        {
+            CliSendDataPortMeasurement( &QMsg );
+        }
+    }
 
     if (--MeasureCount <= 0)
     {
@@ -263,6 +288,7 @@ void pstat_measure_tick(void)
         MakeMeasurementFromISR(&Measurement);
 
         MeasureCount = Config.MeasureTime;
+
     }
 
 
@@ -376,11 +402,10 @@ void pstat_measure_tick(void)
         // Done - we need to stop the interrupt and send a confirmation to the host
         TimDisableMeasureTimer();
 
-        msg.Type = PSTAT_RUN_COMPLETE;
+        msg.Type = PSTAT_INFO_IND;
         msg.data = NULL;
 
         xQueueSendToFrontFromISR( pstat_Queue, &msg, NULL);
-
 
     }
 
@@ -400,8 +425,9 @@ bool MakeMeasurementFromISR(pstatDynamicMeasurement_t * measurement)
     int i = 0;
     volatile int32_t value;
     volatile int32_t testValue;
+    bool MsgSent = false;
 
-    measurement->data.meas.TimeStamp = xTaskGetTickCountFromISR();   // Get Time Stamp ISR
+    measurement->TimeStamp = xTaskGetTickCountFromISR();   // Get Time Stamp ISR
 
     // Measure WE
     do {
@@ -415,19 +441,35 @@ bool MakeMeasurementFromISR(pstatDynamicMeasurement_t * measurement)
 
     } while ( (testValue < DAC_SCALE_THRESHOLD) && (i<8));
 
-    measurement->Type = PSTAT_DYN_RESULT;
-    measurement->data.meas.ADC_WE = value;
-    measurement->data.meas.WE_Scale = CurrentScale;
+    measurement->ADC_WE = value;
+    measurement->WE_Scale = CurrentScale;
 
     // Measure DAC+RE
 
-    measurement->data.meas.ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM, 1);
+    measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM, 1);
 
-    measurement->data.meas.SwitchState = LastSW;
+    measurement->SwitchState = LastSW;
 
-    measurement->data.meas.DAC_Setting = CurrentDAC;
+    measurement->DAC_Setting = CurrentDAC;
 
-    if (xQueueSendToBackFromISR( CliMeasurement_Queue, measurement, NULL))
+    if (DataPortTxComplete)
+    {
+        if (xQueueReceiveFromISR( CliMeasurement_Queue, (void*)&QMsg, NULL))
+        {
+            CliSendDataPortMeasurement( &QMsg );
+            MsgSent = true;
+        }
+    }
+
+    if (!MsgSent)
+    {
+        if (xQueueSendToBackFromISR( CliMeasurement_Queue, measurement, NULL))
+        {
+            MsgSent = true;
+        }
+    }
+
+    if (MsgSent)
     {
         PstatGoodCount++;
     }

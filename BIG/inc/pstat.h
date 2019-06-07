@@ -52,12 +52,12 @@
      int32_t TestMeasurement;
  } pstatMeasurement_t;
 
- // Struct containing one dynamic measurement and status
- typedef enum
+ typedef struct
  {
-     PSTAT_DYN_RESULT,
-     PSTAT_DYN_STOP
- } PstatDynMeasType_t;
+     uint32_t Good_Count;
+     uint32_t Fail_Count;
+ } PstatDynMeasStats_t;
+
 
  typedef struct
  {
@@ -67,30 +67,13 @@
      uint32_t TimeStamp;    // Timestamp 1 ms tick
      int32_t ADC_WE;
      int32_t ADC_DAC_RE;
- } PstatDynMeasData_t;
-
- typedef struct
- {
-     uint32_t Good_Count;
-     uint32_t Fail_Count;
- } PstatDynMeasStats_t;
-
- union PstatDynInfo_u
- {
-     PstatDynMeasData_t meas;    // Only with PSTAT_DYN_RESULT
-     PstatDynMeasStats_t stats;  // Only with PSTAT_DYN_STOP
- };
-
- typedef struct
- {
-     PstatDynMeasType_t Type;
-     union PstatDynInfo_u data;
  } pstatDynamicMeasurement_t;
 
  typedef enum
  {
       PSTAT_RUN_REQ,
       PSTAT_CANCEL_REQ,
+      PSTAT_RUN_COMPLETE_IND
  } PstatCmdId;
 
  typedef enum
@@ -122,6 +105,7 @@ typedef struct
     union
     {
         PstatRunReq_t Run;
+        PstatDynMeasStats_t RunStats;
     } Req;
 } PstatMsgContainer_t;
 

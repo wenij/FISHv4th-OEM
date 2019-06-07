@@ -52,29 +52,22 @@ void cli_task(void * parm)
 
 	HAL_UART_Receive_IT( cli_uart, (uint8_t*)UartRxBuffer, UART_RX_BUF_SIZE);
 
-	DataPortTxComplete = true;
 
 	for (;;)
 	{
-	    // Handle Measurement Queue
-        // Check for data responses - we continuously pump out the data until the queue is empty.
-        while (xQueueReceive( CliMeasurement_Queue, (void*)&DataMsg, 10))
-        {
-            if (DataMsg.Type == PSTAT_DYN_RESULT)
-            {
-                CliSendDataPortMeasurement( &DataMsg.data.meas );
-            }
-            else
-            {
-                CliSendDataPortMeasurementDone( DataMsg.data.stats.Good_Count, DataMsg.data.stats.Fail_Count);
-            }
-        }
-
-
 		// Handle CLI Queue
 		if (xQueueReceive( CliDataQueue, (void*)&PortMsg, 10 ))
 		{
-		    if (PortMsg.Type == CLI_TEXT_MESSAGE)
+		    if (PortMsg.Type == PSTAT_INFO_IND)
+		    {
+                PstatMsgContainer_t *payload = (PstatMsgContainer_t*)PortMsg.data;
+
+                CliSendDataPortMeasurementDone( payload->Req.RunStats.Good_Count, payload->Req.RunStats.Fail_Count);
+
+                vPortFree(payload);
+
+		    }
+		    else if (PortMsg.Type == CLI_TEXT_MESSAGE)
 			{
 			    CliMsgContainer* msg = (CliMsgContainer*)PortMsg.data;
 
@@ -265,14 +258,11 @@ void CliInfoPending(void)
 }
 
 static uint8_t msg_buf[20];
-void CliSendDataPortMeasurement( PstatDynMeasData_t * data)
+void CliSendDataPortMeasurement( pstatDynamicMeasurement_t * data)
 {
     // This is a binary message that goes straight to the UART
     uint8_t * msg = msg_buf;
 
-    do {
-        if (DataPortTxComplete) break;
-    } while (1);
 
     msg[0] = 0x55; // Sync 1
     msg[1] = 0xAA; // Sync 2
@@ -306,7 +296,6 @@ void CliSendDataPortMeasurement( PstatDynMeasData_t * data)
 
     // Switch setting 1 byte
     msg[19] = (uint8_t)data->SwitchState;
-
 
     DataPortTxComplete = false;
     HAL_UART_Transmit_DMA(data_uart, msg, 20);   // Non-blocking Call
