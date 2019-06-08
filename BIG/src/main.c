@@ -104,6 +104,7 @@ static FILINFO fatfileinfo;
 // littlefs structs
 // This is the 1rst args for the init of the file system
 static lfs_t lfs_internal_flash;
+static struct lfs_config lfs_cfg;
 //It has numerous sub structs to deal with
 static lfs_cache_t lfs_read_cache;
 static lfs_cache_t lfs_write_cache;
@@ -217,6 +218,8 @@ int main(void)
 							  0);
 */
 // The above is Fatfs - here is littlefs, lfs
+  // Configure the config struct
+  lfs_cfg.block_count = 250;
   // Configure the read cache
   lfs_read_cache.block = 1; // fudge
   lfs_read_cache.buffer = USER_read_buffer; // rename
