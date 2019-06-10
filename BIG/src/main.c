@@ -104,8 +104,9 @@ static FILINFO fatfileinfo;
 // littlefs structs
 // This is the 1rst args for the init of the file system
 static lfs_t lfs_internal_flash;
+// This works, static alone does not. Also can declare struct, but scope is unclear to me.
 static struct lfs_config lfs_cfg;
-//It has numerous sub structs to deal with
+// numerous sub structs to deal with
 static lfs_cache_t lfs_read_cache;
 static lfs_cache_t lfs_write_cache;
 
@@ -218,18 +219,54 @@ int main(void)
 							  0);
 */
 // The above is Fatfs - here is littlefs, lfs
-  // Configure the config struct
-  lfs_cfg.block_count = 250;
+  // Configure the lfs_config struct
+  lfs_cfg.read_size = 512;
+  lfs_cfg.prog_size = 512;
+  lfs_cfg.block_size = 128 * 1024;	// 128k this is the  erase block size.
+  lfs_cfg.block_count = 4;
+  lfs_cfg.block_cycles = 10000; // Number of erase cycles before we should move data to another block.
+  lfs_cfg.cache_size = 128; // littlefs needs a read cache, a program cache, and one additional
+		    // cache per file. These are smaller than a block~!
+  lfs_cfg.lookahead_size = 8 * 64; // lookahead buffer is stored as a compact bitmap,
+		  // so each byte of RAM can track 8 blocks. Blocks are 512k.
+		  // The code says: must be multiple of 64-bits
+		  // Don't know requirements for this yet. Aren't blocks allocated?
+		  // So how many blocks should this be tracking? Right now allocating nominal values.
+		  void *context;
+		  int (*read)(const struct lfs_config *c, lfs_block_t block,
+		              lfs_off_t off, void *buffer, lfs_size_t size);
+		  int (*prog)(const struct lfs_config *c, lfs_block_t block,
+		              lfs_off_t off, const void *buffer, lfs_size_t size);
+		  int (*erase)(const struct lfs_config *c, lfs_block_t block);
+		  int (*sync)(const struct lfs_config *c);
+		  void *read_buffer; // Optional statically allocated read buffer. Must be cache_size.
+		  void *prog_buffer; // Optional statically allocated program buffer. Must be cache_size.
+		  void *lookahead_buffer; // Optional statically allocated lookahead buffer. Must be lookahead_size
+		    // and aligned to a 64-bit boundary.
+
+		  // Below are optional. file_max is useful. Name length handled by other attributes.
+		  lfs_cfg.name_max; // This is optional. The size of the info struct
+		  	// is controlled by the LFS_NAME_MAX define.
+		  	// Defaults to LFS_NAME_MAX when zero. LFS_NAME_MAX is stored in
+		    // superblock and must be respected by other littlefs drivers.
+		  lfs_cfg.file_max;
+		  lfs_cfg.attr_max;
+  // unit test the static struct lfs_cfg
+  // either this call or the function added below ruins the debug run - end up in HAL timer crap.
+  // commented both out, Need to replug in target?
+  //ut_lfs_cfg();
+  // configure the lookahead buffers
+
   // Configure the read cache
   lfs_read_cache.block = 1; // fudge
   lfs_read_cache.buffer = USER_read_buffer; // rename
   lfs_read_cache.off = 0; // fudge
   lfs_read_cache.size = 512; // All the 512's need to be a symbol
   // Configure the write cache
-  lfs_read_cache.block = 1; // fudge
-  lfs_read_cache.buffer = USER_write_buffer; // rename
-  lfs_read_cache.off = 0; // fudge
-  lfs_read_cache.size = 512; // All the 512's need to be a symbol
+  lfs_write_cache.block = 1; // fudge
+  lfs_write_cache.buffer = USER_write_buffer; // rename
+  lfs_write_cache.off = 0; // fudge
+  lfs_write_cache.size = 512; // All the 512's need to be a symbol
 // Add the read and write cache to lfs_internal_flash struct
   lfs_internal_flash.pcache = lfs_write_cache; // Verify this is write cache
   lfs_internal_flash.rcache = lfs_read_cache;
@@ -387,7 +424,14 @@ void SystemClock_Config(void)
 #endif
 
 /* USER CODE BEGIN 4 */
-
+// lfs_config struct unit test
+// this is bombing the debugger
+/*
+ *
+ void ut_lfs_cfg(){
+	  int readback = lfs_cfg.block_count; // THOUGHT THIS NEEDED CASTING TO ( lfs_size_t)
+}
+*/
 /* USER CODE END 4 */
 
 /**

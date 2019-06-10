@@ -205,6 +205,7 @@ struct lfs_config {
     // increases the number of blocks found during an allocation pass. The
     // lookahead buffer is stored as a compact bitmap, so each byte of RAM
     // can track 8 blocks. Must be a multiple of 4.
+    // The code says: must be multiple of 64-bits
     lfs_size_t lookahead_size;
 
     // Optional statically allocated read buffer. Must be cache_size.
