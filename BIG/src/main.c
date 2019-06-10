@@ -261,7 +261,7 @@ int main(void)
   lfs_read_cache.block = 1; // fudge
   lfs_read_cache.buffer = USER_read_buffer; // rename
   lfs_read_cache.off = 0; // fudge
-  lfs_read_cache.size = 512; // All the 512's need to be a symbol
+  lfs_read_cache.size = 512; // not sure caches are same size as 512k blocks~!
   // Configure the write cache
   lfs_write_cache.block = 1; // fudge
   lfs_write_cache.buffer = USER_write_buffer; // rename
@@ -270,7 +270,10 @@ int main(void)
 // Add the read and write cache to lfs_internal_flash struct
   lfs_internal_flash.pcache = lfs_write_cache; // Verify this is write cache
   lfs_internal_flash.rcache = lfs_read_cache;
+
+  // the lfs_init call prototype here.
   /* USER CODE END 2 */
+
 
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
