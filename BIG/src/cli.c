@@ -62,9 +62,12 @@ void cli_task(void * parm)
 		    {
                 PstatMsgContainer_t *payload = (PstatMsgContainer_t*)PortMsg.data;
 
-                CliSendDataPortMeasurementDone( payload->Req.RunStats.Good_Count, payload->Req.RunStats.Fail_Count);
+                if (payload != NULL)
+                {
+                    CliSendDataPortMeasurementDone( payload->Req.RunStats.Good_Count, payload->Req.RunStats.Fail_Count);
 
-                vPortFree(payload);
+                    vPortFree(payload);
+                }
 
 		    }
 		    else if (PortMsg.Type == CLI_TEXT_MESSAGE)
@@ -255,6 +258,7 @@ void CliSendMeasurementResp(pstatMeasurement_t * data)
 void CliInfoPending(void)
 {
 	InfoPending = true;
+	cli_uart->pRxBuffPtr = NULL;
 }
 
 static uint8_t msg_buf[20];
@@ -297,14 +301,17 @@ void CliSendDataPortMeasurement( pstatDynamicMeasurement_t * data)
     // Switch setting 1 byte
     msg[19] = (uint8_t)data->SwitchState;
 
+    HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);    // spi1.ChipSelect();
     DataPortTxComplete = false;
     HAL_UART_Transmit_DMA(data_uart, msg, 20);   // Non-blocking Call
 }
 
+static uint8_t TxMsg[13];
+
 void CliSendDataPortMeasurementDone( uint32_t GoodMeasurementCount, uint32_t BadMeasurementCount)
 {
     // This is a binary message that goes straight to the UART
-    uint8_t msg[13];
+    uint8_t * msg = TxMsg;
 
     do {
         if (DataPortTxComplete) break;
@@ -324,8 +331,9 @@ void CliSendDataPortMeasurementDone( uint32_t GoodMeasurementCount, uint32_t Bad
     msg[11] =(uint8_t)(BadMeasurementCount);
     msg[12] = 0x1A; // EOF marker
 
+    HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);    // spi1.ChipSelect();
     DataPortTxComplete = false;
-    HAL_UART_Transmit_DMA(data_uart, msg, 13); // This is a blocking call.
+    HAL_UART_Transmit_DMA(data_uart, msg, 13); // This is a non-blocking call.
 }
 
 #define MAX_NUM_PARAMS 16

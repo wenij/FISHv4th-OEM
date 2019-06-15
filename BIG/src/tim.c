@@ -325,7 +325,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     __HAL_RCC_TIM5_CLK_ENABLE();
 
     /* TIM3 interrupt Init */
-    HAL_NVIC_SetPriority(TIM5_IRQn, 5, 0);
+    HAL_NVIC_SetPriority(TIM5_IRQn, 5, 1);
     HAL_NVIC_EnableIRQ(TIM5_IRQn);
 
   /* USER CODE BEGIN TIM5_MspInit 1 */

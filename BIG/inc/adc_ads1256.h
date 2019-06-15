@@ -97,7 +97,10 @@ extern void ads1256_SetPGA( ads1256_pga_t gain );
      ADS1256_CHANNEL_AINCOM = 8
  } ads1256_channel_t;
 
-extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel, uint16_t averages);
+
+extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel);
+extern int32_t ads1256_CycleChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel);
+extern int32_t ads1256_ReadDataWhenReady( int ReadyValue );
 
 
 typedef enum
@@ -169,6 +172,7 @@ typedef enum
 #define ADS1256_MUX_SEL_AIN6 6
 #define ADS1256_MUX_SEL_AIN7 7
 #define ADS1256_MUX_SEL_AINCOM 8
+#define ADS1256_MUX_SEL_INVALID 9
 
 #define set_ADS1256_MUX_PSEL(_val) ( ((_val)<<4) & ADS1256_MUX_PSEL)
 #define get_ADS1256_MUX_PSEL(_val) ( ((_val) & ADS1256_MUX_PSEL) >> 4)

@@ -181,14 +181,19 @@ void pstat_task(void * parm)
 
                 }
 
-                // Tell CLI we're done
-                PortMsg.data = (uint8_t*)payload;
+                configASSERT(payload != NULL);
 
-                payload->PstatId = PSTAT_RUN_COMPLETE_IND;
-                payload->Req.RunStats.Good_Count = PstatGoodCount;
-                payload->Req.RunStats.Fail_Count = PstatFailCount;
+                if (payload != NULL)
+                {
+                    // Tell CLI we're done
+                    PortMsg.data = (uint8_t*)payload;
 
-                xQueueSend(CliDataQueue, &PortMsg, 10);
+                    payload->PstatId = PSTAT_RUN_COMPLETE_IND;
+                    payload->Req.RunStats.Good_Count = PstatGoodCount;
+                    payload->Req.RunStats.Fail_Count = PstatFailCount;
+
+                    xQueueSend(CliDataQueue, &PortMsg, 10);
+                }
 
             }
 
@@ -269,6 +274,8 @@ void pstat_measure_tick(void)
 {
     bool StateChange = false;
 
+    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);    // spi1.ChipSelect();
+
     if (!GetSpiIntMode())
     {
         return;
@@ -284,6 +291,7 @@ void pstat_measure_tick(void)
 
     if (--MeasureCount <= 0)
     {
+
         // Time to measure.
         MakeMeasurementFromISR(&Measurement);
 
@@ -409,6 +417,9 @@ void pstat_measure_tick(void)
 
     }
 
+    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);    // spi1.ChipSelect();
+
+
 }
 
 /**************************************************************
@@ -417,59 +428,67 @@ void pstat_measure_tick(void)
 
 static const WE_Scale_t scales[8] = {WE_SCALE_UNITY, WE_SCALE_316_uA, WE_SCALE_100_uA, WE_SCALE_31p6_uA, WE_SCALE_10_uA, WE_SCALE_3p16_uA, WE_SCALE_1_uA, WE_SCALE_316_nA};
 
+// Multipliers with reference to scale 316 uA (x100)
+static const int multipliers[8] = {1, 100, 316, 1000, 3160, 10000, 31600, 100000};
+
 #define DAC_SCALE_THRESHOLD (0x7FFFFF * 100 / 316)
+
+//#define USE_CYCLE_MEASUREMENT
 
 // This function makes a measurement from an ISR
 bool MakeMeasurementFromISR(pstatDynamicMeasurement_t * measurement)
 {
-    int i = 0;
-    volatile int32_t value;
-    volatile int32_t testValue;
-    bool MsgSent = false;
+    int i = 1;
+    int32_t value;
+    uint32_t test, base;
 
-    measurement->TimeStamp = xTaskGetTickCountFromISR();   // Get Time Stamp ISR
+    SetCurrentScale(WE_SCALE_316_uA);
 
-    // Measure WE
-    do {
-        SetCurrentScale((WE_Scale_t)scales[i]);
 
-        value = ads1256_ReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM, 1);
+#ifdef USE_CYCLE_MEASUREMENT
+    ads1256_CycleChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM);  // First measurement, ignoring the result.
 
-        testValue = (value >= 0) ? value : -value;
+    value = ads1256_CycleChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM);
+#else
 
-        i++;
+    value = ads1256_ReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM);
+#endif
 
-    } while ( (testValue < DAC_SCALE_THRESHOLD) && (i<8));
+    base = (uint32_t)(value < 0 ? -value : value);
 
-    measurement->ADC_WE = value;
+    for (i=1; i<7; i++)
+    {
+        test = base * multipliers[i] / 100;
+        if (test >= DAC_SCALE_THRESHOLD)
+        {
+            break;
+        }
+    }
+
+    SetCurrentScale((WE_Scale_t)scales[i]);
+
+#ifdef USE_CYCLE_MEASUREMENT
+
+    measurement->ADC_DAC_RE = ads1256_CycleChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM);
+
+    measurement->ADC_WE = ads1256_ReadDataWhenReady(0);
+#else
+    measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM);
+
+    measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM);
+#endif
+
     measurement->WE_Scale = CurrentScale;
 
     // Measure DAC+RE
 
-    measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM, 1);
+    measurement->TimeStamp = xTaskGetTickCountFromISR();   // Get Time Stamp ISR
 
     measurement->SwitchState = LastSW;
 
     measurement->DAC_Setting = CurrentDAC;
 
-    if (DataPortTxComplete)
-    {
-        if (xQueueReceiveFromISR( CliMeasurement_Queue, (void*)&QMsg, NULL))
-        {
-            CliSendDataPortMeasurement( &QMsg );
-            MsgSent = true;
-        }
-    }
-
-    if (!MsgSent)
-    {
-        if (xQueueSendToBackFromISR( CliMeasurement_Queue, measurement, NULL))
-        {
-            MsgSent = true;
-        }
-    }
-
-    if (MsgSent)
+    if (xQueueSendToBackFromISR( CliMeasurement_Queue, measurement, NULL))
     {
         PstatGoodCount++;
     }
@@ -505,15 +524,15 @@ bool MakeMeasurement( uint16_t DACvalue, pstatMeasurement_t * measurement)
 
     measurement->TimeStamp = xTaskGetTickCount();   // Get Time Stamp
 
-    measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM, 1);
+    measurement->ADC_WE = ads1256_ReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM);
 
-    measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM, 1);
+    measurement->ADC_DAC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM);
 
-    measurement->ADC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_4, ADS1256_CHANNEL_AINCOM, 1);
+    measurement->ADC_RE = ads1256_ReadChannel(ADS1256_CHANNEL_4, ADS1256_CHANNEL_AINCOM);
 
-    measurement->VREF_2_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_5, ADS1256_CHANNEL_AINCOM, 1);
+    measurement->VREF_2_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_5, ADS1256_CHANNEL_AINCOM);
 
-    measurement->VREF_1_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_6, ADS1256_CHANNEL_AINCOM, 1);
+    measurement->VREF_1_3rd = ads1256_ReadChannel(ADS1256_CHANNEL_6, ADS1256_CHANNEL_AINCOM);
 
     measurement->TestMeasurement = ADC_NOT_PRESENT;
 
@@ -542,7 +561,7 @@ bool MakeSingleTestMeasurement( uint16_t DACvalue, uint8_t Pchannel, uint8_t Nch
 
     //TimDelayMicroSeconds(200);  // Allow dac to settle. Not necessary.
 
-    measurement->TestMeasurement = ads1256_ReadChannel(Pchannel, Nchannel, 1);
+    measurement->TestMeasurement = ads1256_ReadChannel(Pchannel, Nchannel);
 
     measurement->ADC_WE = ADC_NOT_PRESENT;
 
