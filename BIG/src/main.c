@@ -91,6 +91,7 @@ void MX_FREERTOS_Init(void);
 extern DRESULT USER_read (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
 extern DRESULT USER_write (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
 extern void initialise_monitor_handles(void);
+extern int lfs_init(lfs_t *lfs, const struct lfs_config *cfg);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -271,7 +272,9 @@ int main(void)
   lfs_internal_flash.pcache = lfs_write_cache; // Verify this is write cache
   lfs_internal_flash.rcache = lfs_read_cache;
 
-  // the lfs_init call prototype here.
+  // the lfs_init call prototype here. It comes from
+//  static int lfsInit_ret lfs_init(lfs_t *lfs, const struct lfs_config *cfg)
+  int lfs_init_return_code = lfs_init(&lfs_internal_flash, lfs_cfg);
   /* USER CODE END 2 */
 
 
