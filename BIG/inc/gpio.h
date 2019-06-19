@@ -62,6 +62,10 @@
 
 void MX_GPIO_Init(void);
 
+void EnableADC_DRDY_int(void);
+
+void DisableADC_DRDY_int(void);
+
 /* USER CODE BEGIN Prototypes */
 
 /* USER CODE END Prototypes */

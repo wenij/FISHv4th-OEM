@@ -15,16 +15,28 @@
 #include "isr.h"
 #include <usart.h>
 #include "cli.h"
+#include "pstat.h"
 
 void (*BT_ISR_ptr)(void) = NULL;
 
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	if ( (GPIO_Pin == BT_IRQ_Pin) && (BT_ISR_ptr != NULL))
+	if (GPIO_Pin == ADC_DRDYn_Pin)
+	{
+	    pstat_measure_data_ready();
+	}
+	else if ( (GPIO_Pin == BT_IRQ_Pin) && (BT_ISR_ptr != NULL))
 	{
 		BT_ISR_ptr();
 	}
+}
+
+
+void HAL_GPIO_EXTI_Enable(void)
+{
+    HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 }
 
 void USART3_ISR_ENABLE(void)
@@ -35,7 +47,7 @@ void USART3_ISR_ENABLE(void)
 
 void USART2_ISR_ENABLE(void)
 {
-	HAL_NVIC_SetPriority(USART2_IRQn, 1, 2);
+	HAL_NVIC_SetPriority(USART2_IRQn, 6, 2);
 	HAL_NVIC_EnableIRQ(USART2_IRQn);
 }
 

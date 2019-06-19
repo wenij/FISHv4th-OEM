@@ -156,7 +156,10 @@ extern void pstat_task(void * parm);
 
 extern void pstat_meas_start_run(PstatRunReq_t * cfg );
 
-extern void pstat_measure_tick(void);
+extern void pstat_measure_tick_int(void);
+
+extern void pstat_measure_data_ready(void);
+
 
 #ifdef __cplusplus
 }

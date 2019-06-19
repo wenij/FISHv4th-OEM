@@ -13,6 +13,8 @@ extern void (*BT_ISR_ptr)(void);
 extern void EXTI9_5_IRQHandler(void);
 extern void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
+extern void HAL_GPIO_EXTI_Enable(void);
+
 extern void USART2_IRQHandler(void);
 
 extern void USART2_ISR_ENABLE(void);

@@ -22,7 +22,7 @@ static uint16_t SendReceiveSPI( uint8_t * TxData, uint16_t TxLength, uint8_t *Rx
 static bool WaitForDataReady(GPIO_PinState value);
 static void StartConversion(void);
 
-
+bool ads1256_Busy = false;
 
  /*
   * Driver Functions for A/D Converter ADS 1256
@@ -115,10 +115,59 @@ static void StartConversion(void);
  }
 
  /*
+  * InitiateReadChannel
+  *
+  * Read an A/D channel. The function will set the channel and start the conversion.
+  * Parameters:
+  *     Positive Channel
+  *     Negative Channel
+  *     Averages
+  *
+  * Return Value:
+  *    Measured Value
+  */
+ int32_t ads1256_InitiateReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel)
+ {
+     bool Continue = false;
+     int32_t ret = 0;
+     uint8_t buf[3];
+     uint8_t rxbuf[4];
+
+     // Initialize
+     // Make sure DRDY is high
+     Continue = WaitForDataReady(1);
+
+     if (!Continue)
+     {
+         // Reset and try again if drdy wasn't high
+     }
+
+     if (!Continue)
+     {
+         return(0);
+     }
+
+     ads1256_Busy = true;
+
+     //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);
+     // Configure the appropriate channel
+     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_MUX_REGISTER);
+     buf[1] = 0;  // Number of registers - 1
+     buf[2] = set_ADS1256_MUX_PSEL(Pchannel) | set_ADS1256_MUX_NSEL(Nchannel);
+     //buf[2] = set_ADS1256_MUX_PSEL(ADS1256_CHANNEL_AINCOM) | set_ADS1256_MUX_NSEL(Pchannel);
+
+     SendReceiveSPI(buf, 3, rxbuf, 0);   // Send mux select expecting no response.
+     //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);
+
+     // Start conversion.
+     StartConversion();
+     //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);
+
+ }
+ /*
   * ReadChannel
   *
   * Read an A/D channel. The function will set the channel, wait for a conversion, and read the result back.
-  * A number of averages can be requested. That many values will be read back and averaged.
   * Parameters:
   *     Positive Channel
   *     Negative Channel
@@ -129,34 +178,9 @@ static void StartConversion(void);
   */
 int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel)
 {
-    bool Continue = false;
     int32_t ret = 0;
-    uint8_t buf[3];
-    uint8_t rxbuf[4];
 
-    // Initialize
-    // Make sure DRDY is high
-    Continue = WaitForDataReady(1);
-
-    if (!Continue)
-    {
-        // Reset and try again if drdy wasn't high
-    }
-
-    if (!Continue)
-    {
-        return(0);
-    }
-
-    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);
-    // Configure the appropriate channel
-    buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_MUX_REGISTER);
-    buf[1] = 0;  // Number of registers - 1
-    buf[2] = set_ADS1256_MUX_PSEL(Pchannel) | set_ADS1256_MUX_NSEL(Nchannel);
-    //buf[2] = set_ADS1256_MUX_PSEL(ADS1256_CHANNEL_AINCOM) | set_ADS1256_MUX_NSEL(Pchannel);
-
-    SendReceiveSPI(buf, 3, rxbuf, 0);   // Send mux select expecting no response.
-    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);
+    ads1256_InitiateReadChannel(Pchannel, Nchannel);
 
     // Start conversion.
     StartConversion();
@@ -165,44 +189,14 @@ int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchan
     // Wait for DRDY to go low.
     ret = ads1256_ReadDataWhenReady(0);
 
-
     return(ret);
 }
 
 int32_t ads1256_CycleChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel)
 {
-    bool Continue = false;
     int32_t ret = 0;
-    uint8_t buf[3];
-    uint8_t rxbuf[4];
 
-    // Initialize
-    // Make sure DRDY is high
-    Continue = WaitForDataReady(1);
-
-    if (!Continue)
-    {
-        // Reset and try again if drdy wasn't high
-    }
-
-    if (!Continue)
-    {
-        return(0);
-    }
-
-    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);
-    // Configure the appropriate channel
-    buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_MUX_REGISTER);
-    buf[1] = 0;  // Number of registers - 1
-    buf[2] = set_ADS1256_MUX_PSEL(Pchannel) | set_ADS1256_MUX_NSEL(Nchannel);
-    //buf[2] = set_ADS1256_MUX_PSEL(ADS1256_CHANNEL_AINCOM) | set_ADS1256_MUX_NSEL(Pchannel);
-
-    SendReceiveSPI(buf, 3, rxbuf, 0);   // Send mux select expecting no response.
-    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);
-
-    // Start conversion.
-    StartConversion();
-    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);
+    ads1256_InitiateReadChannel(Pchannel, Nchannel);
 
     // Wait for DRDY to go high.
     ret = ads1256_ReadDataWhenReady(1);

@@ -117,6 +117,7 @@ int main(void)
 
   MX_DMA_Init();
 
+
 #ifdef USE_SPI1
   MX_SPI1_Init();
 #else
@@ -136,6 +137,8 @@ int main(void)
 
   MX_TIM2_Init();
   MX_TIM5_Init();
+
+  HAL_GPIO_EXTI_Enable();
 
   //MX_RTC_Init();
 
@@ -160,7 +163,8 @@ int main(void)
   DAC_Queue = xQueueCreate( 1 /*Queue size */, sizeof( Message_t ) );
 
   pstat_Queue = xQueueCreate( 4 /*Queue size */, sizeof( Message_t ) );
-  CliMeasurement_Queue = xQueueCreate( 128, sizeof(pstatDynamicMeasurement_t));  // Large queue pumping results from interrupt to interface.
+
+  CliMeasurement_Queue = xQueueCreate( 32, sizeof(pstatDynamicMeasurement_t));  // Queue for pumping results from interrupt to interface.
 
   xTaskCreate( SPI_driver_task, "SpiDriver", configMINIMAL_STACK_SIZE+256, NULL, 31, NULL );	// Highest Priority
 
@@ -315,7 +319,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
   else if (htim->Instance == TIM5)
   {
-      pstat_measure_tick();
+      pstat_measure_tick_int();
   }
   /* USER CODE BEGIN Callback 1 */
 

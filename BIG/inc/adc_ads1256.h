@@ -101,6 +101,9 @@ extern void ads1256_SetPGA( ads1256_pga_t gain );
 extern int32_t ads1256_ReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel);
 extern int32_t ads1256_CycleChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel);
 extern int32_t ads1256_ReadDataWhenReady( int ReadyValue );
+extern int32_t ads1256_InitiateReadChannel( ads1256_channel_t Pchannel, ads1256_channel_t Nchannel);
+extern bool ads1256_Busy;
+
 
 
 typedef enum

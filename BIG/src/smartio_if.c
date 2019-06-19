@@ -48,9 +48,6 @@ static int AppSPI_State = SPI_IDLE;
 
 void SifInit(void)
 {
-    HAL_NVIC_SetPriority(EXTI9_5_IRQn, 1, 0);
-    HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-
 
     SmartIO_Init( SifAppConnect, SifAppDisconnect);		// Initialize the Smart IO interface
     SIO_Version = SmartIO_GetVersion();	// Firmware version string

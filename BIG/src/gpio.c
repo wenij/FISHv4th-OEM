@@ -211,6 +211,33 @@ void MX_GPIO_Init(void)
 
 }
 
+
+void EnableADC_DRDY_int(void)
+{
+    GPIO_InitTypeDef GPIO_InitStruct;
+
+    /*Configure GPIO pin : PtPin */
+    GPIO_InitStruct.Pin = ADC_DRDYn_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+
+    __HAL_GPIO_EXTI_CLEAR_IT(ADC_DRDYn_Pin);
+
+    HAL_GPIO_Init(ADC_DRDYn_GPIO_Port, &GPIO_InitStruct);
+}
+
+void DisableADC_DRDY_int(void)
+{
+    GPIO_InitTypeDef GPIO_InitStruct;
+
+    /*Configure GPIO pin : PtPin */
+    GPIO_InitStruct.Pin = ADC_DRDYn_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(ADC_DRDYn_GPIO_Port, &GPIO_InitStruct);
+}
+
+
 /* USER CODE BEGIN 2 */
 
 /* USER CODE END 2 */

@@ -116,6 +116,7 @@ typedef struct
 #define BOOT1_GPIO_Port GPIOB
 #define ADC_DRDYn_Pin GPIO_PIN_5
 #define ADC_DRDYn_GPIO_Port GPIOC
+#define ADC_DRDYn_EXTI_IRQn EXTI9_5_IRQn
 #define ADC_RSTn_Pin GPIO_PIN_0
 #define ADC_RSTn_GPIO_Port GPIOB
 #define ADC_PDN_Pin GPIO_PIN_1

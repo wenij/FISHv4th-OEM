@@ -52,6 +52,13 @@ static uint32_t PstatGoodCount;
 static uint32_t PstatFailCount;
 
 
+static void pstat_measure_baseline(void);
+static void pstat_measure_I_WE(void);
+static void pstat_measure_U_DAC(void);
+static void pstat_measure_Finish( bool Measuring);
+
+
+
 void pstat_task(void * parm)
 {
     Message_t PortMsg;
@@ -61,6 +68,7 @@ void pstat_task(void * parm)
         // Handle pstat Queue
         if (xQueueReceive( pstat_Queue, (void*)&PortMsg, 10 ))
         {
+
             if (PortMsg.Type == CLI_COMMAND_MESSAGE)
             {
 
@@ -269,10 +277,59 @@ void pstat_meas_start_run(PstatRunReq_t * cfg)
 
 static pstatDynamicMeasurement_t QMsg;
 static pstatDynamicMeasurement_t Measurement;
+bool StateChange = false;
+int ADC_State = 0;
 
-void pstat_measure_tick(void)
+
+void pstat_measure_data_ready(void)
 {
-    bool StateChange = false;
+    bool EnableInt = true;
+    ads1256_Busy = false;
+
+    // Disable the interrupt - one will occur every 33 us otherwise.
+    DisableADC_DRDY_int();
+
+    // ADC Data Ready interrupt
+    switch (ADC_State)
+    {
+    case 0: // State 0.
+        pstat_measure_baseline();
+        ADC_State++;
+        break;
+
+    case 1:
+        pstat_measure_U_DAC();
+        ADC_State++;
+        break;
+
+    case 2:
+        pstat_measure_I_WE();
+        ADC_State++;
+        break;
+
+    case 3:
+        pstat_measure_Finish(true);
+        ADC_State++;
+        EnableInt = false;
+        break;
+
+    default:
+        EnableInt = false;
+        break;
+    }
+
+    if (EnableInt)
+    {
+        EnableADC_DRDY_int();
+    }
+}
+
+void pstat_measure_tick_int(void)
+{
+    StateChange = false;
+    ADC_State = 0;
+
+    // Initiate a measurement and a data transmission
 
     //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);    // spi1.ChipSelect();
 
@@ -298,13 +355,97 @@ void pstat_measure_tick(void)
         MeasureCount = Config.MeasureTime;
 
     }
+    else
+    {
+        pstat_measure_Finish(false); // No measurement so we just run Finish up. This is where the DAC is programmed
+    }
+
+
+
+    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);    // spi1.ChipSelect();
+
+}
+
+/**************************************************************
+ * Measurement utility functions
+ */
+
+static const WE_Scale_t scales[8] = {WE_SCALE_UNITY, WE_SCALE_316_uA, WE_SCALE_100_uA, WE_SCALE_31p6_uA, WE_SCALE_10_uA, WE_SCALE_3p16_uA, WE_SCALE_1_uA, WE_SCALE_316_nA};
+
+// Multipliers with reference to scale 316 uA (x100)
+static const int multipliers[8] = {1, 100, 316, 1000, 3160, 10000, 31600, 100000};
+
+#define DAC_SCALE_THRESHOLD (0x7FFFFF * 100 / 316)
+
+//#define USE_CYCLE_MEASUREMENT
+
+void pstat_measure_baseline(void)
+{
+    int i = 1;
+    int32_t value;
+    uint32_t test, base;
+
+    // First conversion contains the baseline measurement
+    value = ads1256_ReadDataWhenReady( 0 );
+
+    base = (uint32_t)(value < 0 ? -value : value);
+
+    for (i=1; i<7; i++)
+    {
+        test = base * multipliers[i] / 100;
+        if (test >= DAC_SCALE_THRESHOLD)
+        {
+            break;
+        }
+    }
+
+    SetCurrentScale((WE_Scale_t)scales[i]);
+
+    ads1256_InitiateReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM);
+
+}
+
+void pstat_measure_I_WE(void)
+{
+    Measurement.ADC_DAC_RE = ads1256_ReadDataWhenReady(0);
+
+}
+void pstat_measure_U_DAC(void)
+{
+    Measurement.ADC_DAC_RE = ads1256_ReadDataWhenReady(0);
+
+    ads1256_InitiateReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM);
+
+
+}
+
+void pstat_measure_Finish( bool Measuring)
+{
+
+    if (Measuring)
+    {
+        Measurement.TimeStamp = xTaskGetTickCountFromISR();   // Get Time Stamp ISR
+
+        Measurement.SwitchState = LastSW;
+
+        Measurement.DAC_Setting = CurrentDAC;
+
+        if (xQueueSendToBackFromISR( CliMeasurement_Queue, &Measurement, NULL))
+        {
+            PstatGoodCount++;
+        }
+        else
+        {
+            PstatFailCount++;
+        }
+
+    }
 
 
     if ( (CountUp && (CurrentDAC >= TargetDAC)) || ((!CountUp) && (CurrentDAC <= TargetDAC)) )
     {
         StateChange = true;
     }
-
 
     switch (MeasState)
     {
@@ -376,6 +517,8 @@ void pstat_measure_tick(void)
         // Handle DAC stepping
         if (--ChangeDACCount <= 0)
         {
+            ChangeDACCount = Config.DACStep;
+
             if (CountUp)
             {
                 if (CurrentDAC <= DAC_MAX - Config.DACStep)
@@ -414,30 +557,23 @@ void pstat_measure_tick(void)
         msg.data = NULL;
 
         xQueueSendToFrontFromISR( pstat_Queue, &msg, NULL);
+        //xQueueSendToFront( pstat_Queue, &msg, 10);
 
     }
-
-    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);    // spi1.ChipSelect();
-
-
 }
-
-/**************************************************************
- * Measurement utility functions
- */
-
-static const WE_Scale_t scales[8] = {WE_SCALE_UNITY, WE_SCALE_316_uA, WE_SCALE_100_uA, WE_SCALE_31p6_uA, WE_SCALE_10_uA, WE_SCALE_3p16_uA, WE_SCALE_1_uA, WE_SCALE_316_nA};
-
-// Multipliers with reference to scale 316 uA (x100)
-static const int multipliers[8] = {1, 100, 316, 1000, 3160, 10000, 31600, 100000};
-
-#define DAC_SCALE_THRESHOLD (0x7FFFFF * 100 / 316)
-
-//#define USE_CYCLE_MEASUREMENT
 
 // This function makes a measurement from an ISR
 bool MakeMeasurementFromISR(pstatDynamicMeasurement_t * measurement)
 {
+    SetCurrentScale(WE_SCALE_316_uA);
+
+    ads1256_InitiateReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM);
+
+    EnableADC_DRDY_int();
+
+    return(true);
+
+#if 0
     int i = 1;
     int32_t value;
     uint32_t test, base;
@@ -498,6 +634,7 @@ bool MakeMeasurementFromISR(pstatDynamicMeasurement_t * measurement)
     }
 
     return(true);
+#endif
 
 }
 
