@@ -275,10 +275,9 @@ int main(void)
 
 
 /* Will proceed with Format then mount. Static function lfs_init should be called by them.
-// Returns a negative error code on failure.
-int lfs_format(lfs_t *lfs, const struct lfs_config *config);
 */
   // Returns a negative error code on failure.
+  // this call fails in lfs_init. The args seem valid going in but are wrong in it's scope.
   int lfs_format_status =  lfs_format(&lfs_internal_flash, &lfs_cfg);
   /* USER CODE END 2 */
   // Returns a negative error code on failure.
