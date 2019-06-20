@@ -118,12 +118,7 @@ int main(void)
   MX_DMA_Init();
 
 
-#ifdef USE_SPI1
   MX_SPI1_Init();
-#else
-  MX_SPI3_Init();
-#endif
-
 
 #ifdef STM32F205xx
   MX_USART3_UART_Init();
@@ -139,6 +134,9 @@ int main(void)
   MX_TIM5_Init();
 
   HAL_GPIO_EXTI_Enable();
+
+  HW_DEBUG_BT_RST(GPIO_PIN_RESET);
+  HW_DEBUG_BT_CS(GPIO_PIN_RESET);
 
   //MX_RTC_Init();
 

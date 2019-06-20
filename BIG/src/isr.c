@@ -35,7 +35,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void HAL_GPIO_EXTI_Enable(void)
 {
-    HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
+    HAL_NVIC_SetPriority(EXTI9_5_IRQn, 6, 0);
     HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 }
 
@@ -47,7 +47,7 @@ void USART3_ISR_ENABLE(void)
 
 void USART2_ISR_ENABLE(void)
 {
-	HAL_NVIC_SetPriority(USART2_IRQn, 6, 2);
+	HAL_NVIC_SetPriority(USART2_IRQn, 2, 2);
 	HAL_NVIC_EnableIRQ(USART2_IRQn);
 }
 
@@ -62,7 +62,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
-    HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);    // spi1.ChipSelect();
+    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);    // spi1.ChipSelect();
     DataPortTxComplete = true;
 }
 

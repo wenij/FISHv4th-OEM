@@ -283,8 +283,9 @@ int ADC_State = 0;
 
 void pstat_measure_data_ready(void)
 {
-    bool EnableInt = true;
     ads1256_Busy = false;
+
+    HW_DEBUG_BT_RST(GPIO_PIN_SET);
 
     // Disable the interrupt - one will occur every 33 us otherwise.
     DisableADC_DRDY_int();
@@ -295,33 +296,27 @@ void pstat_measure_data_ready(void)
     case 0: // State 0.
         pstat_measure_baseline();
         ADC_State++;
+        EnableADC_DRDY_int();
         break;
 
     case 1:
         pstat_measure_U_DAC();
         ADC_State++;
+        EnableADC_DRDY_int();
         break;
 
     case 2:
         pstat_measure_I_WE();
-        ADC_State++;
-        break;
-
-    case 3:
         pstat_measure_Finish(true);
         ADC_State++;
-        EnableInt = false;
         break;
 
     default:
-        EnableInt = false;
         break;
     }
 
-    if (EnableInt)
-    {
-        EnableADC_DRDY_int();
-    }
+    HW_DEBUG_BT_RST(GPIO_PIN_RESET);
+
 }
 
 void pstat_measure_tick_int(void)
@@ -330,40 +325,36 @@ void pstat_measure_tick_int(void)
     ADC_State = 0;
 
     // Initiate a measurement and a data transmission
+    HW_DEBUG_BT_CS(GPIO_PIN_SET);
 
-    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);    // spi1.ChipSelect();
-
-    if (!GetSpiIntMode())
+    if (GetSpiIntMode())
     {
-        return;
-    }
 
-    if (DataPortTxComplete)
-    {
-        if (xQueueReceiveFromISR( CliMeasurement_Queue, (void*)&QMsg, NULL))
+        if (DataPortTxComplete)
         {
-            CliSendDataPortMeasurement( &QMsg );
+            if (xQueueReceiveFromISR( CliMeasurement_Queue, (void*)&QMsg, NULL))
+            {
+                CliSendDataPortMeasurement( &QMsg );
+            }
         }
+
+        if (--MeasureCount <= 0)
+        {
+
+            // Time to measure.
+            MakeMeasurementFromISR(&Measurement);
+
+            MeasureCount = Config.MeasureTime;
+
+        }
+        else
+        {
+            pstat_measure_Finish(false); // No measurement so we just run Finish up. This is where the DAC is programmed
+        }
+
     }
 
-    if (--MeasureCount <= 0)
-    {
-
-        // Time to measure.
-        MakeMeasurementFromISR(&Measurement);
-
-        MeasureCount = Config.MeasureTime;
-
-    }
-    else
-    {
-        pstat_measure_Finish(false); // No measurement so we just run Finish up. This is where the DAC is programmed
-    }
-
-
-
-    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_RESET);    // spi1.ChipSelect();
-
+    HW_DEBUG_BT_CS(GPIO_PIN_RESET);
 }
 
 /**************************************************************

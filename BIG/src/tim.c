@@ -129,6 +129,8 @@ void TimDisableMeasureTimer(void)
 
     HAL_TIM_Base_Stop_IT(&htim5);
 
+    HAL_TIM_Base_DeInit(&htim5);
+
 }
 
 bool TimCheckMeasureTimerTimeout(void)

@@ -163,6 +163,7 @@ bool ads1256_Busy = false;
      StartConversion();
      //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);
 
+     return ret;
  }
  /*
   * ReadChannel
@@ -393,17 +394,16 @@ bool ads1256_Cal( ads1256_cal_type_t calType)
   */
  static void StartConversion(void)
  {
-
      uint8_t buf[3];
      uint8_t rxbuf[4];
 
      // Send SYNC and WAKEUP
-     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_SYNC_AD_CONVERSION);
+     buf[0] = ADS1256_SYNC_AD_CONVERSION;
      SendReceiveSPI(buf, 1, rxbuf, 0);   // SYNC Command
 
      //TimDelayMicroSeconds(5);  // Gap T11, 24 clocks, before next command
 
-     buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_WAKEUP);
+     buf[0] = ADS1256_WAKEUP;
      SendReceiveSPI(buf, 1, rxbuf, 0);   // WAKEUP Command
 
      //TimDelayMicroSeconds(5);  // Gap T11, 24 clocks, before next command

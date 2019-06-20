@@ -51,7 +51,7 @@
 
 /* USER CODE BEGIN Includes */
 
-#define USE_SPI1
+#define BT_IS_HW_DEBUG  // Use BT SPI IO lines for hardware debug signals - see gpio.h and c
 #define CARSTENS_BOARD      // Hacked up board with MISO re-routed
 #define VERSION "BIG pstat 2.4" // Version rules: Any text you want NOT containing periods, followed by version number formatted as <major>.<minor> at the end
 

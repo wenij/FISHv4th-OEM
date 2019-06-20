@@ -230,11 +230,16 @@ void DisableADC_DRDY_int(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct;
 
+    HAL_GPIO_DeInit(ADC_DRDYn_GPIO_Port, ADC_DRDYn_Pin);
+
     /*Configure GPIO pin : PtPin */
     GPIO_InitStruct.Pin = ADC_DRDYn_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
+
     HAL_GPIO_Init(ADC_DRDYn_GPIO_Port, &GPIO_InitStruct);
+
+
 }
 
 

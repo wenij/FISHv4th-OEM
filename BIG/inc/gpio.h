@@ -53,7 +53,13 @@
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
+#ifdef BT_IS_HW_DEBUG
+#define HW_DEBUG_BT_CS(_val) HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, (_val))
+#define HW_DEBUG_BT_RST(_val) HAL_GPIO_WritePin(BT_RST_GPIO_Port, BT_RST_Pin, (_val))
+#else
+#define HW_DEBUG_BT_CS(_val)
+#define HW_DEBUG_BT_IRQ(_val)
+#endif
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN Private defines */

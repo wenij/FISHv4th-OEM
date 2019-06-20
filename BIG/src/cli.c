@@ -35,8 +35,6 @@ static void CliSendCmd(CliCommandId CmdId, uint32_t data, uint32_t data2, QueueH
 void cli_task(void * parm)
 {
     Message_t PortMsg;
-    pstatDynamicMeasurement_t DataMsg;
-
 
 	{
 		char * msg = "B.I.G. - Bedbug Intelligence Group - PSTAT\n\r";
@@ -261,7 +259,7 @@ void CliInfoPending(void)
 	cli_uart->pRxBuffPtr = NULL;
 }
 
-static uint8_t msg_buf[20];
+static uint8_t msg_buf[32];
 void CliSendDataPortMeasurement( pstatDynamicMeasurement_t * data)
 {
     // This is a binary message that goes straight to the UART
@@ -301,7 +299,7 @@ void CliSendDataPortMeasurement( pstatDynamicMeasurement_t * data)
     // Switch setting 1 byte
     msg[19] = (uint8_t)data->SwitchState;
 
-    HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);    // spi1.ChipSelect();
+    //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);    // spi1.ChipSelect();
     DataPortTxComplete = false;
     HAL_UART_Transmit_DMA(data_uart, msg, 20);   // Non-blocking Call
 }
@@ -331,7 +329,6 @@ void CliSendDataPortMeasurementDone( uint32_t GoodMeasurementCount, uint32_t Bad
     msg[11] =(uint8_t)(BadMeasurementCount);
     msg[12] = 0x1A; // EOF marker
 
-    HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);    // spi1.ChipSelect();
     DataPortTxComplete = false;
     HAL_UART_Transmit_DMA(data_uart, msg, 13); // This is a non-blocking call.
 }

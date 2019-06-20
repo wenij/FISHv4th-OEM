@@ -113,8 +113,9 @@ void SifTask( void *params)
     /* Init the xLastExecutionTime variable on task entry. */
     //xLastExecutionTime = xTaskGetTickCount();
 
+#ifndef BT_IS_HW_DEBUG
     SifInit();
-
+#endif
 
     for (;;)
     {
