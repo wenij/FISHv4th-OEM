@@ -272,10 +272,17 @@ int main(void)
   lfs_internal_flash.pcache = lfs_write_cache; // Verify this is write cache
   lfs_internal_flash.rcache = lfs_read_cache;
 
-  // the lfs_init call prototype here. It comes from
-//  static int lfsInit_ret lfs_init(lfs_t *lfs, const struct lfs_config *cfg)
-  int lfs_init_return_code = lfs_init(&lfs_internal_flash, lfs_cfg);
+
+
+/* Will proceed with Format then mount. Static function lfs_init should be called by them.
+// Returns a negative error code on failure.
+int lfs_format(lfs_t *lfs, const struct lfs_config *config);
+*/
+  // Returns a negative error code on failure.
+  int lfs_format_status =  lfs_format(&lfs_internal_flash, &lfs_cfg);
   /* USER CODE END 2 */
+  // Returns a negative error code on failure.
+  int lfs_mount_status =  lfs_mount(&lfs_internal_flash, &lfs_cfg);
 
 
   /* Call init function for freertos objects (in freertos.c) */
