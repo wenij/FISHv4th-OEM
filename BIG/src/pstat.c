@@ -398,7 +398,7 @@ void pstat_measure_baseline(void)
 
 void pstat_measure_I_WE(void)
 {
-    Measurement.ADC_DAC_RE = ads1256_ReadDataWhenReady(0);
+    Measurement.ADC_WE = ads1256_ReadDataWhenReady(0);
 
 }
 void pstat_measure_U_DAC(void)
