@@ -91,7 +91,6 @@ void MX_FREERTOS_Init(void);
 extern DRESULT USER_read (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
 extern DRESULT USER_write (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
 extern void initialise_monitor_handles(void);
-extern int lfs_init(lfs_t *lfs, const struct lfs_config *cfg);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
