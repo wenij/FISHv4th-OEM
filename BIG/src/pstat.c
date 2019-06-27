@@ -146,14 +146,13 @@ void pstat_task(void * parm)
 
                 switch (cmd->PstatId)
                 {
-                case PSTAT_RUN_REQ:
+                case PSTAT_RUN_VA_REQ:
                     // Initiate a measurement sweep. We disable SPI comms at this time until it finishes.
                     SPI_SetIrqMode(true);
                     xQueueReceive( pstat_Queue, (void*)&AckMsg, 10 );
-
                     {
-                        PstatRunReq_t *req = &cmd->Req.Run;
-                        pstat_meas_start_run( req );
+                        PstatRunReqVA_t *req = &cmd->Req.RunVA;
+                        pstat_meas_start_VA( req );
                     }
                     break;
 
@@ -213,13 +212,19 @@ void pstat_task(void * parm)
 /*************************************************************************************
  *  Functions associated with measuring in the timer interrupt
  */
-static PstatRunReq_t Config;
+static PstatRunReqVA_t Config;
+
+
 static uint16_t CurrentDAC;
 static int16_t MeasureCount;
 static int16_t ChangeDACCount;
 static uint16_t TargetDAC;
+static uint16_t MeasureCountBase;
 
 static bool CountUp;
+
+static PstatCmdId Mode;
+
 
 typedef enum
 {
@@ -233,13 +238,15 @@ typedef enum
 static PstatMeasState_t MeasState;
 
 
-
-void pstat_meas_start_run(PstatRunReq_t * cfg)
+void pstat_meas_start_VA(PstatRunReqVA_t * cfg)
 {
     if (!GetSpiIntMode())
     {
+        TimDisableMeasureTimer();
         return;
     }
+
+    Mode = PSTAT_RUN_VA_REQ;
 
     // Save the setup configuration
     Config = *cfg;
@@ -259,6 +266,7 @@ void pstat_meas_start_run(PstatRunReq_t * cfg)
     }
     MeasureCount = Config.MeasureTime;
     ChangeDACCount = Config.DACStep;
+    MeasureCountBase = Config.MeasureTime;
 
     MeasState = PSTAT_MEAS_INIT_TO_START;
 
@@ -272,6 +280,57 @@ void pstat_meas_start_run(PstatRunReq_t * cfg)
 
     // Enable the timer
     TimEnableMeasureTimer(Config.TimeSliceUs);
+
+}
+
+static PstatRunReqCVA_t CVA_Config;
+static uint32_t TimeAtFirstDAC;
+static uint32_t TimeAtEndDAC;
+
+void pstat_meas_start_CVA(PstatRunReqCVA_t * cfg)
+{
+    if (!GetSpiIntMode())
+    {
+        TimDisableMeasureTimer();
+        return;
+    }
+
+    Mode = PSTAT_RUN_CVA_REQ;
+
+    // Save the setup configuration
+    CVA_Config = *cfg;
+
+    PstatGoodCount = PstatFailCount = 0;
+
+    // Initial values
+    CurrentDAC = CVA_Config.StartDAC;
+    TargetDAC = CVA_Config.EndDAC;
+    if (Config.InitialDAC <= Config.StartDAC)
+    {
+        CountUp = true;
+    }
+    else
+    {
+        CountUp = false;
+    }
+    MeasureCount = 1;
+
+    TimeAtFirstDAC = CVA_Config.DACTimeAtStart;
+    TimeAtEndDAC = CVA_Config.DACTimeAtEnd;
+    MeasureCountBase = 1;
+
+    MeasState = PSTAT_MEAS_INIT_TO_START;
+
+    SetPstatSwitches(CVA_Config.Switch);
+
+    AD5662_Set(CurrentDAC);
+
+    ads1256_PowerUpInit(true);
+
+    DataPortTxComplete = true;
+
+    // Enable the timer
+    TimEnableMeasureTimer(CVA_Config.TimeSliceUs);
 
 }
 
@@ -344,7 +403,7 @@ void pstat_measure_tick_int(void)
             // Time to measure.
             MakeMeasurementFromISR(&Measurement);
 
-            MeasureCount = Config.MeasureTime;
+            MeasureCount = MeasureCountBase;
 
         }
         else
@@ -432,112 +491,143 @@ void pstat_measure_Finish( bool Measuring)
 
     }
 
-
-    if ( (CountUp && (CurrentDAC >= TargetDAC)) || ((!CountUp) && (CurrentDAC <= TargetDAC)) )
+    if (Mode == PSTAT_RUN_VA_REQ)
     {
-        StateChange = true;
-    }
-
-    switch (MeasState)
-    {
-    case PSTAT_MEAS_INIT_TO_START:
-        if (StateChange)
+        // Voltammetry
+        if ( (CountUp && (CurrentDAC >= TargetDAC)) || ((!CountUp) && (CurrentDAC <= TargetDAC)) )
         {
-            MeasState = PSTAT_MEAS_START_TO_END;
-
-            TargetDAC = Config.EndDAC;
-
-            CountUp = (TargetDAC > CurrentDAC);
-
+            StateChange = true;
         }
-        break;
-    case PSTAT_MEAS_START_TO_END:
-        if (StateChange)
+
+        switch (MeasState)
         {
-            if (Config.Count <= 1)
+        case PSTAT_MEAS_INIT_TO_START:
+            if (StateChange)
             {
-                if (Config.FinalDAC != CurrentDAC)
+                MeasState = PSTAT_MEAS_START_TO_END;
+
+                TargetDAC = Config.EndDAC;
+
+                CountUp = (TargetDAC > CurrentDAC);
+
+            }
+            break;
+        case PSTAT_MEAS_START_TO_END:
+            if (StateChange)
+            {
+                if (Config.Count <= 1)
                 {
-                    MeasState = PSTAT_MEAS_END_TO_FINAL;
-                    TargetDAC = Config.FinalDAC;
+                    if (Config.FinalDAC != CurrentDAC)
+                    {
+                        MeasState = PSTAT_MEAS_END_TO_FINAL;
+                        TargetDAC = Config.FinalDAC;
+                    }
+                    else
+                    {
+                        MeasState = PSTAT_MEAS_DONE;
+                    }
                 }
                 else
                 {
-                    MeasState = PSTAT_MEAS_DONE;
+                    MeasState = PSTAT_MEAS_END_TO_START;
+                    TargetDAC = Config.StartDAC;
                 }
+
+                CountUp = (TargetDAC > CurrentDAC);
+
             }
-            else
+            break;
+        case PSTAT_MEAS_END_TO_START:
+            if (StateChange)
             {
-                MeasState = PSTAT_MEAS_END_TO_START;
-                TargetDAC = Config.StartDAC;
+                Config.Count--;
+
+                MeasState = PSTAT_MEAS_START_TO_END;
+
+                TargetDAC = Config.EndDAC;
+
+                CountUp = (TargetDAC > CurrentDAC);
+
+            }
+            break;
+
+        case PSTAT_MEAS_END_TO_FINAL:
+            if (StateChange)
+            {
+                MeasState = PSTAT_MEAS_DONE;
+            }
+            break;
+        case PSTAT_MEAS_DONE:
+            break;
+        default:
+            break;
+
+        }
+
+        if (MeasState != PSTAT_MEAS_DONE)
+        {
+            // Handle DAC stepping
+            if (--ChangeDACCount <= 0)
+            {
+                ChangeDACCount = Config.DACStep;
+
+                if (CountUp)
+                {
+                    if (CurrentDAC <= DAC_MAX - Config.DACStep)
+                    {
+                        CurrentDAC += Config.DACStep;
+                    }
+                    else
+                    {
+                        CurrentDAC = DAC_MAX;
+                    }
+                }
+                else
+                {
+                    if (CurrentDAC >= Config.DACStep)
+                    {
+                        CurrentDAC -= Config.DACStep;
+                    }
+                    else
+                    {
+                        CurrentDAC = 0;
+                    }
+                }
+
+                AD5662_Set(CurrentDAC);
             }
 
-            CountUp = (TargetDAC > CurrentDAC);
-
         }
-        break;
-    case PSTAT_MEAS_END_TO_START:
-        if (StateChange)
+    }
+    else if (Mode == PSTAT_RUN_CVA_REQ)
+    {
+        // ChronoVoltammetry
+        if (TimeAtFirstDAC > 0)
         {
-            Config.Count--;
+            TimeAtFirstDAC--;
 
-            MeasState = PSTAT_MEAS_START_TO_END;
+            if (TimeAtFirstDAC == 0)
+            {
+                // End of the period. Change the DAC.
+                CurrentDAC = CVA_Config.DACTimeAtEnd;
 
-            TargetDAC = Config.EndDAC;
-
-            CountUp = (TargetDAC > CurrentDAC);
+                AD5662_Set(CurrentDAC);
+            }
 
         }
-        break;
-
-    case PSTAT_MEAS_END_TO_FINAL:
-        if (StateChange)
+        else if (TimeAtEndDAC > 0)
+        {
+            TimeAtEndDAC--;
+        }
+        else
         {
             MeasState = PSTAT_MEAS_DONE;
         }
-        break;
-    case PSTAT_MEAS_DONE:
-        break;
-    default:
-        break;
 
     }
 
-    if (MeasState != PSTAT_MEAS_DONE)
-    {
-        // Handle DAC stepping
-        if (--ChangeDACCount <= 0)
-        {
-            ChangeDACCount = Config.DACStep;
 
-            if (CountUp)
-            {
-                if (CurrentDAC <= DAC_MAX - Config.DACStep)
-                {
-                    CurrentDAC += Config.DACStep;
-                }
-                else
-                {
-                    CurrentDAC = DAC_MAX;
-                }
-            }
-            else
-            {
-                if (CurrentDAC >= Config.DACStep)
-                {
-                    CurrentDAC -= Config.DACStep;
-                }
-                else
-                {
-                    CurrentDAC = 0;
-                }
-            }
-
-            AD5662_Set(CurrentDAC);
-        }
-
-    }
-    else
+    if (MeasState == PSTAT_MEAS_DONE)
     {
         Message_t msg;
 
@@ -757,7 +847,7 @@ void SetPstatSwitches(uint16_t SW)
 }
 
 
-void PstatSendRunReq( PstatRunReq_t * Cmd)
+void PstatSendRunVA_Req( PstatRunReqVA_t * Cmd)
 {
     Message_t Msg;
     PstatMsgContainer_t *payload = (PstatMsgContainer_t*)pvPortMalloc(sizeof(PstatMsgContainer_t));
@@ -765,10 +855,24 @@ void PstatSendRunReq( PstatRunReq_t * Cmd)
     Msg.data = (uint8_t*)payload;
     Msg.Type = PSTAT_COMMAND_MESSAGE;
 
-    payload->PstatId = PSTAT_RUN_REQ;
-    payload->Req.Run = *Cmd;
+    payload->PstatId = PSTAT_RUN_VA_REQ;
+    payload->Req.RunVA = *Cmd;
 
 
     xQueueSend( pstat_Queue, &Msg, 0 );
 }
 
+void PstatSendRunCVA_Req( PstatRunReqCVA_t * Cmd)
+{
+    Message_t Msg;
+    PstatMsgContainer_t *payload = (PstatMsgContainer_t*)pvPortMalloc(sizeof(PstatMsgContainer_t));
+
+    Msg.data = (uint8_t*)payload;
+    Msg.Type = PSTAT_COMMAND_MESSAGE;
+
+    payload->PstatId = PSTAT_RUN_CVA_REQ;
+    payload->Req.RunCVA = *Cmd;
+
+
+    xQueueSend( pstat_Queue, &Msg, 0 );
+}
