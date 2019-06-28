@@ -222,11 +222,11 @@ int main(void)
   // Configure the lfs_config struct
   lfs_cfg.read_size = 512;
   lfs_cfg.prog_size = 512;
-  lfs_cfg.block_size = 128 * 1024;	// 128k this is the  erase block size.
+  lfs_cfg.block_size = 512 * 250;	// 128k this is the  erase block size.
   lfs_cfg.block_count = 4;
   lfs_cfg.block_cycles = 10000; // Number of erase cycles before we should move data to another block.
-  lfs_cfg.cache_size = 128; // littlefs needs a read cache, a program cache, and one additional
-		    // cache per file. These are smaller than a block~!
+  lfs_cfg.cache_size = 512; // littlefs needs a read cache, a program cache, and one additional
+		    // cache per file. Optional statically allocated read buffer. Must be cache_size.
   lfs_cfg.lookahead_size = 8 * 64; // lookahead buffer is stored as a compact bitmap,
 		  // so each byte of RAM can track 8 blocks. Blocks are 512k.
 		  // The code says: must be multiple of 64-bits
