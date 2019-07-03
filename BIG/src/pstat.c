@@ -156,6 +156,16 @@ void pstat_task(void * parm)
                     }
                     break;
 
+                case PSTAT_RUN_CVA_REQ:
+                    // Initiate a measurement sweep. We disable SPI comms at this time until it finishes.
+                    SPI_SetIrqMode(true);
+                    xQueueReceive( pstat_Queue, (void*)&AckMsg, 10 );
+                    {
+                        PstatRunReqCVA_t *req = &cmd->Req.RunCVA;
+                        pstat_meas_start_CVA( req );
+                    }
+                    break;
+
                 case PSTAT_CANCEL_REQ:
                     SPI_SetIrqMode(false);
                     xQueueReceive( pstat_Queue, (void*)&AckMsg, 10 );
