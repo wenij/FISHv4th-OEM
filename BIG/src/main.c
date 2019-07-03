@@ -56,23 +56,26 @@
 #include "tim.h"
 
 /* USER CODE BEGIN Includes */
+// define filesystem in use
+#define littlefs
+//#define fatfs
 
 // Includes for other tasks
 #include "smartio_if.h"
 #include "cli.h"
+#ifdef fatfs
 // Fatfs stuff
 #include "fatfs.h"
-
-// littlefs includes
-#include "lfs.h"
-/*
 #include "FF_Disk_t.h"
 #include "FF_ioman.h"
 #include "ff_flashDisk_Init.h"
 // THis gets included in the init function.
 //#include "ff_disk_t.h"
- *
- */
+#endif
+#ifdef littlefs
+// littlefs includes
+#include "lfs.h"
+#endif
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -88,19 +91,23 @@ void MX_FREERTOS_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+#ifdef fatfs
 extern DRESULT USER_read (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
 extern DRESULT USER_write (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
 extern void initialise_monitor_handles(void);
+#endif
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+#ifdef fatfs
 // Move to file that initializes the structures
-/* FatFs stuff
+/* FatFs stuff */
 static FATFS fatfs;
 static FIL fatfile;
 static DIR fatdir;
 static FILINFO fatfileinfo;
-*/
+#endif
+#ifdef littlefs
 // littlefs structs
 // This is the 1rst args for the init of the file system
 static lfs_t lfs_internal_flash;
@@ -109,10 +116,8 @@ static struct lfs_config lfs_cfg;
 // numerous sub structs to deal with
 static lfs_cache_t lfs_read_cache;
 static lfs_cache_t lfs_write_cache;
+#endif
 
-/* this has no typedef
-static lfs_config lfs_cfg;
-*/
 // lfs will be feed these for the read and write cache
 // I hear tell they can be smaller.
 // The name can be changed if the fatfs dependency is resolved,

@@ -92,6 +92,9 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1746223310.1923318325" name="flash_IO.c" rcbsApplicability="disable" resourcePath="src/flash_IO.c" toolsToInvoke="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1397439380.1375151569">
+						<tool id="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1397439380.1375151569" name="MCU GCC Compiler" superClass="fr.ac6.managedbuild.tool.gnu.cross.c.compiler.1397439380"/>
+					</fileInfo>
 					<folderInfo id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1746223310.1910637932" name="/" resourcePath="FatFs/src">
 						<toolChain id="fr.ac6.managedbuild.toolchain.gnu.cross.exe.debug.490907272" name="Ac6 STM32 MCU GCC" superClass="fr.ac6.managedbuild.toolchain.gnu.cross.exe.debug" unusedChildren="">
 							<option id="fr.ac6.managedbuild.option.gnu.cross.mcu.1872811103.1278603364" name="Mcu" superClass="fr.ac6.managedbuild.option.gnu.cross.mcu.1872811103"/>
