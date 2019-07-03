@@ -476,24 +476,47 @@ void CliParseCommand(void)
 
         if (num_args == 11)
         {
-            // New Command
-            PstatRunReq_t cmd;
+            if (parameter_list[10] == 0)
+            {
+                // VA request
+                PstatRunReqVA_t cmd;
 
-            cmd.InitialDAC = parameter_list[0];
-            cmd.StartDAC = parameter_list[1];
-            cmd.EndDAC = parameter_list[2];
-            cmd.FinalDAC = parameter_list[3];
-            cmd.DACStep = parameter_list[4];
-            cmd.DACTime = parameter_list[5];
-            cmd.TimeSliceUs = parameter_list[6];
-            cmd.MeasureTime = parameter_list[7];
-            cmd.Count = parameter_list[8];
-            cmd.Switch = parameter_list[9];
-            cmd.MeasurementType = (PstatMeasurementType)parameter_list[10];
+                cmd.InitialDAC = parameter_list[0];
+                cmd.StartDAC = parameter_list[1];
+                cmd.EndDAC = parameter_list[2];
+                cmd.FinalDAC = parameter_list[3];
+                cmd.DACStep = parameter_list[4];
+                cmd.DACTime = parameter_list[5];
+                cmd.TimeSliceUs = parameter_list[6];
+                cmd.MeasureTime = parameter_list[7];
+                cmd.Count = parameter_list[8];
+                cmd.Switch = parameter_list[9];
 
-            PstatSendRunReq( &cmd );
+                PstatSendRunVA_Req( &cmd );
 
-            OK = true;
+                OK = true;
+            }
+            else if (parameter_list[10] == 1)
+            {
+                // CVA request
+                PstatRunReqCVA_t cmd;
+
+                //cmd.InitialDAC = parameter_list[0];
+                cmd.StartDAC = parameter_list[1];
+                cmd.EndDAC = parameter_list[2];
+                cmd.FinalDAC = parameter_list[3];
+                cmd.DACTimeAtStart = parameter_list[4];
+                cmd.DACTimeAtEnd = parameter_list[5];
+                cmd.TimeSliceUs = parameter_list[6];
+                //cmd.MeasureTime = parameter_list[7];
+                //cmd.Count = parameter_list[8];
+                cmd.Switch = parameter_list[9];
+
+                PstatSendRunCVA_Req( &cmd );
+
+                OK = true;
+            }
+
         }
     }
     else if (strncmp("end", (const char*)UartRxBuffer, 3) == 0)

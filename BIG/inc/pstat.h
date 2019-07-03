@@ -71,18 +71,13 @@
 
  typedef enum
  {
-      PSTAT_RUN_REQ,
+      PSTAT_RUN_VA_REQ,     // VoltAmmetry
+      PSTAT_RUN_CVA_REQ,    // ChronoVoltAmmetry
       PSTAT_CANCEL_REQ,
       PSTAT_RUN_COMPLETE_IND
  } PstatCmdId;
 
- typedef enum
- {
-     PSTAT_VOLTAMMETRY,
-     PSTAT_CHRONOVOLTAMMETRY
- } PstatMeasurementType;
-
-// Command Structure for Run command
+// Command Structure for Run command w/ VoltAmmetry
 typedef struct
 {
     uint16_t InitialDAC;
@@ -95,8 +90,19 @@ typedef struct
     uint16_t MeasureTime;
     uint16_t Count;
     uint8_t  Switch;
-    PstatMeasurementType  MeasurementType;
-} PstatRunReq_t;
+} PstatRunReqVA_t;
+
+// Command Structure for Run command w/ ChronoVoltAmmetry
+typedef struct
+{
+    uint16_t StartDAC;
+    uint16_t EndDAC;
+    uint16_t FinalDAC;
+    uint32_t TimeSliceUs;
+    uint32_t DACTimeAtStart;
+    uint32_t DACTimeAtEnd;
+    uint8_t  Switch;
+} PstatRunReqCVA_t;
 
 // Command container for Pstat commands. MessageType: PSTAT_COMMAND_MESSAGE
 typedef struct
@@ -104,12 +110,14 @@ typedef struct
     PstatCmdId PstatId;
     union
     {
-        PstatRunReq_t Run;
+        PstatRunReqVA_t RunVA;
+        PstatRunReqCVA_t RunCVA;
         PstatDynMeasStats_t RunStats;
     } Req;
 } PstatMsgContainer_t;
 
-extern void PstatSendRunReq( PstatRunReq_t * );
+extern void PstatSendRunVA_Req( PstatRunReqVA_t * );
+extern void PstatSendRunCVA_Req( PstatRunReqCVA_t * );
 
 
   /*******************************
@@ -154,7 +162,9 @@ extern void PstatSendRunReq( PstatRunReq_t * );
 
 extern void pstat_task(void * parm);
 
-extern void pstat_meas_start_run(PstatRunReq_t * cfg );
+extern void pstat_meas_start_VA(PstatRunReqVA_t * cfg );
+extern void pstat_meas_start_CVA(PstatRunReqCVA_t * cfg );
+
 
 extern void pstat_measure_tick_int(void);
 
