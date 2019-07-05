@@ -1,6 +1,7 @@
 /*
  * @file   flash_IO.c
  * Support for littlefs and fatfs io
+ * Not building probably decause I haven't provided a flash_IO,h with prototypes?
  */
 
 #ifdef STM32F205xx
