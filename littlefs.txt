@@ -1,0 +1,43 @@
+Are there any guidelines for how to map the LFS block/read/program sizes?
+There should probably more documentation about block device geometry. 
+Also agree on the usefulness of a portable test suite
+
+Littlefs doesn't do a read-modify-write,
+instead it performs modifications on a stream of data
+as it copies it from one sector to another.
+	Huh?
+This requires more buffers,
+but the buffers can be much smaller,
+since they don't need to be a full sector.
+	What?
+
+LFS will always invoke the device read/write
+with a multiple of this size.
+	if i set read/program size to 64bytes.
+So if a device has a read size of 4 bytes,
+LFS may read 16 bytes at a time.
+But LFS will not read 15 bytes.
+
+Are you protecting littlefs with mutexes?
+All read offsets and sizes will be a multiple of the "read size", and all program offsets and sizes will be a multiple of the "program size". However, littlefs does require that the "program size" is a multiple of the "read size". Because of math this means that all program offsets and sizes will additionally be a multiple of the "read size" as a side effect.
+
+    What should be the return value from the user-defined function(e.g 0 for valid read/write? ) and in the link to that how the LFS determines that block has gone corrupt? Looking forward.
+
+This is a good question to raise.
+All that the functions read, prog, erase and sync
+need to do is return 0 if it thinks it was successful.
+If the write actually failed to stay on the device,
+that is ok, after every write littlefs reads back
+the written block to verify that the write was succesful.
+
+These functions can also return any negative error
+code (as long as it doesn't conflict with the littlefs error codes),
+which will be propogated directly to the user
+of the library.
+
+Optionally, (and because of some legacy),
+these functions can also return LFS_ERROR_CORRUPT.
+This tells littlefs that the block was corrupted
+early on and can be useful if you want to
+synthetically limit the erases on a block
+or have some other measure of wear.
