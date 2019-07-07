@@ -3,6 +3,7 @@
  * Support for littlefs and fatfs io
  * Not building probably decause I haven't provided a flash_IO,h with prototypes?
  */
+#include "flash_IO.h"
 
 #ifdef STM32F205xx
 #include "stm32f2xx_hal.h"
@@ -38,6 +39,14 @@ static FIL fatfile;
 static DIR fatdir;
 static FILINFO fatfileinfo;
 #endif
+
+// lfs will be feed these to/from the read and write cache
+
+// The name can be changed if the fatfs dependency is resolved,
+// Either by duplicating them for fatfs or deleting fatfs references.
+static unsigned char USER_read_buffer[512];
+static unsigned char USER_write_buffer[512] = { 0x5f, 0xc5 };
+
 #ifdef littlefs
 static lfs_t lfs_internal_flash;
 // This works, static alone does not. Also can declare struct, but scope is unclear to me.
@@ -91,6 +100,8 @@ p0Disk = FF_FlashDiskInit( pcName,
 */
 #endif
 #ifdef littlefs
+
+void lfs_unitTest(){
 // Configure the lfs_config struct
 lfs_cfg.read_size = 512;
 lfs_cfg.prog_size = 512;
@@ -153,3 +164,4 @@ lfs_internal_flash.rcache = lfs_read_cache;
   // Returns a negative error code on failure.
   int lfs_mount_status =  lfs_mount(&lfs_internal_flash, &lfs_cfg);
 */
+}

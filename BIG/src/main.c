@@ -82,12 +82,6 @@ void MX_FREERTOS_Init(void);
 
 /* USER CODE BEGIN 0 */
 
-// lfs will be feed these for the read and write cache
-// I hear tell they can be smaller.
-// The name can be changed if the fatfs dependency is resolved,
-// Either by duplicating them for fatfs or deleting fatfs references.
-static unsigned char USER_read_buffer[512];
-static unsigned char USER_write_buffer[512] = { 0x5f, 0xc5 };
 /* USER CODE END 0 */
 
 /**
