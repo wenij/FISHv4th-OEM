@@ -56,7 +56,7 @@
 #include "tim.h"
 
 /* USER CODE BEGIN Includes */
-// define filesystem in use - MOVE TO PREPROCESSOR TO MAKE GLOBAL
+// define filesystem in use - Defined here outside of main is GLOBAL for all to see
 #define littlefs
 //#define fatfs
 
@@ -69,7 +69,16 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+#ifdef littlefs
+/* int lfs_PSTAT_init(lfs_t *lfs, const struct lfs_config *cfg)
+ * to be called conditionally after test for lfs exists
+ */
+#include "lfs.h"
+#include "flash_io.h"
+extern int lfs_PSTAT_init(lfs_t *lfs, const struct lfs_config *cfg);
+// Compiler recognizes function from flasg_IO.h but doesn't see the arguments
+//int lfs_PSTAT_init_status = lfs_PSTAT_init(&lfs_internal_flash, &lfs_cfg);
+#endif
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
