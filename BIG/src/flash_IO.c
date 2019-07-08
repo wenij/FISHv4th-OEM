@@ -101,7 +101,7 @@ p0Disk = FF_FlashDiskInit( pcName,
 #endif
 #ifdef littlefs
 
-void lfs_unitTest(){
+int lfs_PSTAT_init(lfs_t *lfs, const struct lfs_config *cfg){
 // Configure the lfs_config struct
 lfs_cfg.read_size = 512;
 lfs_cfg.prog_size = 512;
@@ -157,11 +157,9 @@ lfs_internal_flash.rcache = lfs_read_cache;
 
 /* Will proceed with Format then mount. Static function lfs_init should be called by them.
 */
-/* trying to build this file
   // Returns a negative error code on failure.
   // this call fails in lfs_init. The args seem valid going in but are wrong in it's scope.
   int lfs_format_status =  lfs_format(&lfs_internal_flash, &lfs_cfg);
   // Returns a negative error code on failure.
   int lfs_mount_status =  lfs_mount(&lfs_internal_flash, &lfs_cfg);
-*/
 }

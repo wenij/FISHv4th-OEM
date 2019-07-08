@@ -11,7 +11,9 @@
 /// Version info ///
 
 // Alpha version
+#include "lfs.h"
 // Create wrapper prototypes for
-// flash_lfs_PSTAT_init that will call lsf_format and lfs_mount
+// lfs_PSTAT_init that will call lsf_format and lfs_mount
+int lfs_PSTAT_init(lfs_t *lfs, const struct lfs_config *cfg);
 
 #endif /* FLASH_IO_H_ */
