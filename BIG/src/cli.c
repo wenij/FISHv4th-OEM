@@ -502,8 +502,8 @@ void CliParseCommand(void)
                 PstatRunReqCVA_t cmd;
 
                 //cmd.InitialDAC = parameter_list[0];
-                cmd.StartDAC = parameter_list[1];
-                cmd.EndDAC = parameter_list[2];
+                cmd.StartDAC = parameter_list[0];
+                cmd.EndDAC = parameter_list[1];
                 cmd.FinalDAC = parameter_list[3];
                 cmd.DACTimeAtStart = parameter_list[4];
                 cmd.DACTimeAtEnd = parameter_list[5];

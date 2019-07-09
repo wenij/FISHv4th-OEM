@@ -227,7 +227,7 @@ static PstatRunReqVA_t Config;
 
 static uint16_t CurrentDAC;
 static int16_t MeasureCount;
-static int16_t ChangeDACCount;
+static int32_t ChangeDACCount;
 static uint16_t TargetDAC;
 static uint16_t MeasureCountBase;
 
@@ -275,7 +275,7 @@ void pstat_meas_start_VA(PstatRunReqVA_t * cfg)
         CountUp = false;
     }
     MeasureCount = Config.MeasureTime;
-    ChangeDACCount = Config.DACStep;
+    ChangeDACCount = Config.DACTime;
     MeasureCountBase = Config.MeasureTime;
 
     MeasState = PSTAT_MEAS_INIT_TO_START;
@@ -315,14 +315,7 @@ void pstat_meas_start_CVA(PstatRunReqCVA_t * cfg)
     // Initial values
     CurrentDAC = CVA_Config.StartDAC;
     TargetDAC = CVA_Config.EndDAC;
-    if (Config.InitialDAC <= Config.StartDAC)
-    {
-        CountUp = true;
-    }
-    else
-    {
-        CountUp = false;
-    }
+
     MeasureCount = 1;
 
     TimeAtFirstDAC = CVA_Config.DACTimeAtStart;
@@ -579,7 +572,7 @@ void pstat_measure_Finish( bool Measuring)
             // Handle DAC stepping
             if (--ChangeDACCount <= 0)
             {
-                ChangeDACCount = Config.DACStep;
+                ChangeDACCount = Config.DACTime;
 
                 if (CountUp)
                 {
@@ -619,7 +612,7 @@ void pstat_measure_Finish( bool Measuring)
             if (TimeAtFirstDAC == 0)
             {
                 // End of the period. Change the DAC.
-                CurrentDAC = CVA_Config.DACTimeAtEnd;
+                CurrentDAC = CVA_Config.EndDAC;
 
                 AD5662_Set(CurrentDAC);
             }
@@ -631,6 +624,10 @@ void pstat_measure_Finish( bool Measuring)
         }
         else
         {
+            CurrentDAC = CVA_Config.FinalDAC;
+
+            AD5662_Set(CurrentDAC);
+
             MeasState = PSTAT_MEAS_DONE;
         }
 
