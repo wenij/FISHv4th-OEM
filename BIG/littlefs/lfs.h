@@ -398,7 +398,8 @@ typedef struct lfs {
 // be zeroed for defaults and backwards compatibility.
 //
 // Returns a negative error code on failure.
-int lfs_format(lfs_t *lfs, const struct lfs_config *config);
+//int lfs_format(lfs_t *lfs, const struct lfs_config *config);
+int lfs_format();
 
 // Mounts a littlefs
 //

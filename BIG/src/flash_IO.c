@@ -48,9 +48,13 @@ static unsigned char USER_read_buffer[512];
 static unsigned char USER_write_buffer[512] = { 0x5f, 0xc5 };
 
 #ifdef littlefs
-static lfs_t lfs_internal_flash;
+extern lfs_internal_flash;
+extern lfs_cfg;
+//error: initializer element is not constant static lfs_t lfs_internal_flash;
 // This works, static alone does not. Also can declare struct, but scope is unclear to me.
-static struct lfs_config lfs_cfg;
+//static struct lfs_config lfs_cfg;
+// 2nd arg workaround
+//static struct lfs_config _config;
 // numerous sub structs to deal with
 static lfs_cache_t lfs_read_cache;
 static lfs_cache_t lfs_write_cache;
@@ -100,8 +104,13 @@ p0Disk = FF_FlashDiskInit( pcName,
 */
 #endif
 #ifdef littlefs
-
-int lfs_PSTAT_init(lfs_t *lfs, const struct lfs_config *cfg){
+// 2nd arg workaround
+//int lfs_PSTAT_init(lfs_t *lfs, const struct lfs_config *cfg){
+// default 2nd arg workaround
+//int lfs_PSTAT_init(lfs_t *lfs){
+int lfs_PSTAT_init(){
+static struct lfs_config lfs_cfg;
+static lfs_t lfs_internal_flash;
 // Configure the lfs_config struct
 lfs_cfg.read_size = 512;
 lfs_cfg.prog_size = 512;
@@ -116,8 +125,13 @@ lfs_cfg.lookahead_size = 8 * 64; // lookahead buffer is stored as a compact bitm
 		  // Don't know requirements for this yet. Aren't blocks allocated?
 		  // So how many blocks should this be tracking? Right now allocating nominal values.
 		  void *context;
+/*
 		  int (*read)(const struct lfs_config *c, lfs_block_t block,
 		              lfs_off_t off, void *buffer, lfs_size_t size);
+Need to figure out how to assign the function as a pointer in this struct.
+*/
+lsg_cfg.(*read) = read_HAL(lfs_config, block, off, buffer, size);
+
 		  int (*prog)(const struct lfs_config *c, lfs_block_t block,
 		              lfs_off_t off, const void *buffer, lfs_size_t size);
 		  int (*erase)(const struct lfs_config *c, lfs_block_t block);
@@ -153,13 +167,64 @@ lfs_write_cache.size = 512; // All the 512's need to be a symbol
 // Add the read and write cache to lfs_internal_flash struct
 lfs_internal_flash.pcache = lfs_write_cache; // Verify this is write cache
 lfs_internal_flash.rcache = lfs_read_cache;
+
+/* implement read
+    // Read a region in a block. Negative error codes are propagated
+    // to the user.
+int (*read)(const struct lfs_config *c, lfs_block_t block,
+            lfs_off_t off, void *buffer, lfs_size_t size)
+Debug an argument at a time
+*/
+int read_HAL(lfs_config, block, off, buffer, size){
+
+	return LFS_ERR_OK;
+};
+
+/* implement prog
+    // Program a region in a block. The block must have previously
+    // been erased. Negative error codes are propagated to the user.
+    // May return LFS_ERR_CORRUPT if the block should be considered bad.
+int (*prog)(const struct lfs_config *c, lfs_block_t block,
+            lfs_off_t off, const void *buffer, lfs_size_t size);
+Debug an argument at a time
+*/
+int prog_HAL(lfs_config, block, off, buffer, size){
+
+	return LFS_ERR_OK;
+};
+
+/* implement erase
+    // Sync the state of the underlying block device. Negative error codes
+    // are propogated to the user.
+    int (*sync)(const struct lfs_config *c);
+Debug an argument at a time
+*/
+int erase_HAL(lfs_config, block){
+
+	return LFS_ERR_OK;
+};
+
+/* implement sync
+    // Erase a block. A block must be erased before being programmed.
+    // The state of an erased block is undefined. Negative error codes
+    // are propagated to the user.
+    // May return LFS_ERR_CORRUPT if the block should be considered bad.
+    int (*erase)(const struct lfs_config *c, lfs_block_t block);
+Debug an argument at a time
+*/
+int sync_HAL(lfs_config, block){
+
+	return LFS_ERR_OK;
+};
+
 #endif
 
 /* Will proceed with Format then mount. Static function lfs_init should be called by them.
 */
   // Returns a negative error code on failure.
   // this call fails in lfs_init. The args seem valid going in but are wrong in it's scope.
-  int lfs_format_status =  lfs_format(&lfs_internal_flash, &lfs_cfg);
+//  int lfs_format_status =  lfs_format(&lfs_internal_flash, &lfs_cfg);
   // Returns a negative error code on failure.
   int lfs_mount_status =  lfs_mount(&lfs_internal_flash, &lfs_cfg);
+  return lfs_mount_status;
 }

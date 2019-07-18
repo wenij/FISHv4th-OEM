@@ -56,7 +56,7 @@
 #include "tim.h"
 
 /* USER CODE BEGIN Includes */
-// define filesystem in use - Defined here outside of main is GLOBAL for all to see
+// define filesystem in use - Defined here outside of main this is GLOBAL for all to see
 #define littlefs
 //#define fatfs
 
@@ -75,9 +75,18 @@
  */
 #include "lfs.h"
 #include "flash_io.h"
-extern int lfs_PSTAT_init(lfs_t *lfs, const struct lfs_config *cfg);
+//extern int lfs_internal_flash;
+//extern int lfs_cfg;
+/*
+ * This didn't help
+static lfs_t lfs_internal_flash;
+// This works, static alone does not. Also can declare struct, but scope is unclear to me.
+static struct lfs_config lfs_cfg;
+ */
 // Compiler recognizes function from flasg_IO.h but doesn't see the arguments
 //int lfs_PSTAT_init_status = lfs_PSTAT_init(&lfs_internal_flash, &lfs_cfg);
+//int lfs_PSTAT_init_status = lfs_PSTAT_init();
+lfs_PSTAT_init();
 #endif
 /* USER CODE END PV */
 
@@ -119,7 +128,12 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  // extern prototype above compiles...
+  // this is causing a unclosed function bracket error on line 191, builds without it
+#ifdef littlefs
+  // try defaulting 2nd arg and not using it here
+  int lfs_PSTAT_init_status = lfs_PSTAT_init();
+  #endif
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
