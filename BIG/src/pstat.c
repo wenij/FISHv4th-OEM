@@ -452,7 +452,7 @@ void pstat_measure_baseline(void)
         }
     }
 
-    SetCurrentScale((WE_Scale_t)scales[i]);
+    SetCurrentScale((WE_Scale_t)scales[5]);  // Debug...
 
     ads1256_InitiateReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM);
 
@@ -482,6 +482,8 @@ void pstat_measure_Finish( bool Measuring)
         Measurement.SwitchState = LastSW;
 
         Measurement.DAC_Setting = CurrentDAC;
+
+        Measurement.WE_Scale = CurrentScale;
 
         if (xQueueSendToBackFromISR( CliMeasurement_Queue, &Measurement, NULL))
         {
