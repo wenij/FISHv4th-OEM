@@ -61,6 +61,9 @@ bool ads1256_Busy = false;
      // Set PGA to 2
      ads1256_SetPGA(ADS1256_PGA_2);
 
+     // Set PGA to 0
+     //ads1256_SetPGA(ADS1256_PGA_1);
+
 
      // Set Sample rate to 1000 SPS. Reduces noise vs 30 kSPS which is the default. It's painfully slow...
 
@@ -266,7 +269,7 @@ bool ads1256_Cal( ads1256_cal_type_t calType)
         // Configure the appropriate channel
         buf[0] = ADS1256_BUILD_WRITE_REG_CMD(ADS1256_MUX_REGISTER);
         buf[1] = 0;  // Number of registers - 1
-        buf[2] = set_ADS1256_MUX_PSEL(ADS1256_CHANNEL_AINCOM) | set_ADS1256_MUX_NSEL(ADS1256_CHANNEL_0);
+        buf[2] = set_ADS1256_MUX_PSEL(ADS1256_CHANNEL_2) | set_ADS1256_MUX_NSEL(ADS1256_CHANNEL_AINCOM);
 
         SendReceiveSPI(buf, 3, rxbuf, 0);   // Send ad control register expecting no response.
 

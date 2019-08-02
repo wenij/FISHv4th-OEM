@@ -135,10 +135,10 @@ typedef enum
 #define ADS1256_READ_REGS 0x10  // 0X1R 0x0N  2 byte command returns N bytes starting at address R
 #define ADS1256_WRITE_REGS 0x50  //0x5R 0x0N  2 byte command plus data writes N byes starting at address R
 #define ADS1256_SELFCAL   0xf0
-#define ADS1256_SELFCAL_GAINS  0xf1     // self cal gains
-#define ADS1256_SELFCAL_OFFSETS  0xf2
-#define ADS1256_SELFCAL_SYSTEMGAIN 0xf3
-#define ADS1256_SELFCAL_SYSTEMOFFSET 0xf4
+#define ADS1256_SELFCAL_OFFSETS  0xf1
+#define ADS1256_SELFCAL_GAINS  0xf2     // self cal gains
+#define ADS1256_SELFCAL_SYSTEMOFFSET 0xf3
+#define ADS1256_SELFCAL_SYSTEMGAIN 0xf4
 #define ADS1256_SYNC_AD_CONVERSION 0xfc
 #define ADS1256_STANDBY_MODE 0xfd
 #define ADS1256_RESET  0xfe

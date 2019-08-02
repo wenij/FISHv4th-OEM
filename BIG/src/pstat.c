@@ -53,6 +53,7 @@ static uint32_t PstatFailCount;
 
 
 static void pstat_measure_baseline(void);
+static void pstat_finish_baseline(void);
 static void pstat_measure_I_WE(void);
 static void pstat_measure_U_DAC(void);
 static void pstat_measure_Finish( bool Measuring);
@@ -148,6 +149,8 @@ void pstat_task(void * parm)
                 {
                 case PSTAT_RUN_VA_REQ:
                     // Initiate a measurement sweep. We disable SPI comms at this time until it finishes.
+                    CalibratePstat();
+
                     SPI_SetIrqMode(true);
                     xQueueReceive( pstat_Queue, (void*)&AckMsg, 10 );
                     {
@@ -158,6 +161,8 @@ void pstat_task(void * parm)
 
                 case PSTAT_RUN_CVA_REQ:
                     // Initiate a measurement sweep. We disable SPI comms at this time until it finishes.
+                    CalibratePstat();
+
                     SPI_SetIrqMode(true);
                     xQueueReceive( pstat_Queue, (void*)&AckMsg, 10 );
                     {
@@ -230,6 +235,7 @@ static int16_t MeasureCount;
 static int32_t ChangeDACCount;
 static uint16_t TargetDAC;
 static uint16_t MeasureCountBase;
+static int32_t TargetADC_U_DAC_RE;
 
 static bool CountUp;
 
@@ -362,13 +368,19 @@ void pstat_measure_data_ready(void)
         break;
 
     case 1:
-        pstat_measure_U_DAC();
+        pstat_finish_baseline();
         ADC_State++;
         EnableADC_DRDY_int();
         break;
 
     case 2:
         pstat_measure_I_WE();
+        ADC_State++;
+        EnableADC_DRDY_int();
+        break;
+
+    case 3:
+        pstat_measure_U_DAC();
         pstat_measure_Finish(true);
         ADC_State++;
         break;
@@ -428,7 +440,9 @@ static const WE_Scale_t scales[8] = {WE_SCALE_UNITY, WE_SCALE_316_uA, WE_SCALE_1
 // Multipliers with reference to scale 316 uA (x100)
 static const int multipliers[8] = {1, 100, 316, 1000, 3160, 10000, 31600, 100000};
 
-#define DAC_SCALE_THRESHOLD (0x7FFFFF * 100 / 316)
+#define ADC_GAIN_DOWN_THRESHOLD 0x7E0000
+
+#define ADC_GAIN_UP_THRESHOLD (ADC_GAIN_DOWN_THRESHOLD * 100 / 316)
 
 //#define USE_CYCLE_MEASUREMENT
 
@@ -446,29 +460,50 @@ void pstat_measure_baseline(void)
     for (i=1; i<7; i++)
     {
         test = base * multipliers[i] / 100;
-        if (test >= DAC_SCALE_THRESHOLD)
+        if (test >= ADC_GAIN_UP_THRESHOLD)
         {
             break;
         }
     }
 
-    SetCurrentScale((WE_Scale_t)scales[5]);  // Debug...
+    SetCurrentScale((WE_Scale_t)scales[i]);
 
-    ads1256_InitiateReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM);
+    ads1256_InitiateReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM);
 
+}
+
+void pstat_finish_baseline(void)
+{
+    int32_t value;
+    uint32_t base;
+
+    // First conversion contains the baseline measurement
+    value = ads1256_ReadDataWhenReady( 0 );
+
+    base = (uint32_t)(value < 0 ? -value : value);
+
+    if (base >= ADC_GAIN_DOWN_THRESHOLD)
+    {
+        if ( (int)CurrentScale < WE_SCALE_UNITY)
+        {
+            SetCurrentScale((WE_Scale_t)( (int)CurrentScale + 1));
+        }
+
+    }
+
+    ads1256_InitiateReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM);
 }
 
 void pstat_measure_I_WE(void)
 {
     Measurement.ADC_WE = ads1256_ReadDataWhenReady(0);
 
+    ads1256_InitiateReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM);
+
 }
 void pstat_measure_U_DAC(void)
 {
     Measurement.ADC_DAC_RE = ads1256_ReadDataWhenReady(0);
-
-    ads1256_InitiateReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM);
-
 
 }
 
@@ -685,7 +720,7 @@ bool MakeMeasurementFromISR(pstatDynamicMeasurement_t * measurement)
     for (i=1; i<7; i++)
     {
         test = base * multipliers[i] / 100;
-        if (test >= DAC_SCALE_THRESHOLD)
+        if (test >= ADC_GAIN_UP_THRESHOLD)
         {
             break;
         }
@@ -809,7 +844,10 @@ bool CalibratePstat(void)
 
     ads1256_PowerUpInit(true);
 
-    // Set switches
+    // bump PGA to 2 so full scale is +/- 4096 mv.
+    //ads1256_SetPGA(ADS1256_PGA_2);
+
+    // Set switches. This will ensure we calibrate exactly to the DAC 0 and max output.
     SetPstatSwitches(SW_2_ENABLE | SW_3_ENABLE);
 
     ret &= AD5662_Set(0x8000); // 0 reading
@@ -819,11 +857,14 @@ bool CalibratePstat(void)
     // Set switches and DAC
     ret &= ads1256_Cal(CAL_OFFSET);
 
-    ret &= AD5662_Set(0xFFFF); // Max
+    ret &= AD5662_Set(0); // Max
 
     TimDelayMicroSeconds (2000);  // Allow dac to settle
 
     ret &= ads1256_Cal(CAL_GAIN);
+
+    // Back to PGA=1
+    //ads1256_SetPGA(ADS1256_PGA_1);
 
     return(ret);
 }
