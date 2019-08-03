@@ -51,8 +51,8 @@
 
 /* USER CODE BEGIN Includes */
 
-#define BT_IS_HW_DEBUG  // Use BT SPI IO lines for hardware debug signals - see gpio.h and c
-#define CARSTENS_BOARD      // Hacked up board with MISO re-routed
+//#define BT_IS_HW_DEBUG  // Use BT SPI IO lines for hardware debug signals - see gpio.h and c
+//#define CARSTENS_BOARD      // Hacked up board with MISO re-routed
 #define VERSION "BIG pstat 2.8" // Version rules: Any text you want NOT containing periods, followed by version number formatted as <major>.<minor> at the end
 
 // OS Messaging Queues. They are defined in the respective task source files but references are collated here for simplicity
