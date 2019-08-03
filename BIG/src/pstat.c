@@ -242,6 +242,13 @@ static bool CountUp;
 static PstatCmdId Mode;
 
 
+static void  Set_DAC_Target(uint16_t dac)
+{
+    TargetDAC = dac;
+
+    TargetADC_U_DAC_RE = (int32_t)dac * 256 * 16 - 0x7FFFF; // Create an ADC equivalent
+}
+
 typedef enum
 {
     PSTAT_MEAS_INIT_TO_START,
@@ -271,7 +278,8 @@ void pstat_meas_start_VA(PstatRunReqVA_t * cfg)
 
     // Initial values
     CurrentDAC = Config.InitialDAC;
-    TargetDAC = Config.StartDAC;
+    Set_DAC_Target(Config.StartDAC);
+
     if (Config.InitialDAC <= Config.StartDAC)
     {
         CountUp = true;
@@ -320,7 +328,7 @@ void pstat_meas_start_CVA(PstatRunReqCVA_t * cfg)
 
     // Initial values
     CurrentDAC = CVA_Config.StartDAC;
-    TargetDAC = CVA_Config.EndDAC;
+    Set_DAC_Target(CVA_Config.EndDAC);
 
     MeasureCount = 1;
 
@@ -546,7 +554,7 @@ void pstat_measure_Finish( bool Measuring)
             {
                 MeasState = PSTAT_MEAS_START_TO_END;
 
-                TargetDAC = Config.EndDAC;
+                Set_DAC_Target(Config.EndDAC);
 
                 CountUp = (TargetDAC > CurrentDAC);
 
@@ -560,7 +568,7 @@ void pstat_measure_Finish( bool Measuring)
                     if (Config.FinalDAC != CurrentDAC)
                     {
                         MeasState = PSTAT_MEAS_END_TO_FINAL;
-                        TargetDAC = Config.FinalDAC;
+                        Set_DAC_Target(Config.FinalDAC);
                     }
                     else
                     {
@@ -570,7 +578,7 @@ void pstat_measure_Finish( bool Measuring)
                 else
                 {
                     MeasState = PSTAT_MEAS_END_TO_START;
-                    TargetDAC = Config.StartDAC;
+                    Set_DAC_Target(Config.StartDAC);
                 }
 
                 CountUp = (TargetDAC > CurrentDAC);
@@ -584,7 +592,7 @@ void pstat_measure_Finish( bool Measuring)
 
                 MeasState = PSTAT_MEAS_START_TO_END;
 
-                TargetDAC = Config.EndDAC;
+                Set_DAC_Target(Config.EndDAC);
 
                 CountUp = (TargetDAC > CurrentDAC);
 
