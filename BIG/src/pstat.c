@@ -246,7 +246,31 @@ static void  Set_DAC_Target(uint16_t dac)
 {
     TargetDAC = dac;
 
-    TargetADC_U_DAC_RE = (int32_t)dac * 256 * 16 - 0x7FFFF; // Create an ADC equivalent
+    TargetADC_U_DAC_RE = (int32_t)dac * 256 - 0x7fffff; // Create an ADC equivalent
+}
+
+#define ADC_MAX_DAC_RANGE 0x7FFF00      // Maximum DAC value can't go above here.
+static int ADC_LimitCount = 0;
+
+static bool Check_ADC_Value_Limiting(int32_t adc_reading)
+{
+    bool ret = false;
+
+    if (--ADC_LimitCount <= 0)
+    {
+
+        if ( (adc_reading > ADC_MAX_DAC_RANGE) || (adc_reading < -ADC_MAX_DAC_RANGE) )
+        {
+            ret = true;
+        }
+    }
+
+    return(ret);
+}
+
+static void Set_ADC_Value_Limiting_Hysteresis(void)
+{
+    ADC_LimitCount = 10;
 }
 
 typedef enum
@@ -291,6 +315,8 @@ void pstat_meas_start_VA(PstatRunReqVA_t * cfg)
     MeasureCount = Config.MeasureTime;
     ChangeDACCount = Config.DACTime;
     MeasureCountBase = Config.MeasureTime;
+
+    ADC_LimitCount = 0;
 
     MeasState = PSTAT_MEAS_INIT_TO_START;
 
@@ -452,6 +478,7 @@ static const int multipliers[8] = {1, 100, 316, 1000, 3160, 10000, 31600, 100000
 
 #define ADC_GAIN_UP_THRESHOLD (ADC_GAIN_DOWN_THRESHOLD * 100 / 316)
 
+
 //#define USE_CYCLE_MEASUREMENT
 
 void pstat_measure_baseline(void)
@@ -541,10 +568,19 @@ void pstat_measure_Finish( bool Measuring)
 
     if (Mode == PSTAT_RUN_VA_REQ)
     {
+        bool ADC_Limiting = Check_ADC_Value_Limiting(Measurement.ADC_DAC_RE);
+
         // Voltammetry
-        if ( (CountUp && (CurrentDAC >= TargetDAC)) || ((!CountUp) && (CurrentDAC <= TargetDAC)) )
+        if ( (CountUp && (CurrentDAC >= TargetDAC)) || ((!CountUp) && (CurrentDAC <= TargetDAC)) ||  ADC_Limiting)
         {
             StateChange = true;
+
+            if (ADC_Limiting)
+            {
+                TargetDAC = CurrentDAC;     // So we change direction cleanly.
+            }
+
+            Set_ADC_Value_Limiting_Hysteresis();
         }
 
         switch (MeasState)
