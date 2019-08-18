@@ -56,6 +56,7 @@ static void pstat_measure_baseline(void);
 static void pstat_finish_baseline(void);
 static void pstat_measure_I_WE(void);
 static void pstat_measure_U_DAC(void);
+static void pstat_measure_U_RE(void);
 static void pstat_measure_Finish( bool Measuring);
 
 
@@ -415,6 +416,12 @@ void pstat_measure_data_ready(void)
 
     case 3:
         pstat_measure_U_DAC();
+        ADC_State++;
+        EnableADC_DRDY_int();
+        break;
+
+    case 4:
+        pstat_measure_U_RE();
         pstat_measure_Finish(true);
         ADC_State++;
         break;
@@ -533,13 +540,313 @@ void pstat_measure_I_WE(void)
 {
     Measurement.ADC_WE = ads1256_ReadDataWhenReady(0);
 
-    ads1256_InitiateReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM);
+    ads1256_InitiateReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM);  // DAC_RE
 
 }
 void pstat_measure_U_DAC(void)
 {
     Measurement.ADC_DAC_RE = ads1256_ReadDataWhenReady(0);
+    ads1256_InitiateReadChannel(ADS1256_CHANNEL_4, ADS1256_CHANNEL_AINCOM);  // RE
+}
 
+void pstat_measure_U_RE(void)
+{
+    Measurement.ADC_RE = ads1256_ReadDataWhenReady(0);
+
+}
+
+void pstat_measure_Finish_VA(void)  // Finish Voltammetry
+{
+    bool ADC_Limiting = Check_ADC_Value_Limiting(Measurement.ADC_DAC_RE);
+
+    if ( (CountUp && (CurrentDAC >= TargetDAC)) || ((!CountUp) && (CurrentDAC <= TargetDAC)) ||  ADC_Limiting)
+    {
+        StateChange = true;
+
+        if (ADC_Limiting)
+        {
+            TargetDAC = CurrentDAC;     // So we change direction cleanly.
+        }
+
+        Set_ADC_Value_Limiting_Hysteresis();
+    }
+
+    switch (MeasState)
+    {
+    case PSTAT_MEAS_INIT_TO_START:
+        if (StateChange)
+        {
+            MeasState = PSTAT_MEAS_START_TO_END;
+
+            Set_DAC_Target(Config.EndDAC);
+
+            CountUp = (TargetDAC > CurrentDAC);
+
+        }
+        break;
+    case PSTAT_MEAS_START_TO_END:
+        if (StateChange)
+        {
+            if (Config.Count <= 1)
+            {
+                if (Config.FinalDAC != CurrentDAC)
+                {
+                    MeasState = PSTAT_MEAS_END_TO_FINAL;
+                    Set_DAC_Target(Config.FinalDAC);
+                }
+                else
+                {
+                    MeasState = PSTAT_MEAS_DONE;
+                }
+            }
+            else
+            {
+                MeasState = PSTAT_MEAS_END_TO_START;
+                Set_DAC_Target(Config.StartDAC);
+            }
+
+            CountUp = (TargetDAC > CurrentDAC);
+
+        }
+        break;
+    case PSTAT_MEAS_END_TO_START:
+        if (StateChange)
+        {
+            Config.Count--;
+
+            MeasState = PSTAT_MEAS_START_TO_END;
+
+            Set_DAC_Target(Config.EndDAC);
+
+            CountUp = (TargetDAC > CurrentDAC);
+
+        }
+        break;
+
+    case PSTAT_MEAS_END_TO_FINAL:
+        if (StateChange)
+        {
+            MeasState = PSTAT_MEAS_DONE;
+        }
+        break;
+    case PSTAT_MEAS_DONE:
+        break;
+    default:
+        break;
+
+    }
+
+    if (MeasState != PSTAT_MEAS_DONE)
+    {
+        // Handle DAC stepping
+        if (--ChangeDACCount <= 0)
+        {
+            ChangeDACCount = Config.DACTime;
+
+            if (CountUp)
+            {
+                if (CurrentDAC <= DAC_MAX - Config.DACStep)
+                {
+                    CurrentDAC += Config.DACStep;
+                }
+                else
+                {
+                    CurrentDAC = DAC_MAX;
+                }
+            }
+            else
+            {
+                if (CurrentDAC >= Config.DACStep)
+                {
+                    CurrentDAC -= Config.DACStep;
+                }
+                else
+                {
+                    CurrentDAC = 0;
+                }
+            }
+
+            AD5662_Set(CurrentDAC);
+        }
+
+    }
+}
+
+void pstat_measure_Finish_CVA(void)
+{
+    // ChronoVoltammetry
+    if (TimeAtFirstDAC > 0)
+    {
+        TimeAtFirstDAC--;
+
+        if (TimeAtFirstDAC == 0)
+        {
+            // End of the period. Change the DAC.
+            CurrentDAC = CVA_Config.EndDAC;
+
+            AD5662_Set(CurrentDAC);
+        }
+
+    }
+    else if (TimeAtEndDAC > 0)
+    {
+        TimeAtEndDAC--;
+    }
+    else
+    {
+        CurrentDAC = CVA_Config.FinalDAC;
+
+        AD5662_Set(CurrentDAC);
+
+        MeasState = PSTAT_MEAS_DONE;
+    }
+}
+
+void pstat_measure_Finish_GA(void) // Finish Galvanometry
+{
+    bool ADC_Limiting = Check_ADC_Value_Limiting(Measurement.ADC_DAC_RE);
+
+    if ( (CountUp && (CurrentDAC >= TargetDAC)) || ((!CountUp) && (CurrentDAC <= TargetDAC)) ||  ADC_Limiting)
+    {
+        StateChange = true;
+
+        if (ADC_Limiting)
+        {
+            TargetDAC = CurrentDAC;     // So we change direction cleanly.
+        }
+
+        Set_ADC_Value_Limiting_Hysteresis();
+    }
+
+    switch (MeasState)
+    {
+    case PSTAT_MEAS_INIT_TO_START:
+        if (StateChange)
+        {
+            MeasState = PSTAT_MEAS_START_TO_END;
+
+            Set_DAC_Target(Config.EndDAC);
+
+            CountUp = (TargetDAC > CurrentDAC);
+
+        }
+        break;
+    case PSTAT_MEAS_START_TO_END:
+        if (StateChange)
+        {
+            if (Config.Count <= 1)
+            {
+                if (Config.FinalDAC != CurrentDAC)
+                {
+                    MeasState = PSTAT_MEAS_END_TO_FINAL;
+                    Set_DAC_Target(Config.FinalDAC);
+                }
+                else
+                {
+                    MeasState = PSTAT_MEAS_DONE;
+                }
+            }
+            else
+            {
+                MeasState = PSTAT_MEAS_END_TO_START;
+                Set_DAC_Target(Config.StartDAC);
+            }
+
+            CountUp = (TargetDAC > CurrentDAC);
+
+        }
+        break;
+    case PSTAT_MEAS_END_TO_START:
+        if (StateChange)
+        {
+            Config.Count--;
+
+            MeasState = PSTAT_MEAS_START_TO_END;
+
+            Set_DAC_Target(Config.EndDAC);
+
+            CountUp = (TargetDAC > CurrentDAC);
+
+        }
+        break;
+
+    case PSTAT_MEAS_END_TO_FINAL:
+        if (StateChange)
+        {
+            MeasState = PSTAT_MEAS_DONE;
+        }
+        break;
+    case PSTAT_MEAS_DONE:
+        break;
+    default:
+        break;
+
+    }
+
+    if (MeasState != PSTAT_MEAS_DONE)
+    {
+        // Handle DAC stepping
+        if (--ChangeDACCount <= 0)
+        {
+            ChangeDACCount = Config.DACTime;
+
+            if (CountUp)
+            {
+                if (CurrentDAC <= DAC_MAX - Config.DACStep)
+                {
+                    CurrentDAC += Config.DACStep;
+                }
+                else
+                {
+                    CurrentDAC = DAC_MAX;
+                }
+            }
+            else
+            {
+                if (CurrentDAC >= Config.DACStep)
+                {
+                    CurrentDAC -= Config.DACStep;
+                }
+                else
+                {
+                    CurrentDAC = 0;
+                }
+            }
+
+            AD5662_Set(CurrentDAC);
+        }
+
+    }
+}
+
+void pstat_measure_Finish_CGA(void)
+{
+    // ChronoGalvanomtry
+    if (TimeAtFirstDAC > 0)
+    {
+        TimeAtFirstDAC--;
+
+        if (TimeAtFirstDAC == 0)
+        {
+            // End of the period. Change the DAC.
+            CurrentDAC = CVA_Config.EndDAC;
+
+            AD5662_Set(CurrentDAC);
+        }
+
+    }
+    else if (TimeAtEndDAC > 0)
+    {
+        TimeAtEndDAC--;
+    }
+    else
+    {
+        CurrentDAC = CVA_Config.FinalDAC;
+
+        AD5662_Set(CurrentDAC);
+
+        MeasState = PSTAT_MEAS_DONE;
+    }
 }
 
 void pstat_measure_Finish( bool Measuring)
@@ -566,152 +873,27 @@ void pstat_measure_Finish( bool Measuring)
 
     }
 
-    if (Mode == PSTAT_RUN_VA_REQ)
+    switch (Mode)
     {
-        bool ADC_Limiting = Check_ADC_Value_Limiting(Measurement.ADC_DAC_RE);
+    case PSTAT_RUN_VA_REQ:
+        pstat_measure_Finish_VA();
+        break;
 
-        // Voltammetry
-        if ( (CountUp && (CurrentDAC >= TargetDAC)) || ((!CountUp) && (CurrentDAC <= TargetDAC)) ||  ADC_Limiting)
-        {
-            StateChange = true;
+    case PSTAT_RUN_CVA_REQ:
+        pstat_measure_Finish_CVA();
+        break;
 
-            if (ADC_Limiting)
-            {
-                TargetDAC = CurrentDAC;     // So we change direction cleanly.
-            }
+    case PSTAT_RUN_GA_REQ:
+        pstat_measure_Finish_GA();
+        break;
 
-            Set_ADC_Value_Limiting_Hysteresis();
-        }
+    case PSTAT_RUN_CGA_REQ:
+        pstat_measure_Finish_CGA();
+        break;
 
-        switch (MeasState)
-        {
-        case PSTAT_MEAS_INIT_TO_START:
-            if (StateChange)
-            {
-                MeasState = PSTAT_MEAS_START_TO_END;
-
-                Set_DAC_Target(Config.EndDAC);
-
-                CountUp = (TargetDAC > CurrentDAC);
-
-            }
-            break;
-        case PSTAT_MEAS_START_TO_END:
-            if (StateChange)
-            {
-                if (Config.Count <= 1)
-                {
-                    if (Config.FinalDAC != CurrentDAC)
-                    {
-                        MeasState = PSTAT_MEAS_END_TO_FINAL;
-                        Set_DAC_Target(Config.FinalDAC);
-                    }
-                    else
-                    {
-                        MeasState = PSTAT_MEAS_DONE;
-                    }
-                }
-                else
-                {
-                    MeasState = PSTAT_MEAS_END_TO_START;
-                    Set_DAC_Target(Config.StartDAC);
-                }
-
-                CountUp = (TargetDAC > CurrentDAC);
-
-            }
-            break;
-        case PSTAT_MEAS_END_TO_START:
-            if (StateChange)
-            {
-                Config.Count--;
-
-                MeasState = PSTAT_MEAS_START_TO_END;
-
-                Set_DAC_Target(Config.EndDAC);
-
-                CountUp = (TargetDAC > CurrentDAC);
-
-            }
-            break;
-
-        case PSTAT_MEAS_END_TO_FINAL:
-            if (StateChange)
-            {
-                MeasState = PSTAT_MEAS_DONE;
-            }
-            break;
-        case PSTAT_MEAS_DONE:
-            break;
-        default:
-            break;
-
-        }
-
-        if (MeasState != PSTAT_MEAS_DONE)
-        {
-            // Handle DAC stepping
-            if (--ChangeDACCount <= 0)
-            {
-                ChangeDACCount = Config.DACTime;
-
-                if (CountUp)
-                {
-                    if (CurrentDAC <= DAC_MAX - Config.DACStep)
-                    {
-                        CurrentDAC += Config.DACStep;
-                    }
-                    else
-                    {
-                        CurrentDAC = DAC_MAX;
-                    }
-                }
-                else
-                {
-                    if (CurrentDAC >= Config.DACStep)
-                    {
-                        CurrentDAC -= Config.DACStep;
-                    }
-                    else
-                    {
-                        CurrentDAC = 0;
-                    }
-                }
-
-                AD5662_Set(CurrentDAC);
-            }
-
-        }
-    }
-    else if (Mode == PSTAT_RUN_CVA_REQ)
-    {
-        // ChronoVoltammetry
-        if (TimeAtFirstDAC > 0)
-        {
-            TimeAtFirstDAC--;
-
-            if (TimeAtFirstDAC == 0)
-            {
-                // End of the period. Change the DAC.
-                CurrentDAC = CVA_Config.EndDAC;
-
-                AD5662_Set(CurrentDAC);
-            }
-
-        }
-        else if (TimeAtEndDAC > 0)
-        {
-            TimeAtEndDAC--;
-        }
-        else
-        {
-            CurrentDAC = CVA_Config.FinalDAC;
-
-            AD5662_Set(CurrentDAC);
-
-            MeasState = PSTAT_MEAS_DONE;
-        }
-
+    default:
+        MeasState = PSTAT_MEAS_DONE;
+        break;
     }
 
 
@@ -970,3 +1152,34 @@ void PstatSendRunCVA_Req( PstatRunReqCVA_t * Cmd)
 
     xQueueSend( pstat_Queue, &Msg, 0 );
 }
+
+void PstatSendRunGA_Req( PstatRunReqGA_t * Cmd)
+{
+    Message_t Msg;
+    PstatMsgContainer_t *payload = (PstatMsgContainer_t*)pvPortMalloc(sizeof(PstatMsgContainer_t));
+
+    Msg.data = (uint8_t*)payload;
+    Msg.Type = PSTAT_COMMAND_MESSAGE;
+
+    payload->PstatId = PSTAT_RUN_CVA_REQ;
+    payload->Req.RunGA = *Cmd;
+
+
+    xQueueSend( pstat_Queue, &Msg, 0 );
+}
+
+void PstatSendRunCGA_Req( PstatRunReqCGA_t * Cmd)
+{
+    Message_t Msg;
+    PstatMsgContainer_t *payload = (PstatMsgContainer_t*)pvPortMalloc(sizeof(PstatMsgContainer_t));
+
+    Msg.data = (uint8_t*)payload;
+    Msg.Type = PSTAT_COMMAND_MESSAGE;
+
+    payload->PstatId = PSTAT_RUN_CGA_REQ;
+    payload->Req.RunCGA = *Cmd;
+
+
+    xQueueSend( pstat_Queue, &Msg, 0 );
+}
+

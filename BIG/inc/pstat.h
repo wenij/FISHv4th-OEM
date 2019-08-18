@@ -67,12 +67,15 @@
      uint32_t TimeStamp;    // Timestamp 1 ms tick
      int32_t ADC_WE;
      int32_t ADC_DAC_RE;
+     int32_t ADC_RE;
  } pstatDynamicMeasurement_t;
 
  typedef enum
  {
       PSTAT_RUN_VA_REQ,     // VoltAmmetry
       PSTAT_RUN_CVA_REQ,    // ChronoVoltAmmetry
+      PSTAT_RUN_GA_REQ,     // Galvanometry
+      PSTAT_RUN_CGA_REQ,    // ChronoGalvanometry
       PSTAT_CANCEL_REQ,
       PSTAT_RUN_COMPLETE_IND
  } PstatCmdId;
@@ -104,6 +107,38 @@ typedef struct
     uint8_t  Switch;
 } PstatRunReqCVA_t;
 
+// Command Structure for Run command w/ Galvanometry
+typedef struct
+{
+    int32_t InitialCurrentTarget;
+    int32_t StartCurrentTarget;
+    int32_t EndCurrentTarget;
+    int32_t FinalCurrentTarget;
+    uint32_t TimeSliceUs;
+    uint16_t DACStep;
+    uint32_t DACTime;
+    uint16_t MeasureTime;
+    uint16_t Count;
+    uint8_t  Switch;
+    uint8_t  GainSetting;
+    uint16_t InitialDAC_Value;
+} PstatRunReqGA_t;
+
+// Command Structure for Run command w/ ChronoGalvanometry
+typedef struct
+{
+    int32_t InitialCurrentTarget;
+    int32_t StartCurrentTarget;
+    //int32_t EndCurrentTarget;
+    int32_t FinalCurrentTarget;
+    uint32_t TimeSliceUs;
+    uint32_t TimeAtStart;
+    uint32_t TimeAtEnd;
+    uint8_t  Switch;
+    uint8_t  GainSetting;
+    uint16_t InitialDAC_Value;
+} PstatRunReqCGA_t;
+
 // Command container for Pstat commands. MessageType: PSTAT_COMMAND_MESSAGE
 typedef struct
 {
@@ -112,12 +147,17 @@ typedef struct
     {
         PstatRunReqVA_t RunVA;
         PstatRunReqCVA_t RunCVA;
+        PstatRunReqGA_t RunGA;
+        PstatRunReqCGA_t RunCGA;
         PstatDynMeasStats_t RunStats;
     } Req;
 } PstatMsgContainer_t;
 
 extern void PstatSendRunVA_Req( PstatRunReqVA_t * );
 extern void PstatSendRunCVA_Req( PstatRunReqCVA_t * );
+extern void PstatSendRunGA_Req( PstatRunReqGA_t *);
+extern void PstatSendRunCGA_Req( PstatRunReqCGA_t *);
+
 
 
   /*******************************
