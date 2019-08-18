@@ -75,17 +75,23 @@
  */
 #include "lfs.h"
 #include "flash_io.h"
-//extern int lfs_internal_flash;
-//extern int lfs_cfg;
-/*
- * This didn't help
-static lfs_t lfs_internal_flash;
-// This works, static alone does not. Also can declare struct, but scope is unclear to me.
-static struct lfs_config lfs_cfg;
- */
 // Compiler recognizes function from flasg_IO.h but doesn't see the arguments
 //int lfs_PSTAT_init_status = lfs_PSTAT_init(&lfs_internal_flash, &lfs_cfg);
-//int lfs_PSTAT_init_status = lfs_PSTAT_init();
+
+/* test my version of read function
+ * I need help getting a call to read working here
+    // Read a region in a block. Negative error codes are propagated
+    // to the user.
+int (*read)(const struct lfs_config *c, lfs_block_t block,
+            lfs_off_t off, void *buffer, lfs_size_t size)
+*/
+
+/* This is my wrapper call to lfs_format and lfs_mount
+ * I get the arguments in the wrapper and call the lfs routines with them.
+ * Setting a breakpoint in the 1rst read in lfs_init, called by lfs_format,
+ * is as far as I got. The attempts to assign my dummy read prog erase and sync
+ * functions to the lfs_conf struct are where I'm stuck.
+ */
 lfs_PSTAT_init();
 #endif
 /* USER CODE END PV */

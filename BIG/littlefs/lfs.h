@@ -399,6 +399,7 @@ typedef struct lfs {
 //
 // Returns a negative error code on failure.
 //int lfs_format(lfs_t *lfs, const struct lfs_config *config);
+// WOrkaround until I can get the call working with the args
 int lfs_format();
 
 // Mounts a littlefs

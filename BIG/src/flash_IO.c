@@ -104,10 +104,11 @@ p0Disk = FF_FlashDiskInit( pcName,
 */
 #endif
 #ifdef littlefs
-// 2nd arg workaround
-//int lfs_PSTAT_init(lfs_t *lfs, const struct lfs_config *cfg){
-// default 2nd arg workaround
-//int lfs_PSTAT_init(lfs_t *lfs){
+// I could not call lfs_format or lfs_mount from main
+// int lfs_PSTAT_init(lfs_t *lfs, const struct lfs_config *cfg){
+// So workaround is this wrapper I can call from main
+
+// Initialize structs and call lfs_format then lfs_mount
 int lfs_PSTAT_init(){
 static struct lfs_config lfs_cfg;
 static lfs_t lfs_internal_flash;
@@ -125,12 +126,23 @@ lfs_cfg.lookahead_size = 8 * 64; // lookahead buffer is stored as a compact bitm
 		  // Don't know requirements for this yet. Aren't blocks allocated?
 		  // So how many blocks should this be tracking? Right now allocating nominal values.
 		  void *context;
+
 /*
 		  int (*read)(const struct lfs_config *c, lfs_block_t block,
 		              lfs_off_t off, void *buffer, lfs_size_t size);
 Need to figure out how to assign the function as a pointer in this struct.
 */
-lsg_cfg.(*read) = read_HAL(lfs_config, block, off, buffer, size);
+/* googled this as way to assign pointer
+ * doesn't work
+		  int (*functionPtr)(lfs_config, block, off, buffer, size);
+//		  functionPtr = &read_hal;
+//		  lfs_cfg.read = functionPtr;
+ */
+/* from mbed examample?
+ * doesn't work
+lfs_cfg.read = read_HAL(const struct lfs_config *c, lfs_block_t block,
+        lfs_off_t off, void *buffer, lfs_size_t size);
+ */
 
 		  int (*prog)(const struct lfs_config *c, lfs_block_t block,
 		              lfs_off_t off, const void *buffer, lfs_size_t size);
@@ -175,11 +187,12 @@ int (*read)(const struct lfs_config *c, lfs_block_t block,
             lfs_off_t off, void *buffer, lfs_size_t size)
 Debug an argument at a time
 */
-int read_HAL(lfs_config, block, off, buffer, size){
+/*
+int read_HAL(&lfs_config, (int) block, (int) off, (void *) &buffer, (int)size){
 
 	return LFS_ERR_OK;
 };
-
+*/
 /* implement prog
     // Program a region in a block. The block must have previously
     // been erased. Negative error codes are propagated to the user.
