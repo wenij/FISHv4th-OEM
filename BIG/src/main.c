@@ -75,24 +75,8 @@
  */
 #include "lfs.h"
 #include "flash_io.h"
-// Compiler recognizes function from flasg_IO.h but doesn't see the arguments
-//int lfs_PSTAT_init_status = lfs_PSTAT_init(&lfs_internal_flash, &lfs_cfg);
 
-/* test my version of read function
- * I need help getting a call to read working here
-    // Read a region in a block. Negative error codes are propagated
-    // to the user.
-int (*read)(const struct lfs_config *c, lfs_block_t block,
-            lfs_off_t off, void *buffer, lfs_size_t size)
-*/
 
-/* This is my wrapper call to lfs_format and lfs_mount
- * I get the arguments in the wrapper and call the lfs routines with them.
- * Setting a breakpoint in the 1rst read in lfs_init, called by lfs_format,
- * is as far as I got. The attempts to assign my dummy read prog erase and sync
- * functions to the lfs_conf struct are where I'm stuck.
- */
-lfs_PSTAT_init();
 #endif
 /* USER CODE END PV */
 
@@ -134,12 +118,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  // extern prototype above compiles...
-  // this is causing a unclosed function bracket error on line 191, builds without it
-#ifdef littlefs
-  // try defaulting 2nd arg and not using it here
-  int lfs_PSTAT_init_status = lfs_PSTAT_init();
-  #endif
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -173,6 +152,41 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+#ifdef littlefs
+  // Initialize file system
+  int lfs_PSTAT_status = lfs_PSTAT_init();
+
+  // Test Code
+  lfs_file_t file;
+
+  // Create a file
+  if (lfs_PSTAT_status == LFS_ERR_OK)
+  {
+      unsigned char read_buffer[16];
+
+      // Create the file "foo"
+      lfs_PSTAT_status = lfsopen( &file, "foo", LFS_O_CREAT|LFS_O_RDWR );
+
+      // Write something to foo
+      lfs_PSTAT_status = lfswrite( &file, "This is a test", 14 );
+
+      // Flush and Close foo
+      lfs_PSTAT_status = lfsflush( &file );
+      lfs_PSTAT_status = lfsclose( &file );
+
+      // Open foo
+      lfs_PSTAT_status = lfsopen( &file, "foo", LFS_O_RDWR );
+
+      // Read foo data
+      int read_size = lfsread( &file, read_buffer, 16 );
+
+      // Close foo again
+      lfs_PSTAT_status = lfsclose( &file );
+
+  }
+
+#endif
 
   /* Create a queue used by a task.  Messages are received via this queue. */
 
