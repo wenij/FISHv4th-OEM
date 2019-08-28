@@ -148,6 +148,7 @@ int main(void)
   //MX_RTC_Init();
 
 #ifdef littlefs
+  // Stepping thru code rcahe and pcahe buffers point to hardfault vectors
   // Initialize file system
   int lfs_PSTAT_status = lfs_PSTAT_init();
 
