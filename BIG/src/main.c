@@ -147,12 +147,6 @@ int main(void)
 
   //MX_RTC_Init();
 
-  /* Call init function for freertos objects (in freertos.c) */
-  MX_FREERTOS_Init();
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-
 #ifdef littlefs
   // Initialize file system
   int lfs_PSTAT_status = lfs_PSTAT_init();
@@ -187,6 +181,13 @@ int main(void)
   }
 
 #endif
+  /* Call init function for freertos objects (in freertos.c) */
+  MX_FREERTOS_Init();
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+
+
 
   /* Create a queue used by a task.  Messages are received via this queue. */
 
@@ -333,14 +334,6 @@ void SystemClock_Config(void)
 #endif
 
 /* USER CODE BEGIN 4 */
-// lfs_config struct unit test
-// this is bombing the debugger
-/*
- *
- void ut_lfs_cfg(){
-	  int readback = lfs_cfg.block_count; // THOUGHT THIS NEEDED CASTING TO ( lfs_size_t)
-}
-*/
 /* USER CODE END 4 */
 
 /**
