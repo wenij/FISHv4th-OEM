@@ -173,8 +173,8 @@ void pstat_task(void * parm)
                     break;
 
                 case PSTAT_CANCEL_REQ:
-                    SPI_SetIrqMode(false);
-                    xQueueReceive( pstat_Queue, (void*)&AckMsg, 10 );
+                    pstat_meas_cancel();
+
                     break;
 
                 default:
@@ -284,7 +284,12 @@ typedef enum
 } PstatMeasState_t;
 
 static PstatMeasState_t MeasState;
+static bool CancelPending = false;
 
+void pstat_meas_cancel(void)
+{
+    CancelPending = true;
+}
 
 void pstat_meas_start_VA(PstatRunReqVA_t * cfg)
 {
@@ -293,6 +298,8 @@ void pstat_meas_start_VA(PstatRunReqVA_t * cfg)
         TimDisableMeasureTimer();
         return;
     }
+
+    CancelPending = false;
 
     Mode = PSTAT_RUN_VA_REQ;
 
@@ -345,6 +352,8 @@ void pstat_meas_start_CVA(PstatRunReqCVA_t * cfg)
         TimDisableMeasureTimer();
         return;
     }
+
+    CancelPending = false;
 
     Mode = PSTAT_RUN_CVA_REQ;
 
@@ -873,6 +882,11 @@ void pstat_measure_Finish( bool Measuring)
 
     }
 
+    if (CancelPending)
+    {
+    	Mode = PSTAT_CANCEL_REQ;
+    }
+
     switch (Mode)
     {
     case PSTAT_RUN_VA_REQ:
@@ -1122,6 +1136,18 @@ void SetPstatSwitches(uint16_t SW)
     HAL_GPIO_WritePin(SW4_GPIO_Port, SW4_Pin, (LastSW & SW_4_ENABLE) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
+void PstatSendCancelReq( void)
+{
+    Message_t Msg;
+    PstatMsgContainer_t *payload = (PstatMsgContainer_t*)pvPortMalloc(sizeof(PstatMsgContainer_t));
+
+    Msg.data = (uint8_t*)payload;
+    Msg.Type = PSTAT_COMMAND_MESSAGE;
+
+    payload->PstatId = PSTAT_CANCEL_REQ;
+
+    xQueueSend( pstat_Queue, &Msg, 0 );
+}
 
 void PstatSendRunVA_Req( PstatRunReqVA_t * Cmd)
 {

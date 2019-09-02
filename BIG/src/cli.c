@@ -568,7 +568,7 @@ void CliParseCommand(void)
     {
         OK = true;
 
-        CliSendCmd(PSTAT_CANCEL_REQ, 0, 0, pstat_Queue);
+        PstatSendCancelReq();
     }
     else if (strncmp("ver", (const char*)UartRxBuffer, 3) == 0)
     {

@@ -157,7 +157,7 @@ extern void PstatSendRunVA_Req( PstatRunReqVA_t * );
 extern void PstatSendRunCVA_Req( PstatRunReqCVA_t * );
 extern void PstatSendRunGA_Req( PstatRunReqGA_t *);
 extern void PstatSendRunCGA_Req( PstatRunReqCGA_t *);
-
+extern void PstatSendCancelReq( void);
 
 
   /*******************************
@@ -205,6 +205,7 @@ extern void pstat_task(void * parm);
 extern void pstat_meas_start_VA(PstatRunReqVA_t * cfg );
 extern void pstat_meas_start_CVA(PstatRunReqCVA_t * cfg );
 
+extern void pstat_meas_cancel(void);
 
 extern void pstat_measure_tick_int(void);
 
