@@ -269,7 +269,7 @@ void CliSendDataPortMeasurement( pstatDynamicMeasurement_t * data)
     msg[0] = 0x55; // Sync 1
     msg[1] = 0xAA; // Sync 2
     msg[2] = 17;    // Length
-    msg[3] = 0x01; // ID
+    msg[3] = 0x03; // ID
 
     // Timestamp 4 bytes
     msg[4] = (uint8_t)(data->TimeStamp >> 24);
