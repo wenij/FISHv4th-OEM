@@ -4,7 +4,7 @@
  * Not building probably decause I haven't provided a flash_IO,h with prototypes?
  */
 #include "flash_IO.h"
-
+#include <assert.h>
 #ifdef STM32F205xx
 #include "stm32f2xx_hal.h"
 #else
@@ -24,6 +24,7 @@
 #endif
 #ifdef littlefs
 #include "lfs.h"
+#include "lfs_util.h"
 #define LFS_BUFFERS_SIZE 512	// Read, write and cache buffer size.
 								// .buffer the erase block size and is LFS_BUFFERS_SIZE * 250.
 #define LOOKAHEAD_BUFFER_SIZE 8 * 64; // lookahead buffer is stored as a compact bitmap.
@@ -42,26 +43,15 @@ static DIR fatdir;
 static FILINFO fatfileinfo;
 #endif
 
-// lfs will be feed these to/from the read and write cache
+// This is a declaration of buffers shared by fatfs and littlefs for now.
+// lfs will be feed these to/from the read and write cache.
+// If need be separate later.
 
 // The name can be changed if the fatfs dependency is resolved,
 // Either by duplicating them for fatfs or deleting fatfs references.
 static unsigned char USER_read_buffer[LFS_BUFFERS_SIZE];
 static unsigned char USER_write_buffer[LFS_BUFFERS_SIZE] = { 0x5f, 0xc5 };
 
-#ifdef littlefs
-/*
-extern lfs_internal_flash;	Carsten:
-This is an incorrect declaration. Extern and static ONLY determine scope
- - extern tells the compiler to make the declaration visible outside the file.
- - static tells it not to.
-The type is missing so it doesn't work.
- You get a compiler warning because in the "C" language standard a missing
-  type declaration implies int.
-*/
-static lfs_cache_t lfs_read_cache;
-static lfs_cache_t lfs_write_cache;
-#endif
 /* USER CODE BEGIN 2 */
 /* 1meg Flash sector allocation
  * sector#	address		size	#512k sectors
@@ -121,8 +111,21 @@ static int prog_HAL(const struct lfs_config *c, lfs_block_t block,
 static int read_HAL(const struct lfs_config *c, lfs_block_t block,
         lfs_off_t off, void *buffer, lfs_size_t size);
 
+static lfs_cache_t lfs_read_cache;
+static lfs_cache_t lfs_write_cache;
+
 static struct lfs_config lfs_cfg;
 static lfs_t lfs_internal_flash;
+/*
+extern lfs_internal_flash;	Carsten:
+This is an incorrect declaration. Extern and static ONLY determine scope
+ - extern tells the compiler to make the declaration visible outside the file.
+ - static tells it not to.
+The type is missing so it doesn't work.
+ You get a compiler warning because in the "C" language standard a missing
+  type declaration implies int.
+  static lfs_t lfs_internal_flash; // the real deal
+*/
 
 // Initialize structs and call lfs_format then lfs_mount
 // I could not call lfs_format or lfs_mount from main,
@@ -143,29 +146,33 @@ int lfs_PSTAT_init(void)
     // Don't know requirements for this yet. Aren't blocks allocated?
     // So how many blocks should this be tracking? Right now allocating nominal values.
 
-    /*
-		  int (*read)(const struct lfs_config *c, lfs_block_t block,
-		              lfs_off_t off, void *buffer, lfs_size_t size);
-Need to figure out how to assign the function as a pointer in this struct.
-     */
-    /* googled this as way to assign pointer
-     * doesn't work
-		  int (*functionPtr)(lfs_config, block, off, buffer, size);
-//		  functionPtr = &read_hal;
-//		  lfs_cfg.read = functionPtr;
-     */
-    /* from mbed examample?
-     * doesn't work
-lfs_cfg.read = read_HAL(const struct lfs_config *c, lfs_block_t block,
-        lfs_off_t off, void *buffer, lfs_size_t size);
+    // assign the buffers read, prog and lookahead? Or are they malloced?
 
-        It's much simpler than that:
-     */
 
+
+
+
+    /* It's much simpler than that: */
     lfs_cfg.read = read_HAL;
     lfs_cfg.prog = prog_HAL;
     lfs_cfg.erase = erase_HAL;
     lfs_cfg.sync = sync_HAL;
+
+#if 0
+    printf("lfs_cfg.read_size =  %x\n", lfs_cfg.read_size);
+
+    printf("Debug/Output.map =.text.read_HAL = 0x08006df2\n");
+    printf("lfs_cfg.read =  %x\n", lfs_cfg.read);
+
+    printf("Debug/Output.map =.text.prog_HAL = 0x08006de6\n");
+    printf("lfs_cfg.read =  %x\n", lfs_cfg.prog);
+
+    printf("Debug/Output.map =.text.erase_HAL = 0x08006dea\n");
+    printf("lfs_cfg.read =  %x\n", lfs_cfg.erase);
+
+    printf("Debug/Output.map =.text.sync_HAL = 0x08006dee\n");
+    printf("lfs_cfg.read =  %x\n", lfs_cfg.sync);
+#endif
 
     // Below are optional. file_max is useful. Name length handled by other attributes. Still need to be set to 0.
     lfs_cfg.name_max = 0; // This is optional. The size of the info struct
@@ -184,7 +191,7 @@ lfs_cfg.read = read_HAL(const struct lfs_config *c, lfs_block_t block,
 
     // Configure the read cache
     lfs_read_cache.block = 1; // fudge
-    lfs_read_cache.buffer = USER_read_buffer; // rename
+    lfs_read_cache.buffer = USER_read_buffer; // rename. NOTWORKING
     lfs_read_cache.off = 0; // fudge
     lfs_read_cache.size = LFS_BUFFERS_SIZE; // not sure caches are same size as 512k blocks~!
     // Configure the write cache
@@ -196,6 +203,11 @@ lfs_cfg.read = read_HAL(const struct lfs_config *c, lfs_block_t block,
     // Add the read and write cache to lfs_internal_flash struct
     lfs_internal_flash.pcache = lfs_write_cache; // Verify this is write cache
     lfs_internal_flash.rcache = lfs_read_cache;
+
+// Make a test to see if lfs has been formmatted
+    // Returns a negative error code on failure.
+    int lfs_format_status =  lfs_format(&lfs_internal_flash, &lfs_cfg);
+    if (lfs_format_status) return lfs_format_status;
 
     // Returns a negative error code on failure.
     int lfs_mount_status =  lfs_mount(&lfs_internal_flash, &lfs_cfg);
@@ -238,7 +250,26 @@ int lfsclose( lfs_file_t *file)
  */
 int read_HAL(const struct lfs_config *c, lfs_block_t block,
         lfs_off_t off, void *buffer, lfs_size_t size){
+	/*
+	 * I created static unsigned char USER_read_buffer[LFS_BUFFERS_SIZE];
+	 * It can be sent thru a queue to the fatfs API managing task.
+	 * Yet a read function could also return the source address,
+	 * for the read function only, so who needs the buffer?
+	 * any who using memcpy to buffer ~ to be declared in caller, later.
+	 */
+	// FLASH            0x08000000         0x00100000         xr TOP of Flash = 0x8100000
+	// using 524288 bytes for flash at an offset of 0x0 to 0x8000, so 0x8080000 to 0x8100000
+	uint8_t *flashSource = (uint8_t *) 0x8080000;	// Set to the start of the flash *sector* addresses.
 
+
+	    /* Move to the start of the sector being read. */
+	    flashSource += (( LFS_BUFFERS_SIZE * block) + off );
+
+//void * memcpy (void *__restrict, const void *__restrict, size_t);
+	    memcpy( ( void * ) buffer,
+	            ( void * ) flashSource,
+	            ( size_t ) ( size ) );
+// memcopy does not have a return value. A compare would be needed to verify a valid read?
     return LFS_ERR_OK;
 };
 
@@ -267,7 +298,67 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
 Debug an argument at a time
 */
 int erase_HAL(const struct lfs_config *c, lfs_block_t block){
+/*
+ * Block should = current sector?
+ * Erase a block. A block must be erased before being programmed.
+   The state of an erased block is undefined. Negative error codes
+   are propogated to the user.
+   May return LFS_ERR_CORRUPT if the block should be considered bad.
+   So check whole sector for correct erasure.
+ *
+ */
+	// ASSERT that block is between 0 and 3. Need include for it?
+	LFS_ASSERT(block < 4);
+	int sector;
+	switch(block) {
 
+	   case 0  :
+		   sector = 0x8080000;	// 0x8080000 to 0x80A0000
+	      break; /* optional */
+
+	   case 1  :
+		   sector = 0x80A0000;	// 0x80A0000 to 0x80C0000
+	      break; /* optional */
+
+	   case 2  :
+		   sector = 0x80C0000;	// 0x80C0000 to 0x80E0000
+	      break; /* optional */
+
+	   case 3  :
+		   sector = 0x80E0000;	// 0x80E0000 to 0x8100000
+	      break; /* optional */
+
+	   /* you can have any number of case statements */
+	   default : /* Optional */
+	   ;
+	}
+
+	    // HAL_FLASH_Unlock(); The lock is hanging. The flash is unprotected so should be fine.
+	    // __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
+	    FLASH_Erase_Sector(sector, VOLTAGE_RANGE_3);
+	    // HAL_FLASH_Lock();	// this hangs.
+
+	    int *word = (int *) sector;
+	    printf("Erase verify started at %x\n", word);
+	    for( word; word < 0x80A0000; word++ ){	// 0x8000 is half the sector
+/* unit test passed
+	    	printf("word in for loop = %x\n", (unsigned int) word);
+
+	    	if (*word != ( int * )0xFFFFFFFF)
+	    	   return LFS_ERR_CORRUPT;
+	    	if (word == ( int * ) 0x80A0000)
+	    	   // loop is wrong
+	    	   printf("Reached end of erase verify loop %x/n", (unsigned int) word);
+*/
+	    }
+//	    printf("Erase verify loop ended at word = %x\n", (unsigned int) word);
+
+	    /*	Block 0 erase results
+	     * 	Erase verify started at 8080000
+			Erase verify loop ended at word = 80a0000
+
+
+	     */
     return LFS_ERR_OK;
 };
 

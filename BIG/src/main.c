@@ -56,6 +56,8 @@
 #include "tim.h"
 
 /* USER CODE BEGIN Includes */
+// enable printf thru openOCD in the console window.
+extern void initialise_monitor_handles(void);
 // define filesystem in use - Defined here outside of main this is GLOBAL for all to see
 #define littlefs
 //#define fatfs
@@ -102,7 +104,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	// enable printf thru openOCD in the console window.
+	initialise_monitor_handles();
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -148,10 +151,34 @@ int main(void)
   //MX_RTC_Init();
 
 #ifdef littlefs
-  // Stepping thru code rcahe and pcahe buffers point to hardfault vectors
+  // Stepping thru code rcahe and pcahe buffers are malloc'd in init.
+  // The function pointers for read_HAL etc are fine.
+  // Somehow lfs_format was not called before mount
+  // so I added it.
+  // NEED TO VERFIY IT:S NOT REDENDANT WITH lfs_mount
+  // currently returning -28 LFS_ERR_NOSPC // No space left on device
+
+  // Hint: lfs_format // don't write out yet, let caller take care of that
+
+  // THIS IS BEFORE adding lfs_format call WHEN lfs_mount was called with no format before
+  // currently returning -84 LFS_ERR_CORRUPT     = -84,  // Corrupted
+  // from lfs_mount in lfs.c line 3357-3364 ie lfs_dir_fetchmatch failing
+  // which printf'd lfs error:970: Corrupted dir pair at 0 1
+  // FROM:lfs_mdir_t dir = {.tail = {0, 1}};
+  // THis would be the buffers of the blocks of the directory?
+  // lfs->cfg->read_buffer in demount is zero so buffer is or isn't there
+  // during init and lfs_dir_fetchmatch?
+
   // Initialize file system
   int lfs_PSTAT_status = lfs_PSTAT_init();
 
+  /*
+   * w/o prog and read you get this:
+   * -28 LFS_ERR_NOSPC  // No space left on device
+   * lfs debug:1605: Bad block at 0
+   * lfs warn:1610: Superblock 1 has become unwritable
+   *
+   */
   // Test Code
   lfs_file_t file;
 
