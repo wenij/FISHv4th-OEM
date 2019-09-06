@@ -285,10 +285,13 @@ typedef enum
 
 static PstatMeasState_t MeasState;
 static bool CancelPending = false;
+static bool CancelInProgress = false;
 
 void pstat_meas_cancel(void)
 {
     CancelPending = true;
+    CancelInProgress = false;
+
 }
 
 void pstat_meas_start_VA(PstatRunReqVA_t * cfg)
@@ -300,6 +303,7 @@ void pstat_meas_start_VA(PstatRunReqVA_t * cfg)
     }
 
     CancelPending = false;
+    CancelInProgress = false;
 
     Mode = PSTAT_RUN_VA_REQ;
 
@@ -354,6 +358,7 @@ void pstat_meas_start_CVA(PstatRunReqCVA_t * cfg)
     }
 
     CancelPending = false;
+    CancelInProgress = false;
 
     Mode = PSTAT_RUN_CVA_REQ;
 
@@ -580,6 +585,16 @@ void pstat_measure_Finish_VA(void)  // Finish Voltammetry
         Set_ADC_Value_Limiting_Hysteresis();
     }
 
+    if (CancelPending)
+    {
+    	MeasState = PSTAT_MEAS_END_TO_FINAL;	// Begin ramp-down
+        Set_DAC_Target(Config.FinalDAC);
+        CountUp = (TargetDAC > CurrentDAC);
+        StateChange = false;
+        CancelInProgress = true;
+        CancelPending = false;
+    }
+
     switch (MeasState)
     {
     case PSTAT_MEAS_INIT_TO_START:
@@ -683,6 +698,10 @@ void pstat_measure_Finish_VA(void)  // Finish Voltammetry
 
 void pstat_measure_Finish_CVA(void)
 {
+	bool Finish = false;
+
+	if (CancelInProgress) return;
+
     // ChronoVoltammetry
     if (TimeAtFirstDAC > 0)
     {
@@ -703,11 +722,22 @@ void pstat_measure_Finish_CVA(void)
     }
     else
     {
+    	Finish = true;
+    }
+
+    if ( Finish || CancelPending )
+    {
         CurrentDAC = CVA_Config.FinalDAC;
 
         AD5662_Set(CurrentDAC);
 
         MeasState = PSTAT_MEAS_DONE;
+
+        if (CancelPending)
+        {
+        	CancelInProgress = true;
+        	CancelPending = false;
+        }
     }
 }
 
@@ -882,10 +912,6 @@ void pstat_measure_Finish( bool Measuring)
 
     }
 
-    if (CancelPending)
-    {
-    	Mode = PSTAT_CANCEL_REQ;
-    }
 
     switch (Mode)
     {
