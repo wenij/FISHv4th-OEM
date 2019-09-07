@@ -4,6 +4,7 @@
  * Copyright (c) 2017, Arm Limited. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause
  */
+// Modifications or clarifications by CWPJR
 #ifndef LFS_H
 #define LFS_H
 
@@ -35,11 +36,11 @@ extern "C"
 
 /// Definitions ///
 
-// Type definitions
-typedef uint32_t lfs_size_t;
+// Type definitions - Add comments as learned.
+typedef uint32_t lfs_size_t;	// These are used as arguments types to functions.
 typedef uint32_t lfs_off_t;
 
-typedef int32_t  lfs_ssize_t;
+typedef int32_t  lfs_ssize_t;	// These are used for function return types.
 typedef int32_t  lfs_soff_t;
 
 typedef uint32_t lfs_block_t;
