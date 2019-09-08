@@ -298,7 +298,7 @@ Debug an argument at a time
 */
 int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 /*
- * Block should = current sector?
+ * Block should = 512 byte section of a sector?
  * Erase a block. A block must be erased before being programmed.
    The state of an erased block is undefined. Negative error codes
    are propogated to the user.
@@ -306,25 +306,41 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
    So check whole sector for correct erasure.
  *
  */
-	// ASSERT that block is between 0 and 3. Need include for it?
-	LFS_ASSERT(block < 4);
-	int sector;
-	switch(block) {
+	// ASSERT that block is between 0 (first) and last block (999)
+	LFS_ASSERT(block <= 999);
+	int block_in_Sector;
+	if (block <= 0 && block <= 249)
+		block_in_Sector = 0;
+	else if (block <= 250 && block <= 499)
+		block_in_Sector = 1;
+	else if (block <= 500 && block <= 749)
+		block_in_Sector = 2;
+	else if (block <= 750 && block <= 999)
+		block_in_Sector = 3;
 
-	   case 0  :
+	int sector;			// int * used to verify sector is erased.
+	int sector_number;	// enum'd arg to FLASH_Erase_Sector().
+	// Use a tool to write something and then verify it gets erased.
+	switch(block_in_Sector) {
+
+	   case (0)  :
 		   sector = SECTOR08_ADDR;	// FLASH_SECTOR_8 to FLASH_SECTOR_9
+	   	   sector_number = FLASH_SECTOR_8;
 	      break; /* optional */
 
-	   case 1  :
+	   case (1)  :
 		   sector = SECTOR09_ADDR;	// FLASH_SECTOR_9 to FLASH_SECTOR_10
+	   	   sector_number = FLASH_SECTOR_9;
 	      break; /* optional */
 
-	   case 2  :
+	   case (2)  :
 		   sector = SECTOR10_ADDR;	// FLASH_SECTOR_10 to FLASH_SECTOR_11
+	   	   sector_number = FLASH_SECTOR_10;
 	      break; /* optional */
 
-	   case 3  :
+	   case (3)  :
 		   sector = SECTOR11_ADDR;	// FLASH_SECTOR_11 to 0x8100000
+	   	   sector_number = FLASH_SECTOR_11;
 	      break; /* optional */
 
 	   /* you can have any number of case statements */
@@ -333,12 +349,12 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 	}
 
 	    // HAL_FLASH_Unlock(); The lock is hanging. The flash is unprotected so should be fine.
-	    // __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
-	    FLASH_Erase_Sector(sector, VOLTAGE_RANGE_3);
+	    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
+	    FLASH_Erase_Sector(sector_number, VOLTAGE_RANGE_3);	// sector_number is a enum.
 	    // HAL_FLASH_Lock();	// this hangs.
 
 	    int *word = (int *) sector;
-	    printf("Erase verify started at %x\n", word);
+	    printf("Erase verify started at %x\n", (unsigned int) word);
 	    for( word; word < (int *) (sector + SECTOR_SIZE); word++ ){
 /* unit test passed
 	    	printf("word in for loop = %x\n", (unsigned int) word);
