@@ -57,6 +57,13 @@ static FILINFO fatfileinfo;
 static unsigned char USER_read_buffer[LFS_BUFFERS_SIZE];
 static unsigned char USER_write_buffer[LFS_BUFFERS_SIZE] = { 0x5f, 0xc5 };
 
+/*
+ * I discovered that two things are important.
+ * First you have to encapsulate your flash_write function
+ * with taskENTER_CRITICAL(); and taskEXIT_CRITICAL();.
+ * Second the system crashes if you use FLASHD_Unlock(AT91C_IFLASH, AT91C_IFLASH + AT91C_IFLASH_SIZE , 0, 0); and FLASHD_Lock(lastPageAddress, lastPageAddress + AT91C_IFLASH_PAGE_SIZE, 0, 0); to lock and unlock the flash pages.
+ * Dont ask me why this happens. But I found that no pages are locked so writing to flash should be no problem.
+ */
 /* USER CODE BEGIN 2 */
 /* 1meg Flash sector allocation
  * sector#	address		size	#512k sectors
@@ -246,59 +253,116 @@ int lfsclose( lfs_file_t *file)
 
 /*
  * Helper functions
+ * Called by lfs_bd_read() so step thru there.
  */
 int read_HAL(const struct lfs_config *c, lfs_block_t block,
         lfs_off_t off, void *buffer, lfs_size_t size){
 	/*
-	 * I created static unsigned char USER_read_buffer[LFS_BUFFERS_SIZE];
-	 * It can be sent thru a queue to the fatfs API managing task.
-	 * Yet a read function could also return the source address,
-	 * for the read function only, so who needs the buffer?
-	 * any who using memcpy to buffer ~ to be declared in caller, later.
+	 * Using unsigned char USER_read_buffer[LFS_BUFFERS_SIZE];
 	 */
-	// FLASH            0x08000000         0x00100000         xr TOP of Flash = 0x8100000
-	// using 524288 bytes for flash at an offset of 0x0 to 0x8000, so FLASH_SECTOR_8 to 0x8100000
-	uint8_t *flashSource = (uint8_t *) FLASH_SECTOR_8;	// Set to the start of the flash *sector* addresses.
+	// FLASH            0x08000000         0x00100000	TOP of Flash = 0x8100000
+	// using 524288 bytes for flash at an offset of 0x0 to 0x8000,
+	// so FLASH_SECTOR_8 to 0x8100000
+	uint8_t *flashSource = (uint8_t *) SECTOR08_ADDR;	// Set to the start of the flash *sector* addresses.
 
 
 	    /* Move to the start of the sector being read. */
 	    flashSource += (( LFS_BUFFERS_SIZE * block) + off );
 
-//void * memcpy (void *__restrict, const void *__restrict, size_t);
 	    memcpy( ( void * ) buffer,
 	            ( void * ) flashSource,
 	            ( size_t ) ( size ) );
-// memcopy does not have a return value. A compare would be needed to verify a valid read?
+	    // memcopy does not have a return value.
+	    // A compare would be needed to verify a valid read?
     return LFS_ERR_OK;
 };
 
 
-/* implement prog
-    // Program a region in a block. The block must have previously
-    // been erased. Negative error codes are propagated to the user.
-    // May return LFS_ERR_CORRUPT if the block should be considered bad.
-int (*prog)(const struct lfs_config *c, lfs_block_t block,
-            lfs_off_t off, const void *buffer, lfs_size_t size);
-Debug an argument at a time
+/* implement prog lfs_bd_prog() calls lfs_bd_flush() which will call this.
+Block should = 512 byte section of a sector, with off and size specifying where to write.
+Need to calculate setcor block is in for off to work I think.
+Step thru that code to see what is needed here.
+Program a region in a block. The block must have previously
+been erased. Negative error codes are propagated to the user.
+May return LFS_ERR_CORRUPT if the block should be considered bad.
 */
 int prog_HAL(const struct lfs_config *c, lfs_block_t block,
         lfs_off_t off, const void *buffer, lfs_size_t size){
+	//initialise_monitor_handles(); // If needed for printf.
+
+	// ASSERT that block is between 0 (first) and last block (999)
+	LFS_ASSERT(block <= 999);
+	int block_in_Sector;
+	if (block <= 0 && block <= 249)
+		block_in_Sector = 0;
+	else if (block <= 250 && block <= 499)
+		block_in_Sector = 1;
+	else if (block <= 500 && block <= 749)
+		block_in_Sector = 2;
+	else if (block <= 750 && block <= 999)
+		block_in_Sector = 3;
+
+	int sector;			// int * used to program block in sector.
+	int sector_number;	// enum'd arg to calculate sector base address.
+	// Use a tool to write something and then verify it gets erased.
+	switch(block_in_Sector) {
+
+	   case (0)  :
+		   sector = SECTOR08_ADDR;	// FLASH_SECTOR_8 to FLASH_SECTOR_9
+	   	   sector_number = FLASH_SECTOR_8;
+	      break; /* optional */
+
+	   case (1)  :
+		   sector = SECTOR09_ADDR;	// FLASH_SECTOR_9 to FLASH_SECTOR_10
+	   	   sector_number = FLASH_SECTOR_9;
+	      break; /* optional */
+
+	   case (2)  :
+		   sector = SECTOR10_ADDR;	// FLASH_SECTOR_10 to FLASH_SECTOR_11
+	   	   sector_number = FLASH_SECTOR_10;
+	      break; /* optional */
+
+	   case (3)  :
+		   sector = SECTOR11_ADDR;	// FLASH_SECTOR_11 to 0x8100000
+	   	   sector_number = FLASH_SECTOR_11;
+	      break; /* optional */
+
+	   /* you can have any number of case statements */
+	   default : /* Optional */
+	   ;
+	}
+
+    int *word = (int *) sector;
+    printf("Block prog address started at %x\n", (unsigned int) word);
+	printf("block = %x, off = %d, size = %d, *buffer = %x/n", block, off, buffer, size);
+	uint64_t Data;	// The word to write
+
+    //for(int i = 1; i <= size; i++)
+    for( word; word < (int *) (sector + SECTOR_SIZE); word++ ){
+    {
+    	printf("i=%d\n",i);
+    	// Read the uint64_t Data
+    	Data = (uint64_t) &FlashAddress;
+    	// HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)
+    	HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, (uint32_t *) FlashAddress, Data);
+    	if (flashprogstatus)
+        	while(1);
+    	FlashAddress++;
+    }
+    // Verify amount written
 
     return LFS_ERR_OK;
 };
 
-/* implement erase
- *     // Erase a block. A block must be erased before being programmed.
-    // The state of an erased block is undefined. Negative error codes
-    // are propagated to the user.
-     *     int (*erase)(const struct lfs_config *c, lfs_block_t block);
-     *
-    // May return LFS_ERR_CORRUPT if the block should be considered bad.
-Debug an argument at a time
+/* implement erase - Called by lfs_bd_erase() Step thru to see what's needed here.
+ *  Erase a block. A block must be erased before being programmed.
+    The state of an erased block is undefined. Negative error codes
+    are propagated to the user.
+    May return LFS_ERR_CORRUPT if the block should be considered bad.
 */
 int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 /*
- * Block should = 512 byte section of a sector?
+ * Block should = 512 byte section of a sector, with off and size specifying where to write.
  * Erase a block. A block must be erased before being programmed.
    The state of an erased block is undefined. Negative error codes
    are propogated to the user.
@@ -348,23 +412,19 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 	   ;
 	}
 
-	    // HAL_FLASH_Unlock(); The lock is hanging. The flash is unprotected so should be fine.
-	    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
-	    FLASH_Erase_Sector(sector_number, VOLTAGE_RANGE_3);	// sector_number is a enum.
-	    // HAL_FLASH_Lock();	// this hangs.
-
 	    int *word = (int *) sector;
 	    printf("Erase verify started at %x\n", (unsigned int) word);
 	    for( word; word < (int *) (sector + SECTOR_SIZE); word++ ){
-/* unit test passed
+	    	// unit test passed
 	    	printf("word in for loop = %x\n", (unsigned int) word);
-
+/*
 	    	if (*word != ( int * )0xFFFFFFFF)
 	    	   return LFS_ERR_CORRUPT;
 	    	if (word == ( int * ) FLASH_SECTOR_9)
 	    	   // loop is wrong
-	    	   printf("Reached end of erase verify loop %x/n", (unsigned int) word);
-*/
+	    	    *
+	    	    */
+	    	   printf("Reached end of size data to write in loop %x/n", (unsigned int) word);
 	    }
 	    printf("Erase verify loop ended at word = %x\n", (unsigned int) word);
 
@@ -377,15 +437,25 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
     return LFS_ERR_OK;
 };
 
-/* implement sync
-    // Sync the state of the underlying block device. Negative error codes
-    // are propogated to the user.
-    int (*sync)(const struct lfs_config *c);
-Debug an argument at a time
+/* implement sync - Called by lfs_bd_sync after it calls lfs_bd_flush()
+Sync the state of the underlying block device. Negative error codes
+are propagated to the user.
+Derived from this example: https://github.com/ARMmbed/littlefs/blob/master/lfs.c
 */
 int sync_HAL(const struct lfs_config *c){
-
-    return LFS_ERR_OK;
+/* need to step into this from call to figure out what to do
+	int flush_status = lfsflush(const struct lfs_file_t *file);
+    if (flush_status) {
+        return flush_status;
+    }
+    // Is this supposed to be recursive?
+//    int sync_status = lfs->cfg->sync(lfs->cfg);
+    int sync_status = lfs->cfg->sync(lfs->cfg);
+    LFS_ASSERT(sync_status <= 0);
+    return sync_status;
+//    return LFS_ERR_OK;
+ *
+ */
 };
 
 #endif

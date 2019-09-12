@@ -154,8 +154,7 @@ int main(void)
   // Stepping thru code rcahe and pcahe buffers are malloc'd in init.
   // The function pointers for read_HAL etc are fine.
   // Somehow lfs_format was not called before mount
-  // so I added it.
-  // NEED TO VERFIY IT:S NOT REDENDANT WITH lfs_mount
+  // so I added it. Needs to be called conditionally
   // currently returning -28 LFS_ERR_NOSPC // No space left on device
 
   // Hint: lfs_format // don't write out yet, let caller take care of that

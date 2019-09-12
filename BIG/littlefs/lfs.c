@@ -36,7 +36,7 @@ static inline void lfs_cache_zero(lfs_t *lfs, lfs_cache_t *pcache) {
     memset(pcache->buffer, 0xff, lfs->cfg->cache_size);
     pcache->block = 0xffffffff;
 }
-
+// Calls read_HAL();
 static int lfs_bd_read(lfs_t *lfs,
         const lfs_cache_t *pcache, lfs_cache_t *rcache, lfs_size_t hint,
         lfs_block_t block, lfs_off_t off,
@@ -91,6 +91,7 @@ static int lfs_bd_read(lfs_t *lfs,
         rcache->size = lfs_min(lfs_alignup(off+hint, lfs->cfg->read_size),
                 lfs_min(lfs->cfg->block_size - rcache->off,
                     lfs->cfg->cache_size));
+        // Call read_HAL();
         int err = lfs->cfg->read(lfs->cfg, rcache->block,
                 rcache->off, rcache->buffer, rcache->size);
         if (err) {
@@ -220,7 +221,7 @@ static int lfs_bd_prog(lfs_t *lfs,
     return 0;
 }
 
-static int lfs_bd_erase(lfs_t *lfs, lfs_block_t block) {
+static int (lfs_t *lfs, lfs_block_t block) {
     LFS_ASSERT(block < lfs->cfg->block_count);
     return lfs->cfg->erase(lfs->cfg, block);
 }
