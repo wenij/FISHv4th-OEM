@@ -269,7 +269,7 @@ void CliSendDataPortMeasurement( pstatDynamicMeasurement_t * data)
     msg[0] = 0x55; // Sync 1
     msg[1] = 0xAA; // Sync 2
     msg[2] = 17;    // Length
-    msg[3] = 0x01; // ID
+    msg[3] = 0x03; // ID
 
     // Timestamp 4 bytes
     msg[4] = (uint8_t)(data->TimeStamp >> 24);
@@ -283,11 +283,11 @@ void CliSendDataPortMeasurement( pstatDynamicMeasurement_t * data)
     msg[10] = (uint8_t)(data->ADC_WE >> 8);
     msg[11] = (uint8_t)(data->ADC_WE);
 
-    // CE voltage 4 bytes
-    msg[12] = (uint8_t)(data->ADC_DAC_RE >> 24);
-    msg[13] = (uint8_t)(data->ADC_DAC_RE >> 16);
-    msg[14] = (uint8_t)(data->ADC_DAC_RE >> 8);
-    msg[15] = (uint8_t)data->ADC_DAC_RE;
+    // RE potential 4 bytes
+    msg[12] = (uint8_t)(data->ADC_RE >> 24);
+    msg[13] = (uint8_t)(data->ADC_RE >> 16);
+    msg[14] = (uint8_t)(data->ADC_RE >> 8);
+    msg[15] = (uint8_t)data->ADC_RE;
 
     // DAC 2 bytes
     msg[16] = (uint8_t)(data->DAC_Setting >> 8);
@@ -516,6 +516,51 @@ void CliParseCommand(void)
 
                 OK = true;
             }
+        }
+        else if (num_args == 13)
+        {
+            if (parameter_list[10] == 3)
+            {
+                // GA request
+                PstatRunReqGA_t cmd;
+
+                //cmd.InitialDAC = parameter_list[0];
+                cmd.StartCurrentTarget = parameter_list[0];
+                cmd.EndCurrentTarget = parameter_list[1];
+                cmd.FinalCurrentTarget = parameter_list[3];
+                cmd.DACStep = parameter_list[4];
+                cmd.DACTime = parameter_list[5];
+                cmd.TimeSliceUs = parameter_list[6];
+                cmd.MeasureTime = parameter_list[7];
+                cmd.Count = parameter_list[8];
+                cmd.Switch = parameter_list[9];
+                cmd.GainSetting = parameter_list[11];
+                cmd.InitialDAC_Value = parameter_list[12];
+                PstatSendRunGA_Req( &cmd );
+
+                OK = true;
+            }
+            else if (parameter_list[10] == 3)
+            {
+                // CGA request
+                PstatRunReqCGA_t cmd;
+
+                //cmd.InitialDAC = parameter_list[0];
+                cmd.InitialCurrentTarget = parameter_list[0];
+                cmd.StartCurrentTarget = parameter_list[1];
+                cmd.FinalCurrentTarget = parameter_list[3];
+                cmd.TimeAtStart = parameter_list[4];
+                cmd.TimeAtEnd = parameter_list[5];
+                cmd.TimeSliceUs = parameter_list[6];
+                //cmd.MeasureTime = parameter_list[7];
+                //cmd.Count = parameter_list[8];
+                cmd.Switch = parameter_list[9];
+                cmd.GainSetting = parameter_list[11];
+                cmd.InitialDAC_Value = parameter_list[12];
+                PstatSendRunCGA_Req( &cmd );
+
+                OK = true;
+            }
 
         }
     }
@@ -523,7 +568,7 @@ void CliParseCommand(void)
     {
         OK = true;
 
-        CliSendCmd(PSTAT_CANCEL_REQ, 0, 0, pstat_Queue);
+        PstatSendCancelReq();
     }
     else if (strncmp("ver", (const char*)UartRxBuffer, 3) == 0)
     {
