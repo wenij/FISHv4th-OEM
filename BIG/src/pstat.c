@@ -48,6 +48,7 @@ static uint16_t LastDAC = 0;
 
 static uint16_t LastSW = 0;
 
+
 static uint32_t PstatGoodCount;
 static uint32_t PstatFailCount;
 
@@ -524,27 +525,39 @@ void pstat_measure_baseline(void)
 
     SetCurrentScale((WE_Scale_t)scales[i]);
 
+
     ads1256_InitiateReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM);
 
 }
+
+static bool RetakeWE;
 
 void pstat_finish_baseline(void)
 {
     int32_t value;
     uint32_t base;
 
-    // First conversion contains the baseline measurement
+    // First measurement after baselining. Check that the ADC is not close to maxing out.
+
     value = ads1256_ReadDataWhenReady( 0 );
 
     base = (uint32_t)(value < 0 ? -value : value);
+
+    RetakeWE = false;
 
     if (base >= ADC_GAIN_DOWN_THRESHOLD)
     {
         if ( (int)CurrentScale < WE_SCALE_UNITY)
         {
             SetCurrentScale((WE_Scale_t)( (int)CurrentScale + 1));
+            RetakeWE = true;
         }
 
+    }
+
+    if (!RetakeWE)
+    {
+        Measurement.ADC_WE = value;
     }
 
     ads1256_InitiateReadChannel(ADS1256_CHANNEL_0, ADS1256_CHANNEL_AINCOM);
@@ -552,7 +565,15 @@ void pstat_finish_baseline(void)
 
 void pstat_measure_I_WE(void)
 {
-    Measurement.ADC_WE = ads1256_ReadDataWhenReady(0);
+    int32_t measurement;
+
+    measurement = ads1256_ReadDataWhenReady(0);
+
+    if (RetakeWE)
+    {
+        // We are doing this because when we have a good measurement already there is no need to take another one. In fact it oftentimes ends up exceeding the ADC range.
+        Measurement.ADC_WE = measurement;
+    }
 
     ads1256_InitiateReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM);  // DAC_RE
 

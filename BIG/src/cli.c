@@ -299,6 +299,7 @@ void CliSendDataPortMeasurement( pstatDynamicMeasurement_t * data)
     // Switch setting 1 byte
     msg[19] = (uint8_t)data->SwitchState;
 
+
     //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);    // spi1.ChipSelect();
     DataPortTxComplete = false;
     HAL_UART_Transmit_DMA(data_uart, msg, 20);   // Non-blocking Call
