@@ -275,7 +275,7 @@ int read_HAL(const struct lfs_config *c, lfs_block_t block,
 	    // memcopy does not have a return value.
 	    // A compare would be needed to verify a valid read?
     return LFS_ERR_OK;
-};
+}
 
 
 /* implement prog lfs_bd_prog() calls lfs_bd_flush() which will call this.
@@ -303,7 +303,7 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
 		block_in_Sector = 3;
 
 	int sector;			// int * used to program block in sector.
-	int sector_number;	// enum'd arg to calculate sector base address.
+	int sector_number;	// enum'd arg of sector base address.
 	// Use a tool to write something and then verify it gets erased.
 	switch(block_in_Sector) {
 
@@ -340,19 +340,18 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
     //for(int i = 1; i <= size; i++)
     for( word; word < (int *) (sector + SECTOR_SIZE); word++ ){
     {
-    	printf("i=%d\n",i);
+    	printf("i=%x\n",word);
     	// Read the uint64_t Data
-    	Data = (uint64_t) &FlashAddress;
+    	Data = (uint64_t) &word;
     	// HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)
-    	HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, (uint32_t *) FlashAddress, Data);
+    	HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, (uint32_t *) word, Data);
     	if (flashprogstatus)
         	while(1);
-    	FlashAddress++;
     }
     // Verify amount written
 
     return LFS_ERR_OK;
-};
+}
 
 /* implement erase - Called by lfs_bd_erase() Step thru to see what's needed here.
  *  Erase a block. A block must be erased before being programmed.
@@ -382,7 +381,7 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 	else if (block <= 750 && block <= 999)
 		block_in_Sector = 3;
 
-	int sector;			// int * used to verify sector is erased.
+	int sector;			// cast to (int *), used to verify sector is erased.
 	int sector_number;	// enum'd arg to FLASH_Erase_Sector().
 	// Use a tool to write something and then verify it gets erased.
 	switch(block_in_Sector) {
@@ -412,6 +411,11 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 	   ;
 	}
 
+	// HAL_FLASH_Unlock(); The lock is hanging. The flash is unprotected so should be fine.
+    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
+    FLASH_Erase_Sector(sector_number, VOLTAGE_RANGE_3);	// sector_number is a enum.
+    // HAL_FLASH_Lock();	// this hangs.
+
 	    int *word = (int *) sector;
 	    printf("Erase verify started at %x\n", (unsigned int) word);
 	    for( word; word < (int *) (sector + SECTOR_SIZE); word++ ){
@@ -435,28 +439,16 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 
 	     */
     return LFS_ERR_OK;
-};
+}
 
 /* implement sync - Called by lfs_bd_sync after it calls lfs_bd_flush()
-Sync the state of the underlying block device. Negative error codes
-are propagated to the user.
-Derived from this example: https://github.com/ARMmbed/littlefs/blob/master/lfs.c
+Sync the state of the underlying block device.
+Step thru call to function to see what to do.
+Negative error codes are propagated to the user.
 */
-int sync_HAL(const struct lfs_config *c){
-/* need to step into this from call to figure out what to do
-	int flush_status = lfsflush(const struct lfs_file_t *file);
-    if (flush_status) {
-        return flush_status;
-    }
-    // Is this supposed to be recursive?
-//    int sync_status = lfs->cfg->sync(lfs->cfg);
-    int sync_status = lfs->cfg->sync(lfs->cfg);
-    LFS_ASSERT(sync_status <= 0);
-    return sync_status;
-//    return LFS_ERR_OK;
- *
- */
-};
+const int sync_HAL(const struct lfs_config *c){
+	return LFS_ERR_OK;
+}
 
 #endif
 

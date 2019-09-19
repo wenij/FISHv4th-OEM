@@ -189,6 +189,8 @@ struct lfs_config {
     lfs_size_t block_size;
 
     // Number of erasable blocks on the device.
+    // lfs should manage this in calls to _HAL routines.
+    // ie look for block args to be between 0 and this value.
     lfs_size_t block_count;
 
     // Number of erase cycles before we should move data to another block.

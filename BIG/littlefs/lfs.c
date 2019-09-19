@@ -221,7 +221,7 @@ static int lfs_bd_prog(lfs_t *lfs,
     return 0;
 }
 
-static int (lfs_t *lfs, lfs_block_t block) {
+static int lfs_bd_erase(lfs_t *lfs, lfs_block_t block) {
     LFS_ASSERT(block < lfs->cfg->block_count);
     return lfs->cfg->erase(lfs->cfg, block);
 }

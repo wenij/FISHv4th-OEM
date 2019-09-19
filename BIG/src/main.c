@@ -106,6 +106,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	// enable printf thru openOCD in the console window.
 	initialise_monitor_handles();
+	test_block2sector(9);
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -243,6 +244,22 @@ int main(void)
   return 0;
 
   /* USER CODE END 3 */
+
+}
+
+void test_block2sector(int block){
+
+	int block_in_Sector;
+	if (block <= 0 && block <= 249)
+		block_in_Sector = 0;
+	else if (block <= 250 && block <= 499)
+		block_in_Sector = 1;
+	else if (block <= 500 && block <= 749)
+		block_in_Sector = 2;
+	else if (block <= 750 && block <= 999)
+		block_in_Sector = 3;
+printf("block = %d and sector = %d/n", block, block_in_Sector);
+
 
 }
 
