@@ -268,8 +268,8 @@ void CliSendDataPortMeasurement( pstatDynamicMeasurement_t * data)
 
     msg[0] = 0x55; // Sync 1
     msg[1] = 0xAA; // Sync 2
-    msg[2] = 17;    // Length
-    msg[3] = 0x03; // ID
+    msg[2] = 21;    // Length
+    msg[3] = 0x04; // ID
 
     // Timestamp 4 bytes
     msg[4] = (uint8_t)(data->TimeStamp >> 24);
@@ -289,20 +289,26 @@ void CliSendDataPortMeasurement( pstatDynamicMeasurement_t * data)
     msg[14] = (uint8_t)(data->ADC_RE >> 8);
     msg[15] = (uint8_t)data->ADC_RE;
 
+    // DAC + RE 4 bytes
+    msg[16] = (uint8_t)(data->ADC_DAC_RE >> 24);
+    msg[17] = (uint8_t)(data->ADC_DAC_RE >> 16);
+    msg[18] = (uint8_t)(data->ADC_DAC_RE >> 8);
+    msg[19] = (uint8_t)data->ADC_DAC_RE;
+
     // DAC 2 bytes
-    msg[16] = (uint8_t)(data->DAC_Setting >> 8);
-    msg[17] = (uint8_t)(data->DAC_Setting);
+    msg[20] = (uint8_t)(data->DAC_Setting >> 8);
+    msg[21] = (uint8_t)(data->DAC_Setting);
 
     // Gain Setting 1 byte
-    msg[18] = (uint8_t)data->WE_Scale;
+    msg[22] = (uint8_t)data->WE_Scale;
 
     // Switch setting 1 byte
-    msg[19] = (uint8_t)data->SwitchState;
+    msg[23] = (uint8_t)data->SwitchState;
 
 
     //HAL_GPIO_WritePin(BT_CSn_GPIO_Port, BT_CSn_Pin, GPIO_PIN_SET);    // spi1.ChipSelect();
     DataPortTxComplete = false;
-    HAL_UART_Transmit_DMA(data_uart, msg, 20);   // Non-blocking Call
+    HAL_UART_Transmit_DMA(data_uart, msg, 24);   // Non-blocking Call
 }
 
 static uint8_t TxMsg[13];

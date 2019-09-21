@@ -578,6 +578,7 @@ void pstat_measure_I_WE(void)
     ads1256_InitiateReadChannel(ADS1256_CHANNEL_2, ADS1256_CHANNEL_AINCOM);  // DAC_RE
 
 }
+
 void pstat_measure_U_DAC(void)
 {
     Measurement.ADC_DAC_RE = ads1256_ReadDataWhenReady(0);
