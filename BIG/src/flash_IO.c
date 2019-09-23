@@ -288,68 +288,37 @@ May return LFS_ERR_CORRUPT if the block should be considered bad.
 */
 int prog_HAL(const struct lfs_config *c, lfs_block_t block,
         lfs_off_t off, const void *buffer, lfs_size_t size){
-	//initialise_monitor_handles(); // If needed for printf.
+    LFS_ASSERT(block != LFS_BLOCK_NULL);
+	LFS_ASSERT(block >=0 && block <= 999);
+    LFS_ASSERT(off + size <= c->block_size);
 
-	// ASSERT that block is between 0 (first) and last block (999)
-	LFS_ASSERT(block <= 999);
-	int block_in_Sector;
-	if (block <= 0 && block <= 249)
-		block_in_Sector = 0;
-	else if (block <= 250 && block <= 499)
-		block_in_Sector = 1;
-	else if (block <= 500 && block <= 749)
-		block_in_Sector = 2;
-	else if (block <= 750 && block <= 999)
-		block_in_Sector = 3;
-
-	int sector;			// int * used to program block in sector.
-	int sector_number;	// enum'd arg of sector base address.
-	// Use a tool to write something and then verify it gets erased.
-	switch(block_in_Sector) {
-
-	   case (0)  :
-		   sector = SECTOR08_ADDR;	// FLASH_SECTOR_8 to FLASH_SECTOR_9
-	   	   sector_number = FLASH_SECTOR_8;
-	      break; /* optional */
-
-	   case (1)  :
-		   sector = SECTOR09_ADDR;	// FLASH_SECTOR_9 to FLASH_SECTOR_10
-	   	   sector_number = FLASH_SECTOR_9;
-	      break; /* optional */
-
-	   case (2)  :
-		   sector = SECTOR10_ADDR;	// FLASH_SECTOR_10 to FLASH_SECTOR_11
-	   	   sector_number = FLASH_SECTOR_10;
-	      break; /* optional */
-
-	   case (3)  :
-		   sector = SECTOR11_ADDR;	// FLASH_SECTOR_11 to 0x8100000
-	   	   sector_number = FLASH_SECTOR_11;
-	      break; /* optional */
-
-	   /* you can have any number of case statements */
-	   default : /* Optional */
-	   ;
-	}
-
-    int *word = (int *) sector;
-    printf("Block prog address started at %x\n", (unsigned int) word);
+	uint8_t *data = (uint8_t *) buffer;	// write size many be odd byte sized, versus word bounded.
+	uint8_t *flashaddress = (uint8_t *) (block * (LFS_BUFFERS_SIZE) + off) + (SECTOR08_ADDR);
 	printf("block = %x, off = %d, size = %d, *buffer = %x/n", block, off, buffer, size);
-	uint64_t Data;	// The word to write
 
-    //for(int i = 1; i <= size; i++)
-    for( word; word < (int *) (sector + SECTOR_SIZE); word++ ){
+	// Use variable to walk thru size write, decrement by passed size variable.
+    for( int i = 0; i <= size; i++ )
     {
-    	printf("i=%x\n",word);
-    	// Read the uint64_t Data
-    	Data = (uint64_t) &word;
+        printf("Block prog address = %x, data = %x\n", data, flashaddress);
     	// HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)
-    	HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_WORD, (uint32_t *) word, Data);
-    	if (flashprogstatus)
-        	while(1);
+    	HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_BYTE, (uint8_t *) flashaddress, (uint8_t *) data);
+    	flashaddress++;
+    	data++;
+    	if (flashprogstatus);
+    	{
+    	  return LFS_ERR_IO;
+    	}
     }
     // Verify amount written
-
+    flashaddress = (uint8_t *) (block * (LFS_BUFFERS_SIZE) + off) + (SECTOR08_ADDR);
+    data = (uint8_t *) buffer;
+    for( int i = 0; i <= size; i++ )
+    {
+    	if (*data != *flashaddress)
+    	   return LFS_ERR_CORRUPT;
+    	flashaddress++;
+    	data++;
+    }
     return LFS_ERR_OK;
 }
 
@@ -364,7 +333,7 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
  * Block should = 512 byte section of a sector, with off and size specifying where to write.
  * Erase a block. A block must be erased before being programmed.
    The state of an erased block is undefined. Negative error codes
-   are propogated to the user.
+   are propagated to the user.
    May return LFS_ERR_CORRUPT if the block should be considered bad.
    So check whole sector for correct erasure.
  *

@@ -16,7 +16,7 @@ extern "C"
 {
 #endif
 
-
+#define LFS_BLOCK_NULL ((lfs_block_t)-1)
 /// Version info ///
 
 // Software library version
@@ -401,8 +401,8 @@ typedef struct lfs {
 // be zeroed for defaults and backwards compatibility.
 //
 // Returns a negative error code on failure.
-//int lfs_format(lfs_t *lfs, const struct lfs_config *config);
-// WOrkaround until I can get the call working with the args
+// int lfs_format(lfs_t *lfs, const struct lfs_config *config);
+// Workaround until I can get the call working with the args
 int lfs_format();
 
 // Mounts a littlefs
