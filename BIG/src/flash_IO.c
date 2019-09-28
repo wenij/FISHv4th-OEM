@@ -304,7 +304,7 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
     	HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_BYTE, (uint8_t *) flashaddress, (uint8_t *) data);
     	flashaddress++;
     	data++;
-    	if (flashprogstatus);
+    	if (flashprogstatus)
     	{
     	  return LFS_ERR_IO;
     	}
