@@ -258,7 +258,7 @@ void test_block2sector(int block){
 		block_in_Sector = 2;
 	else if (block <= 750 && block <= 999)
 		block_in_Sector = 3;
-printf("block = %d and sector = %d/n", block, block_in_Sector);
+printf("block = %x and sector = %d\n", block, block_in_Sector);
 
 
 }

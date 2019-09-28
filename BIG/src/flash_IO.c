@@ -294,7 +294,7 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
 
 	uint8_t *data = (uint8_t *) buffer;	// write size many be odd byte sized, versus word bounded.
 	uint8_t *flashaddress = (uint8_t *) (block * (LFS_BUFFERS_SIZE) + off) + (SECTOR08_ADDR);
-	printf("block = %x, off = %d, size = %d, *buffer = %x/n", block, off, buffer, size);
+	printf("block = %x, off = %d, size = %x, *buffer = %x\n", block, off, buffer, size);
 
 	// Use variable to walk thru size write, decrement by passed size variable.
     for( int i = 0; i <= size; i++ )
@@ -342,13 +342,13 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 	LFS_ASSERT(block <= 999);
 	int block_in_Sector;
 	if (block <= 0 && block <= 249)
-		block_in_Sector = 0;
+		block_in_Sector = 0;		// 0x8080000 to 0x80A0000
 	else if (block <= 250 && block <= 499)
-		block_in_Sector = 1;
+		block_in_Sector = 1;		// 0x80A0000 to 0x80C0000
 	else if (block <= 500 && block <= 749)
-		block_in_Sector = 2;
+		block_in_Sector = 2;		// 0x80C0000 to 0x80A0000
 	else if (block <= 750 && block <= 999)
-		block_in_Sector = 3;
+		block_in_Sector = 3;		// 0x80C0000 to 0x800000
 
 	int sector;			// cast to (int *), used to verify sector is erased.
 	int sector_number;	// enum'd arg to FLASH_Erase_Sector().
@@ -387,17 +387,11 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 
 	    int *word = (int *) sector;
 	    printf("Erase verify started at %x\n", (unsigned int) word);
-	    for( word; word < (int *) (sector + SECTOR_SIZE); word++ ){
+	    for( word; word < (int) sector + SECTOR_SIZE; word++){
 	    	// unit test passed
-	    	printf("word in for loop = %x\n", (unsigned int) word);
-/*
 	    	if (*word != ( int * )0xFFFFFFFF)
 	    	   return LFS_ERR_CORRUPT;
-	    	if (word == ( int * ) FLASH_SECTOR_9)
-	    	   // loop is wrong
-	    	    *
-	    	    */
-	    	   printf("Reached end of size data to write in loop %x/n", (unsigned int) word);
+	    	   // printf("Verifying address erased in loop %x\n", (unsigned int) word);
 	    }
 	    printf("Erase verify loop ended at word = %x\n", (unsigned int) word);
 
