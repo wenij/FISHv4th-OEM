@@ -278,9 +278,9 @@ int read_HAL(const struct lfs_config *c, lfs_block_t block,
 }
 
 
-/* implement prog lfs_bd_prog() calls lfs_bd_flush() which will call this.
+/* implement prog: lfs_bd_prog() calls lfs_bd_flush() which will call this.
 Block should = 512 byte section of a sector, with off and size specifying where to write.
-Need to calculate setcor block is in for off to work I think.
+Need to calculate sector block is in for off to work I think.
 Step thru that code to see what is needed here.
 Program a region in a block. The block must have previously
 been erased. Negative error codes are propagated to the user.
@@ -294,12 +294,11 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
 
 	uint8_t *data = (uint8_t *) buffer;	// write size many be odd byte sized, versus word bounded.
 	uint8_t *flashaddress = (uint8_t *) (block * (LFS_BUFFERS_SIZE) + off) + (SECTOR08_ADDR);
-	printf("block = %x, off = %d, size = %x, *buffer = %x\n", block, off, buffer, size);
+	printf("prog_HAL ~ block = %x, off = %d, size = %x, *buffer = %x\n", block, off, size, buffer);
 
-	// Use variable to walk thru size write, decrement by passed size variable.
     for( int i = 0; i <= size; i++ )
     {
-        printf("Block prog address = %x, data = %x\n", data, flashaddress);
+        // printf("prog_HAL ~ block prog address = %x, data = %x\n", data, flashaddress);
     	// HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)
     	HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_BYTE, (uint8_t *) flashaddress, (uint8_t *) data);
     	flashaddress++;
@@ -341,15 +340,17 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 	// ASSERT that block is between 0 (first) and last block (999)
 	LFS_ASSERT(block <= 999);
 	int block_in_Sector;
-	if (block <= 0 && block <= 249)
+	if (block >= 0 && block <= 249)
 		block_in_Sector = 0;		// 0x8080000 to 0x80A0000
-	else if (block <= 250 && block <= 499)
+	else if (block >= 250 && block <= 499)
 		block_in_Sector = 1;		// 0x80A0000 to 0x80C0000
-	else if (block <= 500 && block <= 749)
+	else if (block >= 500 && block <= 749)
 		block_in_Sector = 2;		// 0x80C0000 to 0x80A0000
-	else if (block <= 750 && block <= 999)
+	else if (block >= 750 && block <= 999)
 		block_in_Sector = 3;		// 0x80C0000 to 0x800000
-
+	/* passing test for sector 0 1nd 1
+	printf("test_block2sector ~ block = %d and sector = %d\n", block, block_in_Sector);
+	*/
 	int sector;			// cast to (int *), used to verify sector is erased.
 	int sector_number;	// enum'd arg to FLASH_Erase_Sector().
 	// Use a tool to write something and then verify it gets erased.
@@ -380,10 +381,10 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 	   ;
 	}
 
-	// HAL_FLASH_Unlock(); The lock is hanging. The flash is unprotected so should be fine.
+	HAL_FLASH_Unlock(); // The lock is hanging. The flash is unprotected so should be fine.
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
     FLASH_Erase_Sector(sector_number, VOLTAGE_RANGE_3);	// sector_number is a enum.
-    // HAL_FLASH_Lock();	// this hangs.
+    HAL_FLASH_Lock();	// this hangs.
 
 	    int *word = (int *) sector;
 	    printf("Erase verify started at %x\n", (unsigned int) word);
@@ -394,13 +395,6 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 	    	   // printf("Verifying address erased in loop %x\n", (unsigned int) word);
 	    }
 	    printf("Erase verify loop ended at word = %x\n", (unsigned int) word);
-
-	    /*	Block 0 erase results
-	     * 	Erase verify started at 8080000
-			Erase verify loop ended at word = 80a0000
-
-
-	     */
     return LFS_ERR_OK;
 }
 
