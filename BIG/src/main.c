@@ -154,27 +154,15 @@ int main(void)
 #ifdef littlefs
   // Stepping thru code rcahe and pcahe buffers are malloc'd in init.
   // The function pointers for read_HAL etc are fine.
-  // Somehow lfs_format was not called before mount
-  // so I added it. Needs to be called conditionally
-  // currently returning -28 LFS_ERR_NOSPC // No space left on device
 
   // Hint: lfs_format // don't write out yet, let caller take care of that
-
-  // THIS IS BEFORE adding lfs_format call WHEN lfs_mount was called with no format before
-  // currently returning -84 LFS_ERR_CORRUPT     = -84,  // Corrupted
-  // from lfs_mount in lfs.c line 3357-3364 ie lfs_dir_fetchmatch failing
-  // which printf'd lfs error:970: Corrupted dir pair at 0 1
-  // FROM:lfs_mdir_t dir = {.tail = {0, 1}};
-  // THis would be the buffers of the blocks of the directory?
-  // lfs->cfg->read_buffer in demount is zero so buffer is or isn't there
-  // during init and lfs_dir_fetchmatch?
 
   // Initialize file system
   int lfs_PSTAT_status = lfs_PSTAT_init();
 
   /*
-   * w/o prog and read you get this:
-   * -28 LFS_ERR_NOSPC  // No space left on device
+   * with prog and read I get this:
+   * -5 LFS_ERR_IO  // From my routine I think
    * lfs debug:1605: Bad block at 0
    * lfs warn:1610: Superblock 1 has become unwritable
    *

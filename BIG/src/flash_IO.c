@@ -296,6 +296,8 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
 	uint8_t *flashaddress = (uint8_t *) (block * (LFS_BUFFERS_SIZE) + off) + (SECTOR08_ADDR);
 	printf("prog_HAL ~ block = %x, off = %d, size = %x, *buffer = %x\n", block, off, size, buffer);
 
+	HAL_FLASH_Unlock(); // The lock is hanging. The flash is unprotected so should be fine.
+    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
     for( int i = 0; i <= size; i++ )
     {
         // printf("prog_HAL ~ block prog address = %x, data = %x\n", data, flashaddress);
@@ -308,6 +310,8 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
     	  return LFS_ERR_IO;
     	}
     }
+    HAL_FLASH_Lock();
+
     // Verify amount written
     flashaddress = (uint8_t *) (block * (LFS_BUFFERS_SIZE) + off) + (SECTOR08_ADDR);
     data = (uint8_t *) buffer;
@@ -381,10 +385,10 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 	   ;
 	}
 
-	HAL_FLASH_Unlock(); // The lock is hanging. The flash is unprotected so should be fine.
+	HAL_FLASH_Unlock();
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
     FLASH_Erase_Sector(sector_number, VOLTAGE_RANGE_3);	// sector_number is a enum.
-    HAL_FLASH_Lock();	// this hangs.
+    HAL_FLASH_Lock();
 
 	    int *word = (int *) sector;
 	    printf("Erase verify started at %x\n", (unsigned int) word);
