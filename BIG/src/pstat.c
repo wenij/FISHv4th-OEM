@@ -237,7 +237,6 @@ static int16_t MeasureCount;
 static int32_t ChangeDACCount;
 static uint16_t TargetDAC;
 static uint16_t MeasureCountBase;
-static int32_t TargetADC_U_DAC_RE;
 
 static bool CountUp;
 
@@ -248,7 +247,6 @@ static void  Set_DAC_Target(uint16_t dac)
 {
     TargetDAC = dac;
 
-    TargetADC_U_DAC_RE = (int32_t)dac * 256 - 0x7fffff; // Create an ADC equivalent
 }
 
 #define ADC_MAX_DAC_RANGE 0x7FFF00      // Maximum DAC value can't go above here.
@@ -778,6 +776,11 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
 
         Set_ADC_Value_Limiting_Hysteresis();
     }
+
+
+#error Make repeat mesurements to get current inside desired target.
+
+#error Control from here.
 
     switch (MeasState)
     {
