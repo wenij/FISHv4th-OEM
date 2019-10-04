@@ -344,6 +344,59 @@ void pstat_meas_start_VA(PstatRunReqVA_t * cfg)
 
 }
 
+static PstatRunReqGA_t GA_Config;
+
+void pstat_meas_start_GA(PstatRunReqGA_t * cfg)
+{
+    if (!GetSpiIntMode())
+    {
+        TimDisableMeasureTimer();
+        return;
+    }
+
+    CancelPending = false;
+    CancelInProgress = false;
+
+    Mode = PSTAT_RUN_VA_REQ;
+
+    // Save the setup configuration
+    GA_Config = *cfg;
+
+    PstatGoodCount = PstatFailCount = 0;
+
+    // Initial values
+    CurrentDAC = GA_Config.InitialDAC;
+    Set_DAC_Target(GA_Config.StartDAC);
+
+    if (GA_Config.InitialDAC <= GA_Config.StartDAC)
+    {
+        CountUp = true;
+    }
+    else
+    {
+        CountUp = false;
+    }
+    MeasureCount = GA_Config.MeasureTime;
+    ChangeDACCount = GA_Config.DACTime;
+    MeasureCountBase = GA_Config.MeasureTime;
+
+    ADC_LimitCount = 0;
+
+    MeasState = PSTAT_MEAS_INIT_TO_START;
+
+    SetPstatSwitches(Config.Switch);
+
+    AD5662_Set(CurrentDAC);
+
+    ads1256_PowerUpInit(true);
+
+    DataPortTxComplete = true;
+
+    // Enable the timer
+    TimEnableMeasureTimer(Config.TimeSliceUs);
+
+}
+
 static PstatRunReqCVA_t CVA_Config;
 static uint32_t TimeAtFirstDAC;
 static uint32_t TimeAtEndDAC;
@@ -778,9 +831,10 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
     }
 
 
-#error Make repeat mesurements to get current inside desired target.
 
-#error Control from here.
+//#error Make repeat mesurements to get current inside desired target.
+
+//#error Control from here.
 
     switch (MeasState)
     {
