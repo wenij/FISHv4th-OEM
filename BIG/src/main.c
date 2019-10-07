@@ -150,7 +150,8 @@ int main(void)
   MX_TIM3_Init();
 
   //MX_RTC_Init();
-
+// this created it's file and data. The size of the writes
+// and the defaults I set are the next horizon
 #ifdef littlefs
   // Stepping thru code rcahe and pcahe buffers are malloc'd in init.
   // The function pointers for read_HAL etc are fine.
@@ -160,14 +161,7 @@ int main(void)
   // Initialize file system
   int lfs_PSTAT_status = lfs_PSTAT_init();
 
-  /*
-   * with prog and read I get this:
-   * -5 LFS_ERR_IO  // From my routine I think
-   * lfs debug:1605: Bad block at 0
-   * lfs warn:1610: Superblock 1 has become unwritable
-   *
-   */
-  // Test Code
+   // Test Code
   lfs_file_t file;
 
   // Create a file

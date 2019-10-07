@@ -128,16 +128,6 @@ static lfs_cache_t lfs_write_cache;
 
 static struct lfs_config lfs_cfg;
 static lfs_t lfs_internal_flash;
-/*
-extern lfs_internal_flash;	Carsten:
-This is an incorrect declaration. Extern and static ONLY determine scope
- - extern tells the compiler to make the declaration visible outside the file.
- - static tells it not to.
-The type is missing so it doesn't work.
- You get a compiler warning because in the "C" language standard a missing
-  type declaration implies int.
-  static lfs_t lfs_internal_flash; // the real deal
-*/
 
 // Initialize structs and call lfs_format then lfs_mount
 // I could not call lfs_format or lfs_mount from main,
@@ -256,15 +246,8 @@ int lfsclose( lfs_file_t *file)
  * Called by lfs_bd_read() so step thru there.
  */
 int read_HAL(const struct lfs_config *c, lfs_block_t block,
-        lfs_off_t off, void *buffer, lfs_size_t size){
-	/*
-	 * Using unsigned char USER_read_buffer[LFS_BUFFERS_SIZE];
-	 */
-	// FLASH            0x08000000         0x00100000	TOP of Flash = 0x8100000
-	// using 524288 bytes for flash at an offset of 0x0 to 0x8000,
-	// so FLASH_SECTOR_8 to 0x8100000
-	uint8_t *flashSource = (uint8_t *) SECTOR08_ADDR;	// Set to the start of the flash *sector* addresses.
-
+		lfs_off_t off, void *buffer, lfs_size_t size)
+		uint8_t *flashSource = (uint8_t *) SECTOR08_ADDR;	// Set to the start of the flash *sector* addresses.
 
 	    /* Move to the start of the sector being read. */
 	    flashSource += (( LFS_BUFFERS_SIZE * block) + off );
@@ -280,10 +263,6 @@ int read_HAL(const struct lfs_config *c, lfs_block_t block,
 
 /* implement prog: lfs_bd_prog() calls lfs_bd_flush() which will call this.
 Block should = 512 byte section of a sector, with off and size specifying where to write.
-Need to calculate sector block is in for off to work I think.
-Step thru that code to see what is needed here.
-Program a region in a block. The block must have previously
-been erased. Negative error codes are propagated to the user.
 May return LFS_ERR_CORRUPT if the block should be considered bad.
 */
 int prog_HAL(const struct lfs_config *c, lfs_block_t block,
@@ -300,9 +279,9 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
     for( int i = 0; i < size; i++ )
     {
-        // printf("prog_HAL ~ block prog address = %x, data = %x\n", data, flashaddress);
+        printf("prog_HAL ~ block prog address = %x, data = %x, data value = %x\n", flashaddress, data, *data);
     	// HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)
-    	HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_BYTE, (uint8_t *) flashaddress, (uint8_t *) data);
+    	HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_BYTE, (uint8_t *) flashaddress, (uint8_t *) *data);
     	flashaddress++;
     	data++;
     	if (flashprogstatus)
