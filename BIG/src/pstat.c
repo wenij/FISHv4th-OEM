@@ -282,6 +282,14 @@ typedef enum
     PSTAT_MEAS_DONE
 } PstatMeasState_t;
 
+typedef enum
+{
+	PSTAT_GA_INIT_PT_1,
+	PSTAT_GA_INIT_PT_2,
+	PSTAT_GA_TRACK_COARSE,
+	PSTAT_GA_TRACK_FINE
+} PstatGA_States_t;
+
 static PstatMeasState_t MeasState;
 static bool CancelPending = false;
 static bool CancelInProgress = false;
@@ -290,7 +298,6 @@ void pstat_meas_cancel(void)
 {
     CancelPending = true;
     CancelInProgress = false;
-
 }
 
 void pstat_meas_start_VA(PstatRunReqVA_t * cfg)
@@ -345,6 +352,7 @@ void pstat_meas_start_VA(PstatRunReqVA_t * cfg)
 }
 
 static PstatRunReqGA_t GA_Config;
+static PstatGA_States_t GA_State;
 
 void pstat_meas_start_GA(PstatRunReqGA_t * cfg)
 {
@@ -359,22 +367,27 @@ void pstat_meas_start_GA(PstatRunReqGA_t * cfg)
 
     Mode = PSTAT_RUN_VA_REQ;
 
+    GA_State = PSTAT_GA_INIT_PT_1;
+
     // Save the setup configuration
     GA_Config = *cfg;
 
     PstatGoodCount = PstatFailCount = 0;
 
     // Initial values
-    CurrentDAC = GA_Config.InitialDAC;
-    Set_DAC_Target(GA_Config.StartDAC);
+    CurrentDAC = GA_Config.InitialDAC_Value;
 
-    if (GA_Config.InitialDAC <= GA_Config.StartDAC)
+    // DAC Targets are a bit meaningless since we are going by current. Instead we set the DAC to MAX range.
+    if (GA_Config.InitialCurrentTarget > GA_Config.StartCurrentTarget)
     {
+    	// DAC and measured data has inverted signs
         CountUp = true;
+        Set_DAC_Target(0xFFFF);
     }
     else
     {
         CountUp = false;
+        Set_DAC_Target(0);
     }
     MeasureCount = GA_Config.MeasureTime;
     ChangeDACCount = GA_Config.DACTime;
