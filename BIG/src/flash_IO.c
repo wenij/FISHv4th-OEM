@@ -200,10 +200,12 @@ int lfs_PSTAT_init(void)
     lfs_internal_flash.pcache = lfs_write_cache; // Verify this is write cache
     lfs_internal_flash.rcache = lfs_read_cache;
 
-// Make a test to see if lfs has been created.
     // Returns a negative error code on failure.
+/*
+ * Assume already formatted - will add call to cli to do this.
     int lfs_format_status =  lfs_format(&lfs_internal_flash, &lfs_cfg);
     if (lfs_format_status) return lfs_format_status;
+ */
 
     // Returns a negative error code on failure.
     int lfs_mount_status =  lfs_mount(&lfs_internal_flash, &lfs_cfg);
@@ -247,6 +249,7 @@ int lfsclose( lfs_file_t *file)
  */
 int read_HAL(const struct lfs_config *c, lfs_block_t block,
 		lfs_off_t off, void *buffer, lfs_size_t size)
+{
 		uint8_t *flashSource = (uint8_t *) SECTOR08_ADDR;	// Set to the start of the flash *sector* addresses.
 
 	    /* Move to the start of the sector being read. */

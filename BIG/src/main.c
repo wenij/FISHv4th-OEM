@@ -153,11 +153,8 @@ int main(void)
 // this created it's file and data. The size of the writes
 // and the defaults I set are the next horizon
 #ifdef littlefs
-  // Stepping thru code rcahe and pcahe buffers are malloc'd in init.
-  // The function pointers for read_HAL etc are fine.
-
-  // Hint: lfs_format // don't write out yet, let caller take care of that
-
+  // Assume already formatted.
+  // This calls mount
   // Initialize file system
   int lfs_PSTAT_status = lfs_PSTAT_init();
 
@@ -168,7 +165,7 @@ int main(void)
   if (lfs_PSTAT_status == LFS_ERR_OK)
   {
       unsigned char read_buffer[16];
-
+/*	assume already formated and mounted
       // Create the file "foo"
       lfs_PSTAT_status = lfsopen( &file, "foo", LFS_O_CREAT|LFS_O_RDWR );
 
@@ -178,12 +175,15 @@ int main(void)
       // Flush and Close foo
       lfs_PSTAT_status = lfsflush( &file );
       lfs_PSTAT_status = lfsclose( &file );
-
+*/
       // Open foo
       lfs_PSTAT_status = lfsopen( &file, "foo", LFS_O_RDWR );
 
       // Read foo data
       int read_size = lfsread( &file, read_buffer, 16 );
+      // not sure why either prinf not showing up in console?
+      printf("Data read from foo = %s", read_buffer );
+      printf("Data read from foo = ");
 
       // Close foo again
       lfs_PSTAT_status = lfsclose( &file );
