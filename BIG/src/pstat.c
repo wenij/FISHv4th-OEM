@@ -43,6 +43,7 @@ static void SetPstatSwitches(uint16_t SW);
 static bool CalibratePstat(void);
 
 static WE_Scale_t CurrentScale=WE_SCALE_100_uA;
+static int CurrentScaleIdx = 2;	// index corresponding to 100 uA
 
 static uint16_t LastDAC = 0;
 
@@ -382,12 +383,12 @@ void pstat_meas_start_GA(PstatRunReqGA_t * cfg)
     {
     	// DAC and measured data has inverted signs
         CountUp = true;
-        Set_DAC_Target(0xFFFF);
+        Set_DAC_Target(DAC_MAX);
     }
     else
     {
         CountUp = false;
-        Set_DAC_Target(0);
+        Set_DAC_Target(DAC_MIN);
     }
     MeasureCount = GA_Config.MeasureTime;
     ChangeDACCount = GA_Config.DACTime;
@@ -560,12 +561,39 @@ static const WE_Scale_t scales[8] = {WE_SCALE_UNITY, WE_SCALE_316_uA, WE_SCALE_1
 // Multipliers with reference to scale 316 uA (x100)
 static const int multipliers[8] = {1, 100, 316, 1000, 3160, 10000, 31600, 100000};
 
+// Multipliers to convert ADC reading to current; Working unit is nA.
+//   4096 ADC clicks per mV, or 4096000 DAC clicks per volt.
+//   316000 nA per volt on scale 316 uA, which is 316 nA per mv or 316/4096 nA per ADC click. Our unit will be scaled to 1 ADC click on highest sensitivity.
+static const int currentscale[8] = {1, 316000, 100000, 31600, 10000, 3160, 1000, 316};
+
 #define ADC_GAIN_DOWN_THRESHOLD 0x7E0000
 
 #define ADC_GAIN_UP_THRESHOLD (ADC_GAIN_DOWN_THRESHOLD * 100 / 316)
 
 
 //#define USE_CYCLE_MEASUREMENT
+
+// Scale a current measurement to one lsb at highest sensitivity.
+static int64_t ScaledCurrentMeasurement(void)
+{
+	int64_t meas = (int64_t)Measurement.ADC_WE;
+
+	meas *= (int64_t)currentscale[CurrentScaleIdx] * 4096;
+
+	meas /= 1000;
+
+	return( meas);
+}
+
+// Scale a current value in uA to the internal ADC unit.
+static int64_t ScaleCurrentValue_uA(int32_t CurrentUA)
+{
+	int64_t temp = (int64_t)CurrentUA;
+
+	temp *= 1000 * 4096 / 316;
+
+	return(temp);
+}
 
 void pstat_measure_baseline(void)
 {
@@ -827,6 +855,10 @@ void pstat_measure_Finish_CVA(void)
     }
 }
 
+static int64_t ga_pt_1;
+static int64_t ga_slope;
+static int32_t ga_measurement;
+
 void pstat_measure_Finish_GA(void) // Finish Galvanometry
 {
     bool ADC_Limiting = Check_ADC_Value_Limiting(Measurement.ADC_DAC_RE);
@@ -841,6 +873,26 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
         }
 
         Set_ADC_Value_Limiting_Hysteresis();
+    }
+
+    switch(GA_State)
+    {
+    case PSTAT_GA_INIT_PT_1:
+    	ga_pt_1 = ScaledCurrentMeasurement();
+    	GA_State = PSTAT_GA_INIT_PT_2;
+    	break;
+    case PSTAT_GA_INIT_PT_2:
+    {
+    	int64_t meas = ScaledCurrentMeasurement();
+
+    	ga_slope = meas - ga_pt_1;
+
+    	break;
+    }
+    case PSTAT_GA_TRACK_COARSE:
+    	break;
+    case PSTAT_GA_TRACK_FINE:
+    	break;
     }
 
 
@@ -1233,6 +1285,8 @@ bool SetCurrentScale( WE_Scale_t scale)
     bool ret = true;
 
     CurrentScale = scale;
+
+    CurrentScaleIdx = 7-scale;
 
     HAL_GPIO_WritePin(G_S0_GPIO_Port, G_S0_Pin, (scale & 0x01) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 

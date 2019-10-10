@@ -15,6 +15,7 @@
 #endif
 
 #define DAC_MAX 0xFFFF
+#define DAC_MIN 0
 
  extern bool AD5662_Set(uint16_t DacValue);
 
