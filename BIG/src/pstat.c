@@ -287,9 +287,16 @@ typedef enum
 {
 	PSTAT_GA_INIT_PT_1,
 	PSTAT_GA_INIT_PT_2,
-	PSTAT_GA_TRACK_COARSE,
-	PSTAT_GA_TRACK_FINE
+	PSTAT_GA_SET_INITIAL_VALUE,
+	PSTAT_GA_RUN_CYCLE
 } PstatGA_States_t;
+
+typdef enum
+{
+	PSTAT_GA_COARSE_MEASURE,
+	PSTAT_GA_FINE_MEASURE,
+	PSTAT_GA_FINE_MEASURE_DONE
+} PstatGA_Measure_States_t;
 
 static PstatMeasState_t MeasState;
 static bool CancelPending = false;
@@ -859,6 +866,8 @@ static int64_t ga_pt_1;
 static int64_t ga_slope;
 static int32_t ga_measurement;
 
+static PstatGA_Measure_States_t GA_SubState;
+
 #define SLOPE_DAC_SPAN 16	// Number of DAC clicks the slope is calculated over.
 
 void pstat_measure_Finish_GA(void) // Finish Galvanometry
@@ -870,9 +879,8 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
     case PSTAT_GA_INIT_PT_1:
     	// First data point in current slope calculation.
     	ga_pt_1 = ScaledCurrentMeasurement();
-    	GA_State = PSTAT_GA_INIT_PT_2;  // Set up to measure the second data point in slope calculation
 
-    	if ( (CountUp && ((DAC_MAX - CurrentDAC) > SLOPE_DAC_SPAN)) || (CurrentDAC < SLOPE_DAC_SPAN))
+    	if ( (CountUp && ((DAC_MAX - CurrentDAC) >= SLOPE_DAC_SPAN)) || (CurrentDAC < SLOPE_DAC_SPAN))
     	{
 			AD5662_Set(CurrentDAC + SLOPE_DAC_SPAN);
     	}
@@ -880,6 +888,9 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
     	{
             AD5662_Set(CurrentDAC - SLOPE_DAC_SPAN);
     	}
+
+    	GA_State = PSTAT_GA_INIT_PT_2;  // Set up to measure the second data point in slope calculation
+
     	break;
     case PSTAT_GA_INIT_PT_2:
     {
@@ -901,15 +912,12 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
     	}
 
         AD5662_Set(CurrentDAC);	// Return DAC to it's original position.
-    	break;
-    }
-    case PSTAT_GA_TRACK_COARSE:
-    	break;
-    case PSTAT_GA_TRACK_FINE:
-    	break;
-    }
 
-    if (GA_State >= PSTAT_GA_TRACK_COARSE)
+    	GA_State = PSTAT_GA_SET_INITIAL_VALUE;  // Set the initial current value
+    	GA_SubState = PSTAT_GA_COARSE_MEASURE;
+    	break;
+    }
+    case PSTAT_GA_SET_INITIAL_VALUE:
     {
         bool ADC_Limiting = Check_ADC_Value_Limiting(Measurement.ADC_DAC_RE);
 
@@ -925,25 +933,25 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
             Set_ADC_Value_Limiting_Hysteresis();
         }
 
-		switch (MeasState)
+		switch (GA_SubState)
 		{
-		case PSTAT_MEAS_INIT_TO_START:
+		case PSTAT_GA_COARSE_MEASURE:
 			if (StateChange)
 			{
-				MeasState = PSTAT_MEAS_START_TO_END;
+				GA_SubState = PSTAT_GA_FINE_MEASURE;
 
-				Set_DAC_Target(Config.EndDAC);
+				Set_DAC_Target(GA_Config.EndDAC);
 
 				CountUp = (TargetDAC > CurrentDAC);
 
 			}
 			break;
-		case PSTAT_MEAS_START_TO_END:
+		case PSTAT_GA_FINE_MEASURE:
 			if (StateChange)
 			{
-				if (Config.Count <= 1)
+				if (GA_Config.Count <= 1)
 				{
-					if (Config.FinalDAC != CurrentDAC)
+					if (GA_Config.FinalDAC != CurrentDAC)
 					{
 						MeasState = PSTAT_MEAS_END_TO_FINAL;
 						Set_DAC_Target(Config.FinalDAC);
@@ -956,7 +964,7 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
 				else
 				{
 					MeasState = PSTAT_MEAS_END_TO_START;
-					Set_DAC_Target(Config.StartDAC);
+					Set_DAC_Target(GA_Config.StartDAC);
 				}
 
 				CountUp = (TargetDAC > CurrentDAC);
@@ -970,7 +978,7 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
 
 				MeasState = PSTAT_MEAS_START_TO_END;
 
-				Set_DAC_Target(Config.EndDAC);
+				Set_DAC_Target(GA_Config.EndDAC);
 
 				CountUp = (TargetDAC > CurrentDAC);
 
@@ -995,13 +1003,13 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
 			// Handle DAC stepping
 			if (--ChangeDACCount <= 0)
 			{
-				ChangeDACCount = Config.DACTime;
+				ChangeDACCount = GA_Config.DACTime;
 
 				if (CountUp)
 				{
-					if (CurrentDAC <= DAC_MAX - Config.DACStep)
+					if (CurrentDAC <= DAC_MAX - GA_Config.DACStep)
 					{
-						CurrentDAC += Config.DACStep;
+						CurrentDAC += GA_Config.DACStep;
 					}
 					else
 					{
@@ -1010,9 +1018,130 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
 				}
 				else
 				{
-					if (CurrentDAC >= Config.DACStep)
+					if (CurrentDAC >= GA_Config.DACStep)
 					{
-						CurrentDAC -= Config.DACStep;
+						CurrentDAC -= GA_Config.DACStep;
+					}
+					else
+					{
+						CurrentDAC = 0;
+					}
+				}
+
+				AD5662_Set(CurrentDAC);
+			}
+
+		}
+    }
+    	break;
+    case PSTAT_GA_RUN_CYCLE:
+    	break;
+    }
+
+    if (GA_State >= PSTAT_GA_SET_INITIAL_VALUE)
+    {
+        bool ADC_Limiting = Check_ADC_Value_Limiting(Measurement.ADC_DAC_RE);
+
+        if ( (CountUp && (CurrentDAC >= TargetDAC)) || ((!CountUp) && (CurrentDAC <= TargetDAC)) ||  ADC_Limiting)
+        {
+            StateChange = true;
+
+            if (ADC_Limiting)
+            {
+                TargetDAC = CurrentDAC;     // So we change direction cleanly.
+            }
+
+            Set_ADC_Value_Limiting_Hysteresis();
+        }
+
+		switch (MeasState)
+		{
+		case PSTAT_MEAS_INIT_TO_START:
+			if (StateChange)
+			{
+				MeasState = PSTAT_MEAS_START_TO_END;
+
+				Set_DAC_Target(GA_Config.EndDAC);
+
+				CountUp = (TargetDAC > CurrentDAC);
+
+			}
+			break;
+		case PSTAT_MEAS_START_TO_END:
+			if (StateChange)
+			{
+				if (GA_Config.Count <= 1)
+				{
+					if (GA_Config.FinalDAC != CurrentDAC)
+					{
+						MeasState = PSTAT_MEAS_END_TO_FINAL;
+						Set_DAC_Target(Config.FinalDAC);
+					}
+					else
+					{
+						MeasState = PSTAT_MEAS_DONE;
+					}
+				}
+				else
+				{
+					MeasState = PSTAT_MEAS_END_TO_START;
+					Set_DAC_Target(GA_Config.StartDAC);
+				}
+
+				CountUp = (TargetDAC > CurrentDAC);
+
+			}
+			break;
+		case PSTAT_MEAS_END_TO_START:
+			if (StateChange)
+			{
+				Config.Count--;
+
+				MeasState = PSTAT_MEAS_START_TO_END;
+
+				Set_DAC_Target(GA_Config.EndDAC);
+
+				CountUp = (TargetDAC > CurrentDAC);
+
+			}
+			break;
+
+		case PSTAT_MEAS_END_TO_FINAL:
+			if (StateChange)
+			{
+				MeasState = PSTAT_MEAS_DONE;
+			}
+			break;
+		case PSTAT_MEAS_DONE:
+			break;
+		default:
+			break;
+
+		}
+
+		if (MeasState != PSTAT_MEAS_DONE)
+		{
+			// Handle DAC stepping
+			if (--ChangeDACCount <= 0)
+			{
+				ChangeDACCount = GA_Config.DACTime;
+
+				if (CountUp)
+				{
+					if (CurrentDAC <= DAC_MAX - GA_Config.DACStep)
+					{
+						CurrentDAC += GA_Config.DACStep;
+					}
+					else
+					{
+						CurrentDAC = DAC_MAX;
+					}
+				}
+				else
+				{
+					if (CurrentDAC >= GA_Config.DACStep)
+					{
+						CurrentDAC -= GA_Config.DACStep;
 					}
 					else
 					{
