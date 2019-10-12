@@ -859,34 +859,48 @@ static int64_t ga_pt_1;
 static int64_t ga_slope;
 static int32_t ga_measurement;
 
+#define SLOPE_DAC_SPAN 16	// Number of DAC clicks the slope is calculated over.
+
 void pstat_measure_Finish_GA(void) // Finish Galvanometry
 {
-    bool ADC_Limiting = Check_ADC_Value_Limiting(Measurement.ADC_DAC_RE);
 
-    if ( (CountUp && (CurrentDAC >= TargetDAC)) || ((!CountUp) && (CurrentDAC <= TargetDAC)) ||  ADC_Limiting)
-    {
-        StateChange = true;
-
-        if (ADC_Limiting)
-        {
-            TargetDAC = CurrentDAC;     // So we change direction cleanly.
-        }
-
-        Set_ADC_Value_Limiting_Hysteresis();
-    }
 
     switch(GA_State)
     {
     case PSTAT_GA_INIT_PT_1:
+    	// First data point in current slope calculation.
     	ga_pt_1 = ScaledCurrentMeasurement();
-    	GA_State = PSTAT_GA_INIT_PT_2;
+    	GA_State = PSTAT_GA_INIT_PT_2;  // Set up to measure the second data point in slope calculation
+
+    	if ( (CountUp && ((DAC_MAX - CurrentDAC) > SLOPE_DAC_SPAN)) || (CurrentDAC < SLOPE_DAC_SPAN))
+    	{
+			AD5662_Set(CurrentDAC + SLOPE_DAC_SPAN);
+    	}
+    	else
+    	{
+            AD5662_Set(CurrentDAC - SLOPE_DAC_SPAN);
+    	}
     	break;
     case PSTAT_GA_INIT_PT_2:
     {
+    	// Second data point in current slope calculation.
     	int64_t meas = ScaledCurrentMeasurement();
 
-    	ga_slope = meas - ga_pt_1;
+    	ga_slope = (meas - ga_pt_1) / SLOPE_DAC_SPAN;
 
+    	// Ensure slope is not 0
+    	if (ga_slope == 0)
+    	{
+    		ga_slope = 1;
+    	}
+
+    	// Ensure slope is a positive number.
+    	if (ga_slope < 0)
+    	{
+    		ga_slope = -ga_slope;
+    	}
+
+        AD5662_Set(CurrentDAC);	// Return DAC to it's original position.
     	break;
     }
     case PSTAT_GA_TRACK_COARSE:
@@ -895,110 +909,121 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
     	break;
     }
 
-
-
-//#error Make repeat mesurements to get current inside desired target.
-
-//#error Control from here.
-
-    switch (MeasState)
+    if (GA_State >= PSTAT_GA_TRACK_COARSE)
     {
-    case PSTAT_MEAS_INIT_TO_START:
-        if (StateChange)
+        bool ADC_Limiting = Check_ADC_Value_Limiting(Measurement.ADC_DAC_RE);
+
+        if ( (CountUp && (CurrentDAC >= TargetDAC)) || ((!CountUp) && (CurrentDAC <= TargetDAC)) ||  ADC_Limiting)
         {
-            MeasState = PSTAT_MEAS_START_TO_END;
+            StateChange = true;
 
-            Set_DAC_Target(Config.EndDAC);
-
-            CountUp = (TargetDAC > CurrentDAC);
-
-        }
-        break;
-    case PSTAT_MEAS_START_TO_END:
-        if (StateChange)
-        {
-            if (Config.Count <= 1)
+            if (ADC_Limiting)
             {
-                if (Config.FinalDAC != CurrentDAC)
-                {
-                    MeasState = PSTAT_MEAS_END_TO_FINAL;
-                    Set_DAC_Target(Config.FinalDAC);
-                }
-                else
-                {
-                    MeasState = PSTAT_MEAS_DONE;
-                }
-            }
-            else
-            {
-                MeasState = PSTAT_MEAS_END_TO_START;
-                Set_DAC_Target(Config.StartDAC);
+                TargetDAC = CurrentDAC;     // So we change direction cleanly.
             }
 
-            CountUp = (TargetDAC > CurrentDAC);
-
-        }
-        break;
-    case PSTAT_MEAS_END_TO_START:
-        if (StateChange)
-        {
-            Config.Count--;
-
-            MeasState = PSTAT_MEAS_START_TO_END;
-
-            Set_DAC_Target(Config.EndDAC);
-
-            CountUp = (TargetDAC > CurrentDAC);
-
-        }
-        break;
-
-    case PSTAT_MEAS_END_TO_FINAL:
-        if (StateChange)
-        {
-            MeasState = PSTAT_MEAS_DONE;
-        }
-        break;
-    case PSTAT_MEAS_DONE:
-        break;
-    default:
-        break;
-
-    }
-
-    if (MeasState != PSTAT_MEAS_DONE)
-    {
-        // Handle DAC stepping
-        if (--ChangeDACCount <= 0)
-        {
-            ChangeDACCount = Config.DACTime;
-
-            if (CountUp)
-            {
-                if (CurrentDAC <= DAC_MAX - Config.DACStep)
-                {
-                    CurrentDAC += Config.DACStep;
-                }
-                else
-                {
-                    CurrentDAC = DAC_MAX;
-                }
-            }
-            else
-            {
-                if (CurrentDAC >= Config.DACStep)
-                {
-                    CurrentDAC -= Config.DACStep;
-                }
-                else
-                {
-                    CurrentDAC = 0;
-                }
-            }
-
-            AD5662_Set(CurrentDAC);
+            Set_ADC_Value_Limiting_Hysteresis();
         }
 
+		switch (MeasState)
+		{
+		case PSTAT_MEAS_INIT_TO_START:
+			if (StateChange)
+			{
+				MeasState = PSTAT_MEAS_START_TO_END;
+
+				Set_DAC_Target(Config.EndDAC);
+
+				CountUp = (TargetDAC > CurrentDAC);
+
+			}
+			break;
+		case PSTAT_MEAS_START_TO_END:
+			if (StateChange)
+			{
+				if (Config.Count <= 1)
+				{
+					if (Config.FinalDAC != CurrentDAC)
+					{
+						MeasState = PSTAT_MEAS_END_TO_FINAL;
+						Set_DAC_Target(Config.FinalDAC);
+					}
+					else
+					{
+						MeasState = PSTAT_MEAS_DONE;
+					}
+				}
+				else
+				{
+					MeasState = PSTAT_MEAS_END_TO_START;
+					Set_DAC_Target(Config.StartDAC);
+				}
+
+				CountUp = (TargetDAC > CurrentDAC);
+
+			}
+			break;
+		case PSTAT_MEAS_END_TO_START:
+			if (StateChange)
+			{
+				Config.Count--;
+
+				MeasState = PSTAT_MEAS_START_TO_END;
+
+				Set_DAC_Target(Config.EndDAC);
+
+				CountUp = (TargetDAC > CurrentDAC);
+
+			}
+			break;
+
+		case PSTAT_MEAS_END_TO_FINAL:
+			if (StateChange)
+			{
+				MeasState = PSTAT_MEAS_DONE;
+			}
+			break;
+		case PSTAT_MEAS_DONE:
+			break;
+		default:
+			break;
+
+		}
+
+		if (MeasState != PSTAT_MEAS_DONE)
+		{
+			// Handle DAC stepping
+			if (--ChangeDACCount <= 0)
+			{
+				ChangeDACCount = Config.DACTime;
+
+				if (CountUp)
+				{
+					if (CurrentDAC <= DAC_MAX - Config.DACStep)
+					{
+						CurrentDAC += Config.DACStep;
+					}
+					else
+					{
+						CurrentDAC = DAC_MAX;
+					}
+				}
+				else
+				{
+					if (CurrentDAC >= Config.DACStep)
+					{
+						CurrentDAC -= Config.DACStep;
+					}
+					else
+					{
+						CurrentDAC = 0;
+					}
+				}
+
+				AD5662_Set(CurrentDAC);
+			}
+
+		}
     }
 }
 
