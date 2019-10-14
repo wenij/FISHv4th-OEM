@@ -535,7 +535,7 @@ void CliParseCommand(void)
                 cmd.StartCurrentTarget = parameter_list[0];
                 cmd.EndCurrentTarget = parameter_list[1];
                 cmd.FinalCurrentTarget = parameter_list[3];
-                cmd.DACStep = parameter_list[4];
+                cmd.CurrentStep = parameter_list[4];
                 cmd.DACTime = parameter_list[5];
                 cmd.TimeSliceUs = parameter_list[6];
                 cmd.MeasureTime = parameter_list[7];

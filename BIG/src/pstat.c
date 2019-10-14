@@ -238,6 +238,7 @@ static int16_t MeasureCount;
 static int32_t ChangeDACCount;
 static uint16_t TargetDAC;
 static uint16_t MeasureCountBase;
+static bool GA_ContinueMeasurements = false;
 
 static bool CountUp;
 
@@ -247,7 +248,18 @@ static PstatCmdId Mode;
 static void  Set_DAC_Target(uint16_t dac)
 {
     TargetDAC = dac;
+}
 
+static bool pstat_measure_RestartADC(void)
+{
+	bool ret = false;
+
+	if (Mode == PSTAT_RUN_GA_REQ)
+	{
+		ret = GA_ContinueMeasurements;
+	}
+
+	return(ret);
 }
 
 #define ADC_MAX_DAC_RANGE 0x7FFF00      // Maximum DAC value can't go above here.
@@ -291,7 +303,7 @@ typedef enum
 	PSTAT_GA_RUN_CYCLE
 } PstatGA_States_t;
 
-typdef enum
+typedef enum
 {
 	PSTAT_GA_COARSE_MEASURE,
 	PSTAT_GA_FINE_MEASURE,
@@ -510,7 +522,15 @@ void pstat_measure_data_ready(void)
     case 4:
         pstat_measure_U_RE();
         pstat_measure_Finish(true);
-        ADC_State++;
+         if (pstat_measure_RestartADC())
+        {
+			ADC_State = 0;
+            EnableADC_DRDY_int();
+        }
+        else
+        {
+        	ADC_State++;
+        }
         break;
 
     default:
@@ -598,6 +618,15 @@ static int64_t ScaleCurrentValue_uA(int32_t CurrentUA)
 	int64_t temp = (int64_t)CurrentUA;
 
 	temp *= 1000 * 4096 / 316;
+
+	return(temp);
+}
+
+static int64_t ScaleCurrentValue_nA(int32_t CurrentnA)
+{
+	int64_t temp = (int64_t)CurrentnA;
+
+	temp *=  4096 / 316;
 
 	return(temp);
 }
@@ -865,14 +894,18 @@ void pstat_measure_Finish_CVA(void)
 static int64_t ga_pt_1;
 static int64_t ga_slope;
 static int32_t ga_measurement;
+static uint16_t ga_DACStep;
+static uint16_t ga_FineCount;
 
 static PstatGA_Measure_States_t GA_SubState;
 
 #define SLOPE_DAC_SPAN 16	// Number of DAC clicks the slope is calculated over.
+#define MAX_FINE_TUNE_STEPS  4 // Max times we loop through fine tuning of measurements.
 
 void pstat_measure_Finish_GA(void) // Finish Galvanometry
 {
 
+	GA_ContinueMeasurements = false;
 
     switch(GA_State)
     {
@@ -890,6 +923,8 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
     	}
 
     	GA_State = PSTAT_GA_INIT_PT_2;  // Set up to measure the second data point in slope calculation
+
+    	GA_ContinueMeasurements = true;
 
     	break;
     case PSTAT_GA_INIT_PT_2:
@@ -911,10 +946,20 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
     		ga_slope = -ga_slope;
     	}
 
+    	// Calculate current step size DAC equivalent. CurrentStep is in nA. Used for coarse setting.
+    	int64_t temp = ScaleCurrentValue_nA(GA_Config.CurrentStep);
+
+    	ga_DACStep = temp / ga_slope;	// Number of DAC Steps per current step
+
         AD5662_Set(CurrentDAC);	// Return DAC to it's original position.
 
+
     	GA_State = PSTAT_GA_SET_INITIAL_VALUE;  // Set the initial current value
+
     	GA_SubState = PSTAT_GA_COARSE_MEASURE;
+
+    	GA_ContinueMeasurements = true;
+
     	break;
     }
     case PSTAT_GA_SET_INITIAL_VALUE:
@@ -945,6 +990,10 @@ void pstat_measure_Finish_GA(void) // Finish Galvanometry
 				CountUp = (TargetDAC > CurrentDAC);
 
 			}
+			// Continue measurements if value is too far off.
+	    	GA_ContinueMeasurements = true;
+
+	    	ga_FineCount = 0;
 			break;
 		case PSTAT_GA_FINE_MEASURE:
 			if (StateChange)

@@ -115,7 +115,7 @@ typedef struct
     int32_t EndCurrentTarget;
     int32_t FinalCurrentTarget;
     uint32_t TimeSliceUs;
-    uint16_t DACStep;
+    uint32_t CurrentStep;
     uint32_t DACTime;
     uint16_t MeasureTime;
     uint16_t Count;
