@@ -163,7 +163,6 @@ int main(void)
   // Create a file
   if (lfs_PSTAT_status == LFS_ERR_OK)
   {
-      unsigned char read_buffer[16];
 /*	assume already formated and mounted
       // Create the file "foo"
       lfs_PSTAT_status = lfsopen( &file, "foo", LFS_O_CREAT|LFS_O_RDWR );
@@ -175,12 +174,13 @@ int main(void)
       lfs_PSTAT_status = lfsflush( &file );
       lfs_PSTAT_status = lfsclose( &file );
 */
+      unsigned char read_buffer[16];  // add a space for a null in read_buffer.
       // Open foo
       lfs_PSTAT_status = lfsopen( &file, "foo", LFS_O_RDWR );
 
       // Read foo data
       int read_size = lfsread( &file, read_buffer, 16 );
-      // not sure why either prinf not showing up in console?
+      read_buffer[14] = "\0";
       printf("Data read from foo = %s\n", read_buffer );
       printf("Data read from foo = ");
 
