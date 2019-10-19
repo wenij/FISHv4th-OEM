@@ -5,6 +5,7 @@
  */
 #include "flash_IO.h"
 #include <assert.h>
+initialise_monitor_handles();
 #ifdef STM32F205xx
 #include "stm32f2xx_hal.h"
 #else
@@ -157,7 +158,7 @@ int lfs_PSTAT_init(void)
     lfs_cfg.erase = erase_HAL;
     lfs_cfg.sync = sync_HAL;
 
-#if 0
+#if 1
     printf("lfs_cfg.read_size =  %x\n", lfs_cfg.read_size);
 
     printf("Debug/Output.map =.text.read_HAL = 0x08006df2\n");
@@ -210,6 +211,20 @@ int lfs_PSTAT_init(void)
     // Returns a negative error code on failure.
     int lfs_mount_status =  lfs_mount(&lfs_internal_flash, &lfs_cfg);
     return lfs_mount_status;
+
+/*
+ * Alt approach we may use in field products
+ * // mount the filesystem
+    int err = lfs_mount(&lfs, &cfg);
+
+    // reformat if we can't mount the filesystem
+    // this should only happen on the first boot
+    if (err) {
+        lfs_format(&lfs, &cfg);
+        lfs_mount(&lfs, &cfg);
+    }
+ *
+ */
 }
 
 
@@ -278,7 +293,7 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
 	uint8_t *flashaddress = (uint8_t *) (block * (LFS_BUFFERS_SIZE) + off) + (SECTOR08_ADDR);
 	printf("prog_HAL ~ block = %x, off = %d, size = %x, = *flashaddress = %x, *buffer = %x, is *data = %x now\n", block, off, size, flashaddress, buffer, data);
 
-	HAL_FLASH_Unlock(); // The lock is hanging. The flash is unprotected so should be fine.
+	HAL_FLASH_Unlock();
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
     for( int i = 0; i < size; i++ )
     {
@@ -307,7 +322,7 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
     return LFS_ERR_OK;
 }
 
-/* implement erase - Called by lfs_bd_erase() Step thru to see what's needed here.
+/* implement erase - Called by lfs_bd_erase() 
  *  Erase a block. A block must be erased before being programmed.
     The state of an erased block is undefined. Negative error codes
     are propagated to the user.
@@ -315,7 +330,7 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
 */
 int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 /*
- * Block should = 512 byte section of a sector, with off and size specifying where to write.
+ * Block = 512 byte section of a sector, with off and size specifying where to write.
  * Erase a block. A block must be erased before being programmed.
    The state of an erased block is undefined. Negative error codes
    are propagated to the user.
@@ -386,10 +401,12 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 
 /* implement sync - Called by lfs_bd_sync after it calls lfs_bd_flush()
 Sync the state of the underlying block device.
-Step thru call to function to see what to do.
+Flush the lfs_bd_sync block, or search for any un flushed blocks
+and flush and prog_HAL all unflushed blocks.
 Negative error codes are propagated to the user.
 */
 const int sync_HAL(const struct lfs_config *c){
+
 	return LFS_ERR_OK;
 }
 

@@ -154,8 +154,7 @@ int main(void)
 // and the defaults I set are the next horizon
 #ifdef littlefs
   // Assume already formatted.
-  // This calls mount
-  // Initialize file system
+  // This call mounts the Initialized file system
   int lfs_PSTAT_status = lfs_PSTAT_init();
 
    // Test Code
@@ -182,7 +181,7 @@ int main(void)
       // Read foo data
       int read_size = lfsread( &file, read_buffer, 16 );
       // not sure why either prinf not showing up in console?
-      printf("Data read from foo = %s", read_buffer );
+      printf("Data read from foo = %s\n", read_buffer );
       printf("Data read from foo = ");
 
       // Close foo again
