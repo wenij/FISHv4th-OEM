@@ -13,7 +13,9 @@
 #include "adc_ads1256.h"
 #include "dac_ad5662.h"
 #include "util.h"
-
+#include "lfs.h"
+#include "lfs_util.h"
+#include "flash_io.h"
 QueueHandle_t CliDataQueue;
 static uint8_t * UartRxBuffer;
 #define UART_RX_BUF_SIZE 128
@@ -464,23 +466,75 @@ void CliParseCommand(void)
 
         OK = true;
     }
-    else if (strncmp("format", (const char*)UartRxBuffer, 6) == 0)
+    else if (strncmp("format", (const char*)UartRxBuffer, 5) == 0) // no args
     {
+
     }
-    else if (strncmp("mount", (const char*)UartRxBuffer, 5) == 0)
+    else if (strncmp("mount", (const char*)UartRxBuffer, 5) == 0) // no args
     {
+
     }
-    else if (strncmp("openfile", (const char*)UartRxBuffer, 8) == 0)
+    else if (strncmp("openfile ", (const char*)UartRxBuffer, 9) == 0)
     {
+        num_args = CliParseParameterString(9);	// arg is offset past cmd
+        if (num_args == 1)
+        {
+            OK = true;
+            // add pasre of path and file
+
+            int flag = 0;
+//            int res = lfs_file_open( lfs_t *lfs, lfs_file_t *file, parameter_list[0], flag );
+        }
     }
-    else if (strncmp("closefile", (const char*)UartRxBuffer, 9) == 0)
+    else if (strncmp("closefile ", (const char*)UartRxBuffer, 10) == 0)
     {
+        num_args = CliParseParameterString(9);	// arg is offset past cmd
+        if (num_args == 7)
+        {
+            OK = true;
+
+//            PstatSendRunReq( parameter_list[0], parameter_list[1], parameter_list[2], parameter_list[3], parameter_list[4], parameter_list[5], parameter_list[6] );
+        }
     }
-    else if (strncmp("readfile", (const char*)UartRxBuffer, 8) == 0)
+    else if (strncmp("readfile ", (const char*)UartRxBuffer, 9) == 0)
     {
+        num_args = CliParseParameterString(9);	// arg is offset past cmd
+        if (num_args == 7)
+        {
+            OK = true;
+
+//            PstatSendRunReq( parameter_list[0], parameter_list[1], parameter_list[2], parameter_list[3], parameter_list[4], parameter_list[5], parameter_list[6] );
+        }
     }
-    else if (strncmp("writefile", (const char*)UartRxBuffer, 9) == 0)
+    else if (strncmp("writefile ", (const char*)UartRxBuffer, 10) == 0)
     {
+        num_args = CliParseParameterString(9);	// arg is offset past cmd
+        if (num_args == 7)
+        {
+            OK = true;
+
+//            PstatSendRunReq( parameter_list[0], parameter_list[1], parameter_list[2], parameter_list[3], parameter_list[4], parameter_list[5], parameter_list[6] );
+        }
+    }
+    else if (strncmp("mkdir ", (const char*)UartRxBuffer, 5) == 0)
+    {
+        num_args = CliParseParameterString(5);	// arg is offset past cmd
+        if (num_args == 7)
+        {
+            OK = true;
+
+//            PstatSendRunReq( parameter_list[0], parameter_list[1], parameter_list[2], parameter_list[3], parameter_list[4], parameter_list[5], parameter_list[6] );
+        }
+    }
+    else if (strncmp("chdir ", (const char*)UartRxBuffer, 5) == 0)
+    {
+        num_args = CliParseParameterString(5);	// arg is offset past cmd
+        if (num_args == 7)
+        {
+            OK = true;
+
+//            PstatSendRunReq( parameter_list[0], parameter_list[1], parameter_list[2], parameter_list[3], parameter_list[4], parameter_list[5], parameter_list[6] );
+        }
     }
 
     vPortFree(UartRxBuffer);
