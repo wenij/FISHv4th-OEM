@@ -158,7 +158,7 @@ int lfs_PSTAT_init(void)
     lfs_cfg.erase = erase_HAL;
     lfs_cfg.sync = sync_HAL;
 
-#if 1
+#if DEBUG_LFS
     printf("lfs_cfg.read_size =  %x\n", lfs_cfg.read_size);
 
     printf("Debug/Output.map =.text.read_HAL = 0x08006df2\n");
@@ -187,18 +187,18 @@ int lfs_PSTAT_init(void)
 
     // Configure the read cache
     lfs_read_cache.block = 1; // fudge
-    lfs_read_cache.buffer = USER_read_buffer; // rename. NOTWORKING
+    lfs_read_cache.buffer = USER_read_buffer; //
     lfs_read_cache.off = 0; // fudge
     lfs_read_cache.size = LFS_BUFFERS_SIZE; // not sure caches are same size as 512k blocks~!
 
     // Configure the write cache
     lfs_write_cache.block = 1; // fudge
-    lfs_write_cache.buffer = USER_write_buffer; // rename
+    lfs_write_cache.buffer = USER_write_buffer; //
     lfs_write_cache.off = 0; // fudge
     lfs_write_cache.size = LFS_BUFFERS_SIZE;
 
     // Add the read and write cache to lfs_internal_flash struct
-    lfs_internal_flash.pcache = lfs_write_cache; // Verify this is write cache
+    lfs_internal_flash.pcache = lfs_write_cache; //
     lfs_internal_flash.rcache = lfs_read_cache;
 
     // Returns a negative error code on failure.
@@ -280,7 +280,7 @@ int read_HAL(const struct lfs_config *c, lfs_block_t block,
 
 
 /* implement prog: lfs_bd_prog() calls lfs_bd_flush() which will call this.
-Block should = 512 byte section of a sector, with off and size specifying where to write.
+Block = 512 bytes, with off and size specifying where and how much to write in this block.
 May return LFS_ERR_CORRUPT if the block should be considered bad.
 */
 int prog_HAL(const struct lfs_config *c, lfs_block_t block,
@@ -291,13 +291,16 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
 
 	uint8_t *data = (uint8_t *) buffer;	// write size many be odd byte sized, versus word bounded.
 	uint8_t *flashaddress = (uint8_t *) (block * (LFS_BUFFERS_SIZE) + off) + (SECTOR08_ADDR);
+#if DEBUG_LFS
 	printf("prog_HAL ~ block = %x, off = %d, size = %x, = *flashaddress = %x, *buffer = %x, is *data = %x now\n", block, off, size, flashaddress, buffer, data);
-
+#endif
 	HAL_FLASH_Unlock();
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
     for( int i = 0; i < size; i++ )
     {
-        printf("prog_HAL ~ block prog address = %x, data = %x, data value = %x\n", flashaddress, data, *data);
+#if DEBUG_LFS
+    	printf("prog_HAL ~ block prog address = %x, data = %x, data value = %x\n", flashaddress, data, *data);
+#endif
     	// HAL_StatusTypeDef HAL_FLASH_Program(uint32_t TypeProgram, uint32_t Address, uint64_t Data)
     	HAL_StatusTypeDef flashprogstatus = HAL_FLASH_Program(TYPEPROGRAM_BYTE, (uint8_t *) flashaddress, (uint8_t *) *data);
     	flashaddress++;
@@ -349,9 +352,10 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 		block_in_Sector = 2;		// 0x80C0000 to 0x80A0000
 	else if (block >= 750 && block <= 999)
 		block_in_Sector = 3;		// 0x80C0000 to 0x800000
-	/* passing test for sector 0 1nd 1
+#if DEBUG_LFS
 	printf("test_block2sector ~ block = %d and sector = %d\n", block, block_in_Sector);
-	*/
+#endif
+
 	int sector;			// cast to (int *), used to verify sector is erased.
 	int sector_number;	// enum'd arg to FLASH_Erase_Sector().
 	// Use a tool to write something and then verify it gets erased.
@@ -393,17 +397,25 @@ int erase_HAL(const struct lfs_config *c, lfs_block_t block){
 	    	// unit test passed
 	    	if (*word != ( int * )0xFFFFFFFF)
 	    	   return LFS_ERR_CORRUPT;
-	    	   // printf("Verifying address erased in loop %x\n", (unsigned int) word);
 	    }
+#if DEBUG_LFS
 	    printf("Erase verify loop ended at word = %x\n", (unsigned int) word);
+#endif
     return LFS_ERR_OK;
 }
 
-/* implement sync - Called by lfs_bd_sync after it calls lfs_bd_flush()
-Sync the state of the underlying block device.
-Flush the lfs_bd_sync block, or search for any un flushed blocks
-and flush and prog_HAL all unflushed blocks.
-Negative error codes are propagated to the user.
+/* implement sync - For now we see nothing to do here that littlfs hasn't done.
+ * Called by lfs_bd_sync after it calls lfs_bd_flush()
+ * Also called by lfsclose > lfs_file_close > lfs_file_sync > lfs_file_flush >
+ * > lfs_bd_flush > lfs_bd_sync after it calls lfs_bd_flush() > prog_HAL,
+ * then it calls synch_HAL
+ *
+Sync the state of the underlying block device. Negative error codes
+are propogated to the user.
+
+lfs_file_sync is an always true while loop, to repeatedly
+call lfs_file_flush, then lfs_dir_commit or lfs_file_relocate
+The while is left with return statements.
 */
 const int sync_HAL(const struct lfs_config *c){
 

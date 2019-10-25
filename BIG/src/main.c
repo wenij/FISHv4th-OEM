@@ -150,8 +150,6 @@ int main(void)
   MX_TIM3_Init();
 
   //MX_RTC_Init();
-// this created it's file and data. The size of the writes
-// and the defaults I set are the next horizon
 #ifdef littlefs
   // Assume already formatted.
   // This call mounts the Initialized file system
@@ -174,21 +172,24 @@ int main(void)
       lfs_PSTAT_status = lfsflush( &file );
       lfs_PSTAT_status = lfsclose( &file );
 */
-      unsigned char read_buffer[16];  // add a space for a null in read_buffer.
+      unsigned char read_buffer[16];  // add a byte for a null terminator in the read_buffer.
       // Open foo
       lfs_PSTAT_status = lfsopen( &file, "foo", LFS_O_RDWR );
 
       // Read foo data
       int read_size = lfsread( &file, read_buffer, 16 );
-      read_buffer[14] = "\0";
+      read_buffer[14] = 0;
+      if (read_size > 0) {
+#if DEBUG_LFS
       printf("Data read from foo = %s\n", read_buffer );
-      printf("Data read from foo = ");
-
+#endif
+      }
       // Close foo again
       lfs_PSTAT_status = lfsclose( &file );
 
-  }
+// Test file functionality: add files here, rename some, create more dirs and files, etc
 
+  }
 #endif
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();

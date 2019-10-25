@@ -208,7 +208,7 @@ static int lfs_bd_prog(lfs_t *lfs,
             continue;
         }
 
-        // pcache must have been flushed, either by programming and
+        // pcache must have been flushed, either by programming an
         // entire block or manually flushing the pcache
         LFS_ASSERT(pcache->block == 0xffffffff);
 
