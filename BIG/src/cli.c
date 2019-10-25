@@ -464,6 +464,24 @@ void CliParseCommand(void)
 
         OK = true;
     }
+    else if (strncmp("format", (const char*)UartRxBuffer, 6) == 0)
+    {
+    }
+    else if (strncmp("mount", (const char*)UartRxBuffer, 5) == 0)
+    {
+    }
+    else if (strncmp("openfile", (const char*)UartRxBuffer, 8) == 0)
+    {
+    }
+    else if (strncmp("closefile", (const char*)UartRxBuffer, 9) == 0)
+    {
+    }
+    else if (strncmp("readfile", (const char*)UartRxBuffer, 8) == 0)
+    {
+    }
+    else if (strncmp("writefile", (const char*)UartRxBuffer, 9) == 0)
+    {
+    }
 
     vPortFree(UartRxBuffer);
 
