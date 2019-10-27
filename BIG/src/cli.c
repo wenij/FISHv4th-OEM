@@ -468,11 +468,23 @@ void CliParseCommand(void)
     }
     else if (strncmp("format", (const char*)UartRxBuffer, 5) == 0) // no args
     {
+/*
+    	int res = lfs_PSTAT_init(void);	// the init only version, mount is separated here.
+    	if (res)
+    	{
 
+    	}
+*/
     }
     else if (strncmp("mount", (const char*)UartRxBuffer, 5) == 0) // no args
     {
+/*	Create this function:
+    	int res = lfs_PSTAT_mount(void);	// the init only version, mount is separated here.
+    	if (res)
+    	{
 
+    	}
+*/
     }
     else if (strncmp("openfile ", (const char*)UartRxBuffer, 9) == 0)
     {
@@ -480,7 +492,7 @@ void CliParseCommand(void)
         if (num_args == 1)
         {
             OK = true;
-            // add pasre of path and file
+            // add parse of path and file
 
             int flag = 0;
 //            int res = lfs_file_open( lfs_t *lfs, lfs_file_t *file, parameter_list[0], flag );
@@ -517,6 +529,16 @@ void CliParseCommand(void)
         }
     }
     else if (strncmp("mkdir ", (const char*)UartRxBuffer, 5) == 0)
+    {
+        num_args = CliParseParameterString(5);	// arg is offset past cmd
+        if (num_args == 7)
+        {
+            OK = true;
+
+//            PstatSendRunReq( parameter_list[0], parameter_list[1], parameter_list[2], parameter_list[3], parameter_list[4], parameter_list[5], parameter_list[6] );
+        }
+    }
+    else if (strncmp("rmdir ", (const char*)UartRxBuffer, 5) == 0)
     {
         num_args = CliParseParameterString(5);	// arg is offset past cmd
         if (num_args == 7)

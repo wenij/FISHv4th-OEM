@@ -9,8 +9,14 @@
 #define FLASH_IO_H_
 
 /// Version info ///
+ /* Scheduler includes.
+#include <stdbool.h>
 
-// Alpha version
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "pstat.h"
+*/
 #include "lfs.h"
 /* Can statics be declared in an include file? NO
  * If you want a global variable, you need to use extern,
