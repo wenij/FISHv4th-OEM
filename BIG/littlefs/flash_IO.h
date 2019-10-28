@@ -26,7 +26,11 @@ static struct lfs_config lfs_cfg;
 */
 
 
-extern int lfs_PSTAT_init(void);
+extern int lfs_PSTAT_STATIC_init(void);
+
+extern int lfs_PSTAT_format(void);
+
+extern int lfs_PSTAT_mount(void);
 
 extern int lfsopen( lfs_file_t *file, const char *path, int flags);
 

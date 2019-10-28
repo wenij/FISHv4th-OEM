@@ -60,7 +60,6 @@
 extern void initialise_monitor_handles(void);
 // define filesystem in use - Defined here outside of main this is GLOBAL for all to see
 #define littlefs
-//#define fatfs
 
 // Includes for other tasks
 #include "smartio_if.h"
@@ -72,13 +71,11 @@ extern void initialise_monitor_handles(void);
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 #ifdef littlefs
-/* int lfs_PSTAT_init(lfs_t *lfs, const struct lfs_config *cfg)
- * to be called conditionally after test for lfs exists
+/* int lfs_PSTAT_STATIC_init(void)
+ * to be called from lfs_PSTAT_format(void) and lfs_PSTAT_mount(void)
  */
 #include "lfs.h"
 #include "flash_io.h"
-
-
 #endif
 /* USER CODE END PV */
 
@@ -150,47 +147,66 @@ int main(void)
   MX_TIM3_Init();
 
   //MX_RTC_Init();
-#ifdef littlefs
+// #define LFS_NEW
+#ifdef littlefs && LFS_NEW
   // Assume already formatted.
-  // This call mounts the Initialized file system
-  int lfs_PSTAT_status = lfs_PSTAT_init();
 
-   // Test Code
-  lfs_file_t file;
-
-  // Create a file
-  if (lfs_PSTAT_status == LFS_ERR_OK)
+  // this is bombing
+  int lfs_PSTAT_format_status = lfs_PSTAT_format();
+  if(lfs_PSTAT_format_status)
   {
-/*	assume already formated and mounted
-      // Create the file "foo"
-      lfs_PSTAT_status = lfsopen( &file, "foo", LFS_O_CREAT|LFS_O_RDWR );
+	  printf("Format failed, code %h", lfs_PSTAT_format_status);
+  }
+  else
+  {
+	  int lfs_PSTAT_mount_status = lfs_PSTAT_mount();
+	  if(lfs_PSTAT_mount_status)
+	  {
+		  printf("Format failed, code %h", lfs_PSTAT_mount_status);
+	  }
+	  else
+	  {
+		  // Test Code
+		  lfs_file_t file;
 
-      // Write something to foo
-      lfs_PSTAT_status = lfswrite( &file, "This is a test", 14 );
+		  // Create a file
+		  if (lfs_PSTAT_mount_status == LFS_ERR_OK)
+		  {
+			  int lfs_PSTAT_status;
+		      // Create the file "foo"
+		      lfs_PSTAT_status = lfsopen( &file, "foo", LFS_O_CREAT|LFS_O_RDWR );
 
-      // Flush and Close foo
-      lfs_PSTAT_status = lfsflush( &file );
-      lfs_PSTAT_status = lfsclose( &file );
-*/
-      unsigned char read_buffer[16];  // add a byte for a null terminator in the read_buffer.
-      // Open foo
-      lfs_PSTAT_status = lfsopen( &file, "foo", LFS_O_RDWR );
+		      // Write something to foo
+		      lfs_PSTAT_status = lfswrite( &file, "This is a test", 14 );
 
-      // Read foo data
-      int read_size = lfsread( &file, read_buffer, 16 );
-      read_buffer[14] = 0;
-      if (read_size > 0) {
-#if DEBUG_LFS
-      printf("Data read from foo = %s\n", read_buffer );
-#endif
-      }
-      // Close foo again
-      lfs_PSTAT_status = lfsclose( &file );
+		      // Flush and Close foo
+		      lfs_PSTAT_status = lfsflush( &file );
+		      lfs_PSTAT_status = lfsclose( &file );
+		      unsigned char read_buffer[16];  // add a byte for a null terminator in the read_buffer.
+		      // Open foo
+		      int lfs_open_status = lfsopen( &file, "foo", LFS_O_RDWR );
+		      if (lfs_open_status)
+		    	  return lfs_open_status;
+		      // Read foo data
+		      int read_size = lfsread( &file, read_buffer, 16 );
+		      read_buffer[14] = 0;
+		      if (read_size > 0) {
+		#if DEBUG_LFS
+		      printf("Data read from foo = %s\n", read_buffer );
+		#endif
+		      }
+		      // Close foo again
+		      int lfs_close_status = lfsclose( &file );
+		      if (lfs_close_status)
+		    	  return lfs_close_status;
+		// Test file functionality: add files here, rename some, create more dirs and files, etc
 
-// Test file functionality: add files here, rename some, create more dirs and files, etc
+		  }
+		#endif
+
+	  }
 
   }
-#endif
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
 

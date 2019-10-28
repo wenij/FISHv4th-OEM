@@ -46,6 +46,11 @@ static unsigned char USER_write_buffer[LFS_BUFFERS_SIZE] = { 0x5f, 0xc5 };
  * 11			0x80E0000	128k	250 512k sectors FLASH_SECTOR_11
  */
 
+#define SECT_08 0x8080000
+#define SECT_09 0x80A0000
+#define SECT_10 0x80C0000
+#define SECT_11 0x80E0000
+
 #ifdef littlefs
 /*
  * These are function prototypes for the helper functions.
@@ -66,10 +71,30 @@ static lfs_cache_t lfs_write_cache;
 static struct lfs_config lfs_cfg;
 static lfs_t lfs_internal_flash;
 
-// Initialize structs and call lfs_format then lfs_mount
-// I could not call lfs_format or lfs_mount from main,
-// so workaround is this wrapper.
-int lfs_PSTAT_init(void)
+/*
+Prepare for lfs_PSTAT_init() to init static structs only.
+To be called by lfs_PSTAT_format(void) and lfs_PSTAT_mount(void).
+In main and thru the cli.
+I could not call lfs_format or lfs_mount from main,
+so workaround is this wrapper.
+ *
+ */
+
+int lfs_PSTAT_format(void)
+{
+	lfs_PSTAT_STATIC_init();	// ignore its return value for now
+    int lfs_format_status =  lfs_format(&lfs_internal_flash, &lfs_cfg);
+    return lfs_format_status;
+}
+
+int lfs_PSTAT_mount(void)
+{
+	lfs_PSTAT_STATIC_init();	// ignore its return value for now
+    int lfs_mount_status =  lfs_mount(&lfs_internal_flash, &lfs_cfg);
+    return lfs_mount_status;
+}
+
+int lfs_PSTAT_STATIC_init(void)
 {
     // Configure the lfs_config struct
     lfs_cfg.read_size = LFS_BUFFERS_SIZE;
@@ -143,11 +168,11 @@ int lfs_PSTAT_init(void)
     int lfs_format_status =  lfs_format(&lfs_internal_flash, &lfs_cfg);
     if (lfs_format_status) return lfs_format_status;
  */
-
+/*
     // Returns a negative error code on failure.
     int lfs_mount_status =  lfs_mount(&lfs_internal_flash, &lfs_cfg);
     return lfs_mount_status;
-
+*/
 /*
  * Alt approach we may use in field products
  * // mount the filesystem
