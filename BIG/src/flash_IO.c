@@ -25,36 +25,10 @@ initialise_monitor_handles();
 								// .buffer the erase block size and is LFS_BUFFERS_SIZE * 250.
 #define LOOKAHEAD_BUFFER_SIZE 8 * 64; // lookahead buffer is stored as a compact bitmap.
 #endif
-#ifdef fatfs
-extern DRESULT USER_read (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
-extern DRESULT USER_write (BYTE pdrv, const BYTE *buff, DWORD sector, UINT count);
-extern void initialise_monitor_handles(void);
-#endif
-#ifdef fatfs
-// Move to file that initializes the structures
-/* FatFs stuff */
-static FATFS fatfs;
-static FIL fatfile;
-static DIR fatdir;
-static FILINFO fatfileinfo;
-#endif
 
-// This is a declaration of buffers shared by fatfs and littlefs for now.
-// lfs will be feed these to/from the read and write cache.
-// If need be separate later.
-
-// The name can be changed if the fatfs dependency is resolved,
-// Either by duplicating them for fatfs or deleting fatfs references.
 static unsigned char USER_read_buffer[LFS_BUFFERS_SIZE];
 static unsigned char USER_write_buffer[LFS_BUFFERS_SIZE] = { 0x5f, 0xc5 };
 
-/*
- * I discovered that two things are important.
- * First you have to encapsulate your flash_write function
- * with taskENTER_CRITICAL(); and taskEXIT_CRITICAL();.
- * Second the system crashes if you use FLASHD_Unlock(AT91C_IFLASH, AT91C_IFLASH + AT91C_IFLASH_SIZE , 0, 0); and FLASHD_Lock(lastPageAddress, lastPageAddress + AT91C_IFLASH_PAGE_SIZE, 0, 0); to lock and unlock the flash pages.
- * Dont ask me why this happens. But I found that no pages are locked so writing to flash should be no problem.
- */
 /* USER CODE BEGIN 2 */
 /* 1meg Flash sector allocation
  * sector#	address		size	#512k sectors
@@ -71,34 +45,6 @@ static unsigned char USER_write_buffer[LFS_BUFFERS_SIZE] = { 0x5f, 0xc5 };
  * 10			0x80C0000	128k	250 512k sectors FLASH_SECTOR_10
  * 11			0x80E0000	128k	250 512k sectors FLASH_SECTOR_11
  */
-#ifdef fatfs
-/* Unit test USER_read */
-//DRESULT readstatus = USER_read(	0,	USER_read_buffer,	0,	1); // Called in the main function.
-//if (readstatus)
-//	  while(1);
-/* Unit test USER_write */
-//  DRESULT writestatus = USER_write(	0,	USER_write_buffer,	0,	1);
-//  if (writestatus)
-//	  while(1);
-// this prototype writes the same sector this reads.
-//  readstatus = USER_read(	0,	USER_read_buffer,	0,	1); // Called in the main function.
-//  if (readstatus)
-//	  while(1);
-/*
-FF_Disk_t * p0Disk;
-#define flashPARTITION_NUMBER            0
-char diskName[] = {'p','F','L','A','S','H'};
-char *pcName = diskName;
-
-p0Disk = FF_FlashDiskInit( pcName,
-		  //uint8_t *pucDataBuffer,
-		  (uint8_t *) FLASH_SECTOR_8,	// beginning of 1000 sectors of flash disk
-        //uint32_t ulSectorCount,
-		  1000ul,
-        //size_t xIOManagerCacheSize )
-							  0);
-*/
-#endif
 
 #ifdef littlefs
 /*
@@ -247,6 +193,18 @@ int lfsclose( lfs_file_t *file)
 {
     return( lfs_file_close( &lfs_internal_flash, file) );
 }
+
+/* From a forum:
+ * I discovered that two things are important.
+ * First you have to encapsulate your flash_write function
+ * with taskENTER_CRITICAL(); and taskEXIT_CRITICAL();.
+ * Second the system crashes if you use
+ * FLASHD_Unlock(AT91C_IFLASH, AT91C_IFLASH + AT91C_IFLASH_SIZE , 0, 0);
+ * and FLASHD_Lock(lastPageAddress, lastPageAddress + AT91C_IFLASH_PAGE_SIZE, 0, 0);
+ * to lock and unlock the flash pages.
+ * Dont ask me why this happens.
+ * But I found that no pages are locked so writing to flash should be no problem.
+ */
 
 /*
  * Helper functions
