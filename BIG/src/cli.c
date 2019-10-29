@@ -28,6 +28,15 @@ static void CliParseCommand(void);
 
 static void CliSendCmd(CliCommandId CmdId, uint32_t data, uint32_t data2, QueueHandle_t Destination);
 
+extern int lfs_PSTAT_STATIC_init(void);
+extern int lfs_PSTAT_format(void);
+extern int lfs_PSTAT_mount(void);
+extern int lfsopen( lfs_file_t *file, const char *path, int flags);
+extern lfs_ssize_t lfsread( lfs_file_t *file, void *buffer, lfs_size_t size);
+extern lfs_ssize_t lfswrite( lfs_file_t *file, void *buffer, lfs_size_t size);
+extern int lfsflush( lfs_file_t *file);
+extern int lfsclose( lfs_file_t *file);
+
 void cli_task(void * parm)
 {
     Message_t PortMsg;
@@ -468,23 +477,27 @@ void CliParseCommand(void)
     }
     else if (strncmp("format", (const char*)UartRxBuffer, 5) == 0) // no args
     {
-/*
-    	int res = lfs_PSTAT_init(void);	// the init only version, mount is separated here.
+    	int res = lfs_PSTAT_STATIC_init();
     	if (res)
     	{
-
+			res = lfs_PSTAT_format();
+			if (!res)
+			{
+		  	  	  printf("format failed, code %h", res);
+			}
     	}
-*/
     }
     else if (strncmp("mount", (const char*)UartRxBuffer, 5) == 0) // no args
     {
-/*	Create this function:
-    	int res = lfs_PSTAT_mount(void);	// the init only version, mount is separated here.
+    	int res = lfs_PSTAT_STATIC_init();
     	if (res)
     	{
-
+			res = lfs_PSTAT_mount();
+			if (!res)
+			{
+		  	  	  printf("mount failed, code %h", res);
+			}
     	}
-*/
     }
     else if (strncmp("openfile ", (const char*)UartRxBuffer, 9) == 0)
     {
@@ -493,9 +506,14 @@ void CliParseCommand(void)
         {
             OK = true;
             // add parse of path and file
-
+            lfs_file_t *file;	// lfs_t is static. Is the ~ a file handle?
+            // If it's a file handle it is populated in open?
+            // - how to init this for this call, or is it populated here?
+            char * ts = parameter_list[0];
             int flag = 0;
-//            int res = lfs_file_open( lfs_t *lfs, lfs_file_t *file, parameter_list[0], flag );
+// The protoype and debugged to too few args for function - ???:
+//			int lfsopen( lfs_file_t *file, const char *path, int flags);
+//          int res = lfs_file_open( file, ts, flag );
         }
     }
     else if (strncmp("closefile ", (const char*)UartRxBuffer, 10) == 0)

@@ -58,8 +58,6 @@
 /* USER CODE BEGIN Includes */
 // enable printf thru openOCD in the console window.
 extern void initialise_monitor_handles(void);
-// define filesystem in use - Defined here outside of main this is GLOBAL for all to see
-#define littlefs
 
 // Includes for other tasks
 #include "smartio_if.h"
@@ -147,11 +145,11 @@ int main(void)
   MX_TIM3_Init();
 
   //MX_RTC_Init();
-// #define LFS_NEW
-#ifdef littlefs && LFS_NEW
-  // Assume already formatted.
 
-  // this is bombing
+// define filesystem in use - Defined here outside of main this is GLOBAL for all to see
+#define littlefs 1
+#define LFS_NEW 1
+#if littlefs && LFS_NEW // both 1 for new system.
   int lfs_PSTAT_format_status = lfs_PSTAT_format();
   if(lfs_PSTAT_format_status)
   {
@@ -202,11 +200,11 @@ int main(void)
 		// Test file functionality: add files here, rename some, create more dirs and files, etc
 
 		  }
-		#endif
-
 	  }
 
   }
+#endif
+
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
 
