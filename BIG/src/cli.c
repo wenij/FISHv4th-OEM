@@ -27,7 +27,7 @@ static bool InfoPending=false;
 static void CliParseCommand(void);
 
 static void CliSendCmd(CliCommandId CmdId, uint32_t data, uint32_t data2, QueueHandle_t Destination);
-
+/* flash_IO.h has these
 extern int lfs_PSTAT_STATIC_init(void);
 extern int lfs_PSTAT_format(void);
 extern int lfs_PSTAT_mount(void);
@@ -36,7 +36,7 @@ extern lfs_ssize_t lfsread( lfs_file_t *file, void *buffer, lfs_size_t size);
 extern lfs_ssize_t lfswrite( lfs_file_t *file, void *buffer, lfs_size_t size);
 extern int lfsflush( lfs_file_t *file);
 extern int lfsclose( lfs_file_t *file);
-
+*/
 void cli_task(void * parm)
 {
     Message_t PortMsg;

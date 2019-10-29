@@ -68,13 +68,10 @@ extern void initialise_monitor_handles(void);
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-#ifdef littlefs
-/* int lfs_PSTAT_STATIC_init(void)
- * to be called from lfs_PSTAT_format(void) and lfs_PSTAT_mount(void)
- */
+// int lfs_PSTAT_STATIC_init(void)
+// to be called from lfs_PSTAT_format(void) and lfs_PSTAT_mount(void)
 #include "lfs.h"
 #include "flash_io.h"
-#endif
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
