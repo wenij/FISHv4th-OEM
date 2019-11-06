@@ -83,6 +83,9 @@ void MX_FREERTOS_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+// define filesystem in use - Defined here outside of main this is GLOBAL for all to see
+#define MAINvsRTOS 0	// c malloc when this is true, pv_portMalloc when 0
+#define LFS_NEW 0		// create lfs test in main.
 
 /* USER CODE END 0 */
 
@@ -143,10 +146,8 @@ int main(void)
 
   //MX_RTC_Init();
 
-// define filesystem in use - Defined here outside of main this is GLOBAL for all to see
-#define littlefs 1
-#define LFS_NEW 1
-#if littlefs && LFS_NEW // both 1 for new system.
+// both are 1 for new system, MAINvsRTOS denotes malloc (used in main b4 rtos) vs pv_malloc (cli rtos task).
+#if MAINvsRTOS && LFS_NEW
   int lfs_PSTAT_format_status = lfs_PSTAT_format();
   if(lfs_PSTAT_format_status)
   {
@@ -170,20 +171,45 @@ int main(void)
 			  int lfs_PSTAT_status;
 		      // Create the file "foo"
 		      lfs_PSTAT_status = lfsopen( &file, "foo", LFS_O_CREAT|LFS_O_RDWR );
-
+		      if(lfs_PSTAT_status)
+			  {
+				  printf("file open failed, code %h", lfs_PSTAT_status);
+			  }
 		      // Write something to foo
 		      lfs_PSTAT_status = lfswrite( &file, "This is a test", 14 );
+		      if(lfs_PSTAT_status)
+			  {
+				  printf("file write failed, code %h", lfs_PSTAT_status);
+			  }
 
 		      // Flush and Close foo
 		      lfs_PSTAT_status = lfsflush( &file );
+		      if(lfs_PSTAT_status)
+			  {
+				  printf("file flush failed, code %h", lfs_PSTAT_status);
+			  }
 		      lfs_PSTAT_status = lfsclose( &file );
+		      if(lfs_PSTAT_status)
+			  {
+				  printf("file close failed, code %h", lfs_PSTAT_status);
+			  }
+
 		      unsigned char read_buffer[16];  // add a byte for a null terminator in the read_buffer.
 		      // Open foo
 		      int lfs_open_status = lfsopen( &file, "foo", LFS_O_RDWR );
-		      if (lfs_open_status)
-		    	  return lfs_open_status;
-		      // Read foo data
+		      if(lfs_open_status)
+			  {
+				  printf("file open failed, code %h", lfs_PSTAT_status);\
+				  // don't return here, rtos must go on.
+		    	  //return lfs_open_status;
+			  }
 		      int read_size = lfsread( &file, read_buffer, 16 );
+		      if(read_size)
+			  {
+				  printf("file read failed, code %h", lfs_PSTAT_status);\
+				  // don't return here, rtos must go on.
+		    	  //return lfs_open_status;
+			  }
 		      read_buffer[14] = 0;
 		      if (read_size > 0) {
 		#if DEBUG_LFS
@@ -192,13 +218,15 @@ int main(void)
 		      }
 		      // Close foo again
 		      int lfs_close_status = lfsclose( &file );
-		      if (lfs_close_status)
-		    	  return lfs_close_status;
+		      if(lfs_close_status)
+			  {
+				  printf("file close failed, code %h", lfs_PSTAT_status);\
+				  // don't return here, rtos must go on.
+		    	  //return lfs_open_status;
+			  }
 		// Test file functionality: add files here, rename some, create more dirs and files, etc
-
 		  }
 	  }
-
   }
 #endif
 

@@ -1,7 +1,14 @@
 /*
  * @file   flash_IO.c
- * Support for littlefs and fatfs io
- * Not building probably decause I haven't provided a flash_IO,h with prototypes?
+ * Using littlefs.
+* A sample implementation of pvPortMalloc() and vPortFree() that combines
+129	* pvPortMalloc() is called.
+155	void *pvPortMalloc( size_t xWantedSize )
+162	/* If this is the first call to malloc then the heap will require
+282	traceMALLOC( pvReturn, xWantedSize );
+286	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
+290	extern void vApplicationMallocFailedHook( void );
+291	vApplicationMallocFailedHook();
  */
 #include "flash_IO.h"
 #include <assert.h>
@@ -75,6 +82,7 @@ static lfs_t lfs_internal_flash;
 Prepare for lfs_PSTAT_init() to init static structs only.
 To be called by lfs_PSTAT_format(void) and lfs_PSTAT_mount(void).
 In main and thru the cli.
+Temporarily host main calls using malloc (MAINvsRTOS) and task call using pv_alloc (LFS_NEW).
 I could not call lfs_format or lfs_mount from main,
 so workaround is this wrapper.
  *

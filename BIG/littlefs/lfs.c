@@ -2350,7 +2350,11 @@ int lfs_file_opencfg(lfs_t *lfs, lfs_file_t *file,
     if (file->cfg->buffer) {
         file->cache.buffer = file->cfg->buffer;
     } else {
+#if  !MAINvsRTOS // RTOS
+        file->cache.buffer = pvPortMalloc(lfs->cfg->cache_size);
+#else	// called from main be RTOS
         file->cache.buffer = lfs_malloc(lfs->cfg->cache_size);
+#endif
         if (!file->cache.buffer) {
             err = LFS_ERR_NOMEM;
             goto cleanup;
@@ -3200,7 +3204,11 @@ static int lfs_init(lfs_t *lfs, const struct lfs_config *cfg) {
     if (lfs->cfg->read_buffer) {
         lfs->rcache.buffer = lfs->cfg->read_buffer;
     } else {
+#if  !MAINvsRTOS // RTOS
+        lfs->rcache.buffer = pvPortMalloc(lfs->cfg->cache_size);
+#else	// called from main be RTOS
         lfs->rcache.buffer = lfs_malloc(lfs->cfg->cache_size);
+#endif
         if (!lfs->rcache.buffer) {
             err = LFS_ERR_NOMEM;
             goto cleanup;
@@ -3211,7 +3219,11 @@ static int lfs_init(lfs_t *lfs, const struct lfs_config *cfg) {
     if (lfs->cfg->prog_buffer) {
         lfs->pcache.buffer = lfs->cfg->prog_buffer;
     } else {
+#if  !MAINvsRTOS // RTOS
+        lfs->pcache.buffer = pvPortMalloc(lfs->cfg->cache_size);
+#else	// called from main be RTOS
         lfs->pcache.buffer = lfs_malloc(lfs->cfg->cache_size);
+#endif
         if (!lfs->pcache.buffer) {
             err = LFS_ERR_NOMEM;
             goto cleanup;
@@ -3229,7 +3241,11 @@ static int lfs_init(lfs_t *lfs, const struct lfs_config *cfg) {
     if (lfs->cfg->lookahead_buffer) {
         lfs->free.buffer = lfs->cfg->lookahead_buffer;
     } else {
+#if  !MAINvsRTOS // RTOS
+        lfs->free.buffer = pvPortMalloc(lfs->cfg->lookahead_size);
+#else	// called from main be RTOS
         lfs->free.buffer = lfs_malloc(lfs->cfg->lookahead_size);
+#endif
         if (!lfs->free.buffer) {
             err = LFS_ERR_NOMEM;
             goto cleanup;
@@ -3273,16 +3289,37 @@ cleanup:
     lfs_deinit(lfs);
     return err;
 }
-
 static int lfs_deinit(lfs_t *lfs) {
     // free allocated memory
+#if  !MAINvsRTOS // RTOS
     if (!lfs->cfg->read_buffer) {
-        lfs_free(lfs->rcache.buffer);
+    	vPortFree(lfs->rcache.buffer);
     }
+#else	// called from main be RTOS
+        if (!lfs->cfg->read_buffer) {
+            lfs_free(lfs->rcache.buffer);
+        }
+#endif
 
-    if (!lfs->cfg->prog_buffer) {
-        lfs_free(lfs->pcache.buffer);
+#if  !MAINvsRTOS // RTOS
+    if (!lfs->cfg->read_buffer) {
+    	vPortFree(lfs->pcache.buffer);
     }
+#else	// called from main be RTOS
+        if (!lfs->cfg->read_buffer) {
+            lfs_free(lfs->pcache.buffer);
+        }
+#endif
+
+#if  !MAINvsRTOS // RTOS
+    if (!lfs->cfg->read_buffer) {
+    	vPortFree(lfs->free.buffer);
+    }
+#else	// called from main be RTOS
+        if (!lfs->cfg->read_buffer) {
+            lfs_free(free.buffer);
+        }
+#endif
 
     if (!lfs->cfg->lookahead_buffer) {
         lfs_free(lfs->free.buffer);

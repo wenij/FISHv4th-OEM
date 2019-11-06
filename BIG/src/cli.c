@@ -480,11 +480,13 @@ void CliParseCommand(void)
     	int res = lfs_PSTAT_STATIC_init();
     	if (res)
     	{
+    		OK = false;
 			res = lfs_PSTAT_format();
-			if (!res)
+			if (res)
 			{
 		  	  	  printf("format failed, code %h", res);
 			}
+			else OK = true;
     	}
     }
     else if (strncmp("mount", (const char*)UartRxBuffer, 5) == 0) // no args
@@ -492,11 +494,13 @@ void CliParseCommand(void)
     	int res = lfs_PSTAT_STATIC_init();
     	if (res)
     	{
+    		OK = false;
 			res = lfs_PSTAT_mount();
-			if (!res)
+			if (res)
 			{
 		  	  	  printf("mount failed, code %h", res);
 			}
+			else OK = true;
     	}
     }
     else if (strncmp("openfile ", (const char*)UartRxBuffer, 9) == 0)
@@ -504,7 +508,7 @@ void CliParseCommand(void)
         num_args = CliParseParameterString(9);	// arg is offset past cmd
         if (num_args == 1)
         {
-            OK = true;
+            OK = false;
             // add parse of path and file
             lfs_file_t *file;	// lfs_t is static. Is the ~ a file handle?
             // If it's a file handle it is populated in open?
@@ -515,13 +519,14 @@ void CliParseCommand(void)
 //			int lfsopen( lfs_file_t *file, const char *path, int flags);
 //          int res = lfs_file_open( file, ts, flag );
         }
+		else OK = true;
     }
     else if (strncmp("closefile ", (const char*)UartRxBuffer, 10) == 0)
     {
         num_args = CliParseParameterString(9);	// arg is offset past cmd
         if (num_args == 7)
         {
-            OK = true;
+            OK = false;
 
 //            PstatSendRunReq( parameter_list[0], parameter_list[1], parameter_list[2], parameter_list[3], parameter_list[4], parameter_list[5], parameter_list[6] );
         }
@@ -531,7 +536,7 @@ void CliParseCommand(void)
         num_args = CliParseParameterString(9);	// arg is offset past cmd
         if (num_args == 7)
         {
-            OK = true;
+            OK = false;
 
 //            PstatSendRunReq( parameter_list[0], parameter_list[1], parameter_list[2], parameter_list[3], parameter_list[4], parameter_list[5], parameter_list[6] );
         }

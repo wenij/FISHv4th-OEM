@@ -51,7 +51,7 @@
 
 /* USER CODE BEGIN Includes */
 
-#define USE_SPI1
+//#define USE_SPI1
 //#define CARSTENS_BOARD      // Hacked up board with MISO re-routed and USART3 disabled
 #define VERSION "cah_v2.1"
 
