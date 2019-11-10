@@ -171,29 +171,7 @@ int lfs_PSTAT_STATIC_init(void)
     lfs_internal_flash.rcache = lfs_read_cache;
 
     // Returns a negative error code on failure.
-/*
- * Assume already formatted - will add call to cli to do this.
-    int lfs_format_status =  lfs_format(&lfs_internal_flash, &lfs_cfg);
-    if (lfs_format_status) return lfs_format_status;
- */
-/*
-    // Returns a negative error code on failure.
-    int lfs_mount_status =  lfs_mount(&lfs_internal_flash, &lfs_cfg);
-    return lfs_mount_status;
-*/
-/*
- * Alt approach we may use in field products
- * // mount the filesystem
-    int err = lfs_mount(&lfs, &cfg);
-
-    // reformat if we can't mount the filesystem
-    // this should only happen on the first boot
-    if (err) {
-        lfs_format(&lfs, &cfg);
-        lfs_mount(&lfs, &cfg);
-    }
- *
- */
+    return 0;
 }
 
 
@@ -227,18 +205,6 @@ int lfsclose( lfs_file_t *file)
     return( lfs_file_close( &lfs_internal_flash, file) );
 }
 
-/* From a forum:
- * I discovered that two things are important.
- * First you have to encapsulate your flash_write function
- * with taskENTER_CRITICAL(); and taskEXIT_CRITICAL();.
- * Second the system crashes if you use
- * FLASHD_Unlock(AT91C_IFLASH, AT91C_IFLASH + AT91C_IFLASH_SIZE , 0, 0);
- * and FLASHD_Lock(lastPageAddress, lastPageAddress + AT91C_IFLASH_PAGE_SIZE, 0, 0);
- * to lock and unlock the flash pages.
- * Dont ask me why this happens.
- * But I found that no pages are locked so writing to flash should be no problem.
- */
-
 /*
  * Helper functions
  * Called by lfs_bd_read() so step thru there.
@@ -264,6 +230,19 @@ int read_HAL(const struct lfs_config *c, lfs_block_t block,
 Block = 512 bytes, with off and size specifying where and how much to write in this block.
 May return LFS_ERR_CORRUPT if the block should be considered bad.
 */
+/* From a freeRtos littlefs forum:
+ * I discovered that two things are important.
+ * First you have to encapsulate your flash_write function
+ * with taskENTER_CRITICAL(); and taskEXIT_CRITICAL();.
+ * Second the system crashes if you use:
+ * THIS IS A DIFF PROCESSOR AND MAY BE IRRELEVANT:
+ * FLASHD_Unlock(AT91C_IFLASH, AT91C_IFLASH + AT91C_IFLASH_SIZE , 0, 0);
+ * and FLASHD_Lock(lastPageAddress, lastPageAddress + AT91C_IFLASH_PAGE_SIZE, 0, 0);
+ * to lock and unlock the flash pages.
+ * Dont ask me why this happens.
+ * But I found that no pages are locked so writing to flash should be no problem.
+ */
+
 int prog_HAL(const struct lfs_config *c, lfs_block_t block,
         lfs_off_t off, const void *buffer, lfs_size_t size){
     LFS_ASSERT(block != LFS_BLOCK_NULL);
@@ -277,6 +256,7 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
 #endif
 	HAL_FLASH_Unlock();
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
+    taskENTER_CRITICAL();
     for( int i = 0; i < size; i++ )
     {
 #if DEBUG_LFS
@@ -291,6 +271,7 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
     	  return LFS_ERR_IO;
     	}
     }
+    taskEXIT_CRITICAL();
     HAL_FLASH_Lock();
 
     // Verify amount written

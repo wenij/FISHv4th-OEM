@@ -475,33 +475,31 @@ void CliParseCommand(void)
 
         OK = true;
     }
+    // format working in main, but not here.
     else if (strncmp("format", (const char*)UartRxBuffer, 5) == 0) // no args
     {
-    	int res = lfs_PSTAT_STATIC_init();
-    	if (res)
-    	{
-    		OK = false;
-			res = lfs_PSTAT_format();
-			if (res)
-			{
-		  	  	  printf("format failed, code %h", res);
-			}
-			else OK = true;
-    	}
+    	// -5 coming from lfs_dir_compact?
+    	// not directly 05 is from prog_HAL only.
+    	// LFS_ERR_IO = -5,   // Error during device operation
+
+   		OK = false;
+		int res = lfs_PSTAT_format();	// lfs_format is failing, going to deinit.
+		if (res)
+		{
+	  	  	  printf("format failed, code %h", res);
+		}
+		else	OK = true;
     }
+    // mount is working when format from main
     else if (strncmp("mount", (const char*)UartRxBuffer, 5) == 0) // no args
     {
-    	int res = lfs_PSTAT_STATIC_init();
-    	if (res)
-    	{
-    		OK = false;
-			res = lfs_PSTAT_mount();
-			if (res)
-			{
-		  	  	  printf("mount failed, code %h", res);
-			}
-			else OK = true;
-    	}
+   		OK = false;
+		int res = lfs_PSTAT_mount();	// lfs_format is failing, going to deinit.
+		if (res)
+		{
+	  	  	  printf("mount failed, code %h", res);
+		}
+		else	OK = true;
     }
     else if (strncmp("openfile ", (const char*)UartRxBuffer, 9) == 0)
     {
