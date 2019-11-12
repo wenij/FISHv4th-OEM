@@ -3321,9 +3321,15 @@ static int lfs_deinit(lfs_t *lfs) {
         }
 #endif
 
+#if  !MAINvsRTOS // RTOS
     if (!lfs->cfg->lookahead_buffer) {
-        lfs_free(lfs->free.buffer);
+    	vPortFree(lfs->free.buffer);
     }
+#else	// called from main be RTOS
+        if (!lfs->cfg->lookahead_buffer) {
+            lfs_free(free.buffer);
+        }
+#endif
 
     return 0;
 }

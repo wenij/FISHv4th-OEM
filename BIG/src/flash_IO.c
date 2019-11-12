@@ -1,9 +1,8 @@
 /*
  * @file   flash_IO.c
  * Using littlefs.
-* A sample implementation of pvPortMalloc() and vPortFree() that combines
-129	* pvPortMalloc() is called.
-155	void *pvPortMalloc( size_t xWantedSize )
+* A sample implementation of pvPortMalloc() and vPortFree()
+*
 162	/* If this is the first call to malloc then the heap will require
 282	traceMALLOC( pvReturn, xWantedSize );
 286	#if( configUSE_MALLOC_FAILED_HOOK == 1 )
@@ -254,8 +253,10 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
 #if DEBUG_LFS
 	printf("prog_HAL ~ block = %x, off = %d, size = %x, = *flashaddress = %x, *buffer = %x, is *data = %x now\n", block, off, size, flashaddress, buffer, data);
 #endif
-	HAL_FLASH_Unlock();
-    __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
+//	HAL_FLASH_Unlock(); // failing in cli. HAL_FLASH_Program does it's own Hall lock/unlock
+/*
+	__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
+*/
     taskENTER_CRITICAL();
     for( int i = 0; i < size; i++ )
     {
@@ -272,7 +273,7 @@ int prog_HAL(const struct lfs_config *c, lfs_block_t block,
     	}
     }
     taskEXIT_CRITICAL();
-    HAL_FLASH_Lock();
+//    HAL_FLASH_Lock();
 
     // Verify amount written
     flashaddress = (uint8_t *) (block * (LFS_BUFFERS_SIZE) + off) + (SECTOR08_ADDR);
